@@ -41,7 +41,8 @@ public class XKTriggerPlayerAim : MonoBehaviour {
 		script.SetXKTriggerPlayerAim(this);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -55,4 +56,5 @@ public class XKTriggerPlayerAim : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 }

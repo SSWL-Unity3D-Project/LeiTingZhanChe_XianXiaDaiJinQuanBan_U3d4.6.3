@@ -4,7 +4,9 @@ using System.Collections;
 public class PSCameraMark : MonoBehaviour {
 	public bool IsAimPlayer;
 	Transform NextMark;
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -19,8 +21,9 @@ public class PSCameraMark : MonoBehaviour {
 			pathScript.DrawPath();
 		}
 	}
+#endif
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		//Debug.Log("Unity:"+"OnTriggerEnter...hitName "+other.name+", markName "+name);
 //		PSZiYouMoveCamera script = other.GetComponent<PSZiYouMoveCamera>();

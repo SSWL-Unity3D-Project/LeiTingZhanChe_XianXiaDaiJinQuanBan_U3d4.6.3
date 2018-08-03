@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class CoinPlayerCtrl : MonoBehaviour {
+public class CoinPlayerCtrl : MonoBehaviour
+{
 	public PlayerEnum PlayerSt = PlayerEnum.Null;
 	public UISprite CoinSpriteA; //ShiWei
 	public UISprite CoinSpriteB; //GeWei

@@ -28,7 +28,8 @@ public class XKTriggerBossUIOpen : MonoBehaviour
 		XKBossXueTiaoCtrl.GetInstance().OpenBossXueTiao(TimeBoss);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -42,4 +43,5 @@ public class XKTriggerBossUIOpen : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 }

@@ -9,7 +9,7 @@ public class pcvr : MonoBehaviour {
     /// <summary>
     /// 是否为红点点微信手柄操作模式.
     /// </summary>
-    public static bool IsHongDDShouBing = true;
+    public static bool IsHongDDShouBing = false;
     /// <summary>
     /// 是否为硬件版本.
     /// </summary>
@@ -135,6 +135,7 @@ public class pcvr : MonoBehaviour {
         {
             m_GmWXLoginDt[i] = new GameWeiXinLoginData();
         }
+        InitHandleJsonInfo();
     }
 
 	// Use this for initialization
@@ -170,7 +171,6 @@ public class pcvr : MonoBehaviour {
 	{
 		HID_BUF_LEN_WRITE = MyCOMDevice.ComThreadClass.BufLenWrite;
 		lastUpTime = Time.realtimeSinceStartup;
-		InitHandleJsonInfo();
 		InitJiaoYanMiMa();
 		InitSteerInfo();
 		InitYouMenInfo();
@@ -475,6 +475,17 @@ public class pcvr : MonoBehaviour {
     public byte[] m_IndexPlayerActiveGameState = new byte[4];
     public void SetIndexPlayerActiveGameState(int index, byte activeState)
     {
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+        {
+            if (activeState == (int)PlayerActiveState.JiHuo)
+            {
+                PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SetPlayerCoinTimeActive(indexPlayer);
+            }
+        }
+
         m_IndexPlayerActiveGameState[index] = activeState;
         if (activeState == (int)PlayerActiveState.WeiJiHuo)
         {

@@ -2,11 +2,44 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class XKNpcSpawnDaoJu : MonoBehaviour
+public class XKNpcSpawnDaoJu : SSGameMono
 {
-	public bool IsSpawnDJ = true;
+    /// <summary>
+    /// 是否产生随机道具.
+    /// </summary>
+    public bool IsCreatSuiJiDaoJu = false;
+    public bool IsSpawnDJ = true;
 	public GameObject[] DaoJuArray;
 	public int[] DaoJuGaiLv;
+
+    /// <summary>
+    /// 创建随机道具.
+    /// </summary>
+    public void CreatSuiJiDaoJu(PlayerEnum index)
+    {
+        if (!IsCreatSuiJiDaoJu)
+        {
+            return;
+        }
+
+        if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu))
+        {
+            //随机道具彩池的彩票积累的不够.
+            return;
+        }
+        Debug.Log("Unity: CreatSuiJiDaoJu...");
+
+        GameObject suiJiDaoJuPrefab = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSuiJiDaoJuPrefab(index);
+        if (suiJiDaoJuPrefab != null)
+        {
+            Instantiate(suiJiDaoJuPrefab, XkGameCtrl.GetInstance().DaoJuArray, transform);
+        }
+        else
+        {
+            UnityLogWarning("CreatSuiJiDaoJu -> suiJiDaoJuPrefab was null!");
+        }
+    }
+
 	public void SpawnAllDaoJu()
 	{
 		if (!IsSpawnDJ) {

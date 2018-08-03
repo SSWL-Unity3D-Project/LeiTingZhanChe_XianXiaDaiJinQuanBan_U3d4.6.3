@@ -8,7 +8,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
     /// <summary>
     /// 电视遥控器确认按键图片.
     /// </summary>
-    public GameObject m_TVYaoKongEnterObj;
+    //public GameObject m_TVYaoKongEnterObj;
 	GameObject DaoJiShiObj;
 	UISprite DaoJiShiSprite;
 	bool IsPlayDaoJishi;
@@ -88,7 +88,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		DaoJiShiSprite = GetComponent<UISprite>();
 		DaoJiShiObj.SetActive(false);
 		ContinueGameObj.SetActive(false);
-        m_TVYaoKongEnterObj.SetActive(false);
+        //m_TVYaoKongEnterObj.SetActive(false);
         HiddenGameOverObj();
 	}
 
@@ -105,10 +105,10 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		CountDaoJiShi++;
 		DaoJiShiCount = 9;
 		DaoJiShiSprite.spriteName = "daoJiShi9";
-		//DaoJiShiObj.SetActive(true);
-		//ContinueGameObj.SetActive(true);
-        m_TVYaoKongEnterObj.SetActive(true);
-        //ShowDaoJiShiInfo();
+        //m_TVYaoKongEnterObj.SetActive(true);
+		DaoJiShiObj.SetActive(true);
+		ContinueGameObj.SetActive(true);
+        ShowDaoJiShiInfo();
 		//XKGlobalData.GetInstance().StopAudioRanLiaoJingGao();
 		pcvr.CloseAllQiNangArray(PlayerIndex, 1);
 	}
@@ -123,7 +123,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		CountDaoJiShi--;
 		ContinueGameObj.SetActive(false);
 		DaoJiShiObj.SetActive(false);
-        m_TVYaoKongEnterObj.SetActive(false);
+        //m_TVYaoKongEnterObj.SetActive(false);
 
     }
 
@@ -161,9 +161,12 @@ public class DaoJiShiCtrl : MonoBehaviour {
 //				Debug.LogWarning("Unity:"+"ChangeDaoJiShiVal -> CountDaoJiShi "+CountDaoJiShi);
 //			}
 
-			if (XkGameCtrl.PlayerActiveNum <= 0 && CountDaoJiShi <= 0) {
-				GameOverCtrl.GetInstance().ShowGameOver();
-			}
+            //玩家没有进行续币.
+            //重置玩家续币信息.
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ResetPlayerXuBiInfo(PlayerIndex);
+			//if (XkGameCtrl.PlayerActiveNum <= 0 && CountDaoJiShi <= 0) {
+			//	GameOverCtrl.GetInstance().ShowGameOver();
+			//}
 			return;
 		}
 

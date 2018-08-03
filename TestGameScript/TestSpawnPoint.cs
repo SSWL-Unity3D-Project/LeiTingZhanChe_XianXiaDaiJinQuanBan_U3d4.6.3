@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class TestSpawnPoint : MonoBehaviour {
+public class TestSpawnPoint : MonoBehaviour
+{
 	[Range(-1f, 1000f)]public float FireRadius = 10f;
 	public LayerMask TerrainLayer;
 	public bool IsMakeObjToTerrain;
@@ -16,8 +16,9 @@ public class TestSpawnPoint : MonoBehaviour {
 			Gizmos.DrawSphere(transform.position, FireRadius);
 		}
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!enabled) {
 			return;
@@ -32,8 +33,9 @@ public class TestSpawnPoint : MonoBehaviour {
 		}
 		MakeObjMoveToLand();
 	}
+#endif
 
-	void MakeObjMoveToLand()
+    void MakeObjMoveToLand()
 	{
 		if (!IsMakeObjToTerrain) {
 			return;

@@ -361,8 +361,45 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		/*Debug.Log("Unity:"+"OnDamageNpc -> "
 		          +", nameNpc "+NpcNameInfo
 		          +", puTongAmmoNum "+puTongAmmoNum);*/
-		if (PuTongAmmoCount >= puTongAmmoNum ){
-			if (IsDeathNpc) {
+		if (PuTongAmmoCount >= puTongAmmoNum)
+        {
+            if (NpcScript != null)
+            {
+                if (NpcScript.IsZhanCheNpc)
+                {
+                    //战车npc是否可以被击爆的判断.
+                    if (NpcScript.m_IndexPlayerJiBao != playerSt)
+                    {
+                        //不是可以击爆战车npc的玩家.
+                        return;
+                    }
+
+                    if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe))
+                    {
+                        //战车彩池的彩票积累的不够.
+                        return;
+                    }
+                }
+
+                if (NpcScript.IsJPBossNpc)
+                {
+                    //JPBoss是否可以被击爆的判断.
+                    if (NpcScript.m_IndexPlayerJiBao != playerSt)
+                    {
+                        //不是可以击爆JPBoss的玩家.
+                        return;
+                    }
+
+                    if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss))
+                    {
+                        //JPBoss彩池的彩票积累的不够.
+                        return;
+                    }
+                }
+            }
+
+			if (IsDeathNpc)
+            {
 				return;
 			}
 			IsDeathNpc = true;
@@ -378,7 +415,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			if (BoxColCom != null) {
 				BoxColCom.enabled = false;
 			}
-			CheckSpawnDaoJuCom();
+			CheckSpawnDaoJuCom(playerSt);
 			CheckNpcDeathExplode();
 			CheckHiddenNpcObjArray();
 
@@ -434,14 +471,15 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		}
 	}
 
-	void CheckSpawnDaoJuCom()
+	void CheckSpawnDaoJuCom(PlayerEnum index)
 	{
 		XKNpcSpawnDaoJu daoJuScript = GetComponent<XKNpcSpawnDaoJu>();
 		if (daoJuScript == null) {
 			return;
 		}
-		daoJuScript.SpawnAllDaoJu();
-	}
+        //daoJuScript.SpawnAllDaoJu();
+        daoJuScript.CreatSuiJiDaoJu(index);
+    }
 
 	void CheckYouTongDamageNpc()
 	{

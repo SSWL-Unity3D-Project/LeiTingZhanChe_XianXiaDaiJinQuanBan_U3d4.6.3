@@ -209,8 +209,9 @@ public class PSTriggerCamera : MonoBehaviour {
 		CheckWorldTimeScale();
 		CheckAutoFirePlayerAmmoType();
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -224,8 +225,9 @@ public class PSTriggerCamera : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void CheckZiYouMoveCam(XkPlayerCtrl playerScript)
+    void CheckZiYouMoveCam(XkPlayerCtrl playerScript)
 	{
 		if (CamState != PSCameraState.ZiYouMoveCam) {
 			return;

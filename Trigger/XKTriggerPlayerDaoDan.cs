@@ -53,8 +53,9 @@ public class XKTriggerPlayerDaoDan : MonoBehaviour
 			SpawnPlayerDaoDan(script, PlayerDaoDan);
 		}
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -68,8 +69,9 @@ public class XKTriggerPlayerDaoDan : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
-	
-	void SpawnPlayerDaoDan(XkPlayerCtrl script, GameObject playerDaoDan)
+#endif
+
+    void SpawnPlayerDaoDan(XkPlayerCtrl script, GameObject playerDaoDan)
 	{
 		int max = AmmoPointTran.Length;
 		for (int i = 0; i < max; i++) {

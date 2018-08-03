@@ -150,6 +150,7 @@ namespace UnityStandardAssets.Utility
         }
 
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             DrawGizmos(false);
@@ -160,6 +161,7 @@ namespace UnityStandardAssets.Utility
         {
             DrawGizmos(true);
         }
+#endif
 
 
         private void DrawGizmos(bool selected)

@@ -9,9 +9,9 @@ public enum PlayerTypeEnum
 	CartoonCamera,
 }
 
-public class XkPlayerCtrl : MonoBehaviour {
-
-	AiPathCtrl AiPathScript;
+public class XkPlayerCtrl : MonoBehaviour
+{
+    AiPathCtrl AiPathScript;
 	public PlayerTypeEnum PlayerSt = PlayerTypeEnum.FeiJi;
 	//public Transform KaQiuShaAimPoint;
 	/**
@@ -37,7 +37,11 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 //	public GameObject[] PlayerHiddenArray;
 //	public Transform[] PlayerCamPoint; //主角在服务端的跟踪点.
 	public static Transform MissionCleanup;
-	GameObject PlayerObj;
+    /// <summary>
+    /// 战车npc管理组件.
+    /// </summary>
+    public SpawnNpcManage m_SpawnNpcManage;
+    GameObject PlayerObj;
 	Transform PlayerTran;
 	public static Transform PlayerTranFeiJi;
 	public static Transform PlayerTranTanKe;
@@ -157,7 +161,8 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 //		}
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -177,8 +182,9 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		}
 		pathScript.DrawPath();
 	}
+#endif
 
-	void FixedUpdate()
+    void FixedUpdate()
 	{
 		SmothMovePlayerCamera();
 	}
@@ -493,17 +499,19 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		Transform[] tranArray = new Transform[2];
 		tranArray[0] = transform;
 		tranArray[1] = tran.GetChild(MarkCount);
-//		Debug.Log("Unity:"+"InitMovePlayerByMarkSpeed -> path "+AiPathScript.name
-//		          +", mark "+tranArray[1].name);
+        //		Debug.Log("Unity:"+"InitMovePlayerByMarkSpeed -> path "+AiPathScript.name
+        //		          +", mark "+tranArray[1].name);
 
-		if (tranArray[1] == XkGameCtrl.GetInstance().GmCamMark.transform) {
-			QuanShuCount++;
-			if (QuanShuCount > 1) {
-				XkGameCtrl.GetInstance().AddPlayerQuanShu();
-			}
-		}
+        //if (tranArray[1] == XkGameCtrl.GetInstance().GmCamMark.transform)
+        //{
+        //    QuanShuCount++;
+        //    if (QuanShuCount > 1)
+        //    {
+        //        XkGameCtrl.GetInstance().AddPlayerQuanShu();
+        //    }
+        //}
 
-		EndPos = tranArray[1].position;
+        EndPos = tranArray[1].position;
 		AiMark markScript = tranArray[1].GetComponent<AiMark>();
 		AimMvToMarkTran = markScript.transform;
 		if (EndPos == tranArray[0].position) {
@@ -597,7 +605,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 				continue;
 			}
 			
-            if (XkGameCtrl.PlayerActiveNum <= 0)
+            /*if (XkGameCtrl.PlayerActiveNum <= 0)
             {
                 //玩家激活数量小于1时，镜头停止前进.
                 if (PlayerSt == PlayerTypeEnum.FeiJi)
@@ -605,7 +613,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                     yield return new WaitForSeconds(0.1f);
                     continue;
                 }
-            }
+            }*/
 
 			if (XkGameCtrl.PlayerActiveNum <= 0
 			    && PlayerSt != PlayerTypeEnum.CartoonCamera) {

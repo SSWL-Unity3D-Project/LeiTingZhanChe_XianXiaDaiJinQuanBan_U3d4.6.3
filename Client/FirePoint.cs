@@ -26,8 +26,9 @@ public class FirePoint : MonoBehaviour {
             Destroy(meshFt);
         }
     }
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -38,8 +39,9 @@ public class FirePoint : MonoBehaviour {
 		}
 		SetFirePointName();
 	}
-	
-	void SetFirePointName()
+#endif
+
+    void SetFirePointName()
 	{
 		FirePointCtrl script = transform.parent.GetComponent<FirePointCtrl>();
 		if (script == null) {

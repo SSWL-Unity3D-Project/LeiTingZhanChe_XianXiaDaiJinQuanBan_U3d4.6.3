@@ -3,7 +3,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityStandardAssets.Utility;
 
-public class XKNpcMoveCtrl : MonoBehaviour {
+public class XKNpcMoveCtrl : MonoBehaviour
+{
+    /// <summary>
+    /// 可以被哪个玩家击爆.
+    /// </summary>
+    public PlayerEnum m_IndexPlayerJiBao;
+    bool _IsZhanCheNpc = false;
+    /// <summary>
+    /// 是否是战车npc.
+    /// </summary>
+    public bool IsZhanCheNpc
+    {
+        set
+        {
+            _IsZhanCheNpc = value;
+            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv();
+        }
+        get { return _IsZhanCheNpc; }
+    }
+    bool _IsJPBossNpc = false;
+    /// <summary>
+    /// 是否是JPBoss.
+    /// </summary>
+    public bool IsJPBossNpc
+    {
+        set
+        {
+            _IsJPBossNpc = value;
+            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv();
+        }
+        get { return _IsJPBossNpc; }
+    }
+
 	float SpawnTimeVal;
 	NpcType NpcState = NpcType.LandNpc;
 //	public NpcJiFenEnum NpcJiFen = NpcJiFenEnum.ShiBing; //控制npc的运动.
@@ -63,9 +95,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 	Transform MarkNpcMove;
 	bool IsMoveToMarkPoint;
 	NetworkView NetViewCom;
-	int RecordAimPlayerState = -1;
 	public XKPlayerMoveCtrl PlayerMoveScript;
-	bool IsHandleRpc;
 	bool IsCheLiangMoveType;
 	float TimeFire = 1f; //npc开火持续时间.
 	float TimeRun = 1f; //npc开火后奔跑时间.
@@ -98,20 +128,15 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 				}
 			}
 		}
-
-//		NpcMoveType = NpcJiFen;
+        
 		NetViewCom = GetComponent<NetworkView>();
 		if (Network.peerType == NetworkPeerType.Disconnected && NetViewCom != null) {
-			NetViewCom.enabled = false;
+            Destroy(NetViewCom);
 		}
 		InitNpcInfo();
 		//XkGameCtrl.GetInstance().AddNpcTranToList(NpcTran);
 		MakeLandNpcMoveToLand();
 		Invoke("DelayChangeNpcParent", 0.2f);
-		
-		/*if (NpcState == NpcType.FlyNpc) {
-			NpcJiFen = NpcJiFenEnum.FeiJi;
-		}*/
 	}
 
 	void DelayChangeNpcParent()
@@ -123,7 +148,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!enabled) {
 			return;
@@ -142,8 +168,9 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		Gizmos.color = Color.green;
 		Gizmos.DrawWireSphere(transform.position, FireDistance);
 	}
+#endif
 
-	void Update()
+    void Update()
 	{
 		CheckNpcIsRemove();
 		if (IsDeathNPC) {
@@ -151,12 +178,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 		
 		MakeLandNpcMoveToLand();
-		if (!IsHandleRpc) {
-			UpdateClientNpcTransformAimPlayer();
-			return;
-		}
-
-		SendNpcTransformInfo();
 		CheckMoveNpcOnCompelteITween();
 
 		if (IsChangeNpcForward && !IsMoveByCar) {
@@ -239,28 +260,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 		if (IsAimPlayer && IsDoFireAnimation && !IsFireMove && !IsMoveFirePoint) {
 			CheckNpcAimPlayer();
-//			SetNpcIsAimPlayer(1);
 		}
-//		else {
-//			SetNpcIsAimPlayer(0);
-//		}
-	}
-
-	void UpdateClientNpcTransformAimPlayer()
-	{
-		if (Network.peerType == NetworkPeerType.Disconnected) {
-			return;
-		}
-		
-		if (IsHandleRpc) {
-			return;
-		}
-
-		if (!IsAimPlayer) {
-			return;
-		}
-
-		CheckNpcAimPlayer();
 	}
 
 	void CheckNpcAimPlayer()
@@ -296,134 +296,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		pos.y = RealNpcTran.position.y;
 		RealNpcTran.LookAt(pos);
 	}
-
-	/********************************************************************
-	 * NpcAimPlayerState == 0; -> SpawnPointScript.PointType == SpawnPointType.KongZhong
-	 * NpcAimPlayerState == 1; -> SpawnPointScript.PointType == SpawnPointType.DiMian
-	 * NpcAimPlayerState == 2; -> SpawnPointScript.PointType == SpawnPointType.Null && SpawnPointScript.IsAimFeiJiPlayer == true
-	 * NpcAimPlayerState == -1; -> SpawnPointScript.PointType == SpawnPointType.Null && SpawnPointScript.IsAimFeiJiPlayer == false
-	 ********************************************************************/
-	int NpcAimPlayerState = -1;
-	void SetNpcAimPlayerState()
-	{
-		if (NetViewCom == null) {
-			NetViewCom = GetComponent<NetworkView>();
-		}
-
-		NpcAimPlayerState = 0;
-//		if (SpawnPointScript.PointType == SpawnPointType.KongZhong) {
-//			NpcAimPlayerState = 0;
-//		}
-//		else if (SpawnPointScript.PointType == SpawnPointType.DiMian) {
-//			NpcAimPlayerState = 1;
-//		}
-//		else {
-//			if (SpawnPointScript.IsAimFeiJiPlayer) {
-//				NpcAimPlayerState = 2;
-//			}
-//			else {
-//				return;
-//			}
-//		}
-		
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		
-		if (!IsHandleRpc) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendSetNpcAimPlayerState", RPCMode.OthersBuffered, NpcAimPlayerState);
-	}
-
-	[RPC] void XKNpcSendSetNpcAimPlayerState(int val)
-	{
-		if (val > 2 || val < 0) {
-			return;
-		}
-		NpcAimPlayerState = val;
-	}
-
-	void SetNpcIsAimPlayer(int val)
-	{
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		
-		if (!IsHandleRpc || !ScreenDanHeiCtrl.IsStartGame) {
-			return;
-		}
-
-		if (RecordAimPlayerState == val) {
-			return;
-		}
-		RecordAimPlayerState = val;
-		NetViewCom.RPC("XKNpcSendSetNpcIsAimPlayer", RPCMode.OthersBuffered, val);
-	}
-
-	[RPC] void XKNpcSendSetNpcIsAimPlayer(int val)
-	{
-		bool isAim = val == 1 ? true : false;
-		if (isAim == false && isAim != IsAimPlayer) {
-			if (RealNpcTran.localEulerAngles != Vector3.zero) {
-				RealNpcTran.localEulerAngles = Vector3.zero;
-			}
-		}
-		IsAimPlayer = isAim;
-	}
-
-	void SendNpcTransformInfo()
-	{
-		if (XkGameCtrl.GameModeVal != GameMode.LianJi || !GameMovieCtrl.IsActivePlayer) {
-			return;
-		}
-
-		if (Network.peerType != NetworkPeerType.Server) {
-			IsHandleRpc = false;
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-
-		if (!IsHandleRpc) {
-			return;
-		}
-
-		if (IsHuoCheNpc) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendOtherTranformInfo", RPCMode.OthersBuffered, transform.position, transform.rotation);
-
-		if (IsZaiTiNpc) {
-			NetViewCom.RPC("XKRealNpcSendOtherTranformInfo", RPCMode.OthersBuffered, RealNpcTran.rotation);
-		}
-	}
-
-	[RPC] void XKNpcSendOtherTranformInfo(Vector3 pos, Quaternion rot)
-	{
-		if (IsHuoCheNpc) {
-			return;
-		}
-		transform.position = pos;
-		transform.rotation = rot;
-		MakeLandNpcMoveToLand();
-	}
-	
-	[RPC] void XKRealNpcSendOtherTranformInfo(Quaternion rot)
-	{
-		RealNpcTran.rotation = rot;
-	}
-
+    
 	public FirePoint GetFirePointScript()
 	{
 		if (SpawnPointScript == null || SpawnPointScript.FirePointNpc == null) {
@@ -431,7 +304,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 		FirePointScript = SpawnPointScript.FirePointNpc.GetFirePoint();
 		return FirePointScript;
-		//return FirePointScript;
 	}
 	
 	public void SetIndexNpc(int val)
@@ -474,8 +346,9 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 	}
 
 	public void MakeNpcMoveFirePoint()
-	{
-		if (IsDeathNPC) {
+    {
+        //Debug.Log("**************************move 3333333333333333333333");
+        if (IsDeathNPC) {
 			return;
 		}
 
@@ -495,6 +368,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		iTween itweenScript = GetComponent<iTween>();
 		if (itweenScript != null) {
 			Destroy(itweenScript);
+			//Debug.Log("*************************2222 name  " + gameObject.name);
 		}
 		
 		iTween.MoveTo(NpcObj, iTween.Hash("path", posArray,
@@ -553,8 +427,18 @@ public class XKNpcMoveCtrl : MonoBehaviour {
             NpcTran.SetParent(XkGameCtrl.NpcObjArray);
         }
 
-		if (NpcObj != null) {
-			return;
+		if (NpcObj != null)
+        {
+            if (NpcAniScript != null)
+            {
+                NpcAniScript.gameObject.SetActive(true);
+                XKNpcHealthCtrl healthScriptTmp = NpcAniScript.gameObject.GetComponent<XKNpcHealthCtrl>();
+                if (healthScriptTmp != null)
+                {
+                    healthScriptTmp.SetNpcMoveScript(this);
+                }
+            }
+            return;
 		}
 		NpcObj = gameObject;
 		NpcTran = transform;
@@ -600,9 +484,22 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 			}
 			else {
 				healthScript = GetComponentInChildren<XKNpcHealthCtrl>();
-				if (healthScript != null) {
+				if (healthScript != null)
+                {
 					healthScript.SetNpcMoveScript(this);
 				}
+                else
+                {
+                    if (NpcAniScript != null)
+                    {
+                        NpcAniScript.gameObject.SetActive(true);
+                        healthScript = NpcAniScript.gameObject.GetComponent<XKNpcHealthCtrl>();
+                        if (healthScript != null)
+                        {
+                            healthScript.SetNpcMoveScript(this);
+                        }
+                    }
+                }
 			}
 		}
 		else {
@@ -638,10 +535,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 				healthScript.SetNpcMoveScript(this);
 			}
 		}
-
-		IsHandleRpc = true;
+        
 		SpawnPointScript = spawnScript;
-		SetNpcAimPlayerState();
 
 		TimeFire = SpawnPointScript.TimeFire;
 		TimeRun = SpawnPointScript.TimeRun;
@@ -662,22 +557,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 		MvSpeed = SpawnPointScript.MvSpeed;
 		FireDistance = SpawnPointScript.FireDistance;
-		
-//		TimeMinFire = SpawnPointScript.TimeMinFire;
-//		TimeMaxFire = SpawnPointScript.TimeMaxFire;
-		//SetNpcFireAnimationIsAimFeiJiPlayer(spawnScript.IsAimFeiJiPlayer);
 
 		SetFirePointScript();
-	}
-	
-	void SetNpcFireAnimationIsAimFeiJiPlayer(bool isAim)
-	{
-		SetNpcIsAimFeiJiPlayer(isAim);
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendFireAnimationIsAimFeiJiPlayer", RPCMode.OthersBuffered,
-		               isAim == true ? 1 : 0);
 	}
 	
 	void SetNpcIsAimFeiJiPlayer(bool isAim)
@@ -693,37 +574,11 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 	}
 	
-	[RPC] void XKNpcSendFireAnimationIsAimFeiJiPlayer(int val)
-	{
-		if (IsDeathNPC) {
-			IsDeathNPC = false;
-			XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
-			if (healthScript != null) {
-				healthScript.SetNpcMoveScript(this);
-			}
-		}
-
-		if (RealNpcTran != null) {
-			RealNpcTran.gameObject.SetActive(true);
-		}
-
-		if (AnimatorCom == null) {
-			AnimatorCom = RealNpcTran.GetComponent<Animator>();
-		}
-
-		if (AnimatorCom != null) {
-			AnimatorCom.enabled = true;
-		}
-
-		bool isAim = val == 1 ? true : false;
-		SetNpcIsAimFeiJiPlayer(isAim);
-	}
 
 	XKCannonCtrl[] CannonScript;
 	WaypointProgressTracker WaypointCom;
 	public void SetSpawnNpcInfo(XKSpawnNpcPoint spawnScript)
 	{
-		SendNpcTransformInfo();
 		SetNpcSpawnScriptInfo(spawnScript);
 		IsHuoCheNpc = spawnScript.GetIsHuoCheNpc();
 		TestSpawnPoint = spawnScript.gameObject;
@@ -772,75 +627,11 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 				WaypointCom.SetCarPathInfo(NpcPathTran.GetComponent<WaypointCircuit>());
 			}
 		}
-
-//		if (IsAniMove) {
-//			Animator aniCom = GetComponent<Animator>();
-//			if (aniCom == null) {
-//				gameObject.AddComponent<Animator>();
-//				CancelInvoke("DelayCheckNpcAniController");
-//				Invoke("DelayCheckNpcAniController", 0.1f);
-//			}
-//			else {
-//				DelayCheckNpcAniController();
-//			}
-//
-//			SendFeiJiNpcPointIndex(spawnScript);
-//		}
 	}
 
-	void SendFeiJiNpcPointIndex(XKSpawnNpcPoint spawnScript)
-	{
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		int indexVal = spawnScript.GetIndexFeiJiPoint();
-		NetViewCom.RPC("XKNpcSendFeiJiNpcPointIndex", RPCMode.OthersBuffered, indexVal);
-	}
-
-	[RPC] void XKNpcSendFeiJiNpcPointIndex(int indexVal)
-	{
-		//Debug.Log("Unity:"+"XKNpcSendFeiJiNpcPointIndex -> indexVal "+indexVal);
-		XKSpawnNpcPoint.HandleFeiJiNpcSpawnInfo(this, indexVal);
-	}
-	
 	void SetCannonAimPlayerState()
 	{
-		int aimState = 0;
-//		if (SpawnPointScript.PointType == SpawnPointType.KongZhong) {
-//			aimState = 0;
-//		}
-//		else if (SpawnPointScript.PointType == SpawnPointType.DiMian) {
-//			aimState = 1;
-//		}
-//		else {
-//			if (SpawnPointScript.IsAimFeiJiPlayer) {
-//				aimState = 2;
-//			}
-//		}
-		SetCannonNpcInfo(aimState, SpawnPointScript.FireDistance);
-		
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		
-		if (NetViewCom == null) {
-			NetViewCom = GetComponent<NetworkView>();
-		}
-		NetViewCom.RPC("XKCannonSendSetNpcAimPlayerState", RPCMode.OthersBuffered, aimState, SpawnPointScript.FireDistance);
-	}
-	
-	[RPC] void XKCannonSendSetNpcAimPlayerState(int valAim, float valFireDis)
-	{
-		//Debug.Log("Unity:"+"XKCannonSendSetNpcAimPlayerState.............");
-		SetCannonNpcInfo(valAim, valFireDis);
+		SetCannonNpcInfo(0, SpawnPointScript.FireDistance);
 	}
 	
 	void SetCannonNpcInfo(int valAim, float valFireDis)
@@ -906,10 +697,11 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 			}
 		}
 	}
-
+    
 	public void MoveNpcByItween()
 	{
-		if (IsDeathNPC) {
+        //Debug.Log("**************************move 1111111111111111");
+        if (IsDeathNPC) {
 			return;
 		}
 
@@ -938,7 +730,9 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 		Transform[] tranArray = new Transform[2];
 		tranArray[0] = NpcTran;
-		if (MarkCount >= NpcPathTran.childCount || MarkCount < 0) {
+        MarkCount = NpcPathTran.childCount - 1; //test.
+
+        if (MarkCount >= NpcPathTran.childCount || MarkCount < 0) {
 			MarkCount = 0; //fixed MarkCount
 		}
 		tranArray[1] = NpcPathTran.GetChild(MarkCount);
@@ -963,7 +757,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 				isOrienttopath = false;
 			}
 
-			iTween.MoveTo(NpcObj, iTween.Hash("path", tranArray,
+			//Debug.Log("********************************* name " + gameObject.name);
+            iTween.MoveTo(NpcObj, iTween.Hash("path", tranArray,
 			                                  "speed", MvSpeed,
 			                                  "orienttopath", isOrienttopath,
 			                                  "easeType", iTween.EaseType.linear));
@@ -1158,8 +953,10 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 	void DelayMakeNpcMoveDoRun3()
 	{
-		if (ITweenScriptNpc != null) {
-			PlayNpcAnimation(AnimatorNameNPC.Run3);
+		if (ITweenScriptNpc != null)
+        {
+            //Debug.Log("************************33333 time " + Time.time);
+            PlayNpcAnimation(AnimatorNameNPC.Run3);
 			RealNpcTran.localEulerAngles = Vector3.zero;
 			ITweenScriptNpc.isRunning = true;
 			ITweenScriptNpc.isPaused = false;
@@ -1284,22 +1081,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		return IsDoFireAnimation;
 	}
 
-	void SetClientNpcIsDoFireAnimation(bool isDoFire)
-	{
-		if (Network.peerType != NetworkPeerType.Server
-		    || Network.connections.Length <= 0
-		    || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSetClientNpcIsDoFireAnimation", RPCMode.OthersBuffered,
-		               isDoFire == true ? 1 : 0);
-	}
-
-	[RPC] void XKNpcSetClientNpcIsDoFireAnimation(int val)
-	{
-		IsDoFireAnimation = (val == 1 ? true : false);
-	}
-
 	public bool GetIsWuDi()
 	{
 		return IsWuDi;
@@ -1324,6 +1105,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 			itweenScript.isRunning = false;
 			itweenScript.enabled = false;
 			DestroyObject(itweenScript);
+			//Debug.Log("*************************4444 name  " + gameObject.name);
 		}
 
 		NpcMark markScript = null;
@@ -1420,21 +1202,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 	public void NetNpcPlayAnimation(XKNpcAnimatorCtrl aniScript, string aniName)
 	{
 		aniScript.PlayNpcAnimatoin(aniName);
-
-		if (Network.peerType == NetworkPeerType.Server && NetViewCom != null) {
-			if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0 || !IsHandleRpc) {
-				return;
-			}
-			NetViewCom.RPC("XKNpcSendPlayAnimation", RPCMode.OthersBuffered, aniName);
-		}
-	}
-
-	[RPC] void XKNpcSendPlayAnimation(string aniName)
-	{
-		if (NpcAniScript == null) {
-			return;
-		}
-		NpcAniScript.PlayNpcAnimatoin(aniName);
 	}
 
 	public bool GetIsDeathNPC()
@@ -1455,48 +1222,10 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 	void CallServerRemoveNpc()
 	{
-		if (Network.peerType != NetworkPeerType.Client) {
-			return;
-		}
-
-		if (IsHandleRpc) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendServerRemoveNpc", RPCMode.OthersBuffered);
-	}
-
-	[RPC] void XKNpcSendServerRemoveNpc()
-	{
-		TriggerRemovePointNpc(1);
 	}
 
 	void CallServerRemoveCannon(int cannonIndex)
 	{
-		if (Network.peerType != NetworkPeerType.Client) {
-			return;
-		}
-		
-		if (IsHandleRpc) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendServerRemoveCannon", RPCMode.OthersBuffered, cannonIndex);
-	}
-	
-	[RPC] void XKNpcSendServerRemoveCannon(int cannonIndex)
-	{
-		if (CannonScript == null) {
-			return;
-		}
-
-		int max = CannonScript.Length;
-		if (max > 1) {
-			for (int i = 0; i < max; i++) {
-				if (CannonScript[i] != null) {
-					CannonScript[i].OnRemoveCannon(PlayerEnum.Null, 1);
-					break;
-				}
-			}
-		}
 	}
 
 	public void TriggerRemovePointNpc(int key, XKCannonCtrl cannonScriptVal = null,
@@ -1528,6 +1257,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 			itweenScript.isRunning = false;
 			itweenScript.isPaused = true;
 			Destroy(itweenScript);
+			//Debug.Log("*************************1111 name  " + gameObject.name);
 		}
 
 		if (AnimatorCom != null) {
@@ -1676,12 +1406,40 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		else {
 			ResetNpcInfo();
 		}
-	}
+        
+        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+        {
+            //检测是否有战车、JPBoss和SuperJPBoss的数据需要清理.
+            bool isReturn = false;
+            isReturn = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.ZhanCheData.RemoveNpcFromList(obj);
+            if (isReturn)
+            {
+                //战车被删除,重置战车数据信息.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.ZhanChe);
+            }
+
+            isReturn = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.JPBossData.RemoveNpcFromList(obj);
+            if (isReturn)
+            {
+                //JPBoss被删除,重置JPBoss数据信息.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.JPBoss);
+            }
+
+            isReturn = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.SuperJPBossData.RemoveNpcFromList(obj);
+            if (isReturn)
+            {
+                //SuperJPBoss被删除,重置SuperJPBoss数据信息.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
+            }
+        }
+    }
 
 	public void MoveFZNpcToFirePoint(Vector3 firePos, float mvSpeed)
-	{
-		if (IsDeathNPC) {
-			return;
+    {
+        //Debug.Log("**************************move 2222222222222222222");
+        if (IsDeathNPC)
+        {
+		    return;
 		}
 
 		IsChangeNpcForward = false;
@@ -1713,9 +1471,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 	public void SetSpawnPointScript(XKSpawnNpcPoint script)
 	{
-		IsHandleRpc = true;
 		SpawnPointScript = script;
-		SetNpcAimPlayerState();
 	}
 	
 	void MakeLandNpcMoveToLand()
@@ -1746,21 +1502,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 
 	public void SetHuoCheNpcInfo(int indexPoint)
 	{
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendSetHuoCheNpcInfo", RPCMode.OthersBuffered, indexPoint);
 	}
-	
-	[RPC] void XKNpcSendSetHuoCheNpcInfo(int indexPoint)
-	{
-		StartCoroutine(DelaySetHuoCheNpcInfo(indexPoint));
-	}
-	
+
 	IEnumerator DelaySetHuoCheNpcInfo(int indexPoint)
 	{
 		yield return new WaitForSeconds(0.5f);
@@ -1790,23 +1533,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 				}
 			}
 		}
-	}
-
-	public void SetFeiJiNpcInfo(int indexPoint)
-	{
-		if (Network.peerType != NetworkPeerType.Server) {
-			return;
-		}
-		
-		if (Network.connections.Length <= 0 || NetworkServerNet.ServerSendState != 0) {
-			return;
-		}
-		NetViewCom.RPC("XKNpcSendSetFeiJiNpcInfo", RPCMode.OthersBuffered, indexPoint);
-	}
-	
-	[RPC] void XKNpcSendSetFeiJiNpcInfo(int indexPoint)
-	{
-		StartCoroutine(DelaySetFeiJiNpcInfo(indexPoint));
 	}
 	
 	IEnumerator DelaySetFeiJiNpcInfo(int indexPoint)
@@ -1911,7 +1637,6 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 	void ResetNpcInfo()
 	{
 		IsInitNpcInfo = false;
-		IsHandleRpc = false;
 		IsMoveToMarkPoint = false;
 		
 		IsMoveFirePoint = false;
@@ -1939,6 +1664,7 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 			itweenScript.isPaused = true;
 			itweenScript.enabled = false;
 			DestroyObject(itweenScript);
+			//Debug.Log("*************************3333 name  " + gameObject.name);
 		}
 
 		XkNpcZaiTiCtrl zaiTiScript = GetComponentInChildren<XkNpcZaiTiCtrl>();
@@ -1965,42 +1691,8 @@ public class XKNpcMoveCtrl : MonoBehaviour {
 		}
 		NpcTran.position = new Vector3(-18000f, -18000f, 0f);
         NpcTran.SetParent(XkGameCtrl.GetInstance().NpcObjHiddenArray);
-
-        if (Network.peerType == NetworkPeerType.Server) {
-			NetViewCom.RPC("NpcSendResetNpcTransformInfo", RPCMode.OthersBuffered);
-		}
 	}
-
-	[RPC] void NpcSendResetNpcTransformInfo()
-	{
-		IsDeathNPC = true;
-		AnimatorCom.enabled = false;
-		XkNpcZaiTiCtrl zaiTiScript = GetComponentInChildren<XkNpcZaiTiCtrl>();
-		if (zaiTiScript != null && zaiTiScript.ZaiTiNpcBuWaWa != null) {
-			zaiTiScript.ResetNpcZaiTiSomeInfo();
-		}
-
-		RealNpcTran.gameObject.SetActive(false);
-		RealNpcTran.localPosition = Vector3.zero;
-		RealNpcTran.localEulerAngles = Vector3.zero;
-
-		if (BuWaWaRigidbody != null) {
-			Transform buWaWaTran = BuWaWaRigidbody.transform;
-			buWaWaTran.localPosition = Vector3.zero;
-			buWaWaTran.localEulerAngles = Vector3.zero;
-		}
-		
-		if (RigCom != null && !RigCom.isKinematic && !IsMoveByCar) {
-			Destroy(RigCom);
-		}
-		
-		Rigidbody rigCom = RealNpcTran.GetComponent<Rigidbody>();
-		if (rigCom != null && !rigCom.isKinematic) {
-			Destroy(rigCom);
-		}
-		NpcTran.position = new Vector3(-18000f, -18000f, 0f);
-	}
-
+    
 	XKAiCarMoveCtrl AiCarCom;
 	void HandleNpcDeathInfo()
 	{

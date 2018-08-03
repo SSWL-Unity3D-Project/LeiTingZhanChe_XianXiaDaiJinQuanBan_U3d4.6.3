@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-using System.Xml;
+﻿using System.Xml;
 using System.IO;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System;
+using UnityEngine;
 
-public class HandleJson {
-
+public class HandleJson
+{
 	private static  HandleJson Instance;
 	public static HandleJson GetInstance()
 	{
@@ -23,7 +21,7 @@ public class HandleJson {
 	//valueStr: write the value to the file
 	public void WriteToFileXml(string fileName, string attribute, string valueStr)
 	{
-		return ;
+		//return;
 		string filepath = Application.dataPath + "/" + fileName;
 		#if UNITY_ANDROID
 		filepath = Application.persistentDataPath + "//" + fileName;
@@ -61,10 +59,10 @@ public class HandleJson {
 	
 	public void WriteToFilePathXml(string filepath, string attribute, string valueStr)
 	{
-		return;
+		//return;
 		//string filepath = Application.dataPath + "/" + fileName;
 #if UNITY_ANDROID
-		//		filepath = Application.persistentDataPath + "//" + fileName;
+		//filepath = Application.persistentDataPath + "//" + fileName;
 #endif
 
 		//create file
@@ -102,7 +100,7 @@ public class HandleJson {
 	//int.TryParse(valueStr, out aaa);
 	public string ReadFromFileXml(string fileName, string attribute)
 	{
-		return "";
+		//return "";
 		string filepath = Application.dataPath + "/" + fileName;
 		#if UNITY_ANDROID
 		//filepath = Application.persistentDataPath + "//" + fileName;
@@ -135,13 +133,12 @@ public class HandleJson {
 
 	public string ReadFromFilePathXml(string filepath, string attribute)
 	{
-		return "";
+		//return "";
 		//string filepath = Application.dataPath + "/" + fileName;
 #if UNITY_ANDROID
 		//filepath = Application.persistentDataPath + "//" + fileName;
 #endif
 		string valueStr = null;
-		
 		if(File.Exists (filepath))
 		{
 			XmlDocument xmlDoc = new XmlDocument();
@@ -154,14 +151,6 @@ public class HandleJson {
 			File.SetAttributes(filepath, FileAttributes.Normal);
 			xmlDoc.Save(filepath);
 		}
-		
 		return valueStr;
 	}
-
-	#region handle ini file
-	[DllImport("kernel32.dll")]
-	public extern static int GetPrivateProfileStringA(string segName, string keyName, string sDefault, byte[] buffer, int iLen, string fileName);
-	[DllImport("kernel32.dll")]
-	public extern static int WritePrivateProfileString(string segName, string keyName, string sValue, string fileName);
-	#endregion
 }

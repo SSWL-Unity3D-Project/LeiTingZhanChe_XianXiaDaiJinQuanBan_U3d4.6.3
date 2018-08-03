@@ -4,7 +4,6 @@ using System.Threading;
 using System;
 using System.IO.Ports;
 using System.Text;
-using System.Runtime.InteropServices;
 
 public class MyCOMDevice : MonoBehaviour
 {

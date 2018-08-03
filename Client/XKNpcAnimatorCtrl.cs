@@ -88,6 +88,12 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 			ResetNpcAnimation();
 //			AnimationNameCur = aniName;
 		}
+
+        if (AnimatorCom.speed == 0f)
+        {
+            //Debug.LogWarning("PlayNpcAnimatoin -> Reset AniSpeed, SpeedActionCur ====== " + SpeedActionCur);
+            AnimatorCom.speed = SpeedActionCur;
+        }
 		AnimatorCom.SetBool(aniName, true);
 	}
 
@@ -207,6 +213,7 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 //			return;
 //		}
 
+        //Debug.Log("************************11111 time " + Time.time);
 		int rv = AddCountFireAction();
 //		if (Network.peerType == NetworkPeerType.Server) {
 //			if (XkGameCtrl.CountNpcAmmo >= XkGameCtrl.AmmoNumMaxNpc) {
@@ -404,7 +411,9 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 		IsDoRunFireAction = true;
 		ResetNpcAnimation();
 		NpcScript.NetNpcPlayAnimation(this, AnimatorNameNPC.Run3.ToString());
-	}
+
+        //Debug.Log("************************22222 time " + Time.time);
+    }
 
 	void PlayNPCHuanDanAction()
 	{

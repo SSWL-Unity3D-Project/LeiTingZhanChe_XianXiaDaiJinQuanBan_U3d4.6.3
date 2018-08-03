@@ -95,7 +95,8 @@ public class XKTriggerKaQiuShaFire : MonoBehaviour
 		}
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -109,8 +110,9 @@ public class XKTriggerKaQiuShaFire : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void HandleServerKaQiuShaFire()
+    void HandleServerKaQiuShaFire()
 	{
 		if (Network.peerType != NetworkPeerType.Client) {
 			return;

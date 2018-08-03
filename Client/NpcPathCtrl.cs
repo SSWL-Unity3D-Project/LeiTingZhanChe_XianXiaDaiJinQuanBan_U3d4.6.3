@@ -19,7 +19,8 @@ public class NpcPathCtrl : MonoBehaviour {
         gameObject.SetActive(false);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -43,8 +44,9 @@ public class NpcPathCtrl : MonoBehaviour {
 			}
 		}
 	}
-	
-	public void DrawPath ()
+#endif
+
+    public void DrawPath ()
 	{
 		OnDrawGizmosSelected();
 	}

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class DrawNpcAniPathTool : MonoBehaviour {
 	public NpcMark NpcMarkScript;
@@ -8,8 +7,9 @@ public class DrawNpcAniPathTool : MonoBehaviour {
 	{
 		enabled = false;
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -24,4 +24,5 @@ public class DrawNpcAniPathTool : MonoBehaviour {
 		}
 		NpcMarkScript.DrawPath();
 	}
+#endif
 }

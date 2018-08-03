@@ -71,7 +71,8 @@ public class GameOverCtrl : MonoBehaviour {
 public enum GameLevel
 {
 	None = -1,
-	Movie,
-	Scene_1,
-	SetPanel,
+    root = 0,
+	Movie = 1,
+	Scene_1 = 2,
+	SetPanel = 3,
 }

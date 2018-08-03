@@ -32,7 +32,8 @@ public class XKTriggerMoveToAiMark : MonoBehaviour {
 		gameObject.SetActive(false);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -46,4 +47,5 @@ public class XKTriggerMoveToAiMark : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 }

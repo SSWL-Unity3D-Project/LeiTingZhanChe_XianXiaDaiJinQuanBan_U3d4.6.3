@@ -171,11 +171,12 @@ public class XKPlayerCamera : MonoBehaviour {
 		}
 		//Debug.Log("Unity:"+"ActivePlayerCamera -> player "+PlayerSt+", isEnable "+isEnable+", jiTai "+jiTai);
 		PlayerCamera.enabled = isEnable;
-		
-		if (isEnable) {
-			XkGameCtrl.TestDelayActivePlayerOne();
-		}
-	}
+
+        //if (isEnable)
+        //{
+        //    XkGameCtrl.TestDelayActivePlayerOne();
+        //}
+    }
 
 	public bool GetActiveCamera()
 	{

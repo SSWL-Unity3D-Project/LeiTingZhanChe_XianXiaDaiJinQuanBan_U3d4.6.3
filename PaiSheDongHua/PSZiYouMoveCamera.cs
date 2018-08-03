@@ -110,8 +110,9 @@ public class PSZiYouMoveCamera : MonoBehaviour {
 		}
 		gameObject.SetActive(false);
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -125,8 +126,9 @@ public class PSZiYouMoveCamera : MonoBehaviour {
 			AiPathScript.DrawPath();
 		}
 	}
+#endif
 
-	bool CheckIsStopMoveCamera()
+    bool CheckIsStopMoveCamera()
 	{
 		if (XkGameCtrl.GetInstance().IsCartoonShootTest) {
 			if (RealCamera == null) {

@@ -19,6 +19,7 @@ public class XKTriggerOpenStage : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
@@ -33,8 +34,9 @@ public class XKTriggerOpenStage : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		XkPlayerCtrl playerScript = other.GetComponent<XkPlayerCtrl>();
 		if (playerScript == null) {

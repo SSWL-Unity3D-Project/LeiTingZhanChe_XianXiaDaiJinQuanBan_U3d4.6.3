@@ -53,7 +53,8 @@ public class NpcMark : MonoBehaviour {
 		this.enabled = IsFireFeiJiNpc;
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -66,8 +67,9 @@ public class NpcMark : MonoBehaviour {
 		CheckAniName();
 		DrawPath();
 	}
+#endif
 
-	void CheckAniName()
+    void CheckAniName()
 	{
 		if (AniName == AnimatorNameNPC.Fire1 || AniName == AnimatorNameNPC.Fire2) {
 			AniName = AnimatorNameNPC.Null;

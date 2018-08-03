@@ -126,7 +126,7 @@ public class GameMovieCtrl : SSGameMono
     }
 
     bool IsCrateMovieLogo = false;
-    MovieLogoAni m_MovieLogoAni;
+    //MovieLogoAni m_MovieLogoAni;
     /// <summary>
     /// 创建Logo播放对象.
     /// </summary>
@@ -139,15 +139,21 @@ public class GameMovieCtrl : SSGameMono
         }
         IsCrateMovieLogo = true;
 
-        if (m_MovieAniPrefab != null && m_UITrParent != null)
-        {
-            GameObject obj = (GameObject)Instantiate(m_MovieAniPrefab, m_UITrParent);
-            m_MovieLogoAni = obj.GetComponent<MovieLogoAni>();
-        }
-        else
-        {
-            Debug.LogWarning("Unity: m_MovieAniPrefab or m_UITrParent was null");
-        }
+        //if (m_MovieAniPrefab != null && m_UITrParent != null)
+        //{
+        //    GameObject obj = (GameObject)Instantiate(m_MovieAniPrefab, m_UITrParent);
+        //    m_MovieLogoAni = obj.GetComponent<MovieLogoAni>();
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("Unity: m_MovieAniPrefab or m_UITrParent was null");
+        //}
+    }
+
+    void Start()
+    {
+        //加载游戏关卡.
+        Application.LoadLevel((int)GameLevel.Scene_1);
     }
 
     void RemoveMovieLogoAni()
@@ -156,7 +162,7 @@ public class GameMovieCtrl : SSGameMono
         if (IsCrateMovieLogo)
         {
             IsCrateMovieLogo = false;
-            Destroy(m_MovieLogoAni.gameObject);
+            //Destroy(m_MovieLogoAni.gameObject);
         }
     }
 
@@ -272,7 +278,7 @@ public class GameMovieCtrl : SSGameMono
         Debug.Log("Unity: SpawnExitGameUI...");
         if (m_ExitUICom == null)
         {
-            m_MovieLogoAni.SetActiveHiddenObj(false);
+            //m_MovieLogoAni.SetActiveHiddenObj(false);
             GameObject obj = (GameObject)Instantiate(ExitGameUIPrefab, UICenterTrParent);
             m_ExitUICom = obj.GetComponent<SSExitGameUI>();
             m_ExitUICom.Init();
@@ -285,7 +291,7 @@ public class GameMovieCtrl : SSGameMono
         if (m_ExitUICom != null)
         {
             m_ExitUICom.RemoveSelf();
-            m_MovieLogoAni.SetActiveHiddenObj(true);
+            //m_MovieLogoAni.SetActiveHiddenObj(true);
         }
     }
 

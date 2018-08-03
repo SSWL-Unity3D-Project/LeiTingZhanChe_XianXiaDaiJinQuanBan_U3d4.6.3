@@ -25,7 +25,8 @@ public class XKTriggerClosePlayerUI : MonoBehaviour {
 		XkGameCtrl.GetInstance().ChangeBoxColliderSize(transform);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -39,8 +40,9 @@ public class XKTriggerClosePlayerUI : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		if (XKTriggerKaQiuShaFire.IsCloseKaQiuShaTest) {
 			return; //test;

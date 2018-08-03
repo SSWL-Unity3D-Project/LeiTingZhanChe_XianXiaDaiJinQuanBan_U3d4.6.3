@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GameStartTimeCtrl : MonoBehaviour
 {
-    public GameObject m_TiShiUI;
+    //public GameObject m_TiShiUI;
 	public Texture[] TimeTexture;
 	UITexture StartTimeTexture;
 	int TimeCount;
@@ -20,10 +19,10 @@ public class GameStartTimeCtrl : MonoBehaviour
 		_Instance = this;
 		StartTimeTexture = GetComponent<UITexture>();
 		gameObject.SetActive(false);
-        if (m_TiShiUI != null)
-        {
-            m_TiShiUI.SetActive(false);
-        }
+        //if (m_TiShiUI != null)
+        //{
+        //    m_TiShiUI.SetActive(false);
+        //}
     }
 
 	public void InitPlayStartTimeUI()
@@ -32,13 +31,14 @@ public class GameStartTimeCtrl : MonoBehaviour
 			return;
 		}
 		IsInitPlay = true;
-		gameObject.SetActive(true);
-        if (m_TiShiUI != null)
-        {
-            m_TiShiUI.SetActive(true);
-        }
-        PlayStartTimeUI();
-	}
+        //gameObject.SetActive(true);
+        //if (m_TiShiUI != null)
+        //{
+        //    m_TiShiUI.SetActive(true);
+        //}
+        //PlayStartTimeUI();
+        StartPlayGame();
+    }
 
 	void PlayStartTimeUI()
 	{
@@ -62,12 +62,13 @@ public class GameStartTimeCtrl : MonoBehaviour
 	void ChangeStartTimeUI()
 	{
 		TimeCount++;
-		if (TimeCount >= TimeTexture.Length) {
+		if (TimeCount >= TimeTexture.Length)
+        {
 			Debug.Log("Unity:"+"ChangeStartTimeUI -> change over!");
-            if (m_TiShiUI != null)
-            {
-                Destroy(m_TiShiUI);
-            }
+            //if (m_TiShiUI != null)
+            //{
+            //    Destroy(m_TiShiUI);
+            //}
 			gameObject.SetActive(false);
 			ScreenDanHeiCtrl.GetInstance().ActiveGameUiCamera();
 			XkPlayerCtrl.GetInstanceFeiJi().RestartMovePlayer();
@@ -79,4 +80,12 @@ public class GameStartTimeCtrl : MonoBehaviour
 		StartTimeTexture.mainTexture = TimeTexture[TimeCount];
 		PlayStartTimeUI();
 	}
+
+    void StartPlayGame()
+    {
+        gameObject.SetActive(false);
+        ScreenDanHeiCtrl.GetInstance().ActiveGameUiCamera();
+        XkPlayerCtrl.GetInstanceFeiJi().RestartMovePlayer();
+        GameTimeCtrl.GetInstance().ActiveIsCheckTimeSprite();
+    }
 }

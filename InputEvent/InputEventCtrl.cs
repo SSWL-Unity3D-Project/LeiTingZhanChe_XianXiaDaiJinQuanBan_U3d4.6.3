@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class InputEventCtrl : MonoBehaviour {
+public class InputEventCtrl : MonoBehaviour
+{
 	public static bool IsClickFireBtOneDown;
 	public static bool IsClickFireBtTwoDown;
 	public static bool IsClickFireBtThreeDown;
@@ -1019,12 +1020,12 @@ public class InputEventCtrl : MonoBehaviour {
 			}
 		}
 		
-		if (Input.GetKeyUp(KeyCode.I)) {
-			if (XKGlobalData.GameVersionPlayer == 0) {
-				int coinVal = XKGlobalData.CoinPlayerFour + 1;
-				XKGlobalData.SetCoinPlayerFour(coinVal);
-			}
-		}
+		//if (Input.GetKeyUp(KeyCode.I)) {
+		//	if (XKGlobalData.GameVersionPlayer == 0) {
+		//		int coinVal = XKGlobalData.CoinPlayerFour + 1;
+		//		XKGlobalData.SetCoinPlayerFour(coinVal);
+		//	}
+		//}
 
 		//StartBt PlayerOne
 		if (Input.GetKeyUp(KeyCode.G)) {
@@ -1054,13 +1055,13 @@ public class InputEventCtrl : MonoBehaviour {
 		}
 		
 		//StartBt PlayerFour
-		if (Input.GetKeyUp(KeyCode.K)) {
-			ClickStartBtFour( ButtonState.UP );
-		}
+		//if (Input.GetKeyUp(KeyCode.K)) {
+		//	ClickStartBtFour( ButtonState.UP );
+		//}
 		
-		if (Input.GetKeyDown(KeyCode.K)) {
-			ClickStartBtFour( ButtonState.DOWN );
-		}
+		//if (Input.GetKeyDown(KeyCode.K)) {
+		//	ClickStartBtFour( ButtonState.DOWN );
+		//}
 
 		//player_1.
 		if (Input.GetKeyDown(KeyCode.A)) {

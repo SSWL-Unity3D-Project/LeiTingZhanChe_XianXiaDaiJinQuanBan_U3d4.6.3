@@ -28,6 +28,10 @@ public enum GameJiTaiType
 
 public class XkGameCtrl : SSGameMono
 {
+    /// <summary>
+    /// 主角镜头运动路径总控制组件.
+    /// </summary>
+    internal AiPathGroupCtrl m_AiPathGroup;
     [System.Serializable]
     public class GameUIData
     {
@@ -197,7 +201,29 @@ public class XkGameCtrl : SSGameMono
 	/// </summary>
 	public static bool IsDrawGizmosObj = true;
 	public static int AmmoNumMaxNpc = 30;
-	public static int PlayerActiveNum;
+    static int _PlayerActiveNum = 0;
+    public static int PlayerActiveNum
+    {
+        set
+        {
+            if (value > 0 && _PlayerActiveNum == 0)
+            {
+                //重置游戏产生战车npc的信息.
+                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+                {
+                    //检测是否有战车、JPBoss和SuperJPBoss的数据需要清理.
+                    //重置战车数据信息.
+                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.ZhanChe);
+                    //重置JPBoss数据信息.
+                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.JPBoss);
+                    //重置SuperJPBoss数据信息.
+                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
+                }
+            }
+            _PlayerActiveNum = value;
+        }
+        get { return _PlayerActiveNum; }
+    }
 	static float MaxPlayerHealth = 1000000f;
 	public static float MinBloodUIAmount = 0.34f;
 	static float[] PlayerHealthArray = {0f, 0f, 0f, 0f};
@@ -355,17 +381,17 @@ public class XkGameCtrl : SSGameMono
 
 			if (IsCartoonShootTest)
 			{
-				Screen.SetResolution(1280, 720, false);
+				Screen.SetResolution(1360, 768, false);
 			}
 			else if (!XkGameCtrl.IsGameOnQuit)
 			{
-				if (Screen.fullScreen
-					|| Screen.currentResolution.width != 1280
-					|| Screen.currentResolution.height != 720)
+				if (!Screen.fullScreen
+					|| Screen.currentResolution.width != 1360
+					|| Screen.currentResolution.height != 768)
 				{
 					if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1280, 720, false);
+						Screen.SetResolution(1360, 768, true);
 					}
 				}
 			}
@@ -388,7 +414,13 @@ public class XkGameCtrl : SSGameMono
 						break;
 					}
 				}
-			}
+
+                if (FeiJiPlayerPath.transform.parent != null)
+                {
+                    m_AiPathGroup = FeiJiPlayerPath.transform.parent.GetComponent<AiPathGroupCtrl>();
+                }
+
+            }
 			else {
 				Debug.LogWarning("Unity:" + "FeiJiPlayerMark was wrong!");
 				obj.name = "null";
@@ -471,17 +503,18 @@ public class XkGameCtrl : SSGameMono
 			Invoke("DelayResetIsLoadingLevel", 2f);
 			Invoke("TestInitCameraRender", 0.5f);
 
-			if (!GameMovieCtrl.IsActivePlayer)
-			{
-				if (XKGlobalData.GameVersionPlayer == 0)
-				{
-					SetActivePlayerOne(true);
-				}
-				else {
-					SetActivePlayerThree(true);
-				}
-			}
-			IsPlayGamePOne = IsActivePlayerOne;
+            //if (!GameMovieCtrl.IsActivePlayer)
+            //{
+            //    if (XKGlobalData.GameVersionPlayer == 0)
+            //    {
+            //        SetActivePlayerOne(true);
+            //    }
+            //    else
+            //    {
+            //        SetActivePlayerThree(true);
+            //    }
+            //}
+            IsPlayGamePOne = IsActivePlayerOne;
 			IsPlayGamePTwo = IsActivePlayerTwo;
 			IsPlayGamePThree = IsActivePlayerThree;
 			IsPlayGamePFour = IsActivePlayerFour;
@@ -2212,9 +2245,19 @@ public class XkGameCtrl : SSGameMono
 
 		if (isActive) {
 			PlayerHealthArray[indexPlayer] = MaxPlayerHealth;
-			if (djsCtrl != null) {
+			if (djsCtrl != null)
+            {
 				djsCtrl.StopDaoJiShi();
-			}
+                //玩家进行了续币激活游戏操作.
+                //增加玩家续币数量信息.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerXuBiVal(indexVal);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerZhengChangDeCai(indexVal, true);
+            }
+            else
+            {
+                //玩家不是续币激活游戏的.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerZhengChangDeCai(indexVal, false);
+            }
 			
 			if (dyCtrl != null) {
 				dyCtrl.ShowPlayerDanYaoInfo();
@@ -2300,7 +2343,15 @@ public class XkGameCtrl : SSGameMono
 		}
 		pcvr.GetInstance().ActiveFangXiangDouDong(indexVal, false);
 
-		switch (indexVal) {
+        float damagaAddVal = 0f;
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+        {
+            //获取给玩家增加的伤害数值.
+            damagaAddVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetAddDamageToPlayer(indexVal);
+        }
+        valSub *= (1f + damagaAddVal);
+
+        switch (indexVal) {
 		case PlayerEnum.PlayerOne:
 			if (!IsActivePlayerOne
 			    || (!isSubHealth && XKPlayerMoveCtrl.GetInstancePOne().GetIsShanShuoState())) {

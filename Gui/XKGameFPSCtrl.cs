@@ -1,14 +1,15 @@
+//#define DRAW_FPS
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using System;
 
 public class XKGameFPSCtrl : MonoBehaviour
 {
-	/// <summary>
-	/// The update interval.
-	/// </summary>
-	public readonly float UpdateInterval = 0.5f;
+    public static bool IsShowGameFPS;
+#if DRAW_FPS
+    /// <summary>
+    /// The update interval.
+    /// </summary>
+    public readonly float UpdateInterval = 0.5f;
 	
 	/// <summary>
 	/// The accum.
@@ -24,17 +25,16 @@ public class XKGameFPSCtrl : MonoBehaviour
 	/// The timeleft.
 	/// </summary>
 	private float timeleft; // Left time for current interval
-	public static bool IsShowGameFPS;
 	static float FPSVal = 60f;
 	static Color FPSColorVal = Color.green;
 	public void Start()
     {
 #if UNITY_STANDALONE_WIN
-        Application.targetFrameRate = 100;
+        //Application.targetFrameRate = 100;
 #endif
 
 #if UNITY_ANDROID
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 60;
 #endif
         this.timeleft = this.UpdateInterval;
 		gameObject.SetActive(IsShowGameFPS);
@@ -115,4 +115,5 @@ public class XKGameFPSCtrl : MonoBehaviour
 		GUI.Label(new Rect(25f, 80f, 200f, 25f), String.Format("FPS: {0:F0}", FPSVal));
 		GUI.Label(new Rect(25f, 105f, 200f, 25f), XKGameVersionCtrl.GameVersion);
 	}
+#endif
 }

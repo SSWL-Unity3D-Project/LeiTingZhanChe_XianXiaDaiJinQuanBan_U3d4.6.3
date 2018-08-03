@@ -5,8 +5,10 @@ using System;
 
 public class AiPathCtrl : MonoBehaviour
 {
-	//int PathIndex;
-	int KeyState;
+    [HideInInspector]
+    public AiPathGroupCtrl m_AiPathGroup;
+    //int PathIndex;
+    int KeyState;
 	public Transform mNextPath1 = null;
 	public bool IsDrawPath = false;
 	Transform mNextPath2 = null;
@@ -32,10 +34,11 @@ public class AiPathCtrl : MonoBehaviour
 		DrawAiPathByMark();
 	}
 
-	/****************************************************
+#if UNITY_EDITOR
+    /****************************************************
 	 * 路径点个数为[2, 20]个.
 	 ***************************************************/
-	void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -47,8 +50,9 @@ public class AiPathCtrl : MonoBehaviour
 		DrawAiPathByMark();
 		//GetPathNodes(TestNodesNum); //test
 	}
+#endif
 
-	void DrawAiPathByMark()
+    void DrawAiPathByMark()
 	{
 		AiPathCtrl pathScript;
 		if (mNextPath1 != null) {
@@ -223,10 +227,15 @@ public class AiPathCtrl : MonoBehaviour
 		return NextPathNum;
 	}
 
-	// Use this for initialization
+	void Awake()
+    {
+        m_AiPathGroup = gameObject.GetComponentInParent<AiPathGroupCtrl>();
+    }
+
+    // Use this for initialization
 	void Start()
 	{
-		CheckNpcPathScript();
+        CheckNpcPathScript();
 		if (transform.childCount < 2) {
 			Debug.LogWarning("Unity:"+"AiPath node count was wrong!");
 			GameObject obj = null;

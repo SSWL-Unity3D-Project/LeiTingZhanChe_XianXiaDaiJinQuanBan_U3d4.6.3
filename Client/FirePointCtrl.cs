@@ -15,7 +15,8 @@ public class FirePointCtrl : MonoBehaviour
 		}
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -26,8 +27,9 @@ public class FirePointCtrl : MonoBehaviour
 		}
 		SetFirePointName();
 	}
+#endif
 
-	public void SetFirePointName()
+    public void SetFirePointName()
 	{
 		FirePoint[] tranArray = transform.GetComponentsInChildren<FirePoint>();
 		for (int i = 0; i < tranArray.Length; i++) {

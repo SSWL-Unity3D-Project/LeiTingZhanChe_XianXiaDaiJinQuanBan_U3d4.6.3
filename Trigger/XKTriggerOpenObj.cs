@@ -8,7 +8,9 @@ public class XKTriggerOpenObj : MonoBehaviour
 	float TimeLast;
 	bool IsActiveTrigger;
 	public AiPathCtrl TestPlayerPath;
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -22,8 +24,9 @@ public class XKTriggerOpenObj : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void Start()
+    void Start()
 	{
 		ObjOpen.SetActive(false);
 

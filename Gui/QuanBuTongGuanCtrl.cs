@@ -21,7 +21,7 @@ public class QuanBuTongGuanCtrl : MonoBehaviour
 		if (key != 0) {
 			//play gameOver.
 			Debug.Log("Unity:"+"play gameOver...");
-			GameOverCtrl.GetInstance().ShowGameOver(1);
+			//GameOverCtrl.GetInstance().ShowGameOver(1);
 		}
 	}
 

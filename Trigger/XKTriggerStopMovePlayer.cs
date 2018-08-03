@@ -88,8 +88,9 @@ public class XKTriggerStopMovePlayer : MonoBehaviour {
 		KaQiuShaAmmoTr = ammoScript.transform;
 		AmmoSpeedVal = ammoScript.MvSpeed / 3.6f;
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -103,4 +104,5 @@ public class XKTriggerStopMovePlayer : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 }

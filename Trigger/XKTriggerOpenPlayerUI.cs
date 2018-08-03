@@ -25,7 +25,8 @@ public class XKTriggerOpenPlayerUI : MonoBehaviour
         }
     }
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -39,8 +40,9 @@ public class XKTriggerOpenPlayerUI : MonoBehaviour
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		if (Network.peerType != NetworkPeerType.Disconnected) {
 			if (Network.peerType == NetworkPeerType.Server) {

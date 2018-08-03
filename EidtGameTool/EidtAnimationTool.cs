@@ -10,8 +10,9 @@ public class EidtAnimationTool : MonoBehaviour {
 	{
 		enabled = false;
 	}
-	
-	void OnDrawGizmosSelected()
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -36,4 +37,5 @@ public class EidtAnimationTool : MonoBehaviour {
 		transform.position = MoveToPoint.position;
 		transform.rotation = MoveToPoint.rotation;
 	}
+#endif
 }

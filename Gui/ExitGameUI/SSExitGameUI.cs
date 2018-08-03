@@ -30,11 +30,11 @@ public class SSExitGameUI : MonoBehaviour
         QuXiao,
     }
     ExitEnum m_ExitType = ExitEnum.QueDing;
-    static SSExitGameUI _Instance;
-    public static SSExitGameUI GetInstance()
-    {
-        return _Instance;
-    }
+    //static SSExitGameUI _Instance;
+    //public static SSExitGameUI GetInstance()
+    //{
+    //    return _Instance;
+    //}
 
     public void Init ()
     {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public enum NpcSpawnType
@@ -54,7 +53,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
 	XKNpcMoveCtrl[] NpcScript;
 	XKNpcFangZhenCtrl NpcFangZhenScript;
 	bool IsRemoveSpawnPointNpc;
-	XKHuoCheCtrl HuoCheScript;
+	//XKHuoCheCtrl HuoCheScript;
 	XKCannonCtrl CannonScript;
 	XKDaPaoCtrl DaPaoScript;
 //	bool IsSpawnPointNpc;
@@ -107,49 +106,32 @@ public class XKSpawnNpcPoint : MonoBehaviour
 	// Use this for initialization
 	void Awake()
 	{
-//		if (HuoCheNpcTran != null) {
-//			HuoCheNpcTran.gameObject.SetActive(false);
-//		}
-
-		if (NpcObj == null) {
-			if (!XkGameCtrl.GetInstance().IsCartoonShootTest) {
+        SSCreatNpcData npcDataCom = gameObject.GetComponent<SSCreatNpcData>();
+        if (NpcObj == null && npcDataCom == null)
+        {
+			if (!XkGameCtrl.GetInstance().IsCartoonShootTest)
+            {
 				Debug.LogWarning("Unity:"+"NpcObj was null");
 				GameObject obj = null;
 				obj.name = "null";
 			}
 			return;
 		}
-//		else {
-//			NetworkView netView = NpcObj.GetComponent<NetworkView>();
-//			if (netView == null) {
-//				Debug.LogWarning("Unity:"+"npc cannot find NetworkView");
-//				GameObject obj = null;
-//				obj.name = "null";
-//				return;
-//			}
-//		}
 
-		XKNpcMoveCtrl npcScript = NpcObj.GetComponent<XKNpcMoveCtrl>();
-		if (npcScript != null) {
-			if (IsFireMove && IsAimPlayer) {
-				Debug.LogWarning("Unity:"+"SpawnPoint.IsFireMove and SpawnPoint.IsAimPlayer is true!");
-				GameObject obj = null;
-				obj.name = "null";
-			}
-
-//			if (npcScript.IsAniMove) {
-//				SetFeiJiSpawnPointInfo();
-//			}
-			
-//			if (npcScript.NpcState == NpcType.FlyNpc) {
-//				if (NpcPath != null && NpcPath.childCount < 2) {
-//					Debug.LogWarning("Unity:"+"NpcPath.childCount was wrong!");
-//					GameObject obj = null;
-//					obj.name = "null";
-//				}
-//			}
-		}
-
+        if (NpcObj != null)
+        {
+            XKNpcMoveCtrl npcScript = NpcObj.GetComponent<XKNpcMoveCtrl>();
+            if (npcScript != null)
+            {
+                if (IsFireMove && IsAimPlayer)
+                {
+                    Debug.LogWarning("Unity:" + "SpawnPoint.IsFireMove and SpawnPoint.IsAimPlayer is true!");
+                    GameObject obj = null;
+                    obj.name = "null";
+                }
+            }
+        }
+        
 		if (NpcPath != null) {
 		    if (NpcPath.childCount < 1) {
 				Debug.LogWarning("Unity:"+"NpcPath.childCount was wrong! childCount = "+NpcPath.childCount);
@@ -163,23 +145,6 @@ public class XKSpawnNpcPoint : MonoBehaviour
 				obj.name = "null";
 			}
 		}
-
-//		if (FirePointGroup.Length > 0) {
-//			for (int i = 0; i < FirePointGroup.Length; i++) {
-//				if (FirePointGroup[i] == null) {
-//					Debug.LogWarning("Unity:"+"FirePointGroup was wrong! index "+(i+1));
-//					GameObject obj = null;
-//					obj.name = "null";
-//					break;
-//				}
-//			}
-//
-//			if (SpeedFangZhenFireRun <= 0f) {
-//				Debug.LogWarning("Unity:"+"SpeedFangZhenFireRun was wrong! SpeedFangZhenFireRun "+SpeedFangZhenFireRun);
-//				GameObject obj = null;
-//				obj.name = "null";
-//			}
-//		}
 
 		if (NpcSpawnLoop.Length > 0) {
 			for (int i = 0; i < NpcSpawnLoop.Length; i++) {
@@ -272,7 +237,8 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		FiJiNpcPointList.Clear();
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -316,9 +282,39 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		}
 		MakeObjMoveToLand();
 	}
+#endif
+
+    /// <summary>
+    /// 创建战车、JPBoss和SuperJPBoss.
+    /// </summary>
+    public GameObject CreatPointNpc()
+    {
+        if (NpcObj == null)
+        {
+            return null;
+        }
+
+        //if (NpcObj.name != "boss1")
+        //{
+        //    return null;
+        //}
+
+        GameObject obj = null;
+        IsRemoveSpawnPointNpc = false;
+        InitSpawnPointInfo();
+        StartSpawnNpc();
+        obj = NpcLoopObj;
+        return obj;
+    }
 
 	public void SpawnPointAllNpc()
 	{
+        //if ("TestNpcFireRunPoint" != gameObject.name)
+        //{
+        //    //test.
+        //    return;
+        //}
+        //return; //test.
 		if (XkGameCtrl.GetInstance().IsCartoonShootTest && NpcObj == null) {
 			return;
 		}
@@ -392,21 +388,21 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		}
 		
 		GameObject obj = null;
-		XKHuoCheCtrl hcScript = NpcObj.GetComponent<XKHuoCheCtrl>();
-		if (hcScript != null) {
-			obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
-			if (obj == null) {
-				//Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn HuoCheNpc!");
-				return;
-			}
+		//XKHuoCheCtrl hcScript = NpcObj.GetComponent<XKHuoCheCtrl>();
+		//if (hcScript != null) {
+		//	obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+		//	if (obj == null) {
+		//		//Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn HuoCheNpc!");
+		//		return;
+		//	}
 
-			obj.transform.parent = XkGameCtrl.NpcObjArray;
-			HuoCheScript = obj.GetComponent<XKHuoCheCtrl>();
-			HuoCheScript.SetHuoCheInfo(this);
-			//HuoCheScript.StartMoveHuoChe(NpcPath);
-			NpcLoopObj = obj;
-			return;
-		}
+		//	obj.transform.parent = XkGameCtrl.NpcObjArray;
+		//	HuoCheScript = obj.GetComponent<XKHuoCheCtrl>();
+		//	HuoCheScript.SetHuoCheInfo(this);
+		//	//HuoCheScript.StartMoveHuoChe(NpcPath);
+		//	NpcLoopObj = obj;
+		//	return;
+		//}
 
 		DaPaoScript = NpcObj.GetComponent<XKDaPaoCtrl>();
 		if (DaPaoScript != null) {
@@ -621,9 +617,9 @@ public class XKSpawnNpcPoint : MonoBehaviour
 			}
 			DaPaoScript.OnRemoveCannon(PlayerEnum.Null, 0);
 		}
-		else if (HuoCheScript != null) {
-			HuoCheScript.OnRemoveHuoCheObj();
-		}
+		//else if (HuoCheScript != null) {
+		//	HuoCheScript.OnRemoveHuoCheObj();
+		//}
 		else if (NpcScript != null) {
 			int max = NpcScript.Length;
 			for (int i = 0; i < max; i++) {
@@ -704,8 +700,12 @@ public class XKSpawnNpcPoint : MonoBehaviour
     {
         if (!IsSpawnTrigger)
         {
-            //没有使用该产生点.
-            Destroy(gameObject);
+            SSCreatNpcData creatNpcData = GetComponent<SSCreatNpcData>();
+            if (creatNpcData == null)
+            {
+                //没有使用该产生点.
+                Destroy(gameObject);
+            }
         }
     }
 

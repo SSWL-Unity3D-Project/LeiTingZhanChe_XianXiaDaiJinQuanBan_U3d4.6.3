@@ -177,13 +177,14 @@ public class XKTriggerSpawnNpc : MonoBehaviour
 		RenameNpcSpawnPoint();
 	}
 
-	//#if UNITY_EDITOR
-	private void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
 	{
 		DrawGizmos(true);
 	}
+#endif
 
-	void DrawGizmos(bool isSelect)
+    void DrawGizmos(bool isSelect)
 	{
 		if (!isSelect) {
 			return;

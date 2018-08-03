@@ -3,12 +3,17 @@ using System.Collections;
 using System;
 using System.IO;
 
-public class XKGlobalData {
+public class XKGlobalData
+{
 	public static int CoinPlayerOne = 0;
 	public static int CoinPlayerTwo = 0;
 	public static int CoinPlayerThree = 0;
 	public static int CoinPlayerFour = 0;
 	public static int GameNeedCoin;
+    /// <summary>
+    /// 1币兑换多少张彩票.
+    /// </summary>
+    public int m_CoinToCaiPiao = 20;
 	/**
 	 * GameVersionPlayer == 0 -> 四人版本游戏.
 	 * GameVersionPlayer == 1 -> 双人版本游戏.
@@ -18,18 +23,20 @@ public class XKGlobalData {
 	public static string GameDiff;
 	public static int GameAudioVolume = 10;
 	static string FilePath = "";
-	static public string FileName = "/config/XKGameConfig.xml";
+	static public string FileName = "../config/GameConfig.xml";
 	static public HandleJson HandleJsonObj = null;
 	float TimeValDaoDanJingGao;
 	static XKGlobalData Instance;
 	public static XKGlobalData GetInstance()
 	{
-		if (Instance == null) {
+		if (Instance == null)
+        {
 			Instance = new XKGlobalData();
 			Instance.InitInfo();
 
 #if UNITY_STANDALONE_WIN
-            if (!Directory.Exists(FilePath)) {
+            if (!Directory.Exists(FilePath))
+            {
 				Directory.CreateDirectory(FilePath);
 			}
 #endif
@@ -37,7 +44,7 @@ public class XKGlobalData {
             if(HandleJsonObj == null) {
 				HandleJsonObj = HandleJson.GetInstance();
 			}
-			return Instance;
+			//return Instance;
 
 			string startCoinInfo = HandleJsonObj.ReadFromFileXml(FileName, "START_COIN");
 			if(startCoinInfo == null || startCoinInfo == "") {

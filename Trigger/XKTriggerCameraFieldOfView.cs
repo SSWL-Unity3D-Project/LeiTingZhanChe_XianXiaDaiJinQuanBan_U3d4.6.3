@@ -40,7 +40,8 @@ public class XKTriggerCameraFieldOfView : MonoBehaviour {
 		}
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -54,8 +55,9 @@ public class XKTriggerCameraFieldOfView : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
 	{
 		if (XKTriggerKaQiuShaFire.IsCloseKaQiuShaTest) {
 			return; //test;

@@ -4,6 +4,7 @@ using System.Collections;
 public class AiMark : MonoBehaviour
 {
 	public static bool IsMoveSpeedByAiMark = true;
+    AiPathCtrl m_AiPath;
 	[Range(0.001f, 100f)]public float MvSpeed = 5f;
 	/**************************************************************
 	 * PlayerAni是ZhiShengJiAction.null并且TimePlayerAni > 0f时,
@@ -34,8 +35,15 @@ public class AiMark : MonoBehaviour
 	bool IsInitMarkInfo;
 	void Start()
 	{
-		//MvSpeed = XkGameCtrl.GetInstance().MvSpeed;
-		bool isOutputError = false;
+        m_AiPath = gameObject.GetComponentInParent<AiPathCtrl>();
+        if (m_AiPath.m_AiPathGroup != null)
+        {
+            //统一将主角镜头移动速度修改为普通状态移动速度.
+            MvSpeed = m_AiPath.m_AiPathGroup.m_MoveSpeed;
+        }
+
+        //MvSpeed = XkGameCtrl.GetInstance().MvSpeed;
+        bool isOutputError = false;
 		if (PlayerAni == ZhiShengJiAction.Null && TimePlayerAni > 0f && MvSpeed > 1f) {
 			Debug.Log("Unity:"+"PlayerAni is null, but MvSpeed is greater than 1f");
 			isOutputError = true;
@@ -59,6 +67,7 @@ public class AiMark : MonoBehaviour
         {
             Destroy(meshFt);
         }
+        CheckPathMarkScale();
     }
 	
 	public void setMarkCount( int count )
@@ -73,7 +82,25 @@ public class AiMark : MonoBehaviour
 
 	public float GetMvSpeed()
 	{
-		return MvSpeed;
+        float speed = MvSpeed;
+        if (m_AiPath.m_AiPathGroup != null)
+        {
+            switch (m_AiPath.m_AiPathGroup.m_CameraMoveType)
+            {
+                case AiPathGroupCtrl.MoveState.Boss:
+                    {
+                        speed = m_AiPath.m_AiPathGroup.m_BossMoveSpeed;
+                        break;
+                    }
+                case AiPathGroupCtrl.MoveState.YuLe:
+                    {
+                        //娱乐(镜头在场景中转弯阶段)
+                        speed = m_AiPath.m_AiPathGroup.m_YuLeMoveSpeed;
+                        break;
+                    }
+            }
+        }
+        return speed;
 	}
 	
 	// Use this for initialization
@@ -99,7 +126,8 @@ public class AiMark : MonoBehaviour
 		playerScript.PlayZhuJiaoMarkAction(this);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -109,7 +137,7 @@ public class AiMark : MonoBehaviour
 			return;
 		}
 		CheckBoxCollider();
-		CheckPathMarkScale();
+		//CheckPathMarkScale();
 
 		Transform parTran = transform.parent;
 		if (parTran == null) {
@@ -139,8 +167,9 @@ public class AiMark : MonoBehaviour
 		}
 		pathScript.DrawPath();
 	}
-	
-	void CheckPathMarkScale()
+#endif
+
+    void CheckPathMarkScale()
 	{
 		Vector3 scale = new Vector3(1f, 1f, 1f);
 		if (transform.localScale != scale) {

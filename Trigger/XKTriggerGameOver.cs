@@ -53,7 +53,8 @@ public class XKTriggerGameOver : MonoBehaviour {
 		CheckIsActiveGameOver(script);
 	}
 
-	void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
 	{
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
@@ -67,8 +68,9 @@ public class XKTriggerGameOver : MonoBehaviour {
 			TestPlayerPath.DrawPath();
 		}
 	}
+#endif
 
-	void CheckIsActiveGameOver(XkPlayerCtrl script)
+    void CheckIsActiveGameOver(XkPlayerCtrl script)
 	{
 //		if (DaoJiShiCtrl.GetInstance().GetIsPlayDaoJishi()) {
 //			XkGameCtrl.IsActivePlayerOne = DaoJiShiCtrl.IsActivePlayerOne;

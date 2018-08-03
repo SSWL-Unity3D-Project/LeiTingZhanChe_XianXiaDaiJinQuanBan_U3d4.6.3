@@ -126,7 +126,7 @@ public class SSBoxPostNet : MonoBehaviour
             {
                 _boxNumber = value.ToLower();
                 //設置紅點點遊戲手柄的url.
-                string url = _hDianDianGamePadUrl + _boxNumber;
+                string url = _hDianDianGamePadUrl + _boxNumber + "&gameId=1";
                 hDianDianGamePadUrl = url;
             }
             get
