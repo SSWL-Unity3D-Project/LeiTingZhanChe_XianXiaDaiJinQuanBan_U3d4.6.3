@@ -35,11 +35,17 @@ public class AiPathCtrl : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
+    public bool IsDrawGizmos = false;
     /****************************************************
 	 * 路径点个数为[2, 20]个.
 	 ***************************************************/
     void OnDrawGizmosSelected()
 	{
+        if (!IsDrawGizmos)
+        {
+            return;
+        }
+
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
 		}

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿#define CREAT_NPC
+#define CREAT_ZHAN_CHE_NPC
+#define CREAT_BOSS_NPC
+using UnityEngine;
 
 public class SpawnNpcManage : MonoBehaviour
 {
@@ -39,9 +42,21 @@ public class SpawnNpcManage : MonoBehaviour
     public class NpcData
     {
         /// <summary>
-        /// 战车npc预制.
+        /// 左边战车npc预制.
         /// </summary>
-        public GameObject[] ZhanChePrefabGp;
+        public GameObject[] L_ZhanChePrefabGp;
+        /// <summary>
+        /// 右边战车npc预制.
+        /// </summary>
+        public GameObject[] R_ZhanChePrefabGp;
+        /// <summary>
+        /// 上边战车npc预制.
+        /// </summary>
+        public GameObject[] U_ZhanChePrefabGp;
+        /// <summary>
+        /// 下边战车npc预制.
+        /// </summary>
+        public GameObject[] D_ZhanChePrefabGp;
         /// <summary>
         /// JPBoss预制.
         /// </summary>
@@ -66,6 +81,22 @@ public class SpawnNpcManage : MonoBehaviour
         /// 下边创建npc的产生点组.
         /// </summary>
         public SSCreatNpcData[] DownSpawnPointGp;
+        /// <summary>
+        /// 左边创建Boss的产生点组.
+        /// </summary>
+        public SSCreatNpcData[] Boss_LeftSpawnPointGp;
+        /// <summary>
+        /// 右边创建Boss的产生点组.
+        /// </summary>
+        public SSCreatNpcData[] Boss_RightSpawnPointGp;
+        /// <summary>
+        /// 上边创建Boss的产生点组.
+        /// </summary>
+        public SSCreatNpcData[] Boss_UpSpawnPointGp;
+        /// <summary>
+        /// 下边创建Boss的产生点组.
+        /// </summary>
+        public SSCreatNpcData[] Boss_DownSpawnPointGp;
     }
     /// <summary>
     /// npc预制数据.
@@ -299,16 +330,30 @@ public class SpawnNpcManage : MonoBehaviour
             /// 最低击爆概率.
             /// </summary>
             public float MinJiBaoGaiLv = 0f;
+            public ZhanCheJiBaoRuler(ZhanCheJiBaoState type, float max, float cen, float min)
+            {
+                m_ZhanCheJiBaoState = type;
+                MaxJiBaoGaiLv = max;
+                CenJiBaoGaiLv = cen;
+                MinJiBaoGaiLv = min;
+            }
         }
         /// <summary>
         /// 战车击爆规则.
         /// </summary>
-        public ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4];
+        //public ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4];
+        internal ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4]
+        {
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State1, 0.3f, 0.3f,  0.3f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State2, 0.4f, 0.25f, 0.25f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State3, 0.4f, 0.3f,  0.2f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State4, 0.4f, 0.4f,  0.1f),
+        };
     }
     /// <summary>
     /// 战车创建和击爆规则数据.
     /// </summary>
-    public ZhanCheRulerData m_ZhanCheRulerData = new ZhanCheRulerData();
+    internal ZhanCheRulerData m_ZhanCheRulerData = new ZhanCheRulerData();
     
     /// <summary>
     /// 获取可以被哪个玩家击爆,通过击爆规则的产生.
@@ -459,7 +504,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// JPBoss创建规则.
     /// JPBoss击爆条件和战车相同.
     /// </summary>
-    public JPBossRulerData m_JPBossRulerData = new JPBossRulerData();
+    internal JPBossRulerData m_JPBossRulerData = new JPBossRulerData();
 
     /// <summary>
     /// 战车和JPBoss的创建状态.
@@ -517,12 +562,13 @@ public class SpawnNpcManage : MonoBehaviour
         m_JPBossRulerData.Init();
     }
 
+#if CREAT_NPC
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState()); //test.
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState()); //test.
+        //}
 
         if (XkGameCtrl.PlayerActiveNum <= 0)
         {
@@ -537,21 +583,26 @@ public class SpawnNpcManage : MonoBehaviour
             return;
         }
 
+#if CREAT_ZHAN_CHE_NPC
         if (Time.time - m_ZhanCheRulerData.LastTime >= m_ZhanCheRulerData.RandTime)
         {
             //检测是否可以产生战车.
             if (!m_ZhanCheJPBossData.IsCreatZhanChe)
             {
-                //m_ZhanCheJPBossData.IsCreatZhanChe = true;
+                m_ZhanCheJPBossData.IsCreatZhanChe = true;
+                Debug.Log("creat zhanCheNpc, RandTime ============= " + m_ZhanCheRulerData.RandTime);
             }
         }
+#endif
 
+#if CREAT_BOSS_NPC
         if (Time.time - m_JPBossRulerData.LastTime >= m_JPBossRulerData.RandTime)
         {
             //检测是否可以产生JPBoss.
             if (!m_ZhanCheJPBossData.IsCreatJPBoss)
             {
                 m_ZhanCheJPBossData.IsCreatJPBoss = true;
+                Debug.Log("creat jpBoss, RandTime ============= " + m_JPBossRulerData.RandTime);
             }
         }
 
@@ -567,6 +618,7 @@ public class SpawnNpcManage : MonoBehaviour
                 }
             }
         }
+#endif
 
         if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
         {
@@ -602,6 +654,7 @@ public class SpawnNpcManage : MonoBehaviour
             }
         }
     }
+#endif
 
     public void ResetCreatNpcInfo(NpcState type)
     {
@@ -636,6 +689,12 @@ public class SpawnNpcManage : MonoBehaviour
     void CreatNpcObj(NpcState npcType, SpawnPointState pointState)
     {
         //Debug.Log("Unity: CreatNpcObj -> npcType ====== " + npcType + ", pointState ======= " + pointState);
+        if (pointState == SpawnPointState.Null)
+        {
+            //pointState为null时不用产生战车npc.
+            return;
+        }
+
         NpcSpawnData data = GetNpcSpawnData(npcType, pointState);
         if (data != null)
         {
@@ -689,8 +748,8 @@ public class SpawnNpcManage : MonoBehaviour
 
         NpcSpawnData data = new NpcSpawnData();
         //获取ncp预制.
-        data.NpcPrefab = GetNpcPrefab(npcType);
-        SSCreatNpcData creatNpcDt = GetCreatNpcData(pointState);
+        data.NpcPrefab = GetNpcPrefab(npcType, pointState);
+        SSCreatNpcData creatNpcDt = GetCreatNpcData(npcType, pointState);
         if (creatNpcDt != null)
         {
             //获取npc路径.
@@ -704,36 +763,64 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 获取创建npc的组件.
     /// </summary>
-    SSCreatNpcData GetCreatNpcData(SpawnPointState type)
+    SSCreatNpcData GetCreatNpcData(NpcState npcType, SpawnPointState type)
     {
         SSCreatNpcData[] comGp = null;
         switch (type)
         {
             case SpawnPointState.Left:
                 {
-                    comGp = m_NpcData.LeftSpawnPointGp;
+                    if (npcType == NpcState.ZhanChe)
+                    {
+                        comGp = m_NpcData.LeftSpawnPointGp;
+                    }
+                    else
+                    {
+                        comGp = m_NpcData.Boss_LeftSpawnPointGp;
+                    }
                     break;
                 }
             case SpawnPointState.Right:
                 {
-                    comGp = m_NpcData.RightSpawnPointGp;
+                    if (npcType == NpcState.ZhanChe)
+                    {
+                        comGp = m_NpcData.RightSpawnPointGp;
+                    }
+                    else
+                    {
+                        comGp = m_NpcData.Boss_RightSpawnPointGp;
+                    }
                     break;
                 }
             case SpawnPointState.Up:
                 {
-                    comGp = m_NpcData.UpSpawnPointGp;
+                    if (npcType == NpcState.ZhanChe)
+                    {
+                        comGp = m_NpcData.UpSpawnPointGp;
+                    }
+                    else
+                    {
+                        comGp = m_NpcData.Boss_UpSpawnPointGp;
+                    }
                     break;
                 }
             case SpawnPointState.Down:
                 {
-                    comGp = m_NpcData.DownSpawnPointGp;
+                    if (npcType == NpcState.ZhanChe)
+                    {
+                        comGp = m_NpcData.DownSpawnPointGp;
+                    }
+                    else
+                    {
+                        comGp = m_NpcData.Boss_DownSpawnPointGp;
+                    }
                     break;
                 }
         }
 
         if (comGp == null || comGp.Length <= 0)
         {
-            Debug.LogWarning("Unity: not find CreatNpcData! type ================ " + type);
+            Debug.LogWarning("Unity: not find CreatNpcData! type ================ " + type + ", npcType == " + npcType);
             return null;
         }
 
@@ -750,14 +837,29 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 获取npc预制.
     /// </summary>
-    GameObject GetNpcPrefab(NpcState type)
+    GameObject GetNpcPrefab(NpcState type, SpawnPointState pointState)
     {
         GameObject[] npcPrefabGp = null;
         switch (type)
         {
             case NpcState.ZhanChe:
                 {
-                    npcPrefabGp = m_NpcData.ZhanChePrefabGp;
+                    if (pointState == SpawnPointState.Left)
+                    {
+                        npcPrefabGp = m_NpcData.L_ZhanChePrefabGp;
+                    }
+                    else if (pointState == SpawnPointState.Right)
+                    {
+                        npcPrefabGp = m_NpcData.R_ZhanChePrefabGp;
+                    }
+                    else if (pointState == SpawnPointState.Up)
+                    {
+                        npcPrefabGp = m_NpcData.U_ZhanChePrefabGp;
+                    }
+                    else if (pointState == SpawnPointState.Down)
+                    {
+                        npcPrefabGp = m_NpcData.D_ZhanChePrefabGp;
+                    }
                     break;
                 }
             case NpcState.JPBoss:

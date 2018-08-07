@@ -20,8 +20,14 @@ public class NpcPathCtrl : MonoBehaviour {
 	}
 
 #if UNITY_EDITOR
+    public bool IsDrawGizmos = false;
     void OnDrawGizmosSelected()
 	{
+        if (!IsDrawGizmos)
+        {
+            return;
+        }
+
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
 		}

@@ -316,15 +316,21 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			return;
 		}
 
-		switch (NpcJiFen) {
-		case NpcJiFenEnum.Boss:
-			if (!XKBossXueTiaoCtrl.GetInstance().GetIsCanSubXueTiaoAmount()) {
-				return;
-			}
-			break;
-		}
+        switch (NpcJiFen)
+        {
+            case NpcJiFenEnum.Boss:
+                if (!XKBossXueTiaoCtrl.GetInstance().GetIsCanSubXueTiaoAmount())
+                {
+                    if (NpcDamageCom != null)
+                    {
+                        NpcDamageCom.PlayNpcDamageEvent();
+                    }
+                    return;
+                }
+                break;
+        }
 
-		if (CountActivePlayer != XkGameCtrl.PlayerActiveNum) {
+        if (CountActivePlayer != XkGameCtrl.PlayerActiveNum) {
 			if (CountActivePlayer != 0) {
 				//fix PuTongAmmoCount.
 				int indexValTmp = CountActivePlayer - 1;
@@ -464,7 +470,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 					return;
 				}
 				NpcScript.TriggerRemovePointNpc(1, CannonScript, pAmmoType);
-			}
+
+                if (NpcScript.IsCaiPiaoZhanChe)
+                {
+                    SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType = SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe;
+                    //彩票boss或战车npc.
+                    if (NpcScript.GetIsBossNpc())
+                    {
+                        deCaiType = SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss;
+                    }
+
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+                    {
+                        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType);
+                    }
+                }
+            }
 			else if (CannonScript != null) {
 				CannonScript.OnRemoveCannon(playerSt, 1);
 			}

@@ -146,13 +146,13 @@ public class SSGameYuZhiCaiPiaoData
             UnityEngine.Debug.Log("SubZhanCheCaiPiaoVal -> subVal ============ " + subVal);
             //对预制彩池进行数据更新.
             SubYuZhiCaiPiao(subVal);
-            SetJPBossCaiPiao(ZhanCheCaiPiaoVal - subVal);
+            SetZhanCheCaiPiao(ZhanCheCaiPiaoVal - subVal);
 
-            //if (XkPlayerCtrl.GetInstanceFeiJi() != null)
-            //{
-            //    //对战车彩池进行补充.
-            //    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai += subVal;
-            //}
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+            {
+                //对战车彩池进行补充.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai += subVal;
+            }
         }
     }
     
@@ -203,16 +203,11 @@ public class SSGameYuZhiCaiPiaoData
             SubYuZhiCaiPiao(subVal);
             SetJPBossCaiPiao(JPBossCaiPiaoVal - subVal);
 
-            //if (XkPlayerCtrl.GetInstanceFeiJi() != null)
-            //{
-            //    //对JPBoss彩池进行补充.
-            //    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai += subVal;
-            //}
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+            {
+                //对JPBoss彩池进行补充.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai += subVal;
+            }
         }
     }
-
-    //public SSGameYuZhiCaiPiaoData()
-    //{
-    //    InitYuZhiCaiPiao();
-    //}
 }

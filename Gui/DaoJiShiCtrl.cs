@@ -11,7 +11,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
     //public GameObject m_TVYaoKongEnterObj;
 	GameObject DaoJiShiObj;
 	UISprite DaoJiShiSprite;
-	bool IsPlayDaoJishi;
+	internal bool IsPlayDaoJishi;
 	int DaoJiShiCount = 9;
 //	public static bool IsActivePlayerOne;
 //	public static bool IsActivePlayerTwo;
@@ -111,7 +111,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
         ShowDaoJiShiInfo();
 		//XKGlobalData.GetInstance().StopAudioRanLiaoJingGao();
 		pcvr.CloseAllQiNangArray(PlayerIndex, 1);
-	}
+    }
 
 	public void StopDaoJiShi()
 	{

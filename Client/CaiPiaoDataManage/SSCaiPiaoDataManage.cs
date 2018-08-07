@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿//#define CREATE_SUPER_JPBOSS
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SSCaiPiaoDataManage : MonoBehaviour
+public class SSCaiPiaoDataManage : SSGameMono
 {
     /// <summary>
     /// 游戏彩票数据.
@@ -126,6 +127,10 @@ public class SSCaiPiaoDataManage : MonoBehaviour
             /// JPBoss类型.
             /// </summary>
             JPBoss = 2,
+            /// <summary>
+            /// 普通正常得彩类型.
+            /// </summary>
+            ZhengChang = 3,
         }
 
         /// <summary>
@@ -156,7 +161,7 @@ public class SSCaiPiaoDataManage : MonoBehaviour
         /// <summary>
         /// 减去游戏某种类型得彩累积数量.
         /// </summary>
-        public void SubGameDeCaiValByDeCaiState(PlayerEnum index, DeCaiState type, SuiJiDaoJuState suiJiDaoJuType)
+        public void SubGameDeCaiValByDeCaiState(PlayerEnum index, DeCaiState type, SuiJiDaoJuState suiJiDaoJuType = SuiJiDaoJuState.BaoXiang)
         {
             int val = 0;
             int coinStart = XKGlobalData.GetInstance().m_CoinToCaiPiao * XKGlobalData.GameNeedCoin;
@@ -212,6 +217,7 @@ public class SSCaiPiaoDataManage : MonoBehaviour
                 Debug.Log("Unity: SubGameDeCaiValByDeCaiState -> index ====== " + index
                     + ", chuPiaoVal ====== " + val
                     + ", type ======= " + type);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, val, type);
             }
         }
 
@@ -255,6 +261,9 @@ public class SSCaiPiaoDataManage : MonoBehaviour
             return isChuPiao;
         }
     }
+    /// <summary>
+    /// 游戏彩票数据信息.
+    /// </summary>
     [HideInInspector]
     public GameCaiPiaoData m_GameCaiPiaoData = new GameCaiPiaoData();
 
@@ -294,11 +303,11 @@ public class SSCaiPiaoDataManage : MonoBehaviour
         /// <summary>
         /// 骰子在随机道具里的得票率.
         /// </summary>
-        public float TouZiDePiaoLv = 0.6f;
+        internal float TouZiDePiaoLv = 0.6f;
         /// <summary>
         /// 宝箱在随机道具里的得票率.
         /// </summary>
-        public float BaoXiangDePiaoLv = 0.8f;
+        internal float BaoXiangDePiaoLv = 0.8f;
         /// <summary>
         /// 骰子道具预制.
         /// </summary>
@@ -315,7 +324,7 @@ public class SSCaiPiaoDataManage : MonoBehaviour
     /// <summary>
     /// 游戏预支彩票数据.
     /// </summary>
-    public SSGameYuZhiCaiPiaoData m_GameYuZhiCaiPiaoData = new SSGameYuZhiCaiPiaoData();
+    internal SSGameYuZhiCaiPiaoData m_GameYuZhiCaiPiaoData = new SSGameYuZhiCaiPiaoData();
 
     /// <summary>
     /// 获取随机道具预制.
@@ -350,12 +359,22 @@ public class SSCaiPiaoDataManage : MonoBehaviour
         /// 增加伤害百分比.
         /// </summary>
         public float DamageAdd = 0f;
+        public PlayerActiveTimeData(int time, float damage)
+        {
+            TimeLevel = time;
+            DamageAdd = damage;
+        }
     }
     /// <summary>
     /// 玩家激活游戏时长等级信息.
     /// m_PlayerActiveTimeData.TimeLevel从低到高.
     /// </summary>
-    public PlayerActiveTimeData[] m_PlayerActiveTimeData = new PlayerActiveTimeData[3];
+    internal PlayerActiveTimeData[] m_PlayerActiveTimeData = new PlayerActiveTimeData[3]
+    {
+        new PlayerActiveTimeData(90, 0.3f),
+        new PlayerActiveTimeData(120, 0.5f),
+        new PlayerActiveTimeData(180, 0.8f),
+    };
 
     /// <summary>
     /// 正常得彩数据信息.
@@ -371,8 +390,18 @@ public class SSCaiPiaoDataManage : MonoBehaviour
         /// 获得正常彩票的比例.
         /// </summary>
         public float DeCaiBiLi = 0f;
+        public ZhengChangDeCaiData(float time, float biLi)
+        {
+            TimeVal = time;
+            DeCaiBiLi = biLi;
+        }
     }
-    public ZhengChangDeCaiData[] m_ZhengChangDeCaiData = new ZhengChangDeCaiData[3];
+    internal ZhengChangDeCaiData[] m_ZhengChangDeCaiData = new ZhengChangDeCaiData[3]
+    {
+            new ZhengChangDeCaiData(90f, 0.8f),
+            new ZhengChangDeCaiData(120f, 0.9f),
+            new ZhengChangDeCaiData(9999f, 1f),
+    };
 
     /// <summary>
     /// 获取对玩家增加的伤害数值.
@@ -445,7 +474,7 @@ public class SSCaiPiaoDataManage : MonoBehaviour
             float deCaiBiLi = 0;
             for (int i = 0; i < data.Length; i++)
             {
-                if (data[i].TimeVal < timeVal)
+                if (timeVal <= data[i].TimeVal)
                 {
                     deCaiBiLi = data[i].DeCaiBiLi;
                     break;
@@ -458,8 +487,9 @@ public class SSCaiPiaoDataManage : MonoBehaviour
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.AddYuZhiCaiPiao(huiShouCaiPiao);
             ZhengChangDeCai = deCaiVal;
 
-            //这个时候应该打印出玩家的正产得彩数量.
+            //这个时候应该打印出玩家的正常产得彩数量.
             Debug.Log("Unity: ResetZhengChangDeCai -> index ========== " + index + ", ZhengChangDeCai ==== " + ZhengChangDeCai + ", deCaiBiLi == " + deCaiBiLi);
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, deCaiVal, GameCaiPiaoData.DeCaiState.ZhengChang);
             ZhengChangDeCai = 0;
         }
 
@@ -499,7 +529,7 @@ public class SSCaiPiaoDataManage : MonoBehaviour
     public PlayerCoinData[] m_PlayerCoinData = new PlayerCoinData[3];
 
     /// <summary>
-    /// 联机游戏排名数据比较器.
+    /// 玩家续币数量比较器.
     /// </summary>
     int PlayerCoinDataSortByXuBiVal(PlayerCoinData x, PlayerCoinData y)//排序器  
     {
@@ -629,6 +659,12 @@ public class SSCaiPiaoDataManage : MonoBehaviour
         /// 爆彩数量.
         /// </summary>
         public int BaoCaiShuLiang = 150;
+        public SuperJPBossCaiPiaoData(int jiShu, int tiaoJian, int shuLiang)
+        {
+            CaiPiaoBeiLvJiShu = jiShu;
+            BaoCaiTiaoJian = tiaoJian;
+            BaoCaiShuLiang = shuLiang;
+        }
         /// <summary>
         /// 彩票基数计数.
         /// </summary>
@@ -645,15 +681,25 @@ public class SSCaiPiaoDataManage : MonoBehaviour
             }
             set
             {
-                Debug.Log("Unity: SuperJPCaiPiao =============== " + SuperJPCaiPiao);
                 _SuperJPCaiPiao = value;
                 int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCaiPiao;
                 int caiPiaoVal = CaiPiaoJiShuCount * CaiPiaoBeiLvJiShu * coinToCaiPiao;
+                Debug.Log("Unity: SuperJPCaiPiao =============== " + SuperJPCaiPiao
+                    + ", CaiPiaoJiShuCount == " + CaiPiaoJiShuCount
+                    + ", CaiPiaoBeiLvJiShu == " + CaiPiaoBeiLvJiShu
+                    + ", coinToCaiPiao == " + coinToCaiPiao
+                    + ", caiPiaoVal == " + caiPiaoVal);
                 if (value >= caiPiaoVal)
                 {
                     //可以产生SuperJPBoss了.
                     CaiPiaoJiShuCount = (value / (CaiPiaoBeiLvJiShu * coinToCaiPiao)) + 1;
-                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.IsCreatSuperJPBoss = true;
+#if CREATE_SUPER_JPBOSS
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.IsCreatSuperJPBoss == false)
+                    {
+                        Debug.Log("Unity: game can create superJPBoss...................");
+                        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.IsCreatSuperJPBoss = true;
+                    }
+#endif
                 }
             }
         }
@@ -661,5 +707,143 @@ public class SSCaiPiaoDataManage : MonoBehaviour
     /// <summary>
     /// SuperJPBoss彩票数据.
     /// </summary>
-    public SuperJPBossCaiPiaoData m_SuperJPBossCaiPiaoData = new SuperJPBossCaiPiaoData();
+    internal SuperJPBossCaiPiaoData m_SuperJPBossCaiPiaoData = new SuperJPBossCaiPiaoData(25, 125, 150);
+
+    /// <summary>
+    /// 游戏需要打印给玩家的彩票数据信息.
+    /// </summary>
+    public class PcvrPrintCaiPiaoData
+    {
+        PlayerEnum IndexPlayer;
+        int _CaiPiaoVal = 0;
+        /// <summary>
+        /// 彩票数量.
+        /// </summary>
+        internal int CaiPiaoVal
+        {
+            set
+            {
+                _CaiPiaoVal = value;
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    //显示玩家彩票数量.
+                    SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, _CaiPiaoVal);
+                }
+
+                if (IsDaJiangCaiPiao == true && _CaiPiaoVal <= 0)
+                {
+                    IsDaJiangCaiPiao = false;
+                    //删除彩票大奖UI界面.
+                    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                    {
+                        SSUIRoot.GetInstance().m_GameUIManage.RemoveCaiPiaoDaJiangPanel();
+                    }
+                }
+            }
+            get
+            {
+                return _CaiPiaoVal;
+            }
+        }
+
+        /// <summary>
+        /// 是否得到JPBoss大奖.
+        /// </summary>
+        internal bool IsDaJiangCaiPiao = false;
+
+        public PcvrPrintCaiPiaoData(PlayerEnum indexPlayerVal)
+        {
+            IndexPlayer = indexPlayerVal;
+        }
+    }
+    /// <summary>
+    /// 3个玩家的彩票数据信息.
+    /// </summary>
+    internal PcvrPrintCaiPiaoData[] m_PcvrPrintCaiPiaoData = new PcvrPrintCaiPiaoData[3]
+    {
+        new PcvrPrintCaiPiaoData(PlayerEnum.PlayerOne),
+        new PcvrPrintCaiPiaoData(PlayerEnum.PlayerTwo),
+        new PcvrPrintCaiPiaoData(PlayerEnum.PlayerThree),
+    };
+
+    /// <summary>
+    /// 添加彩票给玩家.
+    /// </summary>
+    internal void AddCaiPiaoToPlayer(PlayerEnum indexPlayer, int caiPiao, GameCaiPiaoData.DeCaiState type)
+    {
+        int index = (int)indexPlayer - 1;
+        if (index < 0 || index > 2)
+        {
+            UnityLogWarning("AddCaiPiaoToPlayer -> index was wrong! index ==== " + index);
+            return;
+        }
+
+        if (type == GameCaiPiaoData.DeCaiState.JPBoss)
+        {
+            if (m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao == false)
+            {
+                m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao = true;
+                //产生彩票大奖UI界面.
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
+                }
+            }
+        }
+        m_PcvrPrintCaiPiaoData[index].CaiPiaoVal += caiPiao;
+        Debug.Log("AddCaiPiaoToPlayer ->CaiPiaoVal ===== " + m_PcvrPrintCaiPiaoData[index].CaiPiaoVal
+            + ", addCaiPiao ====== " + caiPiao
+            + ", coinToCaiPiao ==== " + XKGlobalData.GetInstance().m_CoinToCaiPiao);
+
+        //这里添加pcvr打印彩票的消息.
+        pcvr.GetInstance().StartPrintPlayerCaiPiao(indexPlayer, caiPiao);
+    }
+    
+    /// <summary>
+    ///  减少玩家彩票.
+    /// </summary>
+    internal void SubPlayerCaiPiao(PlayerEnum indexPlayer, int caiPiao)
+    {
+        int index = (int)indexPlayer - 1;
+        if (index < 0 || index > 2)
+        {
+            UnityLogWarning("SubPlayerCaiPiao -> index was wrong! index ==== " + index);
+            return;
+        }
+
+        if (m_PcvrPrintCaiPiaoData[index].CaiPiaoVal >= caiPiao)
+        {
+            m_PcvrPrintCaiPiaoData[index].CaiPiaoVal -= caiPiao;
+        }
+        else
+        {
+            m_PcvrPrintCaiPiaoData[index].CaiPiaoVal = 0;
+        }
+        Debug.Log("SubPlayerCaiPiao ->CaiPiaoVal ===== " + m_PcvrPrintCaiPiaoData[index].CaiPiaoVal
+            + ", addCaiPiao ====== " + caiPiao);
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            //删除彩票不足UI界面.
+            SSUIRoot.GetInstance().m_GameUIManage.RemoveCaiPiaoBuZuPanel(indexPlayer, false);
+        }
+    }
+
+    /// <summary>
+    /// 工作人员清理彩票不足机台彩票数据.
+    /// 清理玩家彩票数据信息.
+    /// </summary>
+    internal void ClearPlayerCaiPiaoData(PlayerEnum indexPlayer)
+    {
+        int index = (int)indexPlayer - 1;
+        if (index < 0 || index > 2)
+        {
+            UnityLogWarning("ClearPlayerCaiPiaoData -> index was wrong! index ==== " + index);
+            return;
+        }
+        //清理玩家彩票数据.
+        m_PcvrPrintCaiPiaoData[index].CaiPiaoVal = 0;
+        //清理玩家pcvr彩票数据.
+        pcvr.GetInstance().ClearCaiPiaoData(indexPlayer);
+    }
 }

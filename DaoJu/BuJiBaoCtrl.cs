@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public enum BuJiBaoType
 {
@@ -59,10 +59,12 @@ public class BuJiBaoCtrl : MonoBehaviour {
 //	NetworkView NetworkViewCom;
 	void Start()
 	{
-//		NetworkViewCom = GetComponent<NetworkView>();
-		//if (transform.parent != XkGameCtrl.MissionCleanup) {
-		//	transform.parent = XkGameCtrl.MissionCleanup;
-		//}
+        //NetworkViewCom = GetComponent<NetworkView>();
+        //if (transform.parent != XkGameCtrl.MissionCleanup) {
+        //	transform.parent = XkGameCtrl.MissionCleanup;
+        //}
+
+        m_DaoJuPosOld = transform.position;
         transform.SetParent(XkGameCtrl.GetInstance().DaoJuArray);
 		DaoJuTr = transform;
 		BoxCol = GetComponent<BoxCollider>();
@@ -270,10 +272,45 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		DestroyNetObj(gameObject);
 	}
 
-	void DestroyNetObj(GameObject obj)
+    /// <summary>
+    /// 道具原始坐标.
+    /// </summary>
+    Vector3 m_DaoJuPosOld;
+    IEnumerator HiddenDaoJu()
+    {
+        if (rigidbody != null)
+        {
+            rigidbody.isKinematic = true;
+        }
+        transform.position = new Vector3(-10000f, -10000f, -10000f);
+        yield return new WaitForSeconds(15f);
+
+        transform.position = m_DaoJuPosOld;
+        if (rigidbody != null)
+        {
+            rigidbody.isKinematic = false;
+            rigidbody.useGravity = true;
+        }
+
+        if (BoxCol != null)
+        {
+            BoxCol.enabled = true;
+        }
+        IsDeath = false;
+    }
+
+    void DestroyNetObj(GameObject obj)
 	{
-		if (Network.peerType == NetworkPeerType.Disconnected) {
-			Destroy(obj);
+		if (Network.peerType == NetworkPeerType.Disconnected)
+        {
+            if (IsSpawnDaoJu)
+            {
+                Destroy(obj);
+            }
+            else
+            {
+                StartCoroutine(HiddenDaoJu());
+            }
 		}
 		else {
 			if (Network.peerType == NetworkPeerType.Server) {

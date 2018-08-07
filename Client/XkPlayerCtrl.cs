@@ -662,6 +662,11 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			//dTime = TimeUnitMove; //test
 			timeLastVal = Time.realtimeSinceStartup;
 			float disAimNode = Vector3.Distance(transform.position, EndPos);
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().GmCamMark != null)
+            {
+                SpeedA = XkGameCtrl.GetInstance().GmCamMark.GetMvSpeed();
+            }
+
 			if (JiaSuDuVal == 0) {
 				ds = SpeedA * dTime;
 			}

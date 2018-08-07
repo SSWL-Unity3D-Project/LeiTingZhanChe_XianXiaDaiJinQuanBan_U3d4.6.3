@@ -47,7 +47,7 @@ public class pcvr : MonoBehaviour {
 	public static bool IsOpenStartLightP1 = false;
 	public static bool IsOpenStartLightP2 = false;
 	int SubCoinNum_12 = 0;
-	int SubCoinNum_34 = 0;
+    int SubCoinNum_34 = 0;
 	
 	static string FileName;
 	static HandleJson HandleJsonObj;
@@ -747,7 +747,7 @@ public class pcvr : MonoBehaviour {
             }
         }
     }
-
+    
     IEnumerator DelayResetPlayerShouBingDir(int index)
     {
         yield return new WaitForSeconds(1f);
@@ -792,8 +792,11 @@ public class pcvr : MonoBehaviour {
         }
         m_TVYaoKongPlayerDt.Clear();
 
-        m_GmTVLoginDt.Reset();
-        m_GmTVLoginDt = null;
+        if (m_GmTVLoginDt != null)
+        {
+            m_GmTVLoginDt.Reset();
+            m_GmTVLoginDt = null;
+        }
     }
 
     private void OnEventPlayerLoginBox(WebSocketSimpet.PlayerWeiXinData val)
@@ -3270,16 +3273,39 @@ QiNangArray[3]			QiNangArray[2]
 		TimeLastActivePcvr = Time.realtimeSinceStartup;
 	}
 
-//	void OnGUI()
-//	{
-//		float width = Screen.width;
-//		float hight = 30f;
-//		string infoA = "Coin1: "+XKGlobalData.CoinPlayerOne
-//				+", Coin2: "+XKGlobalData.CoinPlayerTwo
-//				+", Coin3: "+XKGlobalData.CoinPlayerThree
-//				+", Coin4: "+XKGlobalData.CoinPlayerFour;
-//		GUI.Box(new Rect(0f, hight * 4f, width, hight), infoA);
-//	}
+    #region pcvr 游戏彩票管理
+    /// <summary>
+    /// 开始打印彩票.
+    /// </summary>
+    internal void StartPrintPlayerCaiPiao(PlayerEnum index, int caiPiao)
+    {
+    }
+
+    /// <summary>
+    /// 缺票后重新开始打印彩票.
+    /// </summary>
+    internal void RestartPrintCaiPiao(PlayerEnum indexPlayer)
+    {
+    }
+
+    /// <summary>
+    /// 工作人员清理彩票不足机台的彩票数据信息.
+    /// </summary>
+    internal void ClearCaiPiaoData(PlayerEnum indexPlayer)
+    {
+    }
+    #endregion
+
+    //	void OnGUI()
+    //	{
+    //		float width = Screen.width;
+    //		float hight = 30f;
+    //		string infoA = "Coin1: "+XKGlobalData.CoinPlayerOne
+    //				+", Coin2: "+XKGlobalData.CoinPlayerTwo
+    //				+", Coin3: "+XKGlobalData.CoinPlayerThree
+    //				+", Coin4: "+XKGlobalData.CoinPlayerFour;
+    //		GUI.Box(new Rect(0f, hight * 4f, width, hight), infoA);
+    //	}
 }
 
 public enum PcvrValState
@@ -3300,13 +3326,4 @@ public enum LedState
 	Liang,
 	Shan,
 	Mie
-}
-
-public enum AdjustGunDrossState
-{
-	GunCrossLU = 0,
-	GunCrossRU,
-	GunCrossRD,
-	GunCrossLD,
-	GunCrossOver
 }

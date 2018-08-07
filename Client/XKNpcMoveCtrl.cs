@@ -92,7 +92,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	FirePoint FirePointScript;
 	bool IsMoveFirePoint;
 	NpcFireAction FireAnimation;
-	Transform MarkNpcMove;
+	//Transform MarkNpcMove;
+    Vector3 MarkNpcMovePos;
 	bool IsMoveToMarkPoint;
 	NetworkView NetViewCom;
 	public XKPlayerMoveCtrl PlayerMoveScript;
@@ -188,13 +189,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			}
 		}
 
-		if (MarkTranAim != null) {
-			if (IsCheLiangMoveType) {
-				RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
-			}
-		}
+        if (IsCheLiangMoveType && RealNpcTran != null)
+        {
+            RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+        }
 
-		if (!IsDoFireAnimation
+        if (!IsDoFireAnimation
 		    && !IsFangZhenNpc
 		    && FireDistance > 0f
 		    && XkGameCtrl.PlayerActiveNum > 0
@@ -579,6 +579,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	WaypointProgressTracker WaypointCom;
 	public void SetSpawnNpcInfo(XKSpawnNpcPoint spawnScript)
 	{
+        AddPathNodeData(spawnScript.NpcPath);
 		SetNpcSpawnScriptInfo(spawnScript);
 		IsHuoCheNpc = spawnScript.GetIsHuoCheNpc();
 		TestSpawnPoint = spawnScript.gameObject;
@@ -697,8 +698,19 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			}
 		}
 	}
+
+    /// <summary>
+    /// 是否为彩票boss或战车Npc.
+    /// </summary>
+    internal bool IsCaiPiaoZhanChe = false;
+    internal void SetIsCaiPiaoZhanChe()
+    {
+        IsCaiPiaoZhanChe = true;
+        //彩票战车npc.
+        IsZhanCheNpc = true;
+    }
     
-	public void MoveNpcByItween()
+    public void MoveNpcByItween()
 	{
         //Debug.Log("**************************move 1111111111111111");
         if (IsDeathNPC) {
@@ -710,7 +722,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
-		if (NpcState == NpcType.FlyNpc) {
+        if (NpcState == NpcType.FlyNpc) {
 			List<Transform> tranList = new List<Transform>(NpcPathTran.GetComponentsInChildren<Transform>()){};
 			tranList.Remove(NpcPathTran);
 
@@ -718,9 +730,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			if (markScript != null) {
 				SetIsDoFireAnimation(markScript.IsFireFeiJiNpc);
 			}
-			MarkTranAim = tranList[0];
-			MarkNpcMove = MarkTranAim;
-			MarkCount++;
+			//MarkTranAim = tranList[0];
+			//MarkNpcMove = MarkTranAim;
+            MarkNpcMovePos = tranList[0].position;
+            MarkCount++;
 			iTween.MoveTo(NpcObj, iTween.Hash("path", tranList.ToArray(),
 			                                  "speed", MvSpeed,
 			                                  "orienttopath", true,
@@ -729,29 +742,54 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		}
 
 		Transform[] tranArray = new Transform[2];
-		tranArray[0] = NpcTran;
-        MarkCount = NpcPathTran.childCount - 1; //test.
+        Vector3[] nodesArray = new Vector3[2];
+        tranArray[0] = NpcTran;
+        nodesArray[0] = NpcTran.position;
+        if (IsCaiPiaoZhanChe)
+        {
+            //彩票boss或战车类型npc获取路径最后一个点.
+            MarkCount = NpcPathTran.childCount - 1;
+        }
+        //MarkCount = NpcPathTran.childCount - 1; //test.
 
         if (MarkCount >= NpcPathTran.childCount || MarkCount < 0) {
 			MarkCount = 0; //fixed MarkCount
 		}
 		tranArray[1] = NpcPathTran.GetChild(MarkCount);
+        nodesArray[1] = m_PathNodeList[MarkCount];
 
-		MarkCount++;
+        MarkCount++;
 		if (IsHuoCheNpc) {
-			StartCoroutine(MoveNpcByLocalPos(tranArray[1], MvSpeed));
+			//StartCoroutine(MoveNpcByLocalPos(tranArray[1], MvSpeed));
 		}
 		else {
-			MarkNpcMove = tranArray[1];
-			IsMoveToMarkPoint = false;
+			//MarkNpcMove = tranArray[1];
+            MarkNpcMovePos = nodesArray[1];
+            IsMoveToMarkPoint = false;
 
 			bool isOrienttopath = true;
 //			if (NpcJiFen == NpcJiFenEnum.FeiJi  || NpcJiFen == NpcJiFenEnum.ChuanBo
 			if (IsCheLiangMoveType) {
 				isOrienttopath = false;
-				MarkTranAim = tranArray[1];
-				MarkTranAimForward = MarkTranAim.position - NpcTran.position;
-			}
+				//MarkTranAim = tranArray[1];
+				MarkTranAimForward = nodesArray[1] - nodesArray[0];
+                MarkTranAimForward.y = 0f;
+                MarkTranAimForward = MarkTranAimForward.normalized;
+            }
+
+            if (IsCaiPiaoZhanChe)
+            {
+                isOrienttopath = false;
+                //MarkTranAim = tranArray[1];
+                MarkTranAimForward = nodesArray[1] - nodesArray[0];
+                MarkTranAimForward.y = 0f;
+                MarkTranAimForward = MarkTranAimForward.normalized;
+                if (RealNpcTran != null)
+                {
+                    RealNpcTran.forward = MarkTranAimForward;
+                }
+                //Debug.Log("********************************************* boss *************** isOrienttopath == " + isOrienttopath);
+            }
 
 			if (MoveStyle == UITweener.Style.Loop) {
 				isOrienttopath = false;
@@ -779,11 +817,13 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
-		if (MarkNpcMove == null || NpcPathTran == null) {
+		if (NpcPathTran == null) {
 			return;
 		}
 
-		float dis = Vector3.Distance(NpcObj.transform.position, MarkNpcMove.position);
+        Vector3 posA = NpcObj.transform.position;
+        Vector3 posB = MarkNpcMovePos;
+        float dis = Vector3.Distance(posA, posB);
 		float disMin = MvSpeed * Time.deltaTime;
 		if (MarkCount >= NpcPathTran.childCount) {
 			float disMinTmp = 0.5f;
@@ -802,13 +842,14 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			}
 //			Debug.Log("Unity:"+"MarkCount***"+MarkCount);
 
-			MarkTranAim = NpcPathTran.GetChild(MarkCount);
-			NpcMark markScript = MarkTranAim.GetComponent<NpcMark>();
+			//MarkTranAim = NpcPathTran.GetChild(MarkCount);
+			NpcMark markScript = NpcPathTran.GetChild(MarkCount).GetComponent<NpcMark>();
 			if (markScript != null) {
 				SetIsDoFireAnimation(markScript.IsFireFeiJiNpc);
 			}
-			MarkNpcMove = MarkTranAim;
-			MarkCount++;
+			//MarkNpcMove = MarkTranAim;
+            MarkNpcMovePos = m_PathNodeList[MarkCount];
+            MarkCount++;
 			IsMoveToMarkPoint = false;
 			return;
 		}
@@ -1220,28 +1261,28 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		StartCoroutine(DestroyNetNpcObj(NpcObj, RemoveNpcTime));
 	}
 
-	void CallServerRemoveNpc()
-	{
-	}
+	//void CallServerRemoveNpc()
+	//{
+	//}
 
-	void CallServerRemoveCannon(int cannonIndex)
-	{
-	}
+	//void CallServerRemoveCannon(int cannonIndex)
+	//{
+	//}
 
 	public void TriggerRemovePointNpc(int key, XKCannonCtrl cannonScriptVal = null,
 	                                  PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
 	{
-		if (cannonScriptVal != null && CannonScript != null) {
-			int max = CannonScript.Length;
-			if (max > 1) {
-				for (int i = 0; i < max; i++) {
-					if (CannonScript[i] != null && CannonScript[i] == cannonScriptVal) {
-						CallServerRemoveCannon(i);
-						break;
-					}
-				}
-			}
-		}
+		//if (cannonScriptVal != null && CannonScript != null) {
+		//	int max = CannonScript.Length;
+		//	if (max > 1) {
+		//		for (int i = 0; i < max; i++) {
+		//			if (CannonScript[i] != null && CannonScript[i] == cannonScriptVal) {
+		//				CallServerRemoveCannon(i);
+		//				break;
+		//			}
+		//		}
+		//	}
+		//}
 
 		if (IsDeathNPC) {
 			return;
@@ -1250,7 +1291,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		HandleNpcDeathInfo();
 
 		//XkGameCtrl.ClearNpcSpawnAllAmmo(gameObject);
-		CallServerRemoveNpc();
+		//CallServerRemoveNpc();
 		CancelInvoke("DelayMoveNpcWaitAnimationEnd");
 		iTween itweenScript = GetComponent<iTween>();
 		if (itweenScript != null) {
@@ -1264,10 +1305,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			AnimatorCom.enabled = false;
 		}
 
-		if (key == 0) {
+		if (key == 0)
+        {
 			StartCoroutine(DestroyNetNpcObj(NpcObj));
 		}
-		else {
+		else
+        {
 			if (NpcTran.parent != XkGameCtrl.MissionCleanup) {
 				NpcTran.parent = XkGameCtrl.NpcObjArray;
 			}
@@ -1359,7 +1402,14 @@ public class XKNpcMoveCtrl : MonoBehaviour
 //			}
 		}
 		XkGameCtrl.GetInstance().RemoveNpcTranFromList(NpcTran);
-	}
+
+
+        if (m_PathNodeList != null)
+        {
+            //清理路径坐标信息.
+            m_PathNodeList.Clear();
+        }
+    }
 
 	bool IsRemoveNpcObj;
 	public void SetIsRemoveNpcObj()
@@ -1744,12 +1794,42 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	public void SetIsBossNpc(bool isBoss)
 	{
 		IsBossNpc = isBoss;
+        if (isBoss)
+        {
+            IsZhanCheNpc = false;
+            //彩票JPBoss.
+            IsJPBossNpc = true;
+        }
 	}
 	
 	public bool GetIsBossNpc()
 	{
 		return IsBossNpc;
 	}
+
+    /// <summary>
+    /// 路径坐标信息.
+    /// </summary>
+    List<Vector3> m_PathNodeList = new List<Vector3>();
+    /// <summary>
+    /// 组织npc路径坐标信息.
+    /// </summary>
+    void AddPathNodeData(Transform pathTr)
+    {
+        if (m_PathNodeList == null)
+        {
+            return;
+        }
+
+        m_PathNodeList.Clear();
+        if (pathTr != null)
+        {
+            for (int i = 0; i < pathTr.childCount; i++)
+            {
+                m_PathNodeList.Add(pathTr.GetChild(i).position);
+            }
+        }
+    }
 }
 
 public enum NpcType

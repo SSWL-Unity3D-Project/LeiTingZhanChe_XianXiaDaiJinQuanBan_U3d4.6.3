@@ -238,8 +238,14 @@ public class XKSpawnNpcPoint : MonoBehaviour
 	}
 
 #if UNITY_EDITOR
+    public bool IsDrawGizmos = false;
     void OnDrawGizmosSelected()
 	{
+        if (!IsDrawGizmos)
+        {
+            return;
+        }
+
 		if (!XkGameCtrl.IsDrawGizmosObj) {
 			return;
 		}
@@ -298,7 +304,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
         //{
         //    return null;
         //}
-
+        IsCaiPiaoZhanChePoint = true;
         GameObject obj = null;
         IsRemoveSpawnPointNpc = false;
         InitSpawnPointInfo();
@@ -306,6 +312,10 @@ public class XKSpawnNpcPoint : MonoBehaviour
         obj = NpcLoopObj;
         return obj;
     }
+    /// <summary>
+    /// 是否为彩票boss或战车npc产生点.
+    /// </summary>
+    bool IsCaiPiaoZhanChePoint = false;
 
 	public void SpawnPointAllNpc()
 	{
@@ -519,7 +529,12 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		}
 
 		NpcScript[SpawnNpcCount] = obj.GetComponent<XKNpcMoveCtrl>();
-		if (NpcScript[SpawnNpcCount] != null) {
+		if (NpcScript[SpawnNpcCount] != null)
+        {
+            if (IsCaiPiaoZhanChePoint)
+            {
+                NpcScript[SpawnNpcCount].SetIsCaiPiaoZhanChe();
+            }
 			NpcScript[SpawnNpcCount].SetSpawnNpcInfo(this);
 		}
 		NpcLoopObj = obj;

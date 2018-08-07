@@ -100,6 +100,7 @@ public class AiMark : MonoBehaviour
                     }
             }
         }
+        //Debug.Log("*************************** camSpeed == " + speed);
         return speed;
 	}
 	

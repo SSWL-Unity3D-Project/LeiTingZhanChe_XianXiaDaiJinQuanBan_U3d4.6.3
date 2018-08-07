@@ -5,13 +5,14 @@ public class XKNpcDamageCtrl : MonoBehaviour
 {
 	[Range(0.01f, 3f)]public float DamageTime = 0.1f;
 	public XKMeshColorCtrl[] MeshColorArray;
-	// Update is called once per frame
-//	void Update()
-//	{
-//		if (Input.GetKeyUp(KeyCode.P)) {
-//			PlayNpcDamageEvent();
-//		}
-//	}
+    // Update is called once per frame
+    //void Update()
+    //{
+    //    if (Input.GetKeyUp(KeyCode.P))
+    //    {
+    //        PlayNpcDamageEvent();
+    //    }
+    //}
 
 	public void PlayNpcDamageEvent()
 	{

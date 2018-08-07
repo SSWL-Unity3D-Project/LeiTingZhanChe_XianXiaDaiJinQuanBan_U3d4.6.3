@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define USE_AUTO_START_GAME
+using UnityEngine;
 
 public class CoinPlayerCtrl : MonoBehaviour
 {
@@ -259,7 +260,17 @@ public class CoinPlayerCtrl : MonoBehaviour
 			else if (XKGlobalData.CoinPlayerOne >= XKGlobalData.GameNeedCoin && (InsertCoinObj.activeSelf || !StartBtObj.activeSelf)) {
 				InsertCoinObj.SetActive(false); //Hidden Insert Coin
 				StartBtObj.SetActive(true);
-			}
+#if USE_AUTO_START_GAME
+                //运营模式.
+                //玩家币值如果大于启动币数则自动开始.
+                if (XkGameCtrl.GetInstance() != null
+                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerOne))
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.UP);
+                }
+#endif
+            }
 		}
 		else {
 			if (!StartBtObj.activeSelf) {
@@ -286,7 +297,17 @@ public class CoinPlayerCtrl : MonoBehaviour
 			else if (XKGlobalData.CoinPlayerTwo >= XKGlobalData.GameNeedCoin && (InsertCoinObj.activeSelf || !StartBtObj.activeSelf)) {
 				InsertCoinObj.SetActive(false); //Hidden Insert Coin
 				StartBtObj.SetActive(true);
-			}
+#if USE_AUTO_START_GAME
+                //运营模式.
+                //玩家币值如果大于启动币数则自动开始.
+                if (XkGameCtrl.GetInstance() != null
+                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerTwo))
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtTwo(ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtTwo(ButtonState.UP);
+                }
+#endif
+            }
 		}
 		else {
 			if (!StartBtObj.activeSelf) {
@@ -313,7 +334,17 @@ public class CoinPlayerCtrl : MonoBehaviour
 			else if (XKGlobalData.CoinPlayerThree >= XKGlobalData.GameNeedCoin && (InsertCoinObj.activeSelf || !StartBtObj.activeSelf)) {
 				InsertCoinObj.SetActive(false); //Hidden Insert Coin
 				StartBtObj.SetActive(true);
-			}
+#if USE_AUTO_START_GAME
+                //运营模式.
+                //玩家币值如果大于启动币数则自动开始.
+                if (XkGameCtrl.GetInstance() != null
+                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerThree))
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtThree(ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtThree(ButtonState.UP);
+                }
+#endif
+            }
 		}
 		else {
 			if (!StartBtObj.activeSelf) {
@@ -340,7 +371,17 @@ public class CoinPlayerCtrl : MonoBehaviour
 			else if (XKGlobalData.CoinPlayerFour >= XKGlobalData.GameNeedCoin && (InsertCoinObj.activeSelf || !StartBtObj.activeSelf)) {
 				InsertCoinObj.SetActive(false); //Hidden Insert Coin
 				StartBtObj.SetActive(true);
-			}
+#if USE_AUTO_START_GAME
+                //运营模式.
+                //玩家币值如果大于启动币数则自动开始.
+                if (XkGameCtrl.GetInstance() != null
+                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerFour))
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtFour(ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtFour(ButtonState.UP);
+                }
+#endif
+            }
 		}
 		else {
 			if (!StartBtObj.activeSelf) {
