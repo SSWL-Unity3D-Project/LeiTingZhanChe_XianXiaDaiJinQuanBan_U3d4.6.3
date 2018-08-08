@@ -115,7 +115,7 @@ public class MyCOMDevice : MonoBehaviour
 				}
 
 				COMTxData();
-				if (pcvr.IsJiaoYanHid || !pcvr.IsPlayerActivePcvr) {
+				if (pcvr.IsJiaoYanHid) {
 					Thread.Sleep(100);
 				}
 				else {
@@ -123,7 +123,7 @@ public class MyCOMDevice : MonoBehaviour
 				}
 
 				COMRxData();
-				if (pcvr.IsJiaoYanHid || !pcvr.IsPlayerActivePcvr) {
+				if (pcvr.IsJiaoYanHid) {
 					Thread.Sleep(100);
 				}
 				else {

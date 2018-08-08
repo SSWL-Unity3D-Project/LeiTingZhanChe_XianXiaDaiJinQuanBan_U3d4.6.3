@@ -69,11 +69,11 @@ public class GameMovieCtrl : SSGameMono
 			//Debug.Log("Unity:!!!!!!Instance.SetParentTran!!!!!!");
 			GameOverCtrl.IsShowGameOver = false;
 			//Debug.Log("Unity:!!!!!!IsOpenFXZhenDong!!!!!!"+ IsOpenFXZhenDong.ToString());
-			if (IsOpenFXZhenDong)
-			{
-				pcvr.OpenAllPlayerFangXiangPanPower();
-			}
-			pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
+			//if (IsOpenFXZhenDong)
+			//{
+			//	pcvr.OpenAllPlayerFangXiangPanPower();
+			//}
+			//pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
 			//Debug.Log("Unity:!!!!!!CloseAllQiNangArray!!!!!!");
 			//IsTestLJGame = true; //test
 			//IsTestXiaoScreen = true; //test
@@ -233,7 +233,7 @@ public class GameMovieCtrl : SSGameMono
 	void CloseAllFangXiangPanPower()
 	{
 		Debug.Log("Unity:!!!!!!CloseAllFangXiangPanPower!!!!!!");
-		pcvr.GetInstance().CloseFangXiangPanPower();
+		//pcvr.GetInstance().CloseFangXiangPanPower();
 	}
 
     /// <summary>

@@ -70,7 +70,7 @@ public class HardwareBtCtrl : MonoBehaviour
 			break;
 
 		case BtType.JiaMiCheckBt:
-			pcvr.GetInstance().StartJiaoYanIO();
+			//pcvr.GetInstance().StartJiaoYanIO();
 			break;
 		}
 	}
@@ -145,26 +145,26 @@ public class HardwareBtCtrl : MonoBehaviour
 
 	void OnClickQiNangBt(BtType state)
 	{
-		switch (state) {
-		case BtType.QiNangBt_1:
-			QiNangLabel.text = QiNangLabel.text != "气囊1充气" ? "气囊1充气" : "气囊1放气";
-			pcvr.QiNangArray[0] = (byte)(pcvr.QiNangArray[0] != 1 ? 1 : 0);
-			break;
+		//switch (state) {
+		//case BtType.QiNangBt_1:
+		//	QiNangLabel.text = QiNangLabel.text != "气囊1充气" ? "气囊1充气" : "气囊1放气";
+		//	pcvr.QiNangArray[0] = (byte)(pcvr.QiNangArray[0] != 1 ? 1 : 0);
+		//	break;
 
-		case BtType.QiNangBt_2:
-			QiNangLabel.text = QiNangLabel.text != "气囊2充气" ? "气囊2充气" : "气囊2放气";
-			pcvr.QiNangArray[1] = (byte)(pcvr.QiNangArray[1] != 1 ? 1 : 0);
-			break;
+		//case BtType.QiNangBt_2:
+		//	QiNangLabel.text = QiNangLabel.text != "气囊2充气" ? "气囊2充气" : "气囊2放气";
+		//	pcvr.QiNangArray[1] = (byte)(pcvr.QiNangArray[1] != 1 ? 1 : 0);
+		//	break;
 
-		case BtType.QiNangBt_3:
-			QiNangLabel.text = QiNangLabel.text != "气囊3充气" ? "气囊3充气" : "气囊3放气";
-			pcvr.QiNangArray[2] = (byte)(pcvr.QiNangArray[2] != 1 ? 1 : 0);
-			break;
+		//case BtType.QiNangBt_3:
+		//	QiNangLabel.text = QiNangLabel.text != "气囊3充气" ? "气囊3充气" : "气囊3放气";
+		//	pcvr.QiNangArray[2] = (byte)(pcvr.QiNangArray[2] != 1 ? 1 : 0);
+		//	break;
 
-		case BtType.QiNangBt_4:
-			QiNangLabel.text = QiNangLabel.text != "气囊4充气" ? "气囊4充气" : "气囊4放气";
-			pcvr.QiNangArray[3] = (byte)(pcvr.QiNangArray[3] != 1 ? 1 : 0);
-			break;
-		}
+		//case BtType.QiNangBt_4:
+		//	QiNangLabel.text = QiNangLabel.text != "气囊4充气" ? "气囊4充气" : "气囊4放气";
+		//	pcvr.QiNangArray[3] = (byte)(pcvr.QiNangArray[3] != 1 ? 1 : 0);
+		//	break;
+		//}
 	}
 }

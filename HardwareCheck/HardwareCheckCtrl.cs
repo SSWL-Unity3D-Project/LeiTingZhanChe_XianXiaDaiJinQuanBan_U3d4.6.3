@@ -109,10 +109,10 @@ public class HardwareCheckCtrl : MonoBehaviour
 			FangXiangLable[1].text = pcvr.SteerValCurAy[1].ToString();
 			FangXiangLable[2].text = pcvr.SteerValCurAy[2].ToString();
 			FangXiangLable[3].text = pcvr.SteerValCurAy[3].ToString();
-			YouMenLable[0].text = pcvr.YouMenCurVal[0].ToString();
-			YouMenLable[1].text = pcvr.YouMenCurVal[1].ToString();
-			YouMenLable[2].text = pcvr.YouMenCurVal[2].ToString();
-			YouMenLable[3].text = pcvr.YouMenCurVal[3].ToString();
+			//YouMenLable[0].text = pcvr.YouMenCurVal[0].ToString();
+			//YouMenLable[1].text = pcvr.YouMenCurVal[1].ToString();
+			//YouMenLable[2].text = pcvr.YouMenCurVal[2].ToString();
+			//YouMenLable[3].text = pcvr.YouMenCurVal[3].ToString();
 		}
 	}
 
@@ -548,7 +548,7 @@ public class HardwareCheckCtrl : MonoBehaviour
 
 	public void StartJiaoYanIO()
 	{
-		pcvr.GetInstance().StartJiaoYanIO();
+		//pcvr.GetInstance().StartJiaoYanIO();
 	}
 
 	int GetQiNangIndexVal(int playerIndex, int qiNangIndex)
@@ -558,142 +558,142 @@ public class HardwareCheckCtrl : MonoBehaviour
 
 	public void OnClickQiNangBtP1_1()
 	{
-		int indexVal = GetQiNangIndexVal(1, 0);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(1, 0);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 
 	public void OnClickQiNangBtP1_2()
 	{
-		int indexVal = GetQiNangIndexVal(1, 1);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(1, 1);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 
 	public void OnClickQiNangBtP1_3()
 	{
-		int indexVal = GetQiNangIndexVal(1, 2);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(1, 2);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 
 	public void OnClickQiNangBtP1_4()
 	{
-		int indexVal = GetQiNangIndexVal(1, 3);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(1, 3);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP1_5()
 	{
-		int indexVal = 16;
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = 16;
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP2_1()
 	{
-		int indexVal = GetQiNangIndexVal(2, 0);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(2, 0);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP2_2()
 	{
-		int indexVal = GetQiNangIndexVal(2, 1);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(2, 1);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP2_3()
 	{
-		int indexVal = GetQiNangIndexVal(2, 2);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(2, 2);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP2_4()
 	{
-		int indexVal = GetQiNangIndexVal(2, 3);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(2, 3);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP2_5()
 	{
-		int indexVal = 17;
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = 17;
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP3_1()
 	{
-		int indexVal = GetQiNangIndexVal(3, 0);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(3, 0);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP3_2()
 	{
-		int indexVal = GetQiNangIndexVal(3, 1);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(3, 1);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP3_3()
 	{
-		int indexVal = GetQiNangIndexVal(3, 2);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(3, 2);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP3_4()
 	{
-		int indexVal = GetQiNangIndexVal(3, 3);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(3, 3);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP3_5()
 	{
-		int indexVal = 18;
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = 18;
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP4_1()
 	{
-		int indexVal = GetQiNangIndexVal(4, 0);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(4, 0);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "1气囊充气" ? "1气囊充气" : "1气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP4_2()
-	{
-		int indexVal = GetQiNangIndexVal(4, 1);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
-	}
+    {
+        //	int indexVal = GetQiNangIndexVal(4, 1);
+        //	QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "2气囊充气" ? "2气囊充气" : "2气囊放气";
+        //	pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+    }
 	
 	public void OnClickQiNangBtP4_3()
 	{
-		int indexVal = GetQiNangIndexVal(4, 2);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(4, 2);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "3气囊充气" ? "3气囊充气" : "3气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP4_4()
 	{
-		int indexVal = GetQiNangIndexVal(4, 3);
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = GetQiNangIndexVal(4, 3);
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "4气囊充气" ? "4气囊充气" : "4气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 	
 	public void OnClickQiNangBtP4_5()
 	{
-		int indexVal = 19;
-		QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//int indexVal = 19;
+		//QiNangLabel[indexVal].text = QiNangLabel[indexVal].text != "5气囊充气" ? "5气囊充气" : "5气囊放气";
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 	}
 
 	int[] FangXiangDouDongSt = {0, 0, 0, 0};
@@ -707,12 +707,12 @@ public class HardwareCheckCtrl : MonoBehaviour
 		case 0:
 			FangXiangDouDongSt[playerIndex] = 1;
 			FangXiangDouDongLB[0].text = "1P方向关闭";
-			pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerOne, IsLoopDouDongFX);
+			//pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerOne, IsLoopDouDongFX);
 			break;
 		case 1:
 			FangXiangDouDongSt[playerIndex] = 0;
 			FangXiangDouDongLB[0].text = "1P方向抖动";
-			pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerOne);
+			//pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerOne);
 			break;
 		}
 	}
@@ -726,12 +726,12 @@ public class HardwareCheckCtrl : MonoBehaviour
 		case 0:
 			FangXiangDouDongSt[playerIndex] = 1;
 			FangXiangDouDongLB[1].text = "2P方向关闭";
-			pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerTwo, IsLoopDouDongFX);
+			//pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerTwo, IsLoopDouDongFX);
 			break;
 		case 1:
 			FangXiangDouDongSt[playerIndex] = 0;
 			FangXiangDouDongLB[1].text = "2P方向抖动";
-			pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerTwo);
+			//pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerTwo);
 			break;
 		}
 	}
@@ -745,12 +745,12 @@ public class HardwareCheckCtrl : MonoBehaviour
 		case 0:
 			FangXiangDouDongSt[playerIndex] = 1;
 			FangXiangDouDongLB[2].text = "3P方向关闭";
-			pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerThree, IsLoopDouDongFX);
+			//pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerThree, IsLoopDouDongFX);
 			break;
 		case 1:
 			FangXiangDouDongSt[playerIndex] = 0;
 			FangXiangDouDongLB[2].text = "3P方向抖动";
-			pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerThree);
+			//pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerThree);
 			break;
 		}
 	}
@@ -764,12 +764,12 @@ public class HardwareCheckCtrl : MonoBehaviour
 		case 0:
 			FangXiangDouDongSt[playerIndex] = 1;
 			FangXiangDouDongLB[3].text = "4P方向关闭";
-			pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerFour, IsLoopDouDongFX);
+			//pcvr.GetInstance().ActiveFangXiangDouDong(PlayerEnum.PlayerFour, IsLoopDouDongFX);
 			break;
 		case 1:
 			FangXiangDouDongSt[playerIndex] = 0;
 			FangXiangDouDongLB[3].text = "4P方向抖动";
-			pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerFour);
+			//pcvr.GetInstance().CloseFangXiangPanPower(PlayerEnum.PlayerFour);
 			break;
 		}
 	}
@@ -784,19 +784,19 @@ public class HardwareCheckCtrl : MonoBehaviour
 	public void OnClickZuoYiShangP1()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiShangP1...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerOne, 1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerOne, 1);
 	}
 
 	public void OnClickZuoYiZhongP1()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiZhongP1...");
-		pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerOne);
+		//pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerOne);
 	}
 	
 	public void OnClickZuoYiXiaP1()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiXiaP1...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerOne, -1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerOne, -1);
 	}
 
 	public GameObject[] ZuoYiDuiGouP1;
@@ -818,19 +818,19 @@ public class HardwareCheckCtrl : MonoBehaviour
 	public void OnClickZuoYiShangP2()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiShangP2...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerTwo, 1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerTwo, 1);
 	}
 	
 	public void OnClickZuoYiZhongP2()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiZhongP2...");
-		pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerTwo);
+		//pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerTwo);
 	}
 	
 	public void OnClickZuoYiXiaP2()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiXiaP2...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerTwo, -1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerTwo, -1);
 	}
 
 	public GameObject[] ZuoYiDuiGouP2;
@@ -852,19 +852,19 @@ public class HardwareCheckCtrl : MonoBehaviour
 	public void OnClickZuoYiShangP3()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiShangP3...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerThree, 1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerThree, 1);
 	}
 	
 	public void OnClickZuoYiZhongP3()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiZhongP3...");
-		pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerThree);
+		//pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerThree);
 	}
 	
 	public void OnClickZuoYiXiaP3()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiXiaP3...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerThree, -1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerThree, -1);
 	}
 
 	public GameObject[] ZuoYiDuiGouP3;
@@ -886,19 +886,19 @@ public class HardwareCheckCtrl : MonoBehaviour
 	public void OnClickZuoYiShangP4()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiShangP4...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerFour, 1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerFour, 1);
 	}
 	
 	public void OnClickZuoYiZhongP4()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiZhongP4...");
-		pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerFour);
+		//pcvr.GetInstance().MakeZuoYiMoveCenter(PlayerEnum.PlayerFour);
 	}
 	
 	public void OnClickZuoYiXiaP4()
 	{
 		UnityEngine.Debug.Log("Unity:"+"OnClickZuoYiXiaP4...");
-		pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerFour, -1);
+		//pcvr.GetInstance().SetZuoYiDianJiSpeed(PlayerEnum.PlayerFour, -1);
 	}
 	
 	public GameObject[] ZuoYiDuiGouP4;
@@ -925,16 +925,16 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 		int valZD = Mathf.RoundToInt((UIProgressBar.current.value * 14f) + 1f);
 		DianJiSpeedLB.text = valZD.ToString("X1");
-		pcvr.DianJiSpeedP1 = valZD;
-		pcvr.DianJiSpeedP2 = valZD;
-		pcvr.DianJiSpeedP3 = valZD;
-		pcvr.DianJiSpeedP4 = valZD;
+		//pcvr.DianJiSpeedP1 = valZD;
+		//pcvr.DianJiSpeedP2 = valZD;
+		//pcvr.DianJiSpeedP3 = valZD;
+		//pcvr.DianJiSpeedP4 = valZD;
 		
-		for (int i = 0; i < pcvr.ZuoYiDianJiSpeedVal.Length; i++) {
-			if (pcvr.ZuoYiDianJiSpeedVal[i] != 0x00) {
-				pcvr.ZuoYiDianJiSpeedVal[i] = (byte)((0xf0 & pcvr.ZuoYiDianJiSpeedVal[i]) + (0x0f & valZD));
-			}
-		}
+		//for (int i = 0; i < pcvr.ZuoYiDianJiSpeedVal.Length; i++) {
+		//	if (pcvr.ZuoYiDianJiSpeedVal[i] != 0x00) {
+		//		pcvr.ZuoYiDianJiSpeedVal[i] = (byte)((0xf0 & pcvr.ZuoYiDianJiSpeedVal[i]) + (0x0f & valZD));
+		//	}
+		//}
 	}
 
 	public void SetQiangZDValue_1()

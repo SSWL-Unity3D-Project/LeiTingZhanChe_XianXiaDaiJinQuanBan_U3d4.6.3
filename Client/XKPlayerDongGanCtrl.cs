@@ -18,11 +18,11 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 	float TimeLastZY;
 	float MinTimeZY = 0.4f;
 	// Update is called once per frame
-	void Update()
+	void TmpUpdate()
 	{
-		if (pcvr.DongGanState == 0) {
-			return;
-		}
+		//if (pcvr.DongGanState == 0) {
+		//	return;
+		//}
 
 		if (!GameTimeCtrl.GetInstance().GetIsCheckTimeSprite()) {
 			return;
@@ -54,8 +54,8 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 			if (KeyQHQiNangState != 0) {
 				KeyQHQiNangState = 0;
 				if (KeyZYQiNangState == 0) {
-					pcvr.CloseQiNangQian(IndexPlayer);
-					pcvr.CloseQiNangHou(IndexPlayer);
+					//pcvr.CloseQiNangQian(IndexPlayer);
+					//pcvr.CloseQiNangHou(IndexPlayer);
 				}
 			}
 		}
@@ -63,16 +63,16 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 			//前气囊充气,后气囊放气.
 			if (KeyQHQiNangState != 1) {
 				KeyQHQiNangState = 1;
-				pcvr.OpenQiNangQian(IndexPlayer);
-				pcvr.CloseQiNangHou(IndexPlayer, KeyZYQiNangState);
+				//pcvr.OpenQiNangQian(IndexPlayer);
+				//pcvr.CloseQiNangHou(IndexPlayer, KeyZYQiNangState);
 			}
 		}
 		else if (eulerAngleX > 0f) {
 			//后气囊充气,前气囊放气.
 			if (KeyQHQiNangState != 2) {
 				KeyQHQiNangState = 2;
-				pcvr.OpenQiNangHou(IndexPlayer);
-				pcvr.CloseQiNangQian(IndexPlayer, KeyZYQiNangState);
+				//pcvr.OpenQiNangHou(IndexPlayer);
+				//pcvr.CloseQiNangQian(IndexPlayer, KeyZYQiNangState);
 			}
 		}
 
@@ -90,8 +90,8 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 				KeyZYQiNangState = 0;
 				TimeLastZY = Time.realtimeSinceStartup;
 				if (KeyQHQiNangState == 0) {
-					pcvr.CloseQiNangZuo(IndexPlayer);
-					pcvr.CloseQiNangYou(IndexPlayer);
+					//pcvr.CloseQiNangZuo(IndexPlayer);
+					//pcvr.CloseQiNangYou(IndexPlayer);
 				}
 			}
 		}
@@ -100,8 +100,8 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 			if (KeyZYQiNangState != 1 && Time.realtimeSinceStartup - TimeLastZY >= MinTimeZY) {
 				KeyZYQiNangState = 1;
 				TimeLastZY = Time.realtimeSinceStartup;
-				pcvr.OpenQiNangZuo(IndexPlayer);
-				pcvr.CloseQiNangYou(IndexPlayer, KeyQHQiNangState);
+				//pcvr.OpenQiNangZuo(IndexPlayer);
+				//pcvr.CloseQiNangYou(IndexPlayer, KeyQHQiNangState);
 			}
 		}
 		else if  (eulerAngleZ > 0f) {
@@ -109,8 +109,8 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 			if (KeyZYQiNangState != 2 && Time.realtimeSinceStartup - TimeLastZY >= MinTimeZY) {
 				KeyZYQiNangState = 2;
 				TimeLastZY = Time.realtimeSinceStartup;
-				pcvr.OpenQiNangYou(IndexPlayer);
-				pcvr.CloseQiNangZuo(IndexPlayer, KeyQHQiNangState);
+				//pcvr.OpenQiNangYou(IndexPlayer);
+				//pcvr.CloseQiNangZuo(IndexPlayer, KeyQHQiNangState);
 			}
 		}
 	}
@@ -118,6 +118,6 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 	public void SetPlayerIndex(PlayerEnum playerVal)
 	{
 		IndexPlayer = playerVal;
-		pcvr.CloseAllQiNangArray(IndexPlayer, 1);
+		//pcvr.CloseAllQiNangArray(IndexPlayer, 1);
 	}
 }

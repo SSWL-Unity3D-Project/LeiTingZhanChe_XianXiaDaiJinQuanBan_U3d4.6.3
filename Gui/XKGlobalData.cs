@@ -71,28 +71,28 @@ public class XKGlobalData
 				speedStr = "5";
 				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP1", speedStr);
 			}
-			pcvr.DianJiSpeedP1 = Convert.ToInt32(speedStr);
+			//pcvr.DianJiSpeedP1 = Convert.ToInt32(speedStr);
 			
 			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP2");
 			if(speedStr == null || speedStr == "") {
 				speedStr = "5";
 				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP2", speedStr);
 			}
-			pcvr.DianJiSpeedP2 = Convert.ToInt32(speedStr);
+			//pcvr.DianJiSpeedP2 = Convert.ToInt32(speedStr);
 			
 			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP3");
 			if(speedStr == null || speedStr == "") {
 				speedStr = "5";
 				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP3", speedStr);
 			}
-			pcvr.DianJiSpeedP3 = Convert.ToInt32(speedStr);
+			//pcvr.DianJiSpeedP3 = Convert.ToInt32(speedStr);
 			
 			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP4");
 			if(speedStr == null || speedStr == "") {
 				speedStr = "5";
 				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP4", speedStr);
 			}
-			pcvr.DianJiSpeedP4 = Convert.ToInt32(speedStr);
+			//pcvr.DianJiSpeedP4 = Convert.ToInt32(speedStr);
 			
 			string val = HandleJsonObj.ReadFromFileXml(FileName, "GameAudioVolume");
 			if (val == null || val == "") {

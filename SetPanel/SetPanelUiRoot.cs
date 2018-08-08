@@ -146,7 +146,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 		}
 		Time.timeScale = 1.0f;
 		GameOverCtrl.IsShowGameOver = false;
-		pcvr.DongGanState = 1;
+		//pcvr.DongGanState = 1;
 		StarObj = StarTran.gameObject;
 		DirAdjustObj = AdjustDir.gameObject;
 		AdjustYouMenShaCheObj = AdjustYouMenShaCheUI.gameObject;
@@ -155,9 +155,9 @@ public class SetPanelUiRoot : MonoBehaviour {
 		XkGameCtrl.SetActivePlayerTwo(false);
 		XkGameCtrl.SetActivePlayerThree(false);
 		XkGameCtrl.SetActivePlayerFour(false);
-		pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
-		pcvr.OpenCheckYouMenValInfo();
-		pcvr.GetInstance().CloseFangXiangPanPower();
+		//pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
+		//pcvr.OpenCheckYouMenValInfo();
+		//pcvr.GetInstance().CloseFangXiangPanPower();
 		SetGameTextInfo();
 
 		SetStarObjActive(true);
@@ -658,7 +658,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 				AdjustDirSt = AdjustDirState.DirectionCenter;
 				ChangeAdjustDirImg();
 				if (pcvr.bIsHardWare) {
-					pcvr.SaveSteerVal(PcvrValState.ValMax, indexPlayer);
+					//pcvr.SaveSteerVal(PcvrValState.ValMax, indexPlayer);
 				}
 				return;
 
@@ -666,13 +666,13 @@ public class SetPanelUiRoot : MonoBehaviour {
 				AdjustDirSt = AdjustDirState.DirectionLeft;
 				ChangeAdjustDirImg();
 				if (pcvr.bIsHardWare) {
-					pcvr.SaveSteerVal(PcvrValState.ValCenter, indexPlayer);
+					//pcvr.SaveSteerVal(PcvrValState.ValCenter, indexPlayer);
 				}
 				return;
 
 			case AdjustDirState.DirectionLeft:
 				if (pcvr.bIsHardWare) {
-					pcvr.SaveSteerVal(PcvrValState.ValMin, indexPlayer);
+					//pcvr.SaveSteerVal(PcvrValState.ValMin, indexPlayer);
 				}
 				break;
 			}
@@ -686,7 +686,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 				ChangeAdjustYouMenShaCheImg();
 				if (pcvr.bIsHardWare) {
 					//记录油门数据.
-					pcvr.SaveYouMenVal(indexPlayer);
+					//pcvr.SaveYouMenVal(indexPlayer);
 				}
 				//return; //校准刹车.
 				break; //不用校准刹车.
@@ -882,7 +882,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 				}
 			}
 			QiNangCQObj.SetActive(false);
-			pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
+			//pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
 			break;
 		case SelectSetPanelDate.GameTestBt:
 			SetAnJianTestPanel(1); //关闭按键测试界面.
@@ -1010,10 +1010,10 @@ public class SetPanelUiRoot : MonoBehaviour {
 			DianJiSpeedVal[indexVal]++;
 		}
 		DianJiSpeedVal[indexVal] = DianJiSpeedVal[indexVal] >= 16 ? 1 : DianJiSpeedVal[indexVal];
-		pcvr.DianJiSpeedP1 = DianJiSpeedVal[0];
-		pcvr.DianJiSpeedP2 = DianJiSpeedVal[1];
-		pcvr.DianJiSpeedP3 = DianJiSpeedVal[2];
-		pcvr.DianJiSpeedP4 = DianJiSpeedVal[3];
+		//pcvr.DianJiSpeedP1 = DianJiSpeedVal[0];
+		//pcvr.DianJiSpeedP2 = DianJiSpeedVal[1];
+		//pcvr.DianJiSpeedP3 = DianJiSpeedVal[2];
+		//pcvr.DianJiSpeedP4 = DianJiSpeedVal[3];
 
 		for (int i = 0; i < 4; i++) {
 			DianJiSpeedLB[i].text = DianJiSpeedVal[i].ToString("d2");
@@ -1097,8 +1097,8 @@ public class SetPanelUiRoot : MonoBehaviour {
 	{
 		int indexVal = StarMoveCount - (int)SelectSetPanelDate.CheckQiNang1;
 		//Debug.Log("Unity:"+"*** "+pcvr.QiNangArray[indexVal]+", DongGanState "+pcvr.DongGanState);
-		pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
-		QiNangCQObj.SetActive(pcvr.QiNangArray[indexVal] == 0 ? false : true);
+		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
+		//QiNangCQObj.SetActive(pcvr.QiNangArray[indexVal] == 0 ? false : true);
 		//Debug.Log("Unity:"+"--- "+pcvr.QiNangArray[indexVal]);
 	}
 	

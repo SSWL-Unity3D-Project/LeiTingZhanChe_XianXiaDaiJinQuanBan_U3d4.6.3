@@ -110,7 +110,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		ContinueGameObj.SetActive(true);
         ShowDaoJiShiInfo();
 		//XKGlobalData.GetInstance().StopAudioRanLiaoJingGao();
-		pcvr.CloseAllQiNangArray(PlayerIndex, 1);
+		//pcvr.CloseAllQiNangArray(PlayerIndex, 1);
     }
 
 	public void StopDaoJiShi()

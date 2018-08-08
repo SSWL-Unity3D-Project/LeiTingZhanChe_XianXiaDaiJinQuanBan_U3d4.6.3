@@ -131,11 +131,11 @@ public class pcvr : MonoBehaviour {
 	
     void InitInfo()
     {
-        for (int i = 0; i < m_GmWXLoginDt.Length; i++)
-        {
-            m_GmWXLoginDt[i] = new GameWeiXinLoginData();
-        }
-        InitHandleJsonInfo();
+        //for (int i = 0; i < m_GmWXLoginDt.Length; i++)
+        //{
+        //    m_GmWXLoginDt[i] = new GameWeiXinLoginData();
+        //}
+        //InitHandleJsonInfo();
     }
 
 	// Use this for initialization
@@ -171,29 +171,29 @@ public class pcvr : MonoBehaviour {
 	{
 		HID_BUF_LEN_WRITE = MyCOMDevice.ComThreadClass.BufLenWrite;
 		lastUpTime = Time.realtimeSinceStartup;
-		InitJiaoYanMiMa();
-		InitSteerInfo();
-		InitYouMenInfo();
+		//InitJiaoYanMiMa();
+		//InitSteerInfo();
+		//InitYouMenInfo();
 
-        if (IsHongDDShouBing)
-        {
-            if (m_SSBoxPostNet != null)
-            {
-                WebSocketSimpet webSocketSimpet = m_SSBoxPostNet.m_WebSocketSimpet;
-                if (webSocketSimpet != null)
-                {
-                    Debug.Log("Unity:"+"add webSocketSimpet event...");
-                    webSocketSimpet.OnEventPlayerLoginBox += OnEventPlayerLoginBox;
-                    webSocketSimpet.OnEventPlayerExitBox += OnEventPlayerExitBox;
-                    webSocketSimpet.OnEventDirectionAngle += OnEventDirectionAngle;
-                    webSocketSimpet.OnEventActionOperation += OnEventActionOperation;
-                }
-                else
-                {
-                    Debug.Log("Unity:"+"webSocketSimpet is null!");
-                }
-            }
-        }
+  //      if (IsHongDDShouBing)
+  //      {
+  //          if (m_SSBoxPostNet != null)
+  //          {
+  //              WebSocketSimpet webSocketSimpet = m_SSBoxPostNet.m_WebSocketSimpet;
+  //              if (webSocketSimpet != null)
+  //              {
+  //                  Debug.Log("Unity:"+"add webSocketSimpet event...");
+  //                  webSocketSimpet.OnEventPlayerLoginBox += OnEventPlayerLoginBox;
+  //                  webSocketSimpet.OnEventPlayerExitBox += OnEventPlayerExitBox;
+  //                  webSocketSimpet.OnEventDirectionAngle += OnEventDirectionAngle;
+  //                  webSocketSimpet.OnEventActionOperation += OnEventActionOperation;
+  //              }
+  //              else
+  //              {
+  //                  Debug.Log("Unity:"+"webSocketSimpet is null!");
+  //              }
+  //          }
+  //      }
     }
 
     /// <summary>
@@ -475,74 +475,74 @@ public class pcvr : MonoBehaviour {
     public byte[] m_IndexPlayerActiveGameState = new byte[4];
     public void SetIndexPlayerActiveGameState(int index, byte activeState)
     {
-        if (XkPlayerCtrl.GetInstanceFeiJi() != null
-            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
-            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
-        {
-            if (activeState == (int)PlayerActiveState.JiHuo)
-            {
-                PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SetPlayerCoinTimeActive(indexPlayer);
-            }
-        }
+        //if (XkPlayerCtrl.GetInstanceFeiJi() != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+        //{
+        //    if (activeState == (int)PlayerActiveState.JiHuo)
+        //    {
+        //        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        //        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SetPlayerCoinTimeActive(indexPlayer);
+        //    }
+        //}
 
-        m_IndexPlayerActiveGameState[index] = activeState;
-        if (activeState == (int)PlayerActiveState.WeiJiHuo)
-        {
-            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.Index.Equals(index); });
-            if (playerDt != null)
-            {
-                if (playerDt.IsExitWeiXin)
-                {
-                    //玩家已经退出微信.
-                    Debug.Log("Unity:"+"player have exit weiXin! clean the player data...");
-                    m_GamePlayerData.Remove(playerDt);
-                }
-                else
-                {
-                    //玩家血值耗尽应该续费了,找到玩家数据.
-                    Debug.Log("Unity:"+"player should buy game coin!");
-                }
-            }
+        //m_IndexPlayerActiveGameState[index] = activeState;
+        //if (activeState == (int)PlayerActiveState.WeiJiHuo)
+        //{
+        //    GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.Index.Equals(index); });
+        //    if (playerDt != null)
+        //    {
+        //        if (playerDt.IsExitWeiXin)
+        //        {
+        //            //玩家已经退出微信.
+        //            Debug.Log("Unity:"+"player have exit weiXin! clean the player data...");
+        //            m_GamePlayerData.Remove(playerDt);
+        //        }
+        //        else
+        //        {
+        //            //玩家血值耗尽应该续费了,找到玩家数据.
+        //            Debug.Log("Unity:"+"player should buy game coin!");
+        //        }
+        //    }
 
-            m_GmWXLoginDt[index].IsActiveGame = false;
-            if (m_GmWXLoginDt[index].IsLoginWX)
-            {
-                Debug.Log("Unity:" + "player m_GamePadType ==  " + m_GmWXLoginDt[index].m_GamePadType);
-                switch (m_GmWXLoginDt[index].m_GamePadType)
-                {
-                    case GamePadType.WeiXin_ShouBing:
-                        {
-                            //微信手柄玩家血值耗尽了.
-                            m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing));
-                            break;
-                        }
-                    case GamePadType.TV_YaoKongQi:
-                        {
-                            //电视遥控器玩家血值耗尽了.
-                            m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi));
-                            if (m_GmTVLoginDt != null)
-                            {
-                                //关闭玩家发射子弹的按键消息.
-                                int indexVal = m_GmTVLoginDt.Index;
-                                InputEventCtrl.GetInstance().OnClickDaoDanBt(indexVal, ButtonState.UP);
-                                InputEventCtrl.GetInstance().OnClickFireBt(indexVal, ButtonState.UP);
-                            }
-                            break;
-                        }
-                }
-            }
-        }
-        else
-        {
-            if (!IsHongDDShouBing)
-            {
-                //软件版本测试用,模拟微信手柄登陆.
-                m_GmWXLoginDt[index].IsLoginWX = true;
-                m_GmWXLoginDt[index].m_GamePadType = GamePadType.Null;
-                Debug.Log("Unity: SetIndexPlayerActiveGameState -> index == " + index);
-            }
-        }
+        //    m_GmWXLoginDt[index].IsActiveGame = false;
+        //    if (m_GmWXLoginDt[index].IsLoginWX)
+        //    {
+        //        Debug.Log("Unity:" + "player m_GamePadType ==  " + m_GmWXLoginDt[index].m_GamePadType);
+        //        switch (m_GmWXLoginDt[index].m_GamePadType)
+        //        {
+        //            case GamePadType.WeiXin_ShouBing:
+        //                {
+        //                    //微信手柄玩家血值耗尽了.
+        //                    m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing));
+        //                    break;
+        //                }
+        //            case GamePadType.TV_YaoKongQi:
+        //                {
+        //                    //电视遥控器玩家血值耗尽了.
+        //                    m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi));
+        //                    if (m_GmTVLoginDt != null)
+        //                    {
+        //                        //关闭玩家发射子弹的按键消息.
+        //                        int indexVal = m_GmTVLoginDt.Index;
+        //                        InputEventCtrl.GetInstance().OnClickDaoDanBt(indexVal, ButtonState.UP);
+        //                        InputEventCtrl.GetInstance().OnClickFireBt(indexVal, ButtonState.UP);
+        //                    }
+        //                    break;
+        //                }
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    if (!IsHongDDShouBing)
+        //    {
+        //        //软件版本测试用,模拟微信手柄登陆.
+        //        m_GmWXLoginDt[index].IsLoginWX = true;
+        //        m_GmWXLoginDt[index].m_GamePadType = GamePadType.Null;
+        //        Debug.Log("Unity: SetIndexPlayerActiveGameState -> index == " + index);
+        //    }
+        //}
     }
 
     /// <summary>
@@ -892,6 +892,8 @@ public class pcvr : MonoBehaviour {
 
     public string[] m_PlayerHeadUrl = new string[4];
 
+    #region pcvr old code
+#if OLD_PCVR_CODE
     // Update is called once per frame
     void Update()
 	{
@@ -1477,7 +1479,7 @@ QiNangArray[3]			QiNangArray[2]
 		switch (MyCOMDevice.PcvrComSt) {
 		case MyCOMDevice.PcvrComState.TanKeFangXiangZhenDong:
 		{
-			#if !COM_TANK_TEST
+#if !COM_TANK_TEST
 			for (int i = 5; i < HID_BUF_LEN_WRITE - 2; i++) {
 				buffer[i] = (byte)(UnityEngine.Random.Range(0, 10000) % 256);
 			}
@@ -1691,11 +1693,11 @@ QiNangArray[3]			QiNangArray[2]
 				}
 				buffer[29] ^= buffer[i];
 			}
-			#endif
+#endif
 		}
 		break;
 		case MyCOMDevice.PcvrComState.TanKeGunZhenDong:{
-			#if COM_TANK_TEST
+#if COM_TANK_TEST
 			for (int i = 4; i < HID_BUF_LEN_WRITE - 2; i++) {
 				buffer[i] = (byte)(UnityEngine.Random.Range(0, 10000) % 256);
 			}
@@ -1791,7 +1793,7 @@ QiNangArray[3]			QiNangArray[2]
 				}
 				buffer[19] ^= buffer[i];
 			}
-			#endif
+#endif
 		}
 		break;
 		}
@@ -1897,7 +1899,7 @@ QiNangArray[3]			QiNangArray[2]
 
 		if (btState == ButtonState.DOWN) {
 			int indexVal = (int)indexPlayer - 1;
-			#if !USE_CENTER_ZUOYI
+#if !USE_CENTER_ZUOYI
 			switch (indexTrigger) {
 			case 1:
 				SetZuoYiDianJiSpeed(indexPlayer, -1);
@@ -1912,7 +1914,7 @@ QiNangArray[3]			QiNangArray[2]
 				}
 				break;
 			}
-			#else
+#else
 			if (indexTrigger == -1 && ZuoYiDianJiMvCenter[indexVal] == 1) {
 				SetZuoYiDianJiSpeed(indexPlayer, 1);
 			}
@@ -1924,7 +1926,7 @@ QiNangArray[3]			QiNangArray[2]
 				}
 				SetZuoYiDianJiSpeed(indexPlayer, 0);
 			}
-			#endif
+#endif
 		}
 
 		if (HardwareCheckCtrl.IsTestHardWare) {
@@ -2162,7 +2164,7 @@ QiNangArray[3]			QiNangArray[2]
 		switch (MyCOMDevice.PcvrComSt) {
 		case MyCOMDevice.PcvrComState.TanKeFangXiangZhenDong:
 		{
-			#if !COM_TANK_TEST
+#if !COM_TANK_TEST
 			if ((readMsg[34]&0x01) == 0x01) {
 				JiOuJiaoYanCount++;
 				if (JiOuJiaoYanCount >= JiOuJiaoYanMax && !IsJiOuJiaoYanFailed) {
@@ -2288,12 +2290,12 @@ QiNangArray[3]			QiNangArray[2]
 					ScreenLog.LogError("ReadByte[25] was wrong!");
 				}
 			}
-			#endif
+#endif
 		}
 			break;
 		case MyCOMDevice.PcvrComState.TanKeGunZhenDong:
 		{
-			#if COM_TANK_TEST
+#if COM_TANK_TEST
 			if ((readMsg[22]&0x01) == 0x01) {
 				JiOuJiaoYanCount++;
 				if (JiOuJiaoYanCount >= JiOuJiaoYanMax && !IsJiOuJiaoYanFailed) {
@@ -2329,7 +2331,7 @@ QiNangArray[3]			QiNangArray[2]
 	//			ScreenLog.Log("byte21 was wrong!");
 				return;
 			}
-			#endif
+#endif
 		}
 			break;
 		}
@@ -2343,7 +2345,7 @@ QiNangArray[3]			QiNangArray[2]
 		switch (MyCOMDevice.PcvrComSt) {
 		case MyCOMDevice.PcvrComState.TanKeFangXiangZhenDong:
 		{
-			#if !COM_TANK_TEST
+#if !COM_TANK_TEST
 			SteerValCurAy[0] = ((buffer[2] & 0x0f) << 8) + buffer[3];
 			YouMenCurVal[0] = ((buffer[4] & 0x0f) << 8) + buffer[5];
 
@@ -2842,7 +2844,7 @@ QiNangArray[3]			QiNangArray[2]
 				//FramesPerSecond.GetInstance().ClickSetMoveBtEvent( ButtonState.UP );
 				InputEventCtrl.GetInstance().ClickSetMoveBt( ButtonState.UP );
 			}
-			#endif
+#endif
 		}
 		break;
 		}
@@ -3272,8 +3274,10 @@ QiNangArray[3]			QiNangArray[2]
 		IsPlayerActivePcvr = true;
 		TimeLastActivePcvr = Time.realtimeSinceStartup;
 	}
-
-    #region pcvr 游戏彩票管理
+#endif
+#endregion
+    
+#region pcvr 游戏彩票管理
     /// <summary>
     /// 开始打印彩票.
     /// </summary>
@@ -3296,6 +3300,45 @@ QiNangArray[3]			QiNangArray[2]
     }
     #endregion
 
+    public void SubPlayerCoin(PlayerEnum indexPlayer, int subNum)
+    {
+        if (!bIsHardWare)
+        {
+            return;
+        }
+
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                if (CoinNumCurrentP1 < subNum)
+                {
+                    return;
+                }
+                CoinNumCurrentP1 -= subNum;
+                break;
+            case PlayerEnum.PlayerTwo:
+                if (CoinNumCurrentP2 < subNum)
+                {
+                    return;
+                }
+                CoinNumCurrentP2 -= subNum;
+                break;
+            case PlayerEnum.PlayerThree:
+                if (CoinNumCurrentP3 < subNum)
+                {
+                    return;
+                }
+                CoinNumCurrentP3 -= subNum;
+                break;
+            case PlayerEnum.PlayerFour:
+                if (CoinNumCurrentP4 < subNum)
+                {
+                    return;
+                }
+                CoinNumCurrentP4 -= subNum;
+                break;
+        }
+    }
     //	void OnGUI()
     //	{
     //		float width = Screen.width;

@@ -257,8 +257,8 @@ public class XkGameCtrl : SSGameMono
 		try
 		{
 			_Instance = this;
-			pcvr.OpenDongGanState();
-			pcvr.OpenAllPlayerFangXiangPanPower();
+			//pcvr.OpenDongGanState();
+			//pcvr.OpenAllPlayerFangXiangPanPower();
 			switch (XKGlobalData.GameDiff)
 			{
 				case "0":
@@ -1642,7 +1642,7 @@ public class XkGameCtrl : SSGameMono
 	public static void SetActivePlayerOne(bool isActive)
 	{
 		IsActivePlayerOne = isActive;
-		pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
+		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
 		CheckPlayerActiveNum();
 		if (isActive) {
 			IsPlayGamePOne = true;
@@ -1668,7 +1668,7 @@ public class XkGameCtrl : SSGameMono
 	public static void SetActivePlayerTwo(bool isActive)
 	{
 		IsActivePlayerTwo = isActive;
-		pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerTwo);
+		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerTwo);
 		CheckPlayerActiveNum();
 		if (isActive) {
 			IsPlayGamePTwo = true;
@@ -1694,7 +1694,7 @@ public class XkGameCtrl : SSGameMono
 	public static void SetActivePlayerThree(bool isActive)
 	{
 		IsActivePlayerThree = isActive;
-		pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerThree);
+		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerThree);
 		CheckPlayerActiveNum();
 		if (isActive) {
 			IsPlayGamePThree = true;
@@ -1720,7 +1720,7 @@ public class XkGameCtrl : SSGameMono
 	public static void SetActivePlayerFour(bool isActive)
 	{
 		IsActivePlayerFour = isActive;
-		pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerFour);
+		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerFour);
 		CheckPlayerActiveNum();
 		if (isActive) {
 			IsPlayGamePFour = true;
@@ -2400,7 +2400,7 @@ public class XkGameCtrl : SSGameMono
 		if (IsCartoonShootTest) {
 			return;
 		}
-		pcvr.GetInstance().ActiveFangXiangDouDong(indexVal, false);
+		//pcvr.GetInstance().ActiveFangXiangDouDong(indexVal, false);
 
         float damagaAddVal = 0f;
         if (XkPlayerCtrl.GetInstanceFeiJi() != null)

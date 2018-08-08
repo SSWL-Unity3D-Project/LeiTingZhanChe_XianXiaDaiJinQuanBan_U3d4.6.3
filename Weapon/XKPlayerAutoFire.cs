@@ -739,8 +739,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		Quaternion ammoSpawnRot = AmmoStartPosZP[0].rotation;
 		GameObject obj = null;
 		CheckFireAudioPlayerZhuPao();
-		pcvr.OpenZuoYiQiNang(PlayerIndex);
-		pcvr.GetInstance().ActiveFangXiangDouDong(PlayerIndex, false);
+		//pcvr.OpenZuoYiQiNang(PlayerIndex);
+		//pcvr.GetInstance().ActiveFangXiangDouDong(PlayerIndex, false);
 
 		obj = SpawnPlayerAmmoByAmmoType(ZHU_PAO_INDEX, ammoSpawnPos, ammoSpawnRot);
 		if (obj == null) {

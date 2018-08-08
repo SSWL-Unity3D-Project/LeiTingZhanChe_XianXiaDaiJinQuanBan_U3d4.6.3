@@ -20,6 +20,7 @@ public class SSTriggerCamerBox : MonoBehaviour
             }
             else
             {
+                //彩票战车npc走出镜头范围.
                 npcMoveCom.TriggerRemovePointNpc(0);
             }
         }

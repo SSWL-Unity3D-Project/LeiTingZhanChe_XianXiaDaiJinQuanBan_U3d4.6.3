@@ -75,7 +75,7 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 //		FinishTaskObj.SetActive(false);
 		IsShowFinishTask = true;
 		IsMakeJiFenStop = false;
-		pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
+		//pcvr.CloseAllQiNangArray(PlayerEnum.Null, 1);
 
 		if (!JiFenZongJieMianObj.activeSelf) {
 			CoinPlayerCtrl.GetInstanceOne().HiddenPlayerCoin();
