@@ -778,25 +778,25 @@ public class pcvr : MonoBehaviour {
 
     public void ClearGameWeiXinData()
     {
-        Debug.Log("Unity: ClearGameWeiXinData...");
-        if (m_GamePlayerData != null)
-        {
-            m_GamePlayerData.Clear();
-        }
+        //Debug.Log("Unity: ClearGameWeiXinData...");
+        //if (m_GamePlayerData != null)
+        //{
+        //    m_GamePlayerData.Clear();
+        //}
 
-        for (int i = 0; i < m_GmWXLoginDt.Length; i++)
-        {
-            m_GmWXLoginDt[i].IsLoginWX = false;
-            m_GmWXLoginDt[i].IsActiveGame = false;
-            m_GmWXLoginDt[i].m_GamePadType = GamePadType.Null;
-        }
-        m_TVYaoKongPlayerDt.Clear();
+        //for (int i = 0; i < m_GmWXLoginDt.Length; i++)
+        //{
+        //    m_GmWXLoginDt[i].IsLoginWX = false;
+        //    m_GmWXLoginDt[i].IsActiveGame = false;
+        //    m_GmWXLoginDt[i].m_GamePadType = GamePadType.Null;
+        //}
+        //m_TVYaoKongPlayerDt.Clear();
 
-        if (m_GmTVLoginDt != null)
-        {
-            m_GmTVLoginDt.Reset();
-            m_GmTVLoginDt = null;
-        }
+        //if (m_GmTVLoginDt != null)
+        //{
+        //    m_GmTVLoginDt.Reset();
+        //    m_GmTVLoginDt = null;
+        //}
     }
 
     private void OnEventPlayerLoginBox(WebSocketSimpet.PlayerWeiXinData val)
