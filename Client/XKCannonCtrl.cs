@@ -44,10 +44,10 @@ public class XKCannonCtrl : MonoBehaviour {
 	// Use this for initialization
 	void Awake()
 	{
-		if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan) {
-			TimeDanGuanFire *= XkGameCtrl.GetInstance().NpcAmmoTime;
-			TimeAmmoWait *= XkGameCtrl.GetInstance().NpcAmmoTime;
-		}
+		//if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan) {
+		//	TimeDanGuanFire *= XkGameCtrl.GetInstance().NpcAmmoTime;
+		//	TimeAmmoWait *= XkGameCtrl.GetInstance().NpcAmmoTime;
+		//}
 
 		if (AudioCannonFire != null) {
 			AudioCannonFire.playOnAwake = false;

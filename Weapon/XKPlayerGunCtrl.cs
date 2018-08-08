@@ -59,14 +59,14 @@ public class XKPlayerGunCtrl : MonoBehaviour {
 		
 		Vector3 posA = Vector3.zero;
 		Vector3 mousePosInput = Input.mousePosition;
-		if (pcvr.bIsHardWare) {
-			if (PlayerSt == PlayerEnum.PlayerOne) {
-				mousePosInput = pcvr.CrossPositionOne;
-			}
-			else {
-				mousePosInput = pcvr.CrossPositionTwo;
-			}
-		}
+		//if (pcvr.bIsHardWare) {
+		//	if (PlayerSt == PlayerEnum.PlayerOne) {
+		//		mousePosInput = pcvr.CrossPositionOne;
+		//	}
+		//	else {
+		//		mousePosInput = pcvr.CrossPositionTwo;
+		//	}
+		//}
 		
 		Vector3 ammoSpawnPos = AmmoStartPos.position;
 		Vector3 firePos = Vector3.zero;

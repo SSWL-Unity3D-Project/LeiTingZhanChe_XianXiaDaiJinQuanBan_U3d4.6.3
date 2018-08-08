@@ -35,7 +35,7 @@ public class HardwareCheckCtrl : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		pcvr.TKMoveSt = TKMoveSt;
+		//pcvr.TKMoveSt = TKMoveSt;
 		Screen.SetResolution(1280, 720, false);
 		Instance = this;
 		IsTestHardWare = true;
@@ -105,10 +105,10 @@ public class HardwareCheckCtrl : MonoBehaviour
 			YouMenLable[3].text = InputEventCtrl.PlayerYM[3].ToString();
 		}
 		else {
-			FangXiangLable[0].text = pcvr.SteerValCurAy[0].ToString();
-			FangXiangLable[1].text = pcvr.SteerValCurAy[1].ToString();
-			FangXiangLable[2].text = pcvr.SteerValCurAy[2].ToString();
-			FangXiangLable[3].text = pcvr.SteerValCurAy[3].ToString();
+			//FangXiangLable[0].text = pcvr.SteerValCurAy[0].ToString();
+			//FangXiangLable[1].text = pcvr.SteerValCurAy[1].ToString();
+			//FangXiangLable[2].text = pcvr.SteerValCurAy[2].ToString();
+			//FangXiangLable[3].text = pcvr.SteerValCurAy[3].ToString();
 			//YouMenLable[0].text = pcvr.YouMenCurVal[0].ToString();
 			//YouMenLable[1].text = pcvr.YouMenCurVal[1].ToString();
 			//YouMenLable[2].text = pcvr.YouMenCurVal[2].ToString();
@@ -408,17 +408,17 @@ public class HardwareCheckCtrl : MonoBehaviour
 		switch (StartLedNumP1) {
 		case 1:
 			StartLedP1.text = "1P开始灯亮";
-			pcvr.StartLightStateP1 = LedState.Liang;
+			//pcvr.StartLightStateP1 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP1.text = "1P开始灯闪";
-			pcvr.StartLightStateP1 = LedState.Shan;
+			//pcvr.StartLightStateP1 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP1.text = "1P开始灯灭";
-			pcvr.StartLightStateP1 = LedState.Mie;
+			//pcvr.StartLightStateP1 = LedState.Mie;
 			StartLedNumP1 = 1;
 			break;
 		}
@@ -430,17 +430,17 @@ public class HardwareCheckCtrl : MonoBehaviour
 		switch (StartLedNumP2) {
 		case 1:
 			StartLedP2.text = "2P开始灯亮";
-			pcvr.StartLightStateP2 = LedState.Liang;
+			//pcvr.StartLightStateP2 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP2.text = "2P开始灯闪";
-			pcvr.StartLightStateP2 = LedState.Shan;
+			//pcvr.StartLightStateP2 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP2.text = "2P开始灯灭";
-			pcvr.StartLightStateP2 = LedState.Mie;
+			//pcvr.StartLightStateP2 = LedState.Mie;
 			StartLedNumP2 = 1;
 			break;
 		}
@@ -452,17 +452,17 @@ public class HardwareCheckCtrl : MonoBehaviour
 		switch (StartLedNumP3) {
 		case 1:
 			StartLedP3.text = "3P开始灯亮";
-			pcvr.StartLightStateP3 = LedState.Liang;
+			//pcvr.StartLightStateP3 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP3.text = "3P开始灯闪";
-			pcvr.StartLightStateP3 = LedState.Shan;
+			//pcvr.StartLightStateP3 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP3.text = "3P开始灯灭";
-			pcvr.StartLightStateP3 = LedState.Mie;
+			//pcvr.StartLightStateP3 = LedState.Mie;
 			StartLedNumP3 = 1;
 			break;
 		}
@@ -474,17 +474,17 @@ public class HardwareCheckCtrl : MonoBehaviour
 		switch (StartLedNumP4) {
 		case 1:
 			StartLedP4.text = "4P开始灯亮";
-			pcvr.StartLightStateP4 = LedState.Liang;
+			//pcvr.StartLightStateP4 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP4.text = "4P开始灯闪";
-			pcvr.StartLightStateP4 = LedState.Shan;
+			//pcvr.StartLightStateP4 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP4.text = "4P开始灯灭";
-			pcvr.StartLightStateP4 = LedState.Mie;
+			//pcvr.StartLightStateP4 = LedState.Mie;
 			StartLedNumP4 = 1;
 			break;
 		}
@@ -497,17 +497,17 @@ public class HardwareCheckCtrl : MonoBehaviour
 		switch (StartLedNumP5) {
 		case 1:
 			StartLedP5.text = "5P开始灯亮";
-			pcvr.StartLightStateP5 = LedState.Liang;
+			//pcvr.StartLightStateP5 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP5.text = "5P开始灯闪";
-			pcvr.StartLightStateP5 = LedState.Shan;
+			//pcvr.StartLightStateP5 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP5.text = "5P开始灯灭";
-			pcvr.StartLightStateP5 = LedState.Mie;
+			//pcvr.StartLightStateP5 = LedState.Mie;
 			StartLedNumP5 = 1;
 			break;
 		}

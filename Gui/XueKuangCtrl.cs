@@ -106,57 +106,20 @@ public class XueKuangCtrl : MonoBehaviour
 			indexVal = XkGameCtrl.IsActivePlayerFour == true ? 1 : 0;
 			break;
 		}
-        int indexUrl = (int)PlayerSt - 1;
-
 		CoinDiKuang.mainTexture = CoinDKTexture[indexVal];
-
-        if (pcvr.IsHongDDShouBing)
+        
+        if (XKGlobalData.GameVersionPlayer == 0)
         {
-            if (XKGlobalData.GameVersionPlayer == 0)
-            {
-                XueKuangNum.mainTexture = XueKuangTexture[indexVal];
-                if (indexVal == 1)
-                {
-                    if (m_WeiXinHead != null)
-                    {
-                        m_WeiXinHead.gameObject.SetActive(true);
-                        string url = pcvr.GetInstance().m_PlayerHeadUrl[indexUrl];
-                        XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(url, m_WeiXinHead);
-                    }
-                }
-                else
-                {
-                    if (m_WeiXinHead != null)
-                    {
-                        m_WeiXinHead.mainTexture = m_TouMingHead;
-                        m_WeiXinHead.gameObject.SetActive(false);
-                    }
-                }
-            }
-            else
-            {
-                if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
-                {
-                    XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
-                }
-            }
+            XueKuangNum.mainTexture = XueKuangTexture[indexVal];
         }
         else
         {
-            if (XKGlobalData.GameVersionPlayer == 0)
+            if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
             {
-                XueKuangNum.mainTexture = XueKuangTexture[indexVal];
-            }
-            else
-            {
-                if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
-                {
-                    XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
-                }
+                XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
             }
         }
-
-
+        
 		bool isActiveInfo = indexVal == 1 ? true : false;
 		XueTiaoSprite.gameObject.SetActive(isActiveInfo);
 		XueTiaoSprite.fillAmount = 1f;

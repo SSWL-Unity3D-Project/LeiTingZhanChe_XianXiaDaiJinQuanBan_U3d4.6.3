@@ -886,11 +886,9 @@ public class SetPanelUiRoot : MonoBehaviour {
 			break;
 		case SelectSetPanelDate.GameTestBt:
 			SetAnJianTestPanel(1); //关闭按键测试界面.
-			if (pcvr.TKMoveSt == TKMoveState.YaoGanBan) {
-				//摇杆版跳过方向,油门,刹车的校准逻辑.
-				StarMoveCount = (int)SelectSetPanelDate.AdjustYouMenShaCheP4;
-			}
-			break;
+            //摇杆版跳过方向,油门,刹车的校准逻辑.
+            StarMoveCount = (int)SelectSetPanelDate.AdjustYouMenShaCheP4;
+            break;
 		case SelectSetPanelDate.GameLanguage:
 			//跳过座椅电机速度设置.
 			StarMoveCount = (int)SelectSetPanelDate.DianJiSpeedP4;
@@ -900,10 +898,8 @@ public class SetPanelUiRoot : MonoBehaviour {
 			}*/
 			break;
 		case SelectSetPanelDate.Exit:
-			if (pcvr.TKMoveSt == TKMoveState.YaoGanBan) {
-				StarMoveCount = (int)SelectSetPanelDate.CheckQiNang16;
-			}
-			break;
+            StarMoveCount = (int)SelectSetPanelDate.CheckQiNang16;
+            break;
 		}
 	}
 
@@ -913,17 +909,17 @@ public class SetPanelUiRoot : MonoBehaviour {
 		XKGlobalData.CoinPlayerTwo = 0;
 		XKGlobalData.CoinPlayerThree = 0;
 		XKGlobalData.CoinPlayerFour = 0;
-		if (pcvr.bIsHardWare) {
-			pcvr.GetInstance().CoinNumCurrentP1 = 0;
-			pcvr.GetInstance().CoinNumCurrentP2 = 0;
-			pcvr.GetInstance().CoinNumCurrentP3 = 0;
-			pcvr.GetInstance().CoinNumCurrentP4 = 0;
-		}
+		//if (pcvr.bIsHardWare) {
+		//	pcvr.GetInstance().CoinNumCurrentP1 = 0;
+		//	pcvr.GetInstance().CoinNumCurrentP2 = 0;
+		//	pcvr.GetInstance().CoinNumCurrentP3 = 0;
+		//	pcvr.GetInstance().CoinNumCurrentP4 = 0;
+		//}
 	}
 
 	void BackMovieScene()
     {
-        pcvr.GetInstance().ClearGameWeiXinData();
+        //pcvr.GetInstance().ClearGameWeiXinData();
         if (Application.loadedLevel != (int)GameLevel.Movie) {
 			XkGameCtrl.ResetGameInfo();
 			if (!XkGameCtrl.IsGameOnQuit) {

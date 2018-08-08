@@ -123,35 +123,14 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     string m_HeadUrl = "";
     public Texture m_TouMingHead;
 	public void HandlePlayerXueTiaoInfo(float fillVal)
-	{
-        if (pcvr.IsHongDDShouBing)
-        {
-            int indexVal = (int)PlayerSt - 1;
-            if (m_HeadUrl != pcvr.GetInstance().m_PlayerHeadUrl[indexVal])
-            {
-                m_HeadUrl = pcvr.GetInstance().m_PlayerHeadUrl[indexVal];
-                XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(m_HeadUrl, m_MatNum);
-            }
-        }
-        else
-        {
-            m_MatNum.mainTexture = m_PlayerNumImg;
-        }
+    {
+        m_MatNum.mainTexture = m_PlayerNumImg;
 
         float xueLiangVal = 1f - fillVal;
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);
 		NengLiangRenderer.materials[0].SetTextureOffset("_MainTex", new Vector2(xueLiangVal, 0f));
 		bool isActiveXT = xueLiangVal >= 1f ? false : true;
 		gameObject.SetActive(isActiveXT);
-
-        if (pcvr.IsHongDDShouBing && !isActiveXT)
-        {
-            if (m_TouMingHead != null)
-            {
-                m_HeadUrl = "";
-                m_MatNum.mainTexture = m_TouMingHead;
-            }
-        }
 	}
 	
 	public void SetPlayerIndex(PlayerEnum playerIndex)
@@ -182,22 +161,22 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		NengLianTran.parent = XkGameCtrl.MissionCleanup;
 		gameObject.SetActive(isActiveXT);
 
-        if (isActiveXT && pcvr.IsHongDDShouBing)
-        {
-            if (pcvr.IsHongDDShouBing)
-            {
-                int indexVal = (int)PlayerSt - 1;
-                if (m_HeadUrl != pcvr.GetInstance().m_PlayerHeadUrl[indexVal])
-                {
-                    m_HeadUrl = pcvr.GetInstance().m_PlayerHeadUrl[indexVal];
-                    XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(m_HeadUrl, m_MatNum);
-                }
-            }
-            else
-            {
-                m_MatNum.mainTexture = m_PlayerNumImg;
-            }
-        }
+        //if (isActiveXT && pcvr.IsHongDDShouBing)
+        //{
+        //    if (pcvr.IsHongDDShouBing)
+        //    {
+        //        int indexVal = (int)PlayerSt - 1;
+        //        if (m_HeadUrl != pcvr.GetInstance().m_PlayerHeadUrl[indexVal])
+        //        {
+        //            m_HeadUrl = pcvr.GetInstance().m_PlayerHeadUrl[indexVal];
+        //            XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(m_HeadUrl, m_MatNum);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        m_MatNum.mainTexture = m_PlayerNumImg;
+        //    }
+        //}
 	}
 	
 	/**

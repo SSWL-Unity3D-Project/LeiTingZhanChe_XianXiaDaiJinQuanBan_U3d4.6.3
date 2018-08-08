@@ -378,9 +378,9 @@ public class XkGameCtrl : SSGameMono
 				IsServerCameraTest = false;
 				Screen.showCursor = false;
 			}
-			else {
-				pcvr.TKMoveSt = TestTKMoveSt;
-			}
+			//else {
+			//	pcvr.TKMoveSt = TestTKMoveSt;
+			//}
 
 			if (IsServerCameraTest)
 			{
@@ -529,7 +529,7 @@ public class XkGameCtrl : SSGameMono
 			AudioBeiJingCtrl.IndexBeiJingAd = 0;
 			XKGlobalData.GetInstance().PlayGuanKaBeiJingAudio();
             InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
-            pcvr.GetInstance().AddTVYaoKongBtEvent();
+            //pcvr.GetInstance().AddTVYaoKongBtEvent();
 
 #if DRAW_DEBUG_CAIPIAO_INFO
             gameObject.AddComponent<SSDebugCaiPiaoInfo>();
@@ -1662,7 +1662,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        pcvr.GetInstance().SetIndexPlayerActiveGameState(0, (byte)(isActive == true ? 1 : 0));
+        //pcvr.GetInstance().SetIndexPlayerActiveGameState(0, (byte)(isActive == true ? 1 : 0));
     }
 
 	public static void SetActivePlayerTwo(bool isActive)
@@ -1688,7 +1688,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        pcvr.GetInstance().SetIndexPlayerActiveGameState(1, (byte)(isActive == true ? 1 : 0));
+        //pcvr.GetInstance().SetIndexPlayerActiveGameState(1, (byte)(isActive == true ? 1 : 0));
     }
 	
 	public static void SetActivePlayerThree(bool isActive)
@@ -1714,7 +1714,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        pcvr.GetInstance().SetIndexPlayerActiveGameState(2, (byte)(isActive == true ? 1 : 0));
+        //pcvr.GetInstance().SetIndexPlayerActiveGameState(2, (byte)(isActive == true ? 1 : 0));
     }
 
 	public static void SetActivePlayerFour(bool isActive)
@@ -1740,7 +1740,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        pcvr.GetInstance().SetIndexPlayerActiveGameState(3, (byte)(isActive == true ? 1 : 0));
+        //pcvr.GetInstance().SetIndexPlayerActiveGameState(3, (byte)(isActive == true ? 1 : 0));
     }
 
 	static void SetPlayerFireMaxAmmoCount()
@@ -1805,7 +1805,7 @@ public class XkGameCtrl : SSGameMono
 		SetActivePlayerThree(false);
 		SetActivePlayerFour(false);
 
-        pcvr.GetInstance().ClearGameWeiXinData();
+        //pcvr.GetInstance().ClearGameWeiXinData();
 		if (!IsGameOnQuit) {
 			System.GC.Collect();
 			Application.LoadLevel((int)GameLevel.Movie);

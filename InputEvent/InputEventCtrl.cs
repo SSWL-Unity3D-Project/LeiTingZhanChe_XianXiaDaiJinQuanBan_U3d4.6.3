@@ -921,7 +921,7 @@ public class InputEventCtrl : MonoBehaviour
 //		}
 //		#endif
 
-		if (pcvr.bIsHardWare && !TestTanKCom.IsTestTankCom && !pcvr.IsTestInput) {
+		if (pcvr.bIsHardWare && !TestTanKCom.IsTestTankCom) {
 			return;
 		}
         
@@ -1021,12 +1021,7 @@ public class InputEventCtrl : MonoBehaviour
             //接收遥控器/键盘上的向下按键信息.
             ClickTVYaoKongDownBt(ButtonState.UP);
         }
-
-        if (pcvr.IsHongDDShouBing)
-        {
-            return;
-        }
-
+        
         if (Input.GetKeyUp(KeyCode.T)) {
 			int coinVal = XKGlobalData.CoinPlayerOne + 1;
 			XKGlobalData.SetCoinPlayerOne(coinVal);

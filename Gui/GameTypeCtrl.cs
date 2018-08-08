@@ -23,7 +23,7 @@ public class GameTypeCtrl : MonoBehaviour {
 	void Awake()
 	{
 		Instance = this;
-		pcvr.TKMoveSt = TKMoveSt;
+		//pcvr.TKMoveSt = TKMoveSt;
 		IsSetTKMoveSt = true;
 
 		AppTypeStatic = AppType;
