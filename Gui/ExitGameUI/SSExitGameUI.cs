@@ -45,25 +45,25 @@ public class SSExitGameUI : MonoBehaviour
         SetAcitveBtFlash();
         QueDingUI.transform.localScale = m_SmallScale;
         QuXiaoUI.transform.localScale = m_BigScale;
-        InputEventCtrl.GetInstance().ClickTVYaoKongEnterBtEvent += ClickTVYaoKongEnterBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongLeftBtEvent += ClickTVYaoKongLeftBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongRightBtEvent += ClickTVYaoKongRightBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongEnterBtEvent += ClickTVYaoKongEnterBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongLeftBtEvent += ClickTVYaoKongLeftBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongRightBtEvent += ClickTVYaoKongRightBtEvent;
     }
 
     public void RemoveSelf()
     {
         SSUIRoot.GetInstance().m_ExitUICom = null;
-        InputEventCtrl.GetInstance().ClickTVYaoKongEnterBtEvent -= ClickTVYaoKongEnterBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent -= ClickTVYaoKongExitBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongLeftBtEvent -= ClickTVYaoKongLeftBtEvent;
-        InputEventCtrl.GetInstance().ClickTVYaoKongRightBtEvent -= ClickTVYaoKongRightBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongEnterBtEvent -= ClickTVYaoKongEnterBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent -= ClickTVYaoKongExitBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongLeftBtEvent -= ClickTVYaoKongLeftBtEvent;
+        //InputEventCtrl.GetInstance().ClickTVYaoKongRightBtEvent -= ClickTVYaoKongRightBtEvent;
         Destroy(gameObject);
     }
     
-    private void ClickTVYaoKongLeftBtEvent(ButtonState val)
+    private void ClickTVYaoKongLeftBtEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             return;
         }
@@ -75,9 +75,9 @@ public class SSExitGameUI : MonoBehaviour
         SetAcitveBtFlash();
     }
 
-    private void ClickTVYaoKongRightBtEvent(ButtonState val)
+    private void ClickTVYaoKongRightBtEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             return;
         }
@@ -113,19 +113,19 @@ public class SSExitGameUI : MonoBehaviour
         }
     }
 
-    private void ClickTVYaoKongEnterBtEvent(ButtonState val)
+    private void ClickTVYaoKongEnterBtEvent(pcvr.ButtonState val)
     {
 
         if (m_ExitType == ExitEnum.QuXiao)
         {
             switch (val)
             {
-                case ButtonState.DOWN:
+                case pcvr.ButtonState.DOWN:
                     {
                         QuXiaoUI.mainTexture = QuXiaoImg[1];
                         break;
                     }
-                case ButtonState.UP:
+                case pcvr.ButtonState.UP:
                     {
                         QuXiaoUI.mainTexture = QuXiaoImg[0];
                         Debug.Log("Unity:" + "Player close exit game ui...");
@@ -147,12 +147,12 @@ public class SSExitGameUI : MonoBehaviour
         {
             switch (val)
             {
-                case ButtonState.DOWN:
+                case pcvr.ButtonState.DOWN:
                     {
                         QueDingUI.mainTexture = QueDingImg[1];
                         break;
                     }
-                case ButtonState.UP:
+                case pcvr.ButtonState.UP:
                     {
                         QueDingUI.mainTexture = QueDingImg[0];
                         Debug.Log("Unity:" + "Player exit application...");
@@ -172,17 +172,17 @@ public class SSExitGameUI : MonoBehaviour
         }
     }
 
-    private void ClickTVYaoKongExitBtEvent(ButtonState val)
+    private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {
         switch (val)
         {
-            case ButtonState.DOWN:
+            case pcvr.ButtonState.DOWN:
                 {
                     ClickTVYaoKongLeftBtEvent(val);
                     QuXiaoUI.mainTexture = QuXiaoImg[1];
                     break;
                 }
-            case ButtonState.UP:
+            case pcvr.ButtonState.UP:
                 {
                     QuXiaoUI.mainTexture = QuXiaoImg[0];
                     Debug.Log("Unity:" + "Player close exit game ui...");

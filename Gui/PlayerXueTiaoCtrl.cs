@@ -60,7 +60,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		CameraTran = Camera.main != null ? Camera.main.transform : null;
         if (m_TouMingHead != null)
         {
-            m_HeadUrl = "";
+            //m_HeadUrl = "";
             m_MatNum.mainTexture = m_TouMingHead;
         }
     }
@@ -120,7 +120,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		}
 	}
 
-    string m_HeadUrl = "";
+    //string m_HeadUrl = "";
     public Texture m_TouMingHead;
 	public void HandlePlayerXueTiaoInfo(float fillVal)
     {

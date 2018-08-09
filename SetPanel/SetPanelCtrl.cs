@@ -20,13 +20,13 @@ public class SetPanelCtrl : MonoBehaviour {
 		InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
 	}
 
-	void ClickSetEnterBtEvent(ButtonState val)
+	void ClickSetEnterBtEvent(pcvr.ButtonState val)
 	{
 		if (HardwareCheckCtrl.IsTestHardWare) {
 			return;
 		}
 
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 

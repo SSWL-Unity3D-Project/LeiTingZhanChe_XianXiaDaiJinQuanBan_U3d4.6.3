@@ -4,7 +4,7 @@ using System.Collections;
 public class SetPanelGunCrossCtrl : MonoBehaviour {
 	public PlayerEnum PlayerSt = PlayerEnum.PlayerOne;
 	public GameObject [] AimObjArray;
-	Transform ObjTran;
+	//Transform ObjTran;
 	GameObject CrossObj;
 
 //	static SetPanelGunCrossCtrl _Instance;
@@ -39,7 +39,7 @@ public class SetPanelGunCrossCtrl : MonoBehaviour {
 			break;
 		}
 		CrossObj = transform.gameObject;
-		ObjTran = transform;
+		//ObjTran = transform;
 		SetPlayerGunCrossActive(false);
 		SetPlayerAimObjArrayActive(false);
 	}

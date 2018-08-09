@@ -16,12 +16,12 @@ public class CeShiGunAimObjCtrl : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void TmpUpdate () {
 
 		bool isClickFireBtDown = false;
-		if (InputEventCtrl.IsClickFireBtOneDown || InputEventCtrl.IsClickFireBtTwoDown) {
-			isClickFireBtDown = true;
-		}
+		//if (InputEventCtrl.IsClickFireBtOneDown || InputEventCtrl.IsClickFireBtTwoDown) {
+		//	isClickFireBtDown = true;
+		//}
 
 		if (!isClickFireBtDown) {
 			SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(false);

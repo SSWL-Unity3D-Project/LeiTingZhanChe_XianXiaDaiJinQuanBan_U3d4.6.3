@@ -27,9 +27,9 @@ public class GameOverCtrl : MonoBehaviour {
 		IsShowGameOver = true;
 		GameOverObj.SetActive(true);
 
-		if (pcvr.bIsHardWare) {
-			MyCOMDevice.GetInstance().ForceRestartComPort();
-		}
+		//if (pcvr.bIsHardWare) {
+		//	MyCOMDevice.GetInstance().ForceRestartComPort();
+		//}
 
 		switch (key) {
 		case 0:

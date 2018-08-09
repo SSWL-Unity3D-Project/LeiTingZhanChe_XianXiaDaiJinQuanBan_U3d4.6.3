@@ -2,10 +2,15 @@
 
 public class pcvr : MonoBehaviour
 {
+    public enum ButtonState : int
+    {
+        UP = 1,
+        DOWN = -1
+    }
     /// <summary>
     /// 是否是硬件版.
     /// </summary>
-    static public bool bIsHardWare = false;
+    static public bool bIsHardWare = true;
     /// <summary>
     /// 是否校验hid.
     /// </summary>
@@ -13,17 +18,18 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// pcvr通信数据管理.
     /// </summary>
-    //[HideInInspector]
-    //public pcvrTXManage mPcvrTXManage;
+    [HideInInspector]
+    public pcvrTXManage mPcvrTXManage;
     static private pcvr Instance = null;
     static public pcvr GetInstance()
     {
         if (Instance == null)
         {
+            PcvrComInputEvent.GetInstance();
             GameObject obj = new GameObject("_PCVR");
             DontDestroyOnLoad(obj);
             Instance = obj.AddComponent<pcvr>();
-            //Instance.mPcvrTXManage = obj.AddComponent<pcvrTXManage>();
+            Instance.mPcvrTXManage = obj.AddComponent<pcvrTXManage>();
             if (bIsHardWare)
             {
                 MyCOMDevice.GetInstance();
@@ -36,8 +42,23 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 开始打印彩票.
     /// </summary>
-    internal void StartPrintPlayerCaiPiao(PlayerEnum index, int caiPiao)
+    internal void StartPrintPlayerCaiPiao(PlayerEnum indexPlayer, int caiPiao)
     {
+        if (bIsHardWare && mPcvrTXManage != null)
+        {
+            int indexVal = (int)indexPlayer;
+            if (indexVal < 1 || indexVal > 3)
+            {
+                Debug.LogWarning("StartPrintPlayerCaiPiao -> indexVal was wrong! indexVal ==== " + indexVal);
+                return;
+            }
+            pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+            if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
+            {
+                pcvrTXManage.CaiPiaoPrintCmd cmd = pcvrTXManage.CaiPiaoPrintCmd.BanPiaoPrint;
+                mPcvrTXManage.SetCaiPiaoPrintCmd(cmd, indexCaiPiaoJi, caiPiao);
+            }
+        }
     }
 
     /// <summary>
@@ -45,6 +66,23 @@ public class pcvr : MonoBehaviour
     /// </summary>
     internal void RestartPrintCaiPiao(PlayerEnum indexPlayer)
     {
+        if (bIsHardWare && mPcvrTXManage != null)
+        {
+            int indexVal = (int)indexPlayer;
+            if (indexVal < 1 || indexVal > 3)
+            {
+                Debug.LogWarning("StartPrintPlayerCaiPiao -> indexVal was wrong! indexVal ==== " + indexVal);
+                return;
+            }
+
+            pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+            if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
+            {
+                pcvrTXManage.CaiPiaoPrintCmd cmd = pcvrTXManage.CaiPiaoPrintCmd.BanPiaoPrint;
+                int caiPiao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetPlayerCaiPiaoVal(indexPlayer);
+                mPcvrTXManage.SetCaiPiaoPrintCmd(cmd, indexCaiPiaoJi, caiPiao);
+            }
+        }
     }
 
     /// <summary>
@@ -52,8 +90,30 @@ public class pcvr : MonoBehaviour
     /// </summary>
     internal void ClearCaiPiaoData(PlayerEnum indexPlayer)
     {
+        if (bIsHardWare && mPcvrTXManage != null)
+        {
+            int indexVal = (int)indexPlayer;
+            if (indexVal < 1 || indexVal > 3)
+            {
+                Debug.LogWarning("StartPrintPlayerCaiPiao -> indexVal was wrong! indexVal ==== " + indexVal);
+                return;
+            }
+
+            pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+            if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
+            {
+                mPcvrTXManage.ClearCaiPiaoJiData(indexCaiPiaoJi);
+            }
+        }
     }
     #endregion
+    
+    public enum LedState
+    {
+        Liang,
+        Shan,
+        Mie
+    }
 
     public void SubPlayerCoin(PlayerEnum indexPlayer, int subNum)
     {
@@ -62,43 +122,17 @@ public class pcvr : MonoBehaviour
             return;
         }
 
-        //switch (indexPlayer)
-        //{
-        //    case PlayerEnum.PlayerOne:
-        //        if (CoinNumCurrentP1 < subNum)
-        //        {
-        //            return;
-        //        }
-        //        CoinNumCurrentP1 -= subNum;
-        //        break;
-        //    case PlayerEnum.PlayerTwo:
-        //        if (CoinNumCurrentP2 < subNum)
-        //        {
-        //            return;
-        //        }
-        //        CoinNumCurrentP2 -= subNum;
-        //        break;
-        //    case PlayerEnum.PlayerThree:
-        //        if (CoinNumCurrentP3 < subNum)
-        //        {
-        //            return;
-        //        }
-        //        CoinNumCurrentP3 -= subNum;
-        //        break;
-        //    case PlayerEnum.PlayerFour:
-        //        if (CoinNumCurrentP4 < subNum)
-        //        {
-        //            return;
-        //        }
-        //        CoinNumCurrentP4 -= subNum;
-        //        break;
-        //}
-    }
-}
+        int indexVal = (int)indexPlayer;
+        if (indexVal < 1 || indexVal > 3)
+        {
+            Debug.LogWarning("SubPlayerCoin -> indexVal was wrong! indexVal ===== " + indexVal);
+            return;
+        }
+        pcvrTXManage.PlayerCoinEnum indexPlayerCoin = (pcvrTXManage.PlayerCoinEnum)(indexVal - 1);
 
-public enum LedState
-{
-	Liang,
-	Shan,
-	Mie
+        if (mPcvrTXManage != null)
+        {
+            mPcvrTXManage.SubPlayerCoin(subNum, indexPlayerCoin);
+        }
+    }
 }

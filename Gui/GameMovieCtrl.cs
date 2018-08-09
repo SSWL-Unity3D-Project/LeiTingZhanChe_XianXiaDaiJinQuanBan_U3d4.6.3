@@ -114,7 +114,7 @@ public class GameMovieCtrl : SSGameMono
             //PlayMovie();
             //创建Logo播放对象.
             CrateMovieLogoAni();
-            InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
+            //InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
             //pcvr.GetInstance().AddTVYaoKongBtEvent();
         }
 		catch (System.Exception e)
@@ -175,8 +175,8 @@ public class GameMovieCtrl : SSGameMono
         }
 		Debug.Log("Unity:!!!!!!DelayResetIsLoadingLevel3!!!!!!");
 
-		//InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.DOWN); //test.
-        //InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.UP);
+		//InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.DOWN); //test.
+        //InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.UP);
 		//Debug.Log("Unity:!!!!!!DelayResetIsLoadingLevel4!!!!!!");
 	}
 
@@ -247,9 +247,9 @@ public class GameMovieCtrl : SSGameMono
         return obj;
     }
 
-    private void ClickTVYaoKongExitBtEvent(ButtonState val)
+    private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             if (m_ExitUICom == null)
             {

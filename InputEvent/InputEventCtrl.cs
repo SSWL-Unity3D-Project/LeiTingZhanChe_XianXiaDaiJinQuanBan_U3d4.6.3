@@ -1,12 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// 监听pc键盘鼠标按键消息组件.
+/// </summary>
 public class InputEventCtrl : MonoBehaviour
 {
-	public static bool IsClickFireBtOneDown;
-	public static bool IsClickFireBtTwoDown;
-	public static bool IsClickFireBtThreeDown;
-	public static bool IsClickFireBtFourDown;
 	/// <summary>
 	/// 玩家方向信息.
 	/// </summary>
@@ -50,127 +48,111 @@ public class InputEventCtrl : MonoBehaviour
 	{
 		if(Instance == null)
 		{
-			GameObject obj = new GameObject("_InputEventCtrl");
-			Instance = obj.AddComponent<InputEventCtrl>();
-			pcvr.GetInstance();
+            PcvrComInputEvent pcvrComInput = PcvrComInputEvent.GetInstance();
+            GameObject obj = pcvrComInput.gameObject;
+            Instance = obj.AddComponent<InputEventCtrl>();
 			XKGlobalData.GetInstance();
 			SetPanelCtrl.GetInstance();
 		}
 		return Instance;
-	}
+    }
 
     void Start()
     {
-#if UNITY_ANDROID
-        Invoke("DelayClickSetMoveBt", 3f);
-#endif
+        //响应pcvr的按键消息.
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent07 += ClickSetEnterBt;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent08 += ClickSetMoveBt;
+
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent01 += ClickFangXiangLBtP1;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent14 += ClickFangXiangRBtP1;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent12 += ClickFangXiangUBtP1;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent13 += ClickFangXiangDBtP1;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent23 += ClickStartBtOne;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent04 += ClickFireBtOne;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent09 += ClickDaoDanBtOne;
+
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent02 += ClickFangXiangLBtP2;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent18 += ClickFangXiangRBtP2;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent16 += ClickFangXiangUBtP2;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent17 += ClickFangXiangDBtP2;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent24 += ClickStartBtTwo;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent05 += ClickFireBtTwo;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent10 += ClickDaoDanBtTwo;
+
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent03 += ClickFangXiangLBtP3;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent20 += ClickFangXiangRBtP3;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent15 += ClickFangXiangUBtP3;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent19 += ClickFangXiangDBtP3;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent25 += ClickStartBtThree;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent06 += ClickFireBtThree;
+        PcvrComInputEvent.GetInstance().ClickPcvrBtEvent11 += ClickDaoDanBtThree;
+        
+        PcvrComInputEvent.GetInstance().OnPlayerInsertCoinEvent += OnPlayerInsertCoin;
     }
 
-    void DelayClickSetMoveBt()
+    #region Player Coin Event
+    /// <summary>
+    /// 玩家投币时间响应.
+    /// coin -> 玩家的总投币数.
+    /// </summary>
+    public void OnPlayerInsertCoin(pcvrTXManage.PlayerCoinEnum indexPlayerCoin, int coin)
     {
-        if (!XKGameFPSCtrl.IsShowGameFPS)
+        int indexVal = (int)indexPlayerCoin;
+        if (indexVal < 0 || indexVal > 2)
         {
-            ClickSetMoveBt(ButtonState.DOWN); //test
-            ClickSetMoveBt(ButtonState.UP); //test
+            Debug.LogWarning("OnPlayerInsertCoin -> indexVal was wrong! indexVal ==== " + indexVal);
+            return;
         }
+        PlayerEnum indexPlayer = (PlayerEnum)indexVal;
+        XKGlobalData.SetCoinPlayerInfo(indexPlayer, coin);
     }
+    #endregion
 
-#region Click Button Envent
-    public delegate void EventHandel(ButtonState val);
-    public event EventHandel ClickTVYaoKongExitBtEvent;
-    public void ClickTVYaoKongExitBt(ButtonState val)
-    {
-        if (ClickTVYaoKongExitBtEvent != null)
-        {
-            ClickTVYaoKongExitBtEvent(val);
-        }
-    }
+    /// <summary>
+    /// 按键响应事件.
+    /// </summary>
+    public delegate void EventHandel(pcvr.ButtonState val);
 
-    public event EventHandel ClickTVYaoKongEnterBtEvent;
-    public void ClickTVYaoKongEnterBt(ButtonState val)
-    {
-        if (ClickTVYaoKongEnterBtEvent != null)
-        {
-            ClickTVYaoKongEnterBtEvent(val);
-        }
-    }
-
-    public event EventHandel ClickTVYaoKongLeftBtEvent;
-    public void ClickTVYaoKongLeftBt(ButtonState val)
-    {
-        if (ClickTVYaoKongLeftBtEvent != null)
-        {
-            ClickTVYaoKongLeftBtEvent(val);
-        }
-    }
-
-    public event EventHandel ClickTVYaoKongRightBtEvent;
-    public void ClickTVYaoKongRightBt(ButtonState val)
-    {
-        if (ClickTVYaoKongRightBtEvent != null)
-        {
-            ClickTVYaoKongRightBtEvent(val);
-        }
-    }
-
-    public event EventHandel ClickTVYaoKongUpBtEvent;
-    public void ClickTVYaoKongUpBt(ButtonState val)
-    {
-        if (ClickTVYaoKongUpBtEvent != null)
-        {
-            ClickTVYaoKongUpBtEvent(val);
-        }
-    }
-
-    public event EventHandel ClickTVYaoKongDownBtEvent;
-    public void ClickTVYaoKongDownBt(ButtonState val)
-    {
-        if (ClickTVYaoKongDownBtEvent != null)
-        {
-            ClickTVYaoKongDownBtEvent(val);
-        }
-    }
-
+    #region Click Button Envent
     public void OnClickGameStartBt(int indexPlayer)
     {
         switch (indexPlayer)
         {
             case 0:
                 {
-                    ClickStartBtOne(ButtonState.DOWN);
-                    ClickStartBtOne(ButtonState.UP);
+                    ClickStartBtOne(pcvr.ButtonState.DOWN);
+                    ClickStartBtOne(pcvr.ButtonState.UP);
                     break;
                 }
             case 1:
                 {
-                    ClickStartBtTwo(ButtonState.DOWN);
-                    ClickStartBtTwo(ButtonState.UP);
+                    ClickStartBtTwo(pcvr.ButtonState.DOWN);
+                    ClickStartBtTwo(pcvr.ButtonState.UP);
                     break;
                 }
             case 2:
                 {
-                    ClickStartBtThree(ButtonState.DOWN);
-                    ClickStartBtThree(ButtonState.UP);
+                    ClickStartBtThree(pcvr.ButtonState.DOWN);
+                    ClickStartBtThree(pcvr.ButtonState.UP);
                     break;
                 }
             case 3:
                 {
-                    ClickStartBtFour(ButtonState.DOWN);
-                    ClickStartBtFour(ButtonState.UP);
+                    ClickStartBtFour(pcvr.ButtonState.DOWN);
+                    ClickStartBtFour(pcvr.ButtonState.UP);
                     break;
                 }
         }
     }
 
     public event EventHandel ClickStartBtOneEvent;
-	public void ClickStartBtOne(ButtonState val)
+	public void ClickStartBtOne(pcvr.ButtonState val)
 	{
 		if(ClickStartBtOneEvent != null)
 		{
 			ClickStartBtOneEvent( val );
 			//pcvr.StartLightStateP1 = LedState.Mie;
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 
 		if (XKGlobalData.GameVersionPlayer != 0) {
 			ClickStartBtThree(val);
@@ -178,14 +160,13 @@ public class InputEventCtrl : MonoBehaviour
 	}
 	
 	public event EventHandel ClickStartBtTwoEvent;
-	public void ClickStartBtTwo(ButtonState val)
+	public void ClickStartBtTwo(pcvr.ButtonState val)
 	{
 		if(ClickStartBtTwoEvent != null)
 		{
 			ClickStartBtTwoEvent( val );
 			//pcvr.StartLightStateP2 = LedState.Mie;
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 		
 		if (XKGlobalData.GameVersionPlayer != 0) {
 			ClickStartBtFour(val);
@@ -193,62 +174,52 @@ public class InputEventCtrl : MonoBehaviour
 	}
 	
 	public event EventHandel ClickStartBtThreeEvent;
-	public void ClickStartBtThree(ButtonState val)
+	public void ClickStartBtThree(pcvr.ButtonState val)
 	{
 		if(ClickStartBtThreeEvent != null)
 		{
 			ClickStartBtThreeEvent( val );
 			//pcvr.StartLightStateP2 = LedState.Mie;
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 	}
 	
 	public event EventHandel ClickStartBtFourEvent;
-	public void ClickStartBtFour(ButtonState val)
+	public void ClickStartBtFour(pcvr.ButtonState val)
 	{
 		if(ClickStartBtFourEvent != null)
 		{
 			ClickStartBtFourEvent( val );
 			//pcvr.StartLightStateP2 = LedState.Mie;
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 	}
 
 	public event EventHandel ClickSetEnterBtEvent;
-	public void ClickSetEnterBt(ButtonState val)
+	public void ClickSetEnterBt(pcvr.ButtonState val)
 	{
-#if !UNITY_EDITOR
-		SetEnterBtSt = val;
-#endif
 		if(ClickSetEnterBtEvent != null)
 		{
 			ClickSetEnterBtEvent( val );
 		}
 
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			XKGlobalData.PlayAudioSetEnter();
-#if !UNITY_EDITOR
-			TimeSetEnterMoveBt = Time.time;
-#endif
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 	}
 	
 	public event EventHandel ClickSetMoveBtEvent;
-	public void ClickSetMoveBt(ButtonState val)
+	public void ClickSetMoveBt(pcvr.ButtonState val)
 	{
 		if(ClickSetMoveBtEvent != null)
 		{
 			ClickSetMoveBtEvent( val );
 		}
 
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			XKGlobalData.PlayAudioSetMove();
 		}
-		//pcvr.SetIsPlayerActivePcvr();
 	}
 	
-    public void OnClickFireBt(int index, ButtonState val)
+    public void OnClickFireBt(int index, pcvr.ButtonState val)
     {
         switch (index)
         {
@@ -276,14 +247,13 @@ public class InputEventCtrl : MonoBehaviour
     }
 
 	public event EventHandel ClickFireBtOneEvent;
-	public void ClickFireBtOne(ButtonState val)
+	public void ClickFireBtOne(pcvr.ButtonState val)
 	{
 		if (XKGlobalData.GameVersionPlayer == 0) {
 			if(ClickFireBtOneEvent != null)
 			{
 				ClickFireBtOneEvent( val );
 			}
-			//pcvr.SetIsPlayerActivePcvr();
             
             if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerOne) == false
                 || SSUIRoot.GetInstance().GetIsActiveCaiPiaoBuZuPanel(PlayerEnum.PlayerOne) == true)
@@ -297,14 +267,13 @@ public class InputEventCtrl : MonoBehaviour
 	}
 
 	public event EventHandel ClickFireBtTwoEvent;
-	public void ClickFireBtTwo(ButtonState val)
+	public void ClickFireBtTwo(pcvr.ButtonState val)
 	{
 		if (XKGlobalData.GameVersionPlayer == 0) {
 			if(ClickFireBtTwoEvent != null)
 			{
 				ClickFireBtTwoEvent( val );
 			}
-			//pcvr.SetIsPlayerActivePcvr();
 
             if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerTwo) == false
                 || SSUIRoot.GetInstance().GetIsActiveCaiPiaoBuZuPanel(PlayerEnum.PlayerTwo) == true)
@@ -318,7 +287,7 @@ public class InputEventCtrl : MonoBehaviour
 	}
 
 	public event EventHandel ClickFireBtThreeEvent;
-	public void ClickFireBtThree(ButtonState val)
+	public void ClickFireBtThree(pcvr.ButtonState val)
 	{
 		if(ClickFireBtThreeEvent != null)
 		{
@@ -330,11 +299,10 @@ public class InputEventCtrl : MonoBehaviour
                 ClickStartBtThree(val);
             }
         }
-		//pcvr.SetIsPlayerActivePcvr();
 	}
 
 	public event EventHandel ClickFireBtFourEvent;
-	public void ClickFireBtFour(ButtonState val)
+	public void ClickFireBtFour(pcvr.ButtonState val)
 	{
 		if(ClickFireBtFourEvent != null)
 		{
@@ -346,10 +314,9 @@ public class InputEventCtrl : MonoBehaviour
                 ClickStartBtFour(val);
             }
         }
-		//pcvr.SetIsPlayerActivePcvr();
 	}
     
-    public void OnClickDaoDanBt(int index, ButtonState val)
+    public void OnClickDaoDanBt(int index, pcvr.ButtonState val)
     {
         switch (index)
         {
@@ -377,24 +344,13 @@ public class InputEventCtrl : MonoBehaviour
     }
 
     public event EventHandel ClickDaoDanBtOneEvent;
-	public void ClickDaoDanBtOne(ButtonState val)
+	public void ClickDaoDanBtOne(pcvr.ButtonState val)
 	{
 		if (XKGlobalData.GameVersionPlayer == 0) {
 			if(ClickDaoDanBtOneEvent != null)
 			{
 				ClickDaoDanBtOneEvent( val );
 			}
-			//pcvr.SetIsPlayerActivePcvr();
-
-			//if (val == ButtonState.DOWN) {
-			//	pcvr.OpenZuoYiQiNang(PlayerEnum.PlayerOne);
-			//}
-
-			//if (SetPanelUiRoot.GetInstance() == null
-			//    && !HardwareCheckCtrl.IsTestHardWare
-			//    && ClickStartBtOneEvent != null) {
-			//	ClickStartBtOneEvent( val );
-			//}
 		}
 		else {
 			ClickDaoDanBtThree(val);
@@ -402,24 +358,13 @@ public class InputEventCtrl : MonoBehaviour
 	}
 	
 	public event EventHandel ClickDaoDanBtTwoEvent;
-	public void ClickDaoDanBtTwo(ButtonState val)
+	public void ClickDaoDanBtTwo(pcvr.ButtonState val)
 	{
 		if (XKGlobalData.GameVersionPlayer == 0) {
 			if(ClickDaoDanBtTwoEvent != null)
 			{
 				ClickDaoDanBtTwoEvent( val );
 			}
-			//pcvr.SetIsPlayerActivePcvr();
-			
-			//if (val == ButtonState.DOWN) {
-			//	pcvr.OpenZuoYiQiNang(PlayerEnum.PlayerTwo);
-			//}
-			
-			//if (SetPanelUiRoot.GetInstance() == null
-			//    && !HardwareCheckCtrl.IsTestHardWare
-			//    && ClickStartBtTwoEvent != null) {
-			//	ClickStartBtTwoEvent( val );
-			//}
 		}
 		else {
 			ClickDaoDanBtFour(val);
@@ -427,105 +372,27 @@ public class InputEventCtrl : MonoBehaviour
 	}
 	
 	public event EventHandel ClickDaoDanBtThreeEvent;
-	public void ClickDaoDanBtThree(ButtonState val)
+	public void ClickDaoDanBtThree(pcvr.ButtonState val)
 	{
 		if(ClickDaoDanBtThreeEvent != null)
 		{
 			ClickDaoDanBtThreeEvent( val );
 		}
-		//pcvr.SetIsPlayerActivePcvr();
-		
-		//if (val == ButtonState.DOWN) {
-		//	pcvr.OpenZuoYiQiNang(PlayerEnum.PlayerThree);
-		//}
-		
-		//if (SetPanelUiRoot.GetInstance() == null
-		//    && !HardwareCheckCtrl.IsTestHardWare
-		//    && ClickStartBtThreeEvent != null) {
-		//	ClickStartBtThreeEvent( val );
-		//}
 	}
 	
 	public event EventHandel ClickDaoDanBtFourEvent;
-	public void ClickDaoDanBtFour(ButtonState val)
+	public void ClickDaoDanBtFour(pcvr.ButtonState val)
 	{
 		if(ClickDaoDanBtFourEvent != null)
 		{
 			ClickDaoDanBtFourEvent( val );
 		}
-		//pcvr.SetIsPlayerActivePcvr();
-		
-		//if (val == ButtonState.DOWN) {
-		//	pcvr.OpenZuoYiQiNang(PlayerEnum.PlayerFour);
-		//}
-		
-		//if (SetPanelUiRoot.GetInstance() == null
-		//    && !HardwareCheckCtrl.IsTestHardWare
-		//    && ClickStartBtFourEvent != null) {
-		//	ClickStartBtFourEvent( val );
-		//}
 	}
-
-	public event EventHandel ClickStopDongGanBtOneEvent;
-	public void ClickStopDongGanBtOne(ButtonState val)
-	{
-		if(ClickStopDongGanBtOneEvent != null)
-		{
-			ClickStopDongGanBtOneEvent( val );
-		}
-
-		//if (val == ButtonState.DOWN) {
-		//	DongGanUICtrl.ShowDongGanInfo(PlayerEnum.PlayerOne);
-		//}
-		//pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickStopDongGanBtTwoEvent;
-	public void ClickStopDongGanBtTwo(ButtonState val)
-	{
-		if(ClickStopDongGanBtTwoEvent != null)
-		{
-			ClickStopDongGanBtTwoEvent( val );
-		}
-		
-		//if (val == ButtonState.DOWN) {
-		//	DongGanUICtrl.ShowDongGanInfo(PlayerEnum.PlayerTwo);
-		//}
-		//pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickStopDongGanBtThreeEvent;
-	public void ClickStopDongGanBtThree(ButtonState val)
-	{
-		if(ClickStopDongGanBtThreeEvent != null)
-		{
-			ClickStopDongGanBtThreeEvent( val );
-		}
-		
-		//if (val == ButtonState.DOWN) {
-		//	DongGanUICtrl.ShowDongGanInfo(PlayerEnum.PlayerThree);
-		//}
-		//pcvr.SetIsPlayerActivePcvr();
-	}
-	
-	public event EventHandel ClickStopDongGanBtFourEvent;
-	public void ClickStopDongGanBtFour(ButtonState val)
-	{
-		if(ClickStopDongGanBtFourEvent != null)
-		{
-			ClickStopDongGanBtFourEvent( val );
-		}
-		
-		//if (val == ButtonState.DOWN) {
-		//	DongGanUICtrl.ShowDongGanInfo(PlayerEnum.PlayerFour);
-		//}
-		//pcvr.SetIsPlayerActivePcvr();
-	}
-
+    
     /// <summary>
     /// 向左运动.
     /// </summary>
-    public void OnClickFangXiangLBt(int indexPlayer, ButtonState val)
+    public void OnClickFangXiangLBt(int indexPlayer, pcvr.ButtonState val)
     {
         switch (indexPlayer)
         {
@@ -555,7 +422,7 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向右运动.
     /// </summary>
-    public void OnClickFangXiangRBt(int indexPlayer, ButtonState val)
+    public void OnClickFangXiangRBt(int indexPlayer, pcvr.ButtonState val)
     {
         switch (indexPlayer)
         {
@@ -585,7 +452,7 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向上运动.
     /// </summary>
-    public void OnClickFangXiangUBt(int indexPlayer, ButtonState val)
+    public void OnClickFangXiangUBt(int indexPlayer, pcvr.ButtonState val)
     {
         switch (indexPlayer)
         {
@@ -615,7 +482,7 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向下运动.
     /// </summary>
-    public void OnClickFangXiangDBt(int indexPlayer, ButtonState val)
+    public void OnClickFangXiangDBt(int indexPlayer, pcvr.ButtonState val)
     {
         switch (indexPlayer)
         {
@@ -645,14 +512,14 @@ public class InputEventCtrl : MonoBehaviour
     /**
 	 * 方向左响应P1.
 	 */
-    public void ClickFangXiangLBtP1(ButtonState val)
+    public void ClickFangXiangLBtP1(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[0] = 1f;
 			PlayerFX[0] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[0] = 0f;
 			PlayerFX[0] = PlayerFXTmp[1] == 0f ? 0f : 1f;
 			break;
@@ -661,14 +528,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向右响应P1.
 	 */
-	public void ClickFangXiangRBtP1(ButtonState val)
+	public void ClickFangXiangRBtP1(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[1] = 1f;
 			PlayerFX[0] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[1] = 0f;
 			PlayerFX[0] = PlayerFXTmp[0] == 0f ? 0f : -1f;
 			break;
@@ -677,14 +544,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向上响应P1.
 	 */
-	public void ClickFangXiangUBtP1(ButtonState val)
+	public void ClickFangXiangUBtP1(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[0] = 1f;
 			PlayerYM[0] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[0] = 0f;
 			PlayerYM[0] = PlayerYMTmp[1] == 0f ? 0f : -1f;
 			break;
@@ -693,14 +560,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向下响应P1.
 	 */
-	public void ClickFangXiangDBtP1(ButtonState val)
+	public void ClickFangXiangDBtP1(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[1] = 1f;
 			PlayerYM[0] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[1] = 0f;
 			PlayerYM[0] = PlayerYMTmp[0] == 0f ? 0f : 1f;
 			break;
@@ -709,14 +576,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向左响应P2.
 	 */
-	public void ClickFangXiangLBtP2(ButtonState val)
+	public void ClickFangXiangLBtP2(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[2] = 1f;
 			PlayerFX[1] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[2] = 0f;
 			PlayerFX[1] = PlayerFXTmp[3] == 0f ? 0f : 1f;
 			break;
@@ -725,14 +592,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向右响应P2.
 	 */
-	public void ClickFangXiangRBtP2(ButtonState val)
+	public void ClickFangXiangRBtP2(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[3] = 1f;
 			PlayerFX[1] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[3] = 0f;
 			PlayerFX[1] = PlayerFXTmp[2] == 0f ? 0f : -1f;
 			break;
@@ -741,14 +608,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向上响应P2.
 	 */
-	public void ClickFangXiangUBtP2(ButtonState val)
+	public void ClickFangXiangUBtP2(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[2] = 1f;
 			PlayerYM[1] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[2] = 0f;
 			PlayerYM[1] = PlayerYMTmp[3] == 0f ? 0f : -1f;
 			break;
@@ -757,14 +624,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向下响应P2.
 	 */
-	public void ClickFangXiangDBtP2(ButtonState val)
+	public void ClickFangXiangDBtP2(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[3] = 1f;
 			PlayerYM[1] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[3] = 0f;
 			PlayerYM[1] = PlayerYMTmp[2] == 0f ? 0f : 1f;
 			break;
@@ -773,14 +640,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向左响应P3.
 	 */
-	public void ClickFangXiangLBtP3(ButtonState val)
+	public void ClickFangXiangLBtP3(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[4] = 1f;
 			PlayerFX[2] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[4] = 0f;
 			PlayerFX[2] = PlayerFXTmp[5] == 0f ? 0f : 1f;
 			break;
@@ -789,14 +656,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向右响应P3.
 	 */
-	public void ClickFangXiangRBtP3(ButtonState val)
+	public void ClickFangXiangRBtP3(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[5] = 1f;
 			PlayerFX[2] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[5] = 0f;
 			PlayerFX[2] = PlayerFXTmp[4] == 0f ? 0f : -1f;
 			break;
@@ -805,14 +672,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向上响应P3.
 	 */
-	public void ClickFangXiangUBtP3(ButtonState val)
+	public void ClickFangXiangUBtP3(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[4] = 1f;
 			PlayerYM[2] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[4] = 0f;
 			PlayerYM[2] = PlayerYMTmp[5] == 0f ? 0f : -1f;
 			break;
@@ -821,14 +688,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向下响应P3.
 	 */
-	public void ClickFangXiangDBtP3(ButtonState val)
+	public void ClickFangXiangDBtP3(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[5] = 1f;
 			PlayerYM[2] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[5] = 0f;
 			PlayerYM[2] = PlayerYMTmp[4] == 0f ? 0f : 1f;
 			break;
@@ -837,14 +704,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向左响应P4.
 	 */
-	public void ClickFangXiangLBtP4(ButtonState val)
+	public void ClickFangXiangLBtP4(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[6] = 1;
 			PlayerFX[3] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[6] = 0f;
 			PlayerFX[3] = PlayerFXTmp[7] == 0f ? 0f : 1f;
 			break;
@@ -853,14 +720,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向右响应P4.
 	 */
-	public void ClickFangXiangRBtP4(ButtonState val)
+	public void ClickFangXiangRBtP4(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerFXTmp[7] = 1f;
 			PlayerFX[3] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerFXTmp[7] = 0f;
 			PlayerFX[3] = PlayerFXTmp[6] == 0f ? 0f : -1f;
 			break;
@@ -869,14 +736,14 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向上响应P4.
 	 */
-	public void ClickFangXiangUBtP4(ButtonState val)
+	public void ClickFangXiangUBtP4(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[6] = 1f;
 			PlayerYM[3] = 1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[6] = 0f;
 			PlayerYM[3] = PlayerYMTmp[7] == 0f ? 0f : -1f;
 			break;
@@ -885,142 +752,27 @@ public class InputEventCtrl : MonoBehaviour
 	/**
 	 * 方向下响应P4.
 	 */
-	public void ClickFangXiangDBtP4(ButtonState val)
+	public void ClickFangXiangDBtP4(pcvr.ButtonState val)
 	{
 		switch (val) {
-		case ButtonState.DOWN:
+		case pcvr.ButtonState.DOWN:
 			PlayerYMTmp[7] = 1f;
 			PlayerYM[3] = -1f;
 			break;
-		case ButtonState.UP:
+		case pcvr.ButtonState.UP:
 			PlayerYMTmp[7] = 0f;
 			PlayerYM[3] = PlayerYMTmp[6] == 0f ? 0f : 1f;
 			break;
 		}
 	}
     #endregion
-
-#if !UNITY_EDITOR
-	float TimeSetEnterMoveBt;
-	ButtonState SetEnterBtSt = ButtonState.UP;
-#endif
-
-    class KeyCodeTV
-    {
-        /// <summary>
-        /// 遥控器确定键的键值.
-        /// </summary>
-        public static KeyCode PadEnter01 = (KeyCode)10;
-        public static KeyCode PadEnter02 = (KeyCode)66;
-    }
+    
     void Update()
 	{
-//		#if !UNITY_EDITOR
-//		if (SetEnterBtSt == ButtonState.DOWN && Time.time - TimeSetEnterMoveBt > 2f) {
-//			HardwareCheckCtrl.OnRestartGame();
-//		}
-//		#endif
-
-		if (pcvr.bIsHardWare && !TestTanKCom.IsTestTankCom) {
+		if (pcvr.bIsHardWare)
+        {
 			return;
 		}
-        
-#if UNITY_ANDROID
-        if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.K))
-        {
-            //遥控器的确定键消息.
-            ClickTVYaoKongEnterBt(ButtonState.DOWN);
-            ClickSetMoveBt(ButtonState.DOWN); //test
-        }
-
-        if (Input.GetKeyUp(KeyCode.G) || Input.GetKeyUp(KeyCode.K))
-        {
-            //遥控器的确定键消息.
-            ClickTVYaoKongEnterBt(ButtonState.UP);
-            ClickSetMoveBt(ButtonState.UP); //test
-        }
-#endif
-
-        //(KeyCode)10 -> acbox虚拟机的遥控器确定键消息.
-        if (Input.GetKeyDown(KeyCode.KeypadEnter)
-            || Input.GetKeyDown(KeyCode.Return)
-            || Input.GetKeyDown(KeyCodeTV.PadEnter01)
-            || Input.GetKeyDown(KeyCodeTV.PadEnter02)
-            || Input.GetKeyDown(KeyCode.JoystickButton0))
-        {
-            //遥控器的确定键消息.
-            ClickTVYaoKongEnterBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.KeypadEnter)
-            || Input.GetKeyUp(KeyCode.Return)
-            || Input.GetKeyUp(KeyCodeTV.PadEnter01)
-            || Input.GetKeyUp(KeyCodeTV.PadEnter02)
-            || Input.GetKeyUp(KeyCode.JoystickButton0))
-        {
-            //遥控器的确定键消息.
-            ClickTVYaoKongEnterBt(ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //接收遥控器的返回键/键盘上的Esc按键信息.
-            ClickTVYaoKongExitBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            //接收遥控器的返回键/键盘上的Esc按键信息.
-            ClickTVYaoKongExitBt(ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            //接收遥控器/键盘上的向左按键信息.
-            ClickTVYaoKongLeftBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.Keypad4))
-        {
-            //接收遥控器/键盘上的向左按键信息.
-            ClickTVYaoKongLeftBt(ButtonState.UP);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Keypad6))
-        {
-            //接收遥控器/键盘上的向右按键信息.
-            ClickTVYaoKongRightBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.Keypad6))
-        {
-            //接收遥控器/键盘上的向右按键信息.
-            ClickTVYaoKongRightBt(ButtonState.UP);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            //接收遥控器/键盘上的向上按键信息.
-            ClickTVYaoKongUpBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Keypad2))
-        {
-            //接收遥控器/键盘上的向上按键信息.
-            ClickTVYaoKongUpBt(ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.Keypad8))
-        {
-            //接收遥控器/键盘上的向下按键信息.
-            ClickTVYaoKongDownBt(ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.Keypad8))
-        {
-            //接收遥控器/键盘上的向下按键信息.
-            ClickTVYaoKongDownBt(ButtonState.UP);
-        }
         
         if (Input.GetKeyUp(KeyCode.T)) {
 			int coinVal = XKGlobalData.CoinPlayerOne + 1;
@@ -1048,265 +800,245 @@ public class InputEventCtrl : MonoBehaviour
 
 		//StartBt PlayerOne
 		if (Input.GetKeyUp(KeyCode.G)) {
-			ClickStartBtOne( ButtonState.UP );
+			ClickStartBtOne( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.G)) {
-			ClickStartBtOne( ButtonState.DOWN );
+			ClickStartBtOne( pcvr.ButtonState.DOWN );
 		}
 		
 		//StartBt PlayerTwo
 		if (Input.GetKeyUp(KeyCode.H)) {
-			ClickStartBtTwo( ButtonState.UP );
+			ClickStartBtTwo( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.H)) {
-			ClickStartBtTwo( ButtonState.DOWN );
+			ClickStartBtTwo( pcvr.ButtonState.DOWN );
 		}
 		
 		//StartBt PlayerThree
 		if (Input.GetKeyUp(KeyCode.J)) {
-			ClickStartBtThree( ButtonState.UP );
+			ClickStartBtThree( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.J)) {
-			ClickStartBtThree( ButtonState.DOWN );
+			ClickStartBtThree( pcvr.ButtonState.DOWN );
 		}
 		
 		//StartBt PlayerFour
 		//if (Input.GetKeyUp(KeyCode.K)) {
-		//	ClickStartBtFour( ButtonState.UP );
+		//	ClickStartBtFour( pcvr.ButtonState.UP );
 		//}
 		
 		//if (Input.GetKeyDown(KeyCode.K)) {
-		//	ClickStartBtFour( ButtonState.DOWN );
+		//	ClickStartBtFour( pcvr.ButtonState.DOWN );
 		//}
 
 		//player_1.
 		if (Input.GetKeyDown(KeyCode.A)) {
-			ClickFangXiangLBtP1(ButtonState.DOWN);
+			ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.A)) {
-			ClickFangXiangLBtP1(ButtonState.UP);
+			ClickFangXiangLBtP1(pcvr.ButtonState.UP);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.D)) {
-			ClickFangXiangRBtP1(ButtonState.DOWN);
+			ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.D)) {
-			ClickFangXiangRBtP1(ButtonState.UP);
+			ClickFangXiangRBtP1(pcvr.ButtonState.UP);
 		}
 
 		if (Input.GetKeyDown(KeyCode.W)) {
-			ClickFangXiangUBtP1(ButtonState.DOWN);
+			ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.W)) {
-			ClickFangXiangUBtP1(ButtonState.UP);
+			ClickFangXiangUBtP1(pcvr.ButtonState.UP);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.S)) {
-			ClickFangXiangDBtP1(ButtonState.DOWN);
+			ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.S)) {
-			ClickFangXiangDBtP1(ButtonState.UP);
+			ClickFangXiangDBtP1(pcvr.ButtonState.UP);
 		}
 
-		//player_2.
-		if (!TestTanKCom.IsTestTankCom) {
-			if (Input.GetKeyDown(KeyCode.F)) {
-				ClickFangXiangLBtP2(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.F)) {
-				ClickFangXiangLBtP2(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.H)) {
-				ClickFangXiangRBtP2(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.H)) {
-				ClickFangXiangRBtP2(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.T)) {
-				ClickFangXiangUBtP2(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.T)) {
-				ClickFangXiangUBtP2(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.G)) {
-				ClickFangXiangDBtP2(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.G)) {
-				ClickFangXiangDBtP2(ButtonState.UP);
-			}
-		}
-		else {
-			PlayerYM[1] = TestTanKCom.YouMenStateP2;
-			PlayerFX[1] = TestTanKCom.FangXiangStateP2;
-		}
-		
-		//player_3.
-		if (!TestTanKCom.IsTestTankCom) {
-			if (Input.GetKeyDown(KeyCode.J)) {
-				ClickFangXiangLBtP3(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.J)) {
-				ClickFangXiangLBtP3(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.L)) {
-				ClickFangXiangRBtP3(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.L)) {
-				ClickFangXiangRBtP3(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.I)) {
-				ClickFangXiangUBtP3(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.I)) {
-				ClickFangXiangUBtP3(ButtonState.UP);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.K)) {
-				ClickFangXiangDBtP3(ButtonState.DOWN);
-			}
-			
-			if (Input.GetKeyUp(KeyCode.K)) {
-				ClickFangXiangDBtP3(ButtonState.UP);
-			}
-		}
-		else {
-			PlayerFX[2] = TestTanKCom.FangXiangStateP3;
-			PlayerYM[2] = TestTanKCom.YouMenStateP3;
-		}
-		
-		//player_4.
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			ClickFangXiangLBtP4(ButtonState.DOWN);
+        //player_2.
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            ClickFangXiangLBtP2(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.H))
+        {
+            ClickFangXiangRBtP2(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            ClickFangXiangUBtP2(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            ClickFangXiangDBtP2(pcvr.ButtonState.UP);
+        }
+
+        //player_3.
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.J))
+        {
+            ClickFangXiangLBtP3(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            ClickFangXiangRBtP3(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            ClickFangXiangUBtP3(pcvr.ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.K))
+        {
+            ClickFangXiangDBtP3(pcvr.ButtonState.UP);
+        }
+
+        //player_4.
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
-			ClickFangXiangLBtP4(ButtonState.UP);
+			ClickFangXiangLBtP4(pcvr.ButtonState.UP);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			ClickFangXiangRBtP4(ButtonState.DOWN);
+			ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.RightArrow)) {
-			ClickFangXiangRBtP4(ButtonState.UP);
+			ClickFangXiangRBtP4(pcvr.ButtonState.UP);
 		}
 		
 		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			ClickFangXiangUBtP4(ButtonState.DOWN);
+			ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.UpArrow)) {
-			ClickFangXiangUBtP4(ButtonState.UP);
+			ClickFangXiangUBtP4(pcvr.ButtonState.UP);
 		}
 
 		if (Input.GetKeyDown(KeyCode.DownArrow)) {
-			ClickFangXiangDBtP4(ButtonState.DOWN);
+			ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
 		}
 		
 		if (Input.GetKeyUp(KeyCode.DownArrow)) {
-			ClickFangXiangDBtP4(ButtonState.UP);
+			ClickFangXiangDBtP4(pcvr.ButtonState.UP);
 		}
 
 		//setPanel enter button
 		if (Input.GetKeyUp(KeyCode.F4)) {
-			ClickSetEnterBt( ButtonState.UP );
+			ClickSetEnterBt( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.F4)) {
-			ClickSetEnterBt( ButtonState.DOWN );
+			ClickSetEnterBt( pcvr.ButtonState.DOWN );
 		}
 		
 		//setPanel move button
 		if (Input.GetKeyUp(KeyCode.F5)) {
-			ClickSetMoveBt( ButtonState.UP );
+			ClickSetMoveBt( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.F5)) {
-			ClickSetMoveBt( ButtonState.DOWN );
+			ClickSetMoveBt( pcvr.ButtonState.DOWN );
 		}
 
 		//Fire button
 		if (Input.GetKeyUp(KeyCode.Mouse0)) {
-			IsClickFireBtOneDown = false;
-			IsClickFireBtTwoDown = false;
-			IsClickFireBtThreeDown = false;
-			IsClickFireBtFourDown = false;
-			ClickFireBtOne( ButtonState.UP );
-			if (!TestTanKCom.IsTestTankCom) {
-				ClickFireBtTwo( ButtonState.UP );
-				ClickFireBtThree( ButtonState.UP );
-			}
-			ClickFireBtFour( ButtonState.UP );
+			ClickFireBtOne( pcvr.ButtonState.UP );
+            ClickFireBtTwo(pcvr.ButtonState.UP);
+            ClickFireBtThree(pcvr.ButtonState.UP);
+            ClickFireBtFour( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Mouse0)) {
-			IsClickFireBtOneDown = true;
-			IsClickFireBtTwoDown = true;
-			IsClickFireBtThreeDown = true;
-			IsClickFireBtFourDown = true;
-			ClickFireBtOne( ButtonState.DOWN );
-			if (!TestTanKCom.IsTestTankCom) {
-				ClickFireBtTwo( ButtonState.DOWN );
-				ClickFireBtThree( ButtonState.DOWN );
-			}
-			ClickFireBtFour( ButtonState.DOWN );
+			ClickFireBtOne( pcvr.ButtonState.DOWN );
+            ClickFireBtTwo(pcvr.ButtonState.DOWN);
+            ClickFireBtThree(pcvr.ButtonState.DOWN);
+            ClickFireBtFour( pcvr.ButtonState.DOWN );
 		}
 
 		if (Input.GetKeyUp(KeyCode.Mouse1)) {
-			ClickDaoDanBtOne( ButtonState.UP );
-			if (!TestTanKCom.IsTestTankCom) {
-				ClickDaoDanBtTwo( ButtonState.UP );
-				ClickDaoDanBtThree( ButtonState.UP );
-			}
-			ClickDaoDanBtFour( ButtonState.UP );
+			ClickDaoDanBtOne( pcvr.ButtonState.UP );
+            ClickDaoDanBtTwo(pcvr.ButtonState.UP);
+            ClickDaoDanBtThree(pcvr.ButtonState.UP);
+            ClickDaoDanBtFour( pcvr.ButtonState.UP );
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Mouse1)) {
-			ClickDaoDanBtOne( ButtonState.DOWN );
-			if (!TestTanKCom.IsTestTankCom) {
-				ClickDaoDanBtTwo( ButtonState.DOWN );
-				ClickDaoDanBtThree( ButtonState.DOWN );
-			}
-			ClickDaoDanBtFour( ButtonState.DOWN );
+			ClickDaoDanBtOne( pcvr.ButtonState.DOWN );
+            ClickDaoDanBtTwo(pcvr.ButtonState.DOWN);
+            ClickDaoDanBtThree(pcvr.ButtonState.DOWN);
+            ClickDaoDanBtFour( pcvr.ButtonState.DOWN );
 		}
 
-		if (Input.GetKeyDown(KeyCode.C)) {
-			ClickStopDongGanBtOne(ButtonState.DOWN);
-			ClickStopDongGanBtTwo(ButtonState.DOWN);
-			ClickStopDongGanBtThree(ButtonState.DOWN);
-			ClickStopDongGanBtFour(ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.C)) {
-			ClickStopDongGanBtOne(ButtonState.UP);
-			ClickStopDongGanBtTwo(ButtonState.UP);
-			ClickStopDongGanBtThree(ButtonState.UP);
-			ClickStopDongGanBtFour(ButtonState.UP);
-		}
-	}
-}
+        //test
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    PcvrComInputEvent.GetInstance().ClickPcvrBt07(pcvr.ButtonState.DOWN);
+        //}
 
-public enum ButtonState : int
-{
-	UP = 1,
-	DOWN = -1
+        //if (Input.GetKeyUp(KeyCode.P))
+        //{
+        //    PcvrComInputEvent.GetInstance().ClickPcvrBt07(pcvr.ButtonState.UP);
+        //}
+        //test
+    }
 }

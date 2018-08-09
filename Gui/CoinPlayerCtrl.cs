@@ -118,7 +118,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		CoinGroup.SetActive(!isActive);
 	}
 
-	void ClickStartBtOneEvent(ButtonState state)
+	void ClickStartBtOneEvent(pcvr.ButtonState state)
 	{
 		if (XKGlobalData.GameVersionPlayer != 0) {
 			return;
@@ -142,7 +142,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		ActiveZhanDouObj();
 	}
 
-	void ClickStartBtTwoEvent(ButtonState state)
+	void ClickStartBtTwoEvent(pcvr.ButtonState state)
 	{
 		if (XKGlobalData.GameVersionPlayer != 0) {
 			return;
@@ -166,7 +166,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		ActiveZhanDouObj();
 	}
 	
-	void ClickStartBtThreeEvent(ButtonState state)
+	void ClickStartBtThreeEvent(pcvr.ButtonState state)
 	{
 		if (XkGameCtrl.IsActivePlayerThree) {
 			return;
@@ -190,7 +190,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickStartBtFourEvent(ButtonState state)
+	void ClickStartBtFourEvent(pcvr.ButtonState state)
 	{
 		if (XkGameCtrl.IsActivePlayerFour) {
 			return;
@@ -266,8 +266,8 @@ public class CoinPlayerCtrl : MonoBehaviour
                 if (XkGameCtrl.GetInstance() != null
                     && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerOne))
                 {
-                    InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.DOWN);
-                    InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.UP);
+                    InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.UP);
                 }
 #endif
             }
@@ -303,8 +303,8 @@ public class CoinPlayerCtrl : MonoBehaviour
                 if (XkGameCtrl.GetInstance() != null
                     && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerTwo))
                 {
-                    InputEventCtrl.GetInstance().ClickStartBtTwo(ButtonState.DOWN);
-                    InputEventCtrl.GetInstance().ClickStartBtTwo(ButtonState.UP);
+                    InputEventCtrl.GetInstance().ClickStartBtTwo(pcvr.ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtTwo(pcvr.ButtonState.UP);
                 }
 #endif
             }
@@ -340,8 +340,8 @@ public class CoinPlayerCtrl : MonoBehaviour
                 if (XkGameCtrl.GetInstance() != null
                     && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerThree))
                 {
-                    InputEventCtrl.GetInstance().ClickStartBtThree(ButtonState.DOWN);
-                    InputEventCtrl.GetInstance().ClickStartBtThree(ButtonState.UP);
+                    InputEventCtrl.GetInstance().ClickStartBtThree(pcvr.ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtThree(pcvr.ButtonState.UP);
                 }
 #endif
             }
@@ -377,8 +377,8 @@ public class CoinPlayerCtrl : MonoBehaviour
                 if (XkGameCtrl.GetInstance() != null
                     && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerFour))
                 {
-                    InputEventCtrl.GetInstance().ClickStartBtFour(ButtonState.DOWN);
-                    InputEventCtrl.GetInstance().ClickStartBtFour(ButtonState.UP);
+                    InputEventCtrl.GetInstance().ClickStartBtFour(pcvr.ButtonState.DOWN);
+                    InputEventCtrl.GetInstance().ClickStartBtFour(pcvr.ButtonState.UP);
                 }
 #endif
             }

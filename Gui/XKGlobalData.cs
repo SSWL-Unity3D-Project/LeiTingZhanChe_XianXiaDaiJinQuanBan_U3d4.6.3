@@ -5,7 +5,22 @@ using System.IO;
 
 public class XKGlobalData
 {
-	public static int CoinPlayerOne = 0;
+    static int _CoinPlayerOne = 0;
+    public static int CoinPlayerOne
+    {
+        set
+        {
+            _CoinPlayerOne = value;
+        }
+        get
+        {
+            if (pcvr.bIsHardWare)
+            {
+                _CoinPlayerOne = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[0];
+            }
+            return _CoinPlayerOne;
+        }
+    }
 	public static int CoinPlayerTwo = 0;
 	public static int CoinPlayerThree = 0;
 	public static int CoinPlayerFour = 0;
@@ -120,6 +135,33 @@ public class XKGlobalData
 #if UNITY_ANDROID
         FileName = "GameConfig.xml";
 #endif
+    }
+
+    public static void SetCoinPlayerInfo(PlayerEnum indexPlayer, int coin)
+    {
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    SetCoinPlayerOne(coin);
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    SetCoinPlayerTwo(coin);
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    SetCoinPlayerThree(coin);
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    SetCoinPlayerFour(coin);
+                    break;
+                }
+        }
     }
 
     public static void SetCoinPlayerOne(int coin)

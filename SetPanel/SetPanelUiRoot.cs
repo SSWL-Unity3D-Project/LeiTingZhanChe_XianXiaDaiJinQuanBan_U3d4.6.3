@@ -186,15 +186,15 @@ public class SetPanelUiRoot : MonoBehaviour {
 		InputEventCtrl.GetInstance().ClickStartBtTwoEvent += ClickStartBtEventP2;
 		InputEventCtrl.GetInstance().ClickStartBtThreeEvent += ClickStartBtEventP3;
 		InputEventCtrl.GetInstance().ClickStartBtFourEvent += ClickStartBtEventP4;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtOneEvent += ClickStopDongGanBtEventP1;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtTwoEvent += ClickStopDongGanBtEventP2;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtThreeEvent += ClickStopDongGanBtEventP3;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtFourEvent += ClickStopDongGanBtEventP4;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtOneEvent += ClickStopDongGanBtEventP1;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtTwoEvent += ClickStopDongGanBtEventP2;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtThreeEvent += ClickStopDongGanBtEventP3;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtFourEvent += ClickStopDongGanBtEventP4;
 	}
 
 	void Update()
 	{
-		if (SetBtSt == ButtonState.DOWN && Time.time - TimeSetMoveBt > 1f && Time.frameCount % 200 == 0) {
+		if (SetBtSt == pcvr.ButtonState.DOWN && Time.time - TimeSetMoveBt > 1f && Time.frameCount % 200 == 0) {
 			MoveStarImg();
 		}
 
@@ -203,9 +203,9 @@ public class SetPanelUiRoot : MonoBehaviour {
 		UpdateShaCheTestInfo();
 	}
 
-	void ClickSetEnterBtEvent(ButtonState val)
+	void ClickSetEnterBtEvent(pcvr.ButtonState val)
 	{
-		if(val == ButtonState.DOWN){
+		if(val == pcvr.ButtonState.DOWN){
 			return;
 		}
 		//BackMovieScene(); //test.
@@ -213,11 +213,11 @@ public class SetPanelUiRoot : MonoBehaviour {
 	}
 
 	float TimeSetMoveBt;
-	ButtonState SetBtSt = ButtonState.UP;
-	void ClickSetMoveBtEvent(ButtonState val)
+	pcvr.ButtonState SetBtSt = pcvr.ButtonState.UP;
+	void ClickSetMoveBtEvent(pcvr.ButtonState val)
 	{
 		SetBtSt = val;
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			TimeSetMoveBt = Time.time;
 			return;
 		}
@@ -228,122 +228,122 @@ public class SetPanelUiRoot : MonoBehaviour {
 		MoveStarImg();
 	}
 
-	void ClickFireBtOneEvent(ButtonState val)
+	void ClickFireBtOneEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerOne, 0, val);
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 
 		HandleClickStartBtEvent();
 	}
 
-	void ClickFireBtTwoEvent(ButtonState val)
+	void ClickFireBtTwoEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerTwo, 0, val);
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 
 		HandleClickStartBtEvent();
 	}
 
-	void ClickFireBtThreeEvent(ButtonState val)
+	void ClickFireBtThreeEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerThree, 0, val);
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 		
 		HandleClickStartBtEvent();
 	}
 
-	void ClickFireBtFourEvent(ButtonState val)
+	void ClickFireBtFourEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerFour, 0, val);
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 		
 		HandleClickStartBtEvent();
 	}
 
-	void ClickDaoDanBtOneEvent(ButtonState val)
+	void ClickDaoDanBtOneEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerOne, 1, val);
 	}
 	
-	void ClickDaoDanBtTwoEvent(ButtonState val)
+	void ClickDaoDanBtTwoEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerTwo, 1, val);
 	}
 	
-	void ClickDaoDanBtThreeEvent(ButtonState val)
+	void ClickDaoDanBtThreeEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerThree, 1, val);
 	}
 	
-	void ClickDaoDanBtFourEvent(ButtonState val)
+	void ClickDaoDanBtFourEvent(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerFour, 1, val);
 	}
 
-	void ClickStartBtEventP1(ButtonState val)
+	void ClickStartBtEventP1(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerOne, 2, val);
-		if(val == ButtonState.DOWN)
+		if(val == pcvr.ButtonState.DOWN)
 		{
 			return;
 		}
 		HandleClickStartBtEvent();
 	}
 
-	void ClickStartBtEventP2(ButtonState val)
+	void ClickStartBtEventP2(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerTwo, 2, val);
-		if(val == ButtonState.DOWN)
+		if(val == pcvr.ButtonState.DOWN)
 		{
 			return;
 		}
 		HandleClickStartBtEvent();
 	}
 
-	void ClickStartBtEventP3(ButtonState val)
+	void ClickStartBtEventP3(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerThree, 2, val);
-		if(val == ButtonState.DOWN)
+		if(val == pcvr.ButtonState.DOWN)
 		{
 			return;
 		}
 		HandleClickStartBtEvent();
 	}
 
-	void ClickStartBtEventP4(ButtonState val)
+	void ClickStartBtEventP4(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerFour, 2, val);
-		if(val == ButtonState.DOWN)
+		if(val == pcvr.ButtonState.DOWN)
 		{
 			return;
 		}
 		HandleClickStartBtEvent();
 	}
 
-	void ClickStopDongGanBtEventP1(ButtonState val)
+	void ClickStopDongGanBtEventP1(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerOne, 3, val);
 	}
 
-	void ClickStopDongGanBtEventP2(ButtonState val)
+	void ClickStopDongGanBtEventP2(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerTwo, 3, val);
 	}
 
-	void ClickStopDongGanBtEventP3(ButtonState val)
+	void ClickStopDongGanBtEventP3(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerThree, 3, val);
 	}
 
-	void ClickStopDongGanBtEventP4(ButtonState val)
+	void ClickStopDongGanBtEventP4(pcvr.ButtonState val)
 	{
 		SetAnJianTestInfo(PlayerEnum.PlayerFour, 3, val);
 	}
@@ -650,9 +650,9 @@ public class SetPanelUiRoot : MonoBehaviour {
 
 	void CloseAllJiaoYanPanel()
 	{
-		PlayerEnum indexPlayer = PlayerEnum.Null;
+		//PlayerEnum indexPlayer = PlayerEnum.Null;
 		if (DirAdjustObj.activeSelf) {
-			indexPlayer = (PlayerEnum)(1 + StarMoveCount - (int)SelectSetPanelDate.AdjustDirP1);
+			//indexPlayer = (PlayerEnum)(1 + StarMoveCount - (int)SelectSetPanelDate.AdjustDirP1);
 			switch (AdjustDirSt) {
 			case AdjustDirState.DirectionRight:
 				AdjustDirSt = AdjustDirState.DirectionCenter;
@@ -679,7 +679,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 		}
 
 		if (AdjustYouMenShaCheObj.activeSelf) {
-			indexPlayer = (PlayerEnum)(1 + StarMoveCount - (int)SelectSetPanelDate.AdjustYouMenShaCheP1);
+			//indexPlayer = (PlayerEnum)(1 + StarMoveCount - (int)SelectSetPanelDate.AdjustYouMenShaCheP1);
 			switch (AdjustYMSCSt) {
 			case AdjustYouMenShaCheState.YouMen:
 				AdjustYMSCSt = AdjustYouMenShaCheState.ShaChe;
@@ -1053,10 +1053,10 @@ public class SetPanelUiRoot : MonoBehaviour {
 	 * key == 2 -> 开始按键.
 	 * key == 3 -> 紧急按键.
 	 */
-	void SetAnJianTestInfo(PlayerEnum indexPlayer, int key, ButtonState btState)
+	void SetAnJianTestInfo(PlayerEnum indexPlayer, int key, pcvr.ButtonState btState)
 	{
 		int indexVal = (int)indexPlayer;
-		bool isActive = btState == ButtonState.DOWN ? true : false;
+		bool isActive = btState == pcvr.ButtonState.DOWN ? true : false;
 		for (int i = 0; i < 2; i++) {
 			JiQiangBtLB[i].text = indexVal.ToString();
 			DaoDanBtLB[i].text = indexVal.ToString();
@@ -1091,7 +1091,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 	public GameObject QiNangCQObj;
 	void OnClickCheckQiNang()
 	{
-		int indexVal = StarMoveCount - (int)SelectSetPanelDate.CheckQiNang1;
+		//int indexVal = StarMoveCount - (int)SelectSetPanelDate.CheckQiNang1;
 		//Debug.Log("Unity:"+"*** "+pcvr.QiNangArray[indexVal]+", DongGanState "+pcvr.DongGanState);
 		//pcvr.QiNangArray[indexVal] = (byte)(pcvr.QiNangArray[indexVal] != 1 ? 1 : 0);
 		//QiNangCQObj.SetActive(pcvr.QiNangArray[indexVal] == 0 ? false : true);

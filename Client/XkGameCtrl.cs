@@ -528,7 +528,6 @@ public class XkGameCtrl : SSGameMono
 			IsPlayGamePFour = IsActivePlayerFour;
 			AudioBeiJingCtrl.IndexBeiJingAd = 0;
 			XKGlobalData.GetInstance().PlayGuanKaBeiJingAudio();
-            InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
             //pcvr.GetInstance().AddTVYaoKongBtEvent();
 
 #if DRAW_DEBUG_CAIPIAO_INFO
@@ -543,9 +542,9 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
 
-    private void ClickTVYaoKongExitBtEvent(ButtonState val)
+    private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             if (m_ExitUICom == null)
             {
