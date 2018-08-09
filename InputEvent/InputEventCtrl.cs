@@ -103,7 +103,7 @@ public class InputEventCtrl : MonoBehaviour
             Debug.LogWarning("OnPlayerInsertCoin -> indexVal was wrong! indexVal ==== " + indexVal);
             return;
         }
-        PlayerEnum indexPlayer = (PlayerEnum)indexVal;
+        PlayerEnum indexPlayer = (PlayerEnum)(indexVal + 1);
         XKGlobalData.SetCoinPlayerInfo(indexPlayer, coin);
     }
     #endregion

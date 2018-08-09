@@ -26,7 +26,7 @@ public class SetPanelCtrl : MonoBehaviour {
 			return;
 		}
 
-		if (val == pcvr.ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.UP) {
 			return;
 		}
 

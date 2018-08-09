@@ -217,29 +217,29 @@ public class CoinPlayerCtrl : MonoBehaviour
 	void SubCoinPlayerOne()
 	{
 		XKGlobalData.CoinPlayerOne -= XKGlobalData.GameNeedCoin;
-		SetPlayerCoin(XKGlobalData.CoinPlayerOne);
-		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.GameNeedCoin);
+        pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.GameNeedCoin);
+        SetPlayerCoin(XKGlobalData.CoinPlayerOne);
 	}
 	
 	void SubCoinPlayerTwo()
 	{
 		XKGlobalData.CoinPlayerTwo -= XKGlobalData.GameNeedCoin;
-		SetPlayerCoin(XKGlobalData.CoinPlayerTwo);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerTwo, XKGlobalData.GameNeedCoin);
+		SetPlayerCoin(XKGlobalData.CoinPlayerTwo);
 	}
 	
 	void SubCoinPlayerThree()
 	{
 		XKGlobalData.CoinPlayerThree -= XKGlobalData.GameNeedCoin;
-		SetPlayerCoin(XKGlobalData.CoinPlayerThree);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerThree, XKGlobalData.GameNeedCoin);
+		SetPlayerCoin(XKGlobalData.CoinPlayerThree);
 	}
 	
 	void SubCoinPlayerFour()
 	{
 		XKGlobalData.CoinPlayerFour -= XKGlobalData.GameNeedCoin;
-		SetPlayerCoin(XKGlobalData.CoinPlayerFour);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerFour, XKGlobalData.GameNeedCoin);
+		SetPlayerCoin(XKGlobalData.CoinPlayerFour);
 	}
 
 	void CheckPlayerOneCoinCur()

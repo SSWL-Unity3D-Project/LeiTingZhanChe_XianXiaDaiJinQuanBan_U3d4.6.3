@@ -25,7 +25,6 @@ public class pcvr : MonoBehaviour
     {
         if (Instance == null)
         {
-            PcvrComInputEvent.GetInstance();
             GameObject obj = new GameObject("_PCVR");
             DontDestroyOnLoad(obj);
             Instance = obj.AddComponent<pcvr>();
