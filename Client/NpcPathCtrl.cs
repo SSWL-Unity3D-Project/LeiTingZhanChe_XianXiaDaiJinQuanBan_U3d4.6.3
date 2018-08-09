@@ -54,7 +54,9 @@ public class NpcPathCtrl : MonoBehaviour {
 
     public void DrawPath ()
 	{
+#if UNITY_EDITOR
 		OnDrawGizmosSelected();
+#endif
 	}
 
 	void CheckNpcPathScript()

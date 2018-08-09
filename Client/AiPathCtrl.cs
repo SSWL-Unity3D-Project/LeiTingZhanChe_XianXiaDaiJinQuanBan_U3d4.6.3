@@ -181,7 +181,9 @@ public class AiPathCtrl : MonoBehaviour
 
 	public void DrawPath()
 	{
+#if UNITY_EDITOR
 		OnDrawGizmosSelected();
+#endif
 	}
 
 	public void SetPrePathTran(Transform tranVal)

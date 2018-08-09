@@ -45,6 +45,8 @@ public class PSCameraPath : MonoBehaviour {
 
     public void DrawPath ()
 	{
+#if UNITY_EDITOR
 		OnDrawGizmosSelected();
+#endif
 	}
 }
