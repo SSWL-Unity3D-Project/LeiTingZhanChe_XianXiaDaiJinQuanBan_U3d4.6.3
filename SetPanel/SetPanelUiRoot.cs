@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
-public class SetPanelUiRoot : MonoBehaviour {
-
+public class SetPanelUiRoot : MonoBehaviour
+{
 	public UILabel CoinStartLabel;
 	public GameObject DuiGouDiffLow;
 	public GameObject DuiGouDiffMiddle;
@@ -205,7 +204,8 @@ public class SetPanelUiRoot : MonoBehaviour {
 
 	void ClickSetEnterBtEvent(pcvr.ButtonState val)
 	{
-		if(val == pcvr.ButtonState.DOWN){
+		if(val == pcvr.ButtonState.UP)
+        {
 			return;
 		}
 		//BackMovieScene(); //test.
@@ -905,16 +905,20 @@ public class SetPanelUiRoot : MonoBehaviour {
 
 	void ResetPlayerCoinCur()
 	{
-		XKGlobalData.CoinPlayerOne = 0;
-		XKGlobalData.CoinPlayerTwo = 0;
-		XKGlobalData.CoinPlayerThree = 0;
-		XKGlobalData.CoinPlayerFour = 0;
-		//if (pcvr.bIsHardWare) {
-		//	pcvr.GetInstance().CoinNumCurrentP1 = 0;
-		//	pcvr.GetInstance().CoinNumCurrentP2 = 0;
-		//	pcvr.GetInstance().CoinNumCurrentP3 = 0;
-		//	pcvr.GetInstance().CoinNumCurrentP4 = 0;
-		//}
+        if (pcvr.bIsHardWare)
+        {
+            pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.CoinPlayerOne);
+            pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerTwo, XKGlobalData.CoinPlayerTwo);
+            pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerThree, XKGlobalData.CoinPlayerThree);
+            //pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerFour, XKGlobalData.CoinPlayerFour);
+        }
+        else
+        {
+            XKGlobalData.CoinPlayerOne = 0;
+            XKGlobalData.CoinPlayerTwo = 0;
+            XKGlobalData.CoinPlayerThree = 0;
+            //XKGlobalData.CoinPlayerFour = 0;
+        }
 	}
 
 	void BackMovieScene()
@@ -1085,7 +1089,7 @@ public class SetPanelUiRoot : MonoBehaviour {
 		PlayerCoinLB[0].text = XKGlobalData.CoinPlayerOne.ToString("d2");
 		PlayerCoinLB[1].text = XKGlobalData.CoinPlayerTwo.ToString("d2");
 		PlayerCoinLB[2].text = XKGlobalData.CoinPlayerThree.ToString("d2");
-		PlayerCoinLB[3].text = XKGlobalData.CoinPlayerFour.ToString("d2");
+		//PlayerCoinLB[3].text = XKGlobalData.CoinPlayerFour.ToString("d2");
 	}
 	
 	public GameObject QiNangCQObj;
