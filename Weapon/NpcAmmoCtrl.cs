@@ -41,9 +41,9 @@ public class NpcAmmoCtrl : MonoBehaviour {
 	void Awake()
 	{
 		//Debug.Log("Unity:"+"*************** TKMoveSt "+pcvr.TKMoveSt);
-		if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan && IsChangeAmmoSpeed) {
-			MvSpeed *= XkGameCtrl.GetInstance().NpcAmmoSpeed;
-		}
+		//if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan && IsChangeAmmoSpeed) {
+		//	MvSpeed *= XkGameCtrl.GetInstance().NpcAmmoSpeed;
+		//}
 
 		if (AmmoType == PlayerAmmoType.GenZongAmmo) {
 			if (GetComponent<BoxCollider>() == null) {

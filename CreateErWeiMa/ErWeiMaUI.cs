@@ -24,26 +24,26 @@ public class ErWeiMaUI : MonoBehaviour
     {
         try
         {
-            if (pcvr.IsHongDDShouBing)
-            {
-                if (pcvr.GetInstance().m_SSBoxPostNet != null)
-                {
-                    if (pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg == null)
-                    {
-                        string url = pcvr.GetInstance().m_SSBoxPostNet.m_BoxLoginData.hDianDianGamePadUrl;
-                        m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_BarcodeCam.CreateErWeiMaImg(url);
-                        StartCoroutine(CaptureScreenshot2());
-                    }
-                    else
-                    {
-                        m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg;
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("Unity: m_SSBoxPostNet was null");
-                }
-            }
+            //if (pcvr.IsHongDDShouBing)
+            //{
+            //    if (pcvr.GetInstance().m_SSBoxPostNet != null)
+            //    {
+            //        if (pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg == null)
+            //        {
+            //            string url = pcvr.GetInstance().m_SSBoxPostNet.m_BoxLoginData.hDianDianGamePadUrl;
+            //            m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_BarcodeCam.CreateErWeiMaImg(url);
+            //            StartCoroutine(CaptureScreenshot2());
+            //        }
+            //        else
+            //        {
+            //            m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Debug.LogWarning("Unity: m_SSBoxPostNet was null");
+            //    }
+            //}
         }
         catch (System.Exception ex)
         {
@@ -78,7 +78,7 @@ public class ErWeiMaUI : MonoBehaviour
         screenShot.ReadPixels(rect, 0, 0);
         screenShot.Apply();    
         m_ErWeiMaUI.mainTexture = screenShot;
-        pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg = screenShot;
+        //pcvr.GetInstance().m_BarcodeCam.m_ErWeuMaImg = screenShot;
     }
 
 //#if UNITY_EDITOR

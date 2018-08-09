@@ -115,7 +115,7 @@ public class GameMovieCtrl : SSGameMono
             //创建Logo播放对象.
             CrateMovieLogoAni();
             InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
-            pcvr.GetInstance().AddTVYaoKongBtEvent();
+            //pcvr.GetInstance().AddTVYaoKongBtEvent();
         }
 		catch (System.Exception e)
 		{

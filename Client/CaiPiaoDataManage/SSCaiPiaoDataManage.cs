@@ -751,6 +751,28 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// </summary>
         internal bool IsDaJiangCaiPiao = false;
 
+        /// <summary>
+        /// 是否正在打印彩票.
+        /// </summary>
+        internal bool IsPrintCaiPiao = false;
+        /// <summary>
+        /// 彩票数据缓存信息.
+        /// 当彩票机处于打印彩票时,新加进来的彩票数暂时存入缓冲区数据里,等彩票机打印完当前
+        /// 彩票后,再去检查缓冲区的彩票数,有数据则继续打印缓冲区彩票并将缓冲区彩票清空,没有
+        /// 数据则不进行任何操作.
+        /// </summary>
+        internal int CaiPiaoValCache = 0;
+
+        /// <summary>
+        /// 清理彩票数据.
+        /// </summary>
+        public void ClearCaiPiaoData()
+        {
+            IsPrintCaiPiao = false;
+            CaiPiaoValCache = 0;
+            CaiPiaoVal = 0;
+        }
+
         public PcvrPrintCaiPiaoData(PlayerEnum indexPlayerVal)
         {
             IndexPlayer = indexPlayerVal;
@@ -790,6 +812,15 @@ public class SSCaiPiaoDataManage : SSGameMono
                 }
             }
         }
+
+        if (m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao)
+        {
+            //当前机位正在打印彩票.
+            //将新得到的彩票存入缓冲区.
+            m_PcvrPrintCaiPiaoData[index].CaiPiaoValCache += caiPiao;
+            return;
+        }
+        m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao = true;
         m_PcvrPrintCaiPiaoData[index].CaiPiaoVal += caiPiao;
         Debug.Log("AddCaiPiaoToPlayer ->CaiPiaoVal ===== " + m_PcvrPrintCaiPiaoData[index].CaiPiaoVal
             + ", addCaiPiao ====== " + caiPiao
@@ -797,6 +828,31 @@ public class SSCaiPiaoDataManage : SSGameMono
 
         //这里添加pcvr打印彩票的消息.
         pcvr.GetInstance().StartPrintPlayerCaiPiao(indexPlayer, caiPiao);
+    }
+
+    /// <summary>
+    /// 开始打印缓冲区彩票.
+    /// </summary>
+    void StartPrintCaiPiaoCache(PlayerEnum indexPlayer)
+    {
+        int index = (int)indexPlayer - 1;
+        if (index < 0 || index > 2)
+        {
+            UnityLogWarning("AddCaiPiaoToPlayer -> index was wrong! index ==== " + index);
+            return;
+        }
+
+        if (m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao)
+        {
+            //当前机位正在打印彩票.
+            return;
+        }
+        m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao = true;
+
+        int caiPiao = m_PcvrPrintCaiPiaoData[index].CaiPiaoValCache;
+        //这里添加pcvr打印彩票的消息.
+        pcvr.GetInstance().StartPrintPlayerCaiPiao(indexPlayer, caiPiao);
+        m_PcvrPrintCaiPiaoData[index].CaiPiaoValCache = 0;
     }
     
     /// <summary>
@@ -818,6 +874,14 @@ public class SSCaiPiaoDataManage : SSGameMono
         else
         {
             m_PcvrPrintCaiPiaoData[index].CaiPiaoVal = 0;
+        }
+
+        if (m_PcvrPrintCaiPiaoData[index].CaiPiaoVal <= 0
+            && m_PcvrPrintCaiPiaoData[index].CaiPiaoValCache > 0)
+        {
+            //开始打印缓冲区彩票.
+            m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao = false;
+            StartPrintCaiPiaoCache(indexPlayer);
         }
         Debug.Log("SubPlayerCaiPiao ->CaiPiaoVal ===== " + m_PcvrPrintCaiPiaoData[index].CaiPiaoVal
             + ", addCaiPiao ====== " + caiPiao);
@@ -842,7 +906,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             return;
         }
         //清理玩家彩票数据.
-        m_PcvrPrintCaiPiaoData[index].CaiPiaoVal = 0;
+        m_PcvrPrintCaiPiaoData[index].ClearCaiPiaoData();
         //清理玩家pcvr彩票数据.
         pcvr.GetInstance().ClearCaiPiaoData(indexPlayer);
     }

@@ -86,17 +86,17 @@ public class HardwareBtCtrl : MonoBehaviour
 		switch (StartLedNumP1) {
 		case 1:
 			StartLedP1.text = "开始灯P1亮";
-			pcvr.StartLightStateP1 = LedState.Liang;
+			//pcvr.StartLightStateP1 = LedState.Liang;
 			break;
 
 		case 2:
 			StartLedP1.text = "开始灯P1闪";
-			pcvr.StartLightStateP1 = LedState.Shan;
+			//pcvr.StartLightStateP1 = LedState.Shan;
 			break;
 
 		case 3:
 			StartLedP1.text = "开始灯P1灭";
-			pcvr.StartLightStateP1 = LedState.Mie;
+			//pcvr.StartLightStateP1 = LedState.Mie;
 			StartLedNumP1 = 1;
 			break;
 		}
@@ -108,17 +108,17 @@ public class HardwareBtCtrl : MonoBehaviour
 		switch (StartLedNumP2) {
 		case 1:
 			StartLedP2.text = "开始灯P2亮";
-			pcvr.StartLightStateP2 = LedState.Liang;
+			//pcvr.StartLightStateP2 = LedState.Liang;
 			break;
 			
 		case 2:
 			StartLedP2.text = "开始灯P2闪";
-			pcvr.StartLightStateP2 = LedState.Shan;
+			//pcvr.StartLightStateP2 = LedState.Shan;
 			break;
 			
 		case 3:
 			StartLedP2.text = "开始灯P2灭";
-			pcvr.StartLightStateP2 = LedState.Mie;
+			//pcvr.StartLightStateP2 = LedState.Mie;
 			StartLedNumP2 = 1;
 			break;
 		}

@@ -6,18 +6,18 @@ public class CrossInfoCtrl : MonoBehaviour {
 	public UILabel CrossPxLable;
 	public UILabel CrossPyLable;
 	// Update is called once per frame
-	void Update()
+	void TmpUpdate()
 	{
-		switch(PlayerSt) {
-		case PlayerEnum.PlayerOne:
-			CrossPxLable.text = "px: "+pcvr.CrossPositionOne.x;
-			CrossPyLable.text = "py: "+pcvr.CrossPositionOne.y;
-			break;
+		//switch(PlayerSt) {
+		//case PlayerEnum.PlayerOne:
+		//	CrossPxLable.text = "px: "+pcvr.CrossPositionOne.x;
+		//	CrossPyLable.text = "py: "+pcvr.CrossPositionOne.y;
+		//	break;
 			
-		case PlayerEnum.PlayerTwo:
-			CrossPxLable.text = "px: "+pcvr.CrossPositionTwo.x;
-			CrossPyLable.text = "py: "+pcvr.CrossPositionTwo.y;
-			break;
-		}
+		//case PlayerEnum.PlayerTwo:
+		//	CrossPxLable.text = "px: "+pcvr.CrossPositionTwo.x;
+		//	CrossPyLable.text = "py: "+pcvr.CrossPositionTwo.y;
+		//	break;
+		//}
 	}
 }

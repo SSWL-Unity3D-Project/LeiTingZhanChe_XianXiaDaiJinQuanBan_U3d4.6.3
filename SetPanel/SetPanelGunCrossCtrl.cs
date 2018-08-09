@@ -45,17 +45,17 @@ public class SetPanelGunCrossCtrl : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update()
+	void TmpUpdate()
 	{
-		switch (PlayerSt) {
-		case PlayerEnum.PlayerOne:
-			ObjTran.localPosition = pcvr.CrossPositionOne;
-			break;
+		//switch (PlayerSt) {
+		//case PlayerEnum.PlayerOne:
+		//	ObjTran.localPosition = pcvr.CrossPositionOne;
+		//	break;
 
-		case PlayerEnum.PlayerTwo:
-			ObjTran.localPosition = pcvr.CrossPositionTwo;
-			break;
-		}
+		//case PlayerEnum.PlayerTwo:
+		//	ObjTran.localPosition = pcvr.CrossPositionTwo;
+		//	break;
+		//}
 	}
 
 	public static void SetGunCrossActive(bool isActive)

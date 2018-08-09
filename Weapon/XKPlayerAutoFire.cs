@@ -395,9 +395,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
 		
 		Vector3 mousePosInput = Input.mousePosition;
-		if (pcvr.bIsHardWare) {
-			mousePosInput = pcvr.CrossPositionOne;
-		}
+		//if (pcvr.bIsHardWare) {
+			//mousePosInput = pcvr.CrossPositionOne;
+		//}
 		
 		RaycastHit hit;
 		Vector3 firePos = Vector3.zero;
@@ -750,9 +750,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 		PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
 		Vector3 mousePosInput = Input.mousePosition;
-		if (pcvr.bIsHardWare) {
-			mousePosInput = pcvr.CrossPositionTwo;
-		}
+		//if (pcvr.bIsHardWare) {
+			//mousePosInput = pcvr.CrossPositionTwo;
+		//}
 		
 		Vector3 firePos = Vector3.zero;
 		Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;

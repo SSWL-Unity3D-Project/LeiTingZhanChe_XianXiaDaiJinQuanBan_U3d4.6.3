@@ -38,11 +38,11 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 	bool IsAimFeiJiPlayer;
 	void Awake()
 	{
-		if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan) {
-			for (int i = 0; i < TimeFireAmmo.Length; i++) {
-				TimeFireAmmo[i] *= XkGameCtrl.GetInstance().NpcAmmoTime;
-			}
-		}
+		//if (pcvr.TKMoveSt == TKMoveState.U_FangXiangPan) {
+		//	for (int i = 0; i < TimeFireAmmo.Length; i++) {
+		//		TimeFireAmmo[i] *= XkGameCtrl.GetInstance().NpcAmmoTime;
+		//	}
+		//}
 
 		if (NpcAniController.Length > 0) {
 			for (int i = 0; i < NpcAniController.Length; i++) {
