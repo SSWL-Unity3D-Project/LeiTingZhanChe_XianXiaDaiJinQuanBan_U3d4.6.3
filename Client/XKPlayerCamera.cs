@@ -2,8 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class XKPlayerCamera : MonoBehaviour {
-	public Transform[] PlayerSpawnPoint;
+public class XKPlayerCamera : MonoBehaviour
+{
+    /// <summary>
+    /// 玩家1彩票移动的终点.
+    /// </summary>
+    public Transform m_CaiPiaoEndTrP1;
+    /// <summary>
+    /// 玩家2彩票移动的终点.
+    /// </summary>
+    public Transform m_CaiPiaoEndTrP2;
+    /// <summary>
+    /// 玩家3彩票移动的终点.
+    /// </summary>
+    public Transform m_CaiPiaoEndTrP3;
+    public Transform[] PlayerSpawnPoint;
 	public Transform DaoJuSpawnPointArray;
 	Transform[] DaoJuSpawnPoint;
 	Transform CameraTran;
@@ -65,7 +78,13 @@ public class XKPlayerCamera : MonoBehaviour {
 			PlayerSt = PlayerTypeEnum.FeiJi;
 			FeiJiCameraTan = transform;
 			gameObject.SetActive(false);
-			break;
+            if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            {
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_CaiPiaoEndTrP1 = m_CaiPiaoEndTrP1;
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_CaiPiaoEndTrP2 = m_CaiPiaoEndTrP2;
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_CaiPiaoEndTrP3 = m_CaiPiaoEndTrP3;
+            }
+            break;
 
 		case PlayerTypeEnum.TanKe:
 			_InstanceTanKe = this;

@@ -1052,17 +1052,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		}
 	}
 
-	void ClickFireBtEvent(ButtonState state)
+	void ClickFireBtEvent(pcvr.ButtonState state)
 	{
 		//Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
-		if (state == ButtonState.DOWN)
+		if (state == pcvr.ButtonState.DOWN)
         {
 			SetIsActiveFireBtJQ(true);
 			LastFireTimeJiQiang = -100f;
 			CheckPlayerJiQiangFireBt();
             //if (pcvr.IsHongDDShouBing)
             //{
-            //    ClickFireDaoDanBtEvent(ButtonState.UP);
+            //    ClickFireDaoDanBtEvent(pcvr.ButtonState.UP);
             //}
         }
 		else
@@ -1075,19 +1075,19 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
     {
         //Debug.Log("Unity:"+"DelayResetFire...111");
         yield return new WaitForSeconds(0.5f);
-        ClickFireBtEvent(ButtonState.UP);
+        ClickFireBtEvent(pcvr.ButtonState.UP);
         //Debug.Log("Unity:"+"DelayResetFire...222");
     }
 
-    void ClickFireDaoDanBtEvent(ButtonState state)
+    void ClickFireDaoDanBtEvent(pcvr.ButtonState state)
 	{
 		//Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
-		if (state == ButtonState.DOWN)
+		if (state == pcvr.ButtonState.DOWN)
         {
             IsActiveFireBtZP = true;
             //if (pcvr.IsHongDDShouBing)
             //{
-            //    ClickFireBtEvent(ButtonState.UP);
+            //    ClickFireBtEvent(pcvr.ButtonState.UP);
             //}
         }
 		else
@@ -1100,7 +1100,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
     {
         //Debug.Log("Unity:"+"DelayResetFireDaoDan...111");
         yield return new WaitForSeconds(0.1f);
-        ClickFireDaoDanBtEvent(ButtonState.UP);
+        ClickFireDaoDanBtEvent(pcvr.ButtonState.UP);
         //Debug.Log("Unity:"+"DelayResetFireDaoDan...222");
     }
 
@@ -1245,8 +1245,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 				break;
 
 			case PlayerAmmoType.DaoDanAmmo:
-//				ClickDaoDanBtOneEvent(ButtonState.DOWN);
-//				ClickDaoDanBtTwoEvent(ButtonState.DOWN);
+//				ClickDaoDanBtOneEvent(pcvr.ButtonState.DOWN);
+//				ClickDaoDanBtTwoEvent(pcvr.ButtonState.DOWN);
 				break;
 
 			default:

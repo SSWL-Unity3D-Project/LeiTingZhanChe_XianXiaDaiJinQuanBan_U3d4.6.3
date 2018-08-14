@@ -119,8 +119,40 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		childTr.gameObject.SetActive(!isHiddenDaoJu);
 	}
 
+    /// <summary>
+    /// 是否为彩票道具.
+    /// </summary>
+    internal bool IsCaiPiaoDaoJu = false;
+    bool IsDelayRemoveSelf = false;
+    SSCaiPiaoDataManage.SuiJiDaoJuState DaoJuType = SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang;
+    public void DelayRemoveSelf(PlayerEnum indexPlayer)
+    {
+        if (IsDelayRemoveSelf == false)
+        {
+            IsDelayRemoveSelf = true;
+            if (BuJiBao == BuJiBaoType.ShuangBeiFenShuDJ)
+            {
+                //骰子类型.
+                DaoJuType = SSCaiPiaoDataManage.SuiJiDaoJuState.TouZi;
+            }
+            StartCoroutine(RemoveSelf(1f, indexPlayer));
+        }
+    }
+
+    IEnumerator RemoveSelf(float time, PlayerEnum indexPlayer)
+    {
+        yield return new WaitForSeconds(time);
+        RemoveBuJiBao(indexPlayer);
+    }
+
 	void OnCollisionEnter(Collision collision)
 	{
+        if (IsCaiPiaoDaoJu)
+        {
+            //彩票随机道具不接受玩家碰撞得取.
+            return;
+        }
+
 		//Debug.Log("Unity:"+"OnCollisionEnter -> nameHit "+collision.gameObject.name);
 		string layerName = LayerMask.LayerToName(collision.gameObject.layer);
 		if (layerName == XkGameCtrl.TerrainLayer
@@ -181,7 +213,33 @@ public class BuJiBaoCtrl : MonoBehaviour {
 			if (ExplodeObj != null) {
 				GameObject obj = (GameObject)Instantiate(ExplodeObj, transform.position, transform.rotation);
 				XkGameCtrl.CheckObjDestroyThisTimed(obj);
-			}
+                if (obj != null && IsCaiPiaoDaoJu)
+                {
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+                    {
+                        int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu, DaoJuType);
+                        SSCaiPiaoLiZiManage caiPiaoLiZi = obj.GetComponent<SSCaiPiaoLiZiManage>();
+                        if (caiPiaoLiZi != null)
+                        {
+                            caiPiaoLiZi.ShowNumUI(value, playerSt);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("CreatLiZi -> caiPiaoLiZi was null.................");
+                        }
+                    }
+
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+                    {
+                        //初始化飞出的彩票逻辑.
+                        XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(obj.transform, playerSt, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+                    }
+                }
+            }
 			
 			if (Network.peerType != NetworkPeerType.Server) {
 				bool isMoveDaoJu = true;
@@ -202,10 +260,10 @@ public class BuJiBaoCtrl : MonoBehaviour {
 					XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
 					break;
 				case BuJiBaoType.ShuangBeiFenShuDJ:
-					//isMoveDaoJu = false;
+					isMoveDaoJu = false;
 					//XKDaoJuGlobalDt.SetTimeFenShuBeiLv(playerSt, FenShuBeiLv);
-					XKDaoJuGlobalDt.SetTimeFenShuBeiLv(playerSt, 2);
-					XKFenShuBeiLvCtrl.GetInstance().ShowPlayerFenShuBeiLv(playerSt);
+					//XKDaoJuGlobalDt.SetTimeFenShuBeiLv(playerSt, 2);
+					//XKFenShuBeiLvCtrl.GetInstance().ShowPlayerFenShuBeiLv(playerSt);
 					break;
 				case BuJiBaoType.QianHouFireDJ:
 					isMoveDaoJu = false;
@@ -390,7 +448,12 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		Transform playerTr = null;
 		Vector3 posA = Vector3.zero;
 		Vector3 posB = DaoJuTr.position;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
+            if (XKPlayerGlobalDt.PlayerMoveList == null && XKPlayerGlobalDt.PlayerMoveList.Count <= i)
+            {
+                break;
+            }
+
 			if (XKPlayerGlobalDt.PlayerMoveList == null || XKPlayerGlobalDt.PlayerMoveList[i] == null) {
 				continue;
 			}

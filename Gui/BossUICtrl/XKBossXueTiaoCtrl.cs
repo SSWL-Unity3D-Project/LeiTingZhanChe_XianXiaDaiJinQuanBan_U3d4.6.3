@@ -42,6 +42,8 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 	XKNpcHealthCtrl BossHealthScript;
 	public void SetBloodBossAmount(float bloodAmount, XKNpcHealthCtrl bossHealth = null)
 	{
+        //不去设置boss血条UI.
+        return;
 		if (bossHealth != null && bloodAmount == -1f) {
 			BossHealthScript = bossHealth; //存储Boss血量脚本.
 		}

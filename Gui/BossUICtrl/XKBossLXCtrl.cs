@@ -31,7 +31,7 @@ public class XKBossLXCtrl : MonoBehaviour
 	public void StartPlayBossLaiXi()
 	{
 		Debug.Log("Unity:"+"StartPlayBossLaiXi...");
-		BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
+		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 
 		TweenAlpha twAlpha = GetComponent<TweenAlpha>();
 		if (twAlpha != null) {

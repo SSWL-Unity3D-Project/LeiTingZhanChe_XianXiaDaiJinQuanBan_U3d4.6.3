@@ -18,6 +18,7 @@ public class SSGameYuZhiCaiPiaoData
     {
         set
         {
+            XKGlobalData.GetInstance().SetYuZhiCaiChi(value);
             _YuZhiCaiPiaoVal = value;
         }
         get
@@ -30,11 +31,22 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     public void Init()
     {
-        int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCaiPiao;
-        YuZhiCaiPiaoVal = YuZhiCaiPiaoBeiLv * coinToCaiPiao;
+        bool isUpdateYuZhiCaiChi = XKGlobalData.GetInstance().InitYuZhiCaiChi(YuZhiCaiPiaoBeiLv);
+        YuZhiCaiPiaoVal = XKGlobalData.GetInstance().m_YuZhiCaiChi;
+        //int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
+        //YuZhiCaiPiaoVal = YuZhiCaiPiaoBeiLv * coinToCaiPiao;
+
         UpdateYuZhiCaiChiData();
-        SubZhanCheCaiPiaoVal();
-        SubJPBossCaiPiaoVal();
+        if (isUpdateYuZhiCaiChi)
+        {
+            SubZhanCheCaiPiaoVal();
+            SubJPBossCaiPiaoVal();
+        }
+        else
+        {
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai = XKGlobalData.GetInstance().m_ZhanCheCaiChi;
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai = XKGlobalData.GetInstance().m_JPBossCaiChi;
+        }
     }
 
     /// <summary>
@@ -42,7 +54,7 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     int GetOldYuZhiCaiPiaoVal()
     {
-        int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCaiPiao;
+        int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
         return YuZhiCaiPiaoBeiLv * coinToCaiPiao;
     }
 

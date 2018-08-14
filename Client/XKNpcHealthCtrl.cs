@@ -374,7 +374,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 if (NpcScript.IsZhanCheNpc)
                 {
                     //战车npc是否可以被击爆的判断.
-                    if (NpcScript.m_IndexPlayerJiBao != playerSt)
+                    if (XkGameCtrl.GetInstance().IsCaiPiaoHuLuePlayerIndex == false && NpcScript.m_IndexPlayerJiBao != playerSt)
                     {
                         //不是可以击爆战车npc的玩家.
                         return;
@@ -390,7 +390,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 if (NpcScript.IsJPBossNpc)
                 {
                     //JPBoss是否可以被击爆的判断.
-                    if (NpcScript.m_IndexPlayerJiBao != playerSt)
+                    if (XkGameCtrl.GetInstance().IsCaiPiaoHuLuePlayerIndex == false && NpcScript.m_IndexPlayerJiBao != playerSt)
                     {
                         //不是可以击爆JPBoss的玩家.
                         return;
@@ -422,7 +422,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 				BoxColCom.enabled = false;
 			}
 			CheckSpawnDaoJuCom(playerSt);
-			CheckNpcDeathExplode();
+			CheckNpcDeathExplode(playerSt);
 			CheckHiddenNpcObjArray();
 
 //			bool isAddKillNpcNum = true;
@@ -571,7 +571,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		CheckDisGameCamera();
 	}
 
-	void CheckNpcDeathExplode()
+	void CheckNpcDeathExplode(PlayerEnum indexPlayer = PlayerEnum.Null)
 	{
 		if (DeathExplode == null) {
 			return;
@@ -581,7 +581,66 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
 		objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
 		XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
-	}
+
+        if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
+        {
+            SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType = SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe;
+            //彩票boss或战车npc.
+            if (NpcScript.GetIsBossNpc())
+            {
+                deCaiType = SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss;
+                AudioBeiJingCtrl.StopGameBeiJingAudio();
+            }
+
+            if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+            {
+                int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
+                if (objExplode != null)
+                {
+                    SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
+                    if (caiPiaoLiZi != null)
+                    {
+                        caiPiaoLiZi.ShowNumUI(value, indexPlayer);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+                    }
+                }
+            }
+
+
+            if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
+            {
+                if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+                {
+                    //初始化飞出的彩票逻辑.
+                    XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+                }
+                else
+                {
+                    Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+                }
+            }
+            else if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+            {
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer);
+                }
+
+                if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+                {
+                    //初始化烟花粒子的产生.
+                    XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitPlayCaiPiaoYanHua();
+                }
+                else
+                {
+                    Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+                }
+            }
+        }
+    }
 
 	public string GetNpcName()
 	{

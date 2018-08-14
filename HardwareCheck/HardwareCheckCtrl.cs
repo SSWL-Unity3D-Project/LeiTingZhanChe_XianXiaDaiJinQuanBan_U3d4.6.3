@@ -36,7 +36,7 @@ public class HardwareCheckCtrl : MonoBehaviour
 	void Start()
 	{
 		//pcvr.TKMoveSt = TKMoveSt;
-		Screen.SetResolution(1280, 720, false);
+		Screen.SetResolution(1360, 768, false);
 		Instance = this;
 		IsTestHardWare = true;
 		JiaMiCeShiObj.SetActive(IsJiaMiCeShi);
@@ -80,10 +80,10 @@ public class HardwareCheckCtrl : MonoBehaviour
 		InputEventCtrl.GetInstance().ClickStartBtTwoEvent += ClickStartP2BtEvent;
 		InputEventCtrl.GetInstance().ClickStartBtThreeEvent += ClickStartP3BtEvent;
 		InputEventCtrl.GetInstance().ClickStartBtFourEvent += ClickStartP4BtEvent;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtOneEvent += ClickStopDongGanBtOneEvent;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtTwoEvent += ClickStopDongGanBtTwoEvent;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtThreeEvent += ClickStopDongGanBtThreeEvent;
-		InputEventCtrl.GetInstance().ClickStopDongGanBtFourEvent += ClickStopDongGanBtFourEvent;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtOneEvent += ClickStopDongGanBtOneEvent;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtTwoEvent += ClickStopDongGanBtTwoEvent;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtThreeEvent += ClickStopDongGanBtThreeEvent;
+		//InputEventCtrl.GetInstance().ClickStopDongGanBtFourEvent += ClickStopDongGanBtFourEvent;
 	}
 	
 	// Update is called once per frame
@@ -129,9 +129,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		GUI.Label(new Rect(10f, 25f, Screen.width, 30f), strA);
 	}*/
 
-	void ClickSetEnterBtEvent(ButtonState val)
+	void ClickSetEnterBtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "设置 Down";
 		}
 		else {
@@ -139,9 +139,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickSetMoveBtEvent(ButtonState val)
+	void ClickSetMoveBtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "移动 Down";
 		}
 		else {
@@ -149,9 +149,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickStartP1BtEvent(ButtonState val)
+	void ClickStartP1BtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "1P开始 Down";
 		}
 		else {
@@ -159,9 +159,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickStartP2BtEvent(ButtonState val)
+	void ClickStartP2BtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "2P开始 Down";
 		}
 		else {
@@ -169,9 +169,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickStartP3BtEvent(ButtonState val)
+	void ClickStartP3BtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "3P开始 Down";
 		}
 		else {
@@ -179,9 +179,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickStartP4BtEvent(ButtonState val)
+	void ClickStartP4BtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "4P开始 Down";
 		}
 		else {
@@ -189,9 +189,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickStopDongGanBtOneEvent(ButtonState val)
+	void ClickStopDongGanBtOneEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "1P紧急 Down";
 		}
 		else {
@@ -199,9 +199,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickStopDongGanBtTwoEvent(ButtonState val)
+	void ClickStopDongGanBtTwoEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "2P紧急 Down";
 		}
 		else {
@@ -209,9 +209,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickStopDongGanBtThreeEvent(ButtonState val)
+	void ClickStopDongGanBtThreeEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "3P紧急 Down";
 		}
 		else {
@@ -219,9 +219,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickStopDongGanBtFourEvent(ButtonState val)
+	void ClickStopDongGanBtFourEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "4P紧急 Down";
 		}
 		else {
@@ -229,9 +229,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickFireBtOneEvent(ButtonState val)
+	void ClickFireBtOneEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "1P射击 Down";
 		}
 		else {
@@ -239,9 +239,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickFireBtTwoEvent(ButtonState val)
+	void ClickFireBtTwoEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "2P射击 Down";
 		}
 		else {
@@ -249,9 +249,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickFireBtThreeEvent(ButtonState val)
+	void ClickFireBtThreeEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "3P射击 Down";
 		}
 		else {
@@ -259,9 +259,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickFireBtFourEvent(ButtonState val)
+	void ClickFireBtFourEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "4P射击 Down";
 		}
 		else {
@@ -269,9 +269,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickDaoDanBtOneEvent(ButtonState val)
+	void ClickDaoDanBtOneEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "1P导弹 Down";
 		}
 		else {
@@ -279,9 +279,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickDaoDanBtTwoEvent(ButtonState val)
+	void ClickDaoDanBtTwoEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "2P导弹 Down";
 		}
 		else {
@@ -289,9 +289,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 	
-	void ClickDaoDanBtThreeEvent(ButtonState val)
+	void ClickDaoDanBtThreeEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "3P导弹 Down";
 		}
 		else {
@@ -299,9 +299,9 @@ public class HardwareCheckCtrl : MonoBehaviour
 		}
 	}
 
-	void ClickDaoDanBtFourEvent(ButtonState val)
+	void ClickDaoDanBtFourEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			AnJianLable.text = "4P导弹 Down";
 		}
 		else {

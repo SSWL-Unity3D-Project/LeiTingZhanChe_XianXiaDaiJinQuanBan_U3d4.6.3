@@ -52,8 +52,9 @@ public class GameMovieCtrl : SSGameMono
 		{
             XKGlobalData.GetInstance();
 			//Debug.Log("Unity:!!!!!!GetInstance!!!!!!");
-			AudioListener.volume = (float)XKGlobalData.GameAudioVolume / 10f;
-			if (AudioListCtrl.GetInstance() != null)
+			//AudioListener.volume = (float)XKGlobalData.GameAudioVolume / 10f;
+			AudioListener.volume = 1f;
+            if (AudioListCtrl.GetInstance() != null)
 			{
 				AudioListCtrl.GetInstance().CloseGameAudioBJ();
 			}
@@ -79,13 +80,13 @@ public class GameMovieCtrl : SSGameMono
 			//IsTestXiaoScreen = true; //test
 			if (!XkGameCtrl.IsGameOnQuit)
 			{
-				if (Screen.fullScreen
-					|| Screen.currentResolution.width != 1280
-					|| Screen.currentResolution.height != 720)
+				if (!Screen.fullScreen
+					|| Screen.currentResolution.width != 1360
+					|| Screen.currentResolution.height != 768)
 				{
 					if (!IsTestLJGame && !IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1280, 720, false);
+						Screen.SetResolution(1360, 768, true);
 					}
 				}
 			}
@@ -114,7 +115,7 @@ public class GameMovieCtrl : SSGameMono
             //PlayMovie();
             //创建Logo播放对象.
             CrateMovieLogoAni();
-            InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
+            //InputEventCtrl.GetInstance().ClickTVYaoKongExitBtEvent += ClickTVYaoKongExitBtEvent;
             //pcvr.GetInstance().AddTVYaoKongBtEvent();
         }
 		catch (System.Exception e)
@@ -175,8 +176,8 @@ public class GameMovieCtrl : SSGameMono
         }
 		Debug.Log("Unity:!!!!!!DelayResetIsLoadingLevel3!!!!!!");
 
-		//InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.DOWN); //test.
-        //InputEventCtrl.GetInstance().ClickStartBtOne(ButtonState.UP);
+		//InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.DOWN); //test.
+        //InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.UP);
 		//Debug.Log("Unity:!!!!!!DelayResetIsLoadingLevel4!!!!!!");
 	}
 
@@ -247,9 +248,9 @@ public class GameMovieCtrl : SSGameMono
         return obj;
     }
 
-    private void ClickTVYaoKongExitBtEvent(ButtonState val)
+    private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             if (m_ExitUICom == null)
             {

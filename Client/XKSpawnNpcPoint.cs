@@ -536,7 +536,16 @@ public class XKSpawnNpcPoint : MonoBehaviour
                 NpcScript[SpawnNpcCount].SetIsCaiPiaoZhanChe();
             }
 			NpcScript[SpawnNpcCount].SetSpawnNpcInfo(this);
-		}
+
+            if (IsCaiPiaoZhanChePoint)
+            {
+                Vector3 forwardVal = Vector3.zero;
+                forwardVal = transform.forward;
+                forwardVal.y = 0f;
+                //强制修改彩票战车和boss的方向.
+                obj.transform.forward = forwardVal.normalized;
+            }
+        }
 		NpcLoopObj = obj;
 
 		SpawnNpcCount++;

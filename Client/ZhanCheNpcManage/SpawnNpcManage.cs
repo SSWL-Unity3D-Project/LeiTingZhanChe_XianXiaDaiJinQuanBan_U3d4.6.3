@@ -721,6 +721,13 @@ public class SpawnNpcManage : MonoBehaviour
                                 XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Boss);
                             }
                             m_ZhanCheJPBossData.JPBossData.AddNpcToList(obj);
+
+                            if (XKBossLXCtrl.GetInstance() != null)
+                            {
+                                //播放boss来袭UI.
+                                XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                                AudioBeiJingCtrl.StopGameBeiJingAudio();
+                            }
                             break;
                         }
                     case NpcState.SuperJPBoss:

@@ -29,25 +29,25 @@ public class SSCaiPiaoBuZu : SSGameMono
         InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
     }
 
-    private void ClickStartBtOneEvent(ButtonState val)
+    private void ClickStartBtOneEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             PcvrRestartPrintCaiPiao(PlayerEnum.PlayerOne);
         }
     }
 
-    private void ClickStartBtTwoEvent(ButtonState val)
+    private void ClickStartBtTwoEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             PcvrRestartPrintCaiPiao(PlayerEnum.PlayerTwo);
         }
     }
 
-    private void ClickStartBtThreeEvent(ButtonState val)
+    private void ClickStartBtThreeEvent(pcvr.ButtonState val)
     {
-        if (val == ButtonState.UP)
+        if (val == pcvr.ButtonState.UP)
         {
             PcvrRestartPrintCaiPiao(PlayerEnum.PlayerThree);
         }
@@ -62,9 +62,9 @@ public class SSCaiPiaoBuZu : SSGameMono
         pcvr.GetInstance().RestartPrintCaiPiao(indexPlayer);
     }
 
-    private void ClickSetMoveBtEvent(ButtonState val)
+    private void ClickSetMoveBtEvent(pcvr.ButtonState val)
     {
-        IsBtDownSetMove = val == ButtonState.DOWN ? true : false;
+        IsBtDownSetMove = val == pcvr.ButtonState.DOWN ? true : false;
         if (IsBtDownSetMove)
         {
             m_TimeValBtDown = 0f;

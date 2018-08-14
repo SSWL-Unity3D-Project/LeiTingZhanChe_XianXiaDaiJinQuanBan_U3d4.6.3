@@ -1,4 +1,5 @@
 ﻿//#define CREATE_SUPER_JPBOSS
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,11 +56,11 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// <summary>
         /// 战车出票条件(游戏启动币数乘以该值).
         /// </summary>
-        float ZhanCheChuPiaoTiaoJian = 10f;
+        float ZhanCheChuPiaoTiaoJian = 2.5f;
         /// <summary>
         /// 随机道具出票条件(游戏启动币数乘以该值).
         /// </summary>
-        float SuiJiDaoJuChuPiaoTiaoJian = 2.5f;
+        float SuiJiDaoJuChuPiaoTiaoJian = 0.5f;
         /// <summary>
         /// JPBoss出票条件(游戏启动币数乘以该值).
         /// </summary>
@@ -72,6 +73,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         {
             set
             {
+                XKGlobalData.GetInstance().SetZhanCheCaiChi(value);
                 _ZhanCheDeCai = value;
             }
             get
@@ -87,11 +89,13 @@ public class SSCaiPiaoDataManage : SSGameMono
         {
             set
             {
+                XKGlobalData.GetInstance().SetDaoJuCaiChi(value);
                 _SuiJiDaoJuDeCai = value;
             }
             get
             {
-                return _SuiJiDaoJuDeCai;
+                return XKGlobalData.GetInstance().m_DaoJuCaiChi;
+                //return _SuiJiDaoJuDeCai;
             }
         }
         int _JPBossDeCai = 0;
@@ -102,6 +106,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         {
             set
             {
+                XKGlobalData.GetInstance().SetJPBossCaiChi(value);
                 _JPBossDeCai = value;
             }
             get
@@ -138,7 +143,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// </summary>
         public void FenPeiDeCaiVal(bool isPlayerXuBi)
         {
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCaiPiao * XKGlobalData.GameNeedCoin;
+            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             float xuBiChuPiaoLvTmp = isPlayerXuBi == true ? XuBiChuPiaoLv : 1f;
             if (isPlayerXuBi)
             {
@@ -149,7 +154,13 @@ public class SSCaiPiaoDataManage : SSGameMono
 
             coinStart = (int)(coinStart * xuBiChuPiaoLvTmp);
             ZhanCheDeCai += (int)(coinStart * ZhanCheChuPiaoLv);
-            SuiJiDaoJuDeCai += (int)(coinStart * SuiJiDaoJuChuPiaoLv);
+            int suiJiDaoJuDeCaiFenPei = (int)(coinStart * SuiJiDaoJuChuPiaoLv);
+            if (suiJiDaoJuDeCaiFenPei < 1)
+            {
+                //至少给随机道具分配一张彩票.
+                suiJiDaoJuDeCaiFenPei = 1;
+            }
+            SuiJiDaoJuDeCai += suiJiDaoJuDeCaiFenPei;
             JPBossDeCai += (int)(coinStart * JPBossChuPiaoLv);
             Debug.Log("Unity: FenPeiDeCaiVal -> coinStart == " + coinStart
                 + ", ZhanCheDeCai == " + ZhanCheDeCai
@@ -164,7 +175,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         public void SubGameDeCaiValByDeCaiState(PlayerEnum index, DeCaiState type, SuiJiDaoJuState suiJiDaoJuType = SuiJiDaoJuState.BaoXiang)
         {
             int val = 0;
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCaiPiao * XKGlobalData.GameNeedCoin;
+            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             switch (type)
             {
                 case DeCaiState.ZhanChe:
@@ -222,12 +233,52 @@ public class SSCaiPiaoDataManage : SSGameMono
         }
 
         /// <summary>
+        /// 获取需要打印的彩票数量.
+        /// </summary>
+        public int GetPrintCaiPiaoValueByDeCaiState(DeCaiState type, SuiJiDaoJuState suiJiDaoJuType = SuiJiDaoJuState.BaoXiang)
+        {
+            int value = 0;
+            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            switch (type)
+            {
+                case DeCaiState.ZhanChe:
+                    {
+                        value = (int)(coinStart * ZhanCheChuPiaoTiaoJian);
+                        break;
+                    }
+                case DeCaiState.SuiJiDaoJu:
+                    {
+                        float suiJiDaoJuChuPiaoLv = 0f;
+                        SuiJiDaoJuData suiJiDaoJuData = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuiJiDaoJuData;
+                        if (suiJiDaoJuType == SuiJiDaoJuState.TouZi)
+                        {
+                            suiJiDaoJuChuPiaoLv = suiJiDaoJuData.TouZiDePiaoLv;
+                        }
+                        else
+                        {
+                            suiJiDaoJuChuPiaoLv = suiJiDaoJuData.BaoXiangDePiaoLv;
+                        }
+                        value = (int)(coinStart * SuiJiDaoJuChuPiaoTiaoJian);
+                        //应该给玩家的彩票数量.
+                        value = (int)(value * suiJiDaoJuChuPiaoLv);
+                        break;
+                    }
+                case DeCaiState.JPBoss:
+                    {
+                        value = (int)(coinStart * JPBossChuPiaoTiaoJian);
+                        break;
+                    }
+            }
+            return value;
+        }
+
+        /// <summary>
         /// 判断是否达到某种得彩类型的出彩条件.
         /// </summary>
         public bool GetIsChuCaiPiaoByDeCaiState(DeCaiState type)
         {
             bool isChuPiao = false;
-            int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCaiPiao * XKGlobalData.GameNeedCoin;
+            int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             float chuPiaoTiaoJian = 0f;
             int deCaiVal = -1;
             switch (type)
@@ -333,15 +384,41 @@ public class SSCaiPiaoDataManage : SSGameMono
     {
         SuiJiDaoJuState type = SuiJiDaoJuState.TouZi;
         GameObject obj = null;
-        float rv = Random.Range(0, 100) / 100f;
+        //SSCaiPiaoSuiJiDaoJu suiJiDaoJu = null;
+        float rv = UnityEngine.Random.Range(0, 100) / 100f;
         if (rv < m_SuiJiDaoJuData.TouZiGaiLv)
         {
             obj = m_SuiJiDaoJuData.TouZiPrefab;
+
+            //if (obj != null)
+            //{
+            //    suiJiDaoJu = obj.GetComponent<SSCaiPiaoSuiJiDaoJu>();
+            //    if (suiJiDaoJu != null)
+            //    {
+            //        suiJiDaoJu.DaoJuType = SuiJiDaoJuState.TouZi;
+            //    }
+            //    else
+            //    {
+            //        UnityLogWarning("GetSuiJiDaoJuPrefab -> suiJiDaoJu was null..........");
+            //    }
+            //}
         }
         else
         {
             type = SuiJiDaoJuState.BaoXiang;
             obj = m_SuiJiDaoJuData.BaoXiangPrefab;
+            //if (obj != null)
+            //{
+            //    suiJiDaoJu = obj.GetComponent<SSCaiPiaoSuiJiDaoJu>();
+            //    if (suiJiDaoJu != null)
+            //    {
+            //        suiJiDaoJu.DaoJuType = SuiJiDaoJuState.BaoXiang;
+            //    }
+            //    else
+            //    {
+            //        UnityLogWarning("GetSuiJiDaoJuPrefab -> suiJiDaoJu was null..........");
+            //    }
+            //}
         }
 
         m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(index, GameCaiPiaoData.DeCaiState.SuiJiDaoJu, type);
@@ -501,7 +578,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             int deCaiVal = 0;
             float xuBiChuPiaoLvTmp = 1f;
             float zhengChangChuPiaoLvTmp = 0f;
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCaiPiao * XKGlobalData.GameNeedCoin;
+            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             if (isPlayerXuBi)
             {
                 xuBiChuPiaoLvTmp = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.XuBiChuPiaoLv;
@@ -574,6 +651,43 @@ public class SSCaiPiaoDataManage : SSGameMono
         }
 
         m_GameYuZhiCaiPiaoData.Init();
+        PcvrComInputEvent.GetInstance().OnCaiPiaJiWuPiaoEvent += OnCaiPiaJiWuPiaoEvent;
+        PcvrComInputEvent.GetInstance().OnCaiPiaJiChuPiaoEvent += OnCaiPiaJiChuPiaoEvent;
+    }
+
+    /// <summary>
+    /// 彩票机无票.
+    /// </summary>
+    private void OnCaiPiaJiWuPiaoEvent(pcvrTXManage.CaiPiaoJi val)
+    {
+        int indexVal = (int)val;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            Debug.LogWarning("OnCaiPiaJiWuPiaoEvent -> indexVal was wrong! indexVal ==== " + indexVal);
+            return;
+        }
+
+        PlayerEnum indexPlayer = (PlayerEnum)(indexVal + 1);
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoBuZuPanel(indexPlayer);
+        }
+    }
+
+    /// <summary>
+    /// 彩票机出票.
+    /// </summary>
+    private void OnCaiPiaJiChuPiaoEvent(pcvrTXManage.CaiPiaoJi val)
+    {
+        int indexVal = (int)val;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            Debug.LogWarning("OnCaiPiaJiChuPiaoEvent -> indexVal was wrong! indexVal ==== " + indexVal);
+            return;
+        }
+
+        PlayerEnum indexPlayer = (PlayerEnum)(indexVal + 1);
+        SubPlayerCaiPiao(indexPlayer, 1);
     }
 
     /// <summary>
@@ -682,7 +796,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             set
             {
                 _SuperJPCaiPiao = value;
-                int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCaiPiao;
+                int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
                 int caiPiaoVal = CaiPiaoJiShuCount * CaiPiaoBeiLvJiShu * coinToCaiPiao;
                 Debug.Log("Unity: SuperJPCaiPiao =============== " + SuperJPCaiPiao
                     + ", CaiPiaoJiShuCount == " + CaiPiaoJiShuCount
@@ -727,7 +841,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {
                     //显示玩家彩票数量.
-                    SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, _CaiPiaoVal);
+                    SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, _CaiPiaoVal + CaiPiaoValCache);
                 }
 
                 if (IsDaJiangCaiPiao == true && _CaiPiaoVal <= 0)
@@ -813,6 +927,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             }
         }
 
+        XKGlobalData.GetInstance().SetTotalOutPrintCards(XKGlobalData.GetInstance().m_TotalOutPrintCards + caiPiao);
         if (m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao)
         {
             //当前机位正在打印彩票.
@@ -820,11 +935,12 @@ public class SSCaiPiaoDataManage : SSGameMono
             m_PcvrPrintCaiPiaoData[index].CaiPiaoValCache += caiPiao;
             return;
         }
+
         m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao = true;
         m_PcvrPrintCaiPiaoData[index].CaiPiaoVal += caiPiao;
         Debug.Log("AddCaiPiaoToPlayer ->CaiPiaoVal ===== " + m_PcvrPrintCaiPiaoData[index].CaiPiaoVal
             + ", addCaiPiao ====== " + caiPiao
-            + ", coinToCaiPiao ==== " + XKGlobalData.GetInstance().m_CoinToCaiPiao);
+            + ", coinToCaiPiao ==== " + XKGlobalData.GetInstance().m_CoinToCard);
 
         //这里添加pcvr打印彩票的消息.
         pcvr.GetInstance().StartPrintPlayerCaiPiao(indexPlayer, caiPiao);
@@ -891,6 +1007,26 @@ public class SSCaiPiaoDataManage : SSGameMono
             //删除彩票不足UI界面.
             SSUIRoot.GetInstance().m_GameUIManage.RemoveCaiPiaoBuZuPanel(indexPlayer, false);
         }
+    }
+
+    /// <summary>
+    /// 获取玩家当前的彩票数量.
+    /// </summary>
+    internal int GetPlayerCaiPiaoVal(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer;
+        if (indexVal < 1 || indexVal > 3)
+        {
+            Debug.LogWarning("GetPlayerCaiPiaoVal -> indexVal was wrong! indexVal ==== " + indexVal);
+            return 0;
+        }
+
+        if (m_PcvrPrintCaiPiaoData.Length <= indexVal)
+        {
+            Debug.LogWarning("GetPlayerCaiPiaoVal -> m_PcvrPrintCaiPiaoData was wrong! indexVal ==== " + indexVal);
+            return 0;
+        }
+        return m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoVal;
     }
 
     /// <summary>

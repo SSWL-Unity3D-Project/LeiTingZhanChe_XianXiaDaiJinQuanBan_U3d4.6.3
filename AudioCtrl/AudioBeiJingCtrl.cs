@@ -13,13 +13,25 @@ public class AudioBeiJingCtrl : MonoBehaviour
 			TimeDuration = tVol.duration;
 			DestroyObject(tVol);
 		}
-	}
 
+        if (audio != null)
+        {
+            m_VolumeStart = audio.volume;
+        }
+    }
+
+    internal float m_VolumeStart = 1f;
 	public void MakeBeiJiAudioDownVolum()
 	{
-		TweenVolume tVol = gameObject.AddComponent<TweenVolume>();
+        TweenVolume tVol = gameObject.GetComponent<TweenVolume>();
+        if (tVol != null)
+        {
+            DestroyObject(tVol);
+        }
+
+        tVol = gameObject.AddComponent<TweenVolume>();
 		if (tVol != null) {
-			tVol.from = audio.volume;
+			tVol.from = m_VolumeStart;
 			tVol.to = 0f;
 			tVol.duration = TimeDuration;
 			EventDelegate.Add(tVol.onFinished, delegate{
@@ -41,10 +53,17 @@ public class AudioBeiJingCtrl : MonoBehaviour
 	}
 
 	void DelayPlayNextBeiJingAudio()
-	{
-		AudioListCtrl.StopLoopAudio(AudioListCtrl.GetInstance().ASGuanKaBJ[IndexBeiJingAd]);
+    {
+        TweenVolume tVol = gameObject.GetComponent<TweenVolume>();
+        if (tVol != null)
+        {
+            DestroyObject(tVol);
+        }
 
-		IndexBeiJingAd++;
+        AudioListCtrl.StopLoopAudio(AudioListCtrl.GetInstance().ASGuanKaBJ[IndexBeiJingAd]);
+        AudioListCtrl.GetInstance().ASGuanKaBJ[IndexBeiJingAd].volume = m_VolumeStart;
+
+        IndexBeiJingAd++;
 		if (IndexBeiJingAd >= AudioListCtrl.GetInstance().ASGuanKaBJ.Length) {
 			IndexBeiJingAd = 0;
 		}

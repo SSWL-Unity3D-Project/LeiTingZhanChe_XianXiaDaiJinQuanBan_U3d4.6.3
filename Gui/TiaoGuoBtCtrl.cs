@@ -33,7 +33,7 @@ public class TiaoGuoBtCtrl : MonoBehaviour {
 		}
 		else {
 			InstanceCartoon = this;
-			ClickStartBtOneEvent(ButtonState.UP);
+			ClickStartBtOneEvent(pcvr.ButtonState.UP);
 		}
 		TiaoGuoBtObj.SetActive(false);
 	}
@@ -58,25 +58,25 @@ public class TiaoGuoBtCtrl : MonoBehaviour {
 		TiaoGuoBtObj.SetActive(false);
 	}
 
-	void ClickStartBtOneEvent(ButtonState state)
+	void ClickStartBtOneEvent(pcvr.ButtonState state)
 	{
 		if (!TiaoGuoBtObj.activeSelf) {
 			return;
 		}
 
-		if (state == ButtonState.DOWN) {
+		if (state == pcvr.ButtonState.DOWN) {
 			return;
 		}
 		OnClickTiaoGuoBt();
 	}
 	
-	void ClickStartBtTwoEvent(ButtonState state)
+	void ClickStartBtTwoEvent(pcvr.ButtonState state)
 	{
 		if (!TiaoGuoBtObj.activeSelf) {
 			return;
 		}
 		
-		if (state == ButtonState.DOWN) {
+		if (state == pcvr.ButtonState.DOWN) {
 			return;
 		}
 		OnClickTiaoGuoBt();
