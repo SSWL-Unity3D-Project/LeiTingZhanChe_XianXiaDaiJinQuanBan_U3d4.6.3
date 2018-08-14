@@ -58,15 +58,20 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 	void Start()
 	{
 		CameraTran = Camera.main != null ? Camera.main.transform : null;
-        if (m_TouMingHead != null)
+        if (m_PlayerNumImg != null && m_MatNum != null)
         {
-            //m_HeadUrl = "";
-            m_MatNum.mainTexture = m_TouMingHead;
+            m_MatNum.mainTexture = m_PlayerNumImg;
         }
+
+        //if (m_TouMingHead != null)
+        //{
+        //    //m_HeadUrl = "";
+        //    m_MatNum.mainTexture = m_TouMingHead;
+        //}
     }
 
-	// Update is called once per frame
-	void Update()
+    // Update is called once per frame
+    void Update()
 	{
 		if (CameraTran == null) {
 			CameraTran = Camera.main != null ? Camera.main.transform : null;
@@ -124,7 +129,10 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     public Texture m_TouMingHead;
 	public void HandlePlayerXueTiaoInfo(float fillVal)
     {
-        m_MatNum.mainTexture = m_PlayerNumImg;
+        if (m_PlayerNumImg != null && m_MatNum != null)
+        {
+            m_MatNum.mainTexture = m_PlayerNumImg;
+        }
 
         float xueLiangVal = 1f - fillVal;
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);

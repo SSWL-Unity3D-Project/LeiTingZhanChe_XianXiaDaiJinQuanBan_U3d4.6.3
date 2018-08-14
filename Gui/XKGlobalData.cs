@@ -25,10 +25,6 @@ public class XKGlobalData
 	public static int CoinPlayerThree = 0;
 	public static int CoinPlayerFour = 0;
 	public static int GameNeedCoin;
-    /// <summary>
-    /// 1币兑换多少张彩票.
-    /// </summary>
-    public int m_CoinToCaiPiao = 20;
 	/**
 	 * GameVersionPlayer == 0 -> 四人版本游戏.
 	 * GameVersionPlayer == 1 -> 双人版本游戏.
@@ -80,49 +76,31 @@ public class XKGlobalData
 				GameDiff = "1";
 				HandleJsonObj.WriteToFileXml(FileName, "GAME_DIFFICULTY", GameDiff);
 			}
+			
+			//string val = HandleJsonObj.ReadFromFileXml(FileName, "GameAudioVolume");
+			//if (val == null || val == "") {
+			//	val = "7";
+			//	HandleJsonObj.WriteToFileXml(FileName, "GameAudioVolume", val);
+			//}
+            string val = "10";
+            GameAudioVolume = Convert.ToInt32(val);
 
-			string speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP1");
-			if(speedStr == null || speedStr == "") {
-				speedStr = "5";
-				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP1", speedStr);
-			}
-			//pcvr.DianJiSpeedP1 = Convert.ToInt32(speedStr);
-			
-			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP2");
-			if(speedStr == null || speedStr == "") {
-				speedStr = "5";
-				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP2", speedStr);
-			}
-			//pcvr.DianJiSpeedP2 = Convert.ToInt32(speedStr);
-			
-			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP3");
-			if(speedStr == null || speedStr == "") {
-				speedStr = "5";
-				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP3", speedStr);
-			}
-			//pcvr.DianJiSpeedP3 = Convert.ToInt32(speedStr);
-			
-			speedStr = HandleJsonObj.ReadFromFileXml(FileName, "DianJiSpeedP4");
-			if(speedStr == null || speedStr == "") {
-				speedStr = "5";
-				HandleJsonObj.WriteToFileXml(FileName, "DianJiSpeedP4", speedStr);
-			}
-			//pcvr.DianJiSpeedP4 = Convert.ToInt32(speedStr);
-			
-			string val = HandleJsonObj.ReadFromFileXml(FileName, "GameAudioVolume");
-			if (val == null || val == "") {
-				val = "7";
-				HandleJsonObj.WriteToFileXml(FileName, "GameAudioVolume", val);
-			}
-			GameAudioVolume = Convert.ToInt32(val);
+			//val = HandleJsonObj.ReadFromFileXml(FileName, "GameVersionPlayer");
+			//if (val == null || val == "") {
+			//	val = "0"; //四人版本.
+			//	HandleJsonObj.WriteToFileXml(FileName, "GameVersionPlayer", val);
+			//}
+            val = "0"; //四人版本.
+            GameVersionPlayer = Convert.ToInt32(val);
 
-			val = HandleJsonObj.ReadFromFileXml(FileName, "GameVersionPlayer");
-			if (val == null || val == "") {
-				val = "0"; //四人版本.
-				HandleJsonObj.WriteToFileXml(FileName, "GameVersionPlayer", val);
-			}
-			GameVersionPlayer = Convert.ToInt32(val);
-		}
+            Instance.InitIsPrintCaiPiao();
+            Instance.InitCoinToCard();
+            Instance.InitTotalOutPrintCards();
+            Instance.InitTotalInsertCoins();
+            Instance.InitZhanCheCaiChi();
+            Instance.InitDaoJuCaiChi();
+            Instance.InitJPBossCaiChi();
+        }
 		return Instance;
 	}
 
@@ -135,6 +113,316 @@ public class XKGlobalData
 #if UNITY_ANDROID
         FileName = "GameConfig.xml";
 #endif
+    }
+    
+    /// <summary>
+    /// 预支彩池.
+    /// </summary>
+    internal int m_YuZhiCaiChi = 0;
+    /// <summary>
+    /// 预支彩池倍率.
+    /// </summary>
+    int m_YuZhiCaiPiaoBeiLv = 100;
+    /// <summary>
+    /// 是否重置了预支彩池数据.
+    /// </summary>
+    bool IsResetYuZhiCaiPiaoData = false;
+    /// <summary>
+    /// 初始化预支彩池.
+    /// </summary>
+    public bool InitYuZhiCaiChi(int yuZhiCaiPiaoBeiLv)
+    {
+        int val = 0;
+        bool isUpdateYuZhiCaiChi = false;
+        if (IsResetYuZhiCaiPiaoData)
+        {
+            isUpdateYuZhiCaiChi = true;
+            IsResetYuZhiCaiPiaoData = false;
+            val = yuZhiCaiPiaoBeiLv * m_CoinToCard;
+        }
+        else
+        {
+            string info = HandleJsonObj.ReadFromFileXml(FileName, "YuZhiCaiChi");
+            if (info == null || info == "")
+            {
+                val = yuZhiCaiPiaoBeiLv * m_CoinToCard;
+                isUpdateYuZhiCaiChi = true;
+            }
+            else
+            {
+                val = Convert.ToInt32(info);
+            }
+        }
+        m_YuZhiCaiPiaoBeiLv = yuZhiCaiPiaoBeiLv;
+        m_YuZhiCaiChi = val;
+
+        return isUpdateYuZhiCaiChi;
+    }
+
+    /// <summary>
+    /// 重置预支彩池.
+    /// </summary>
+    public void ResetYuZhiCaiChi()
+    {
+        int val = m_YuZhiCaiPiaoBeiLv * m_CoinToCard;
+        IsResetYuZhiCaiPiaoData = true;
+        SetYuZhiCaiChi(val);
+    }
+
+    /// <summary>
+    /// 设置预支彩池.
+    /// </summary>
+    public void SetYuZhiCaiChi(int val)
+    {
+        m_YuZhiCaiChi = val;
+        HandleJsonObj.WriteToFileXml(FileName, "YuZhiCaiChi", val.ToString());
+    }
+    
+    /// <summary>
+    /// JP大奖彩池.
+    /// </summary>
+    internal int m_JPBossCaiChi = 0;
+    /// <summary>
+    /// 初始化JP大奖彩池.
+    /// </summary>
+    void InitJPBossCaiChi()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "JPBossCaiChi");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        int val = Convert.ToInt32(info);
+        m_JPBossCaiChi = val;
+    }
+
+    /// <summary>
+    /// 重置JP大奖彩池.
+    /// </summary>
+    public void ResetJPBossCaiChi()
+    {
+        SetJPBossCaiChi(0);
+    }
+
+    /// <summary>
+    /// 设置JP大奖彩池.
+    /// </summary>
+    public void SetJPBossCaiChi(int val)
+    {
+        m_JPBossCaiChi = val;
+        HandleJsonObj.WriteToFileXml(FileName, "JPBossCaiChi", val.ToString());
+    }
+
+    /// <summary>
+    /// 道具彩池.
+    /// </summary>
+    internal int m_DaoJuCaiChi = 0;
+    /// <summary>
+    /// 初始化道具彩池.
+    /// </summary>
+    void InitDaoJuCaiChi()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "DaoJuCaiChi");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        int val = Convert.ToInt32(info);
+        m_DaoJuCaiChi = val;
+    }
+
+    /// <summary>
+    /// 重置道具彩池.
+    /// </summary>
+    public void ResetDaoJuCaiChi()
+    {
+        SetDaoJuCaiChi(0);
+    }
+
+    /// <summary>
+    /// 设置道具彩池.
+    /// </summary>
+    public void SetDaoJuCaiChi(int val)
+    {
+        m_DaoJuCaiChi = val;
+        HandleJsonObj.WriteToFileXml(FileName, "DaoJuCaiChi", val.ToString());
+    }
+
+    /// <summary>
+    /// 战车彩池.
+    /// </summary>
+    internal int m_ZhanCheCaiChi = 0;
+    /// <summary>
+    /// 初始化战车彩池.
+    /// </summary>
+    void InitZhanCheCaiChi()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "ZhanCheCaiChi");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        int val = Convert.ToInt32(info);
+        m_ZhanCheCaiChi = val;
+    }
+
+    /// <summary>
+    /// 重置战车彩池.
+    /// </summary>
+    public void ResetZhanCheCaiChi()
+    {
+        SetZhanCheCaiChi(0);
+    }
+
+    /// <summary>
+    /// 设置战车彩池.
+    /// </summary>
+    public void SetZhanCheCaiChi(int val)
+    {
+        m_ZhanCheCaiChi = val;
+        HandleJsonObj.WriteToFileXml(FileName, "ZhanCheCaiChi", val.ToString());
+    }
+
+    /// <summary>
+    /// 总出票数.
+    /// </summary>
+    internal int m_TotalOutPrintCards = 0;
+    /// <summary>
+    /// 初始化总出票数.
+    /// </summary>
+    void InitTotalOutPrintCards()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "TotalOutPrintCards");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        int val = Convert.ToInt32(info);
+        m_TotalOutPrintCards = val;
+    }
+
+    /// <summary>
+    /// 重置总出票数.
+    /// </summary>
+    public void ResetTotalOutPrintCards()
+    {
+        SetTotalOutPrintCards(0);
+    }
+
+    /// <summary>
+    /// 设置总出票数.
+    /// </summary>
+    public void SetTotalOutPrintCards(int val)
+    {
+        m_TotalOutPrintCards = val;
+        HandleJsonObj.WriteToFileXml(FileName, "TotalOutPrintCards", val.ToString());
+    }
+    
+    /// <summary>
+    /// 总投币数.
+    /// </summary>
+    internal int m_TotalInsertCoins = 0;
+    /// <summary>
+    /// 初始化总投币数.
+    /// </summary>
+    void InitTotalInsertCoins()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "TotalInsertCoins");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        int val = Convert.ToInt32(info);
+        m_TotalInsertCoins = val;
+    }
+
+    /// <summary>
+    /// 重置总投币数.
+    /// </summary>
+    public void ResetTotalInsertCoins()
+    {
+        SetTotalInsertCoins(0);
+    }
+
+    /// <summary>
+    /// 设置总投币数.
+    /// </summary>
+    public void SetTotalInsertCoins(int val)
+    {
+        m_TotalInsertCoins = val;
+        HandleJsonObj.WriteToFileXml(FileName, "TotalInsertCoins", val.ToString());
+    }
+
+    /// <summary>
+    /// 是否打印彩票.
+    /// </summary>
+    internal bool IsPrintCaiPiao = true;
+    /// <summary>
+    /// 初始化是否打印彩票.
+    /// </summary>
+    void InitIsPrintCaiPiao()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "PrintCard");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+        
+        if (info == "0")
+        {
+            //初始化打印彩票信息.
+            IsPrintCaiPiao = true;
+        }
+        else
+        {
+            IsPrintCaiPiao = false;
+        }
+    }
+
+    /// <summary>
+    /// 设置是否打印彩票.
+    /// </summary>
+    public void SetIsPrintCaiPiao(bool isPrintCaiPiao)
+    {
+        IsPrintCaiPiao = isPrintCaiPiao;
+        HandleJsonObj.WriteToFileXml(FileName, "PrintCard", IsPrintCaiPiao == true ? "0" : "1");
+    }
+
+    /// <summary>
+    /// 一币兑换彩票数.
+    /// </summary>
+    internal int m_CoinToCard = 20;
+    /// <summary>
+    /// 初始化1币兑换彩票数.
+    /// </summary>
+    void InitCoinToCard()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "CoinToCard");
+        if (info == null || info == "")
+        {
+            info = "20";
+        }
+
+        int val = Convert.ToInt32(info);
+        if (val < 10 || val > 50)
+        {
+            val = 20;
+        }
+        m_CoinToCard = val;
+    }
+
+    /// <summary>
+    /// 设置1币兑换彩票数.
+    /// </summary>
+    public void SetCoinToCardVal(int val)
+    {
+        m_CoinToCard = val;
+        HandleJsonObj.WriteToFileXml(FileName, "CoinToCard", m_CoinToCard.ToString());
     }
 
     public static void SetCoinPlayerInfo(PlayerEnum indexPlayer, int coin)
@@ -174,6 +462,10 @@ public class XKGlobalData
 
 		if (coin > 0 && CoinPlayerOne != coin) {
 			PlayTouBiAudio();
+            if (coin > CoinPlayerOne)
+            {
+                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerOne));
+            }
 		}
 		CoinPlayerOne = coin;
 		if (CoinPlayerCtrl.GetInstanceOne() != null) {
@@ -195,7 +487,11 @@ public class XKGlobalData
 
 		if (coin > 0 && CoinPlayerTwo != coin) {
 			PlayTouBiAudio();
-		}
+            if (coin > CoinPlayerTwo)
+            {
+                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerTwo));
+            }
+        }
 		CoinPlayerTwo = coin;
 		if (CoinPlayerCtrl.GetInstanceTwo() != null) {
 			CoinPlayerCtrl.GetInstanceTwo().SetPlayerCoin(coin);
@@ -210,7 +506,11 @@ public class XKGlobalData
 	{
 		if (coin > 0 && CoinPlayerThree != coin) {
 			PlayTouBiAudio();
-		}
+            if (coin > CoinPlayerThree)
+            {
+                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerThree));
+            }
+        }
 		CoinPlayerThree = coin;
 		if (CoinPlayerCtrl.GetInstanceThree() != null) {
 			CoinPlayerCtrl.GetInstanceThree().SetPlayerCoin(coin);
@@ -225,7 +525,11 @@ public class XKGlobalData
 	{
 		if (coin > 0 && CoinPlayerFour != coin) {
 			PlayTouBiAudio();
-		}
+            if (coin > CoinPlayerFour)
+            {
+                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerFour));
+            }
+        }
 		CoinPlayerFour = coin;
 		if (CoinPlayerCtrl.GetInstanceFour() != null) {
 			CoinPlayerCtrl.GetInstanceFour().SetPlayerCoin(coin);
@@ -295,7 +599,13 @@ public class XKGlobalData
 		if (AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex] != null) {
 			AudioSource audioVal = AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex].gameObject.AddComponent<AudioSource>();
 			audioVal.clip = AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex].clip;
-			audioVal.volume = AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex].volume;
+            AudioBeiJingCtrl beiJingAudio = AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex].GetComponent<AudioBeiJingCtrl>();
+            if (beiJingAudio != null)
+            {
+                audioVal.volume = beiJingAudio.m_VolumeStart;
+                //Debug.Log("Unity: volume ================= " + beiJingAudio.m_VolumeStart);
+            }
+            //audioVal.volume = AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex].volume;
 
 			AudioListCtrl.GetInstance().RemoveAudioSource(AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex]);
 			AudioListCtrl.GetInstance().ASGuanKaBJ[audioIndex] = audioVal;

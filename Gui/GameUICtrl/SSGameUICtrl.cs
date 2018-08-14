@@ -165,6 +165,26 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
+    /// <summary>
+    /// 初始化彩票数字动画播放逻辑.
+    /// </summary>
+    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (m_CaiPiaoInfoArray[indexVal] != null)
+        {
+            SSCaiPiaoInfo caiPiaoInfo = m_CaiPiaoInfoArray[indexVal].GetComponent<SSCaiPiaoInfo>();
+            if (caiPiaoInfo != null)
+            {
+                caiPiaoInfo.InitCaiPiaoAnimation(timeVal, indexPlayer);
+            }
+            else
+            {
+                UnityLogWarning("InitCaiPiaoAnimation -> caiPiaoInfo was null............");
+            }
+        }
+    }
+
     void SetActiveZhengZaiChuPiaoUI(PlayerEnum indexPlayer, bool isActive)
     {
         int index = (int)indexPlayer - 1;

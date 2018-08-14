@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class XKNpcSpawnDaoJu : SSGameMono
@@ -15,10 +14,22 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// <summary>
     /// 创建随机道具.
     /// </summary>
-    public void CreatSuiJiDaoJu(PlayerEnum index)
+    public void CreatSuiJiDaoJu(PlayerEnum indexPlayer)
     {
         if (!IsCreatSuiJiDaoJu)
         {
+            return;
+        }
+
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            return;
+        }
+
+        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PlayerCoinData[indexVal].XuBiVal <= 0)
+        {
+            //不是续币玩家.
             return;
         }
 
@@ -27,12 +38,32 @@ public class XKNpcSpawnDaoJu : SSGameMono
             //随机道具彩池的彩票积累的不够.
             return;
         }
-        Debug.Log("Unity: CreatSuiJiDaoJu...");
+        UnityLog("CreatSuiJiDaoJu....................");
 
-        GameObject suiJiDaoJuPrefab = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSuiJiDaoJuPrefab(index);
+        GameObject suiJiDaoJuPrefab = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSuiJiDaoJuPrefab(indexPlayer);
         if (suiJiDaoJuPrefab != null)
         {
-            Instantiate(suiJiDaoJuPrefab, XkGameCtrl.GetInstance().DaoJuArray, transform);
+            GameObject obj = (GameObject)Instantiate(suiJiDaoJuPrefab, XkGameCtrl.GetInstance().DaoJuArray, transform);
+            if (obj != null)
+            {
+                BuJiBaoCtrl buJiBao = obj.GetComponent<BuJiBaoCtrl>();
+                if (buJiBao != null)
+                {
+                    buJiBao.IsCaiPiaoDaoJu = true;
+                    buJiBao.SetIsSpawnDaoJu();
+                    buJiBao.DelayRemoveSelf(indexPlayer);
+                }
+
+                //SSCaiPiaoSuiJiDaoJu suiJiDaoJu = obj.GetComponent<SSCaiPiaoSuiJiDaoJu>();
+                //if (suiJiDaoJu != null)
+                //{
+                //    suiJiDaoJu.CreatLiZi(indexPlayer);
+                //}
+                //else
+                //{
+                //    UnityLogWarning("CreatSuiJiDaoJu -> SSCaiPiaoSuiJiDaoJu was null..........");
+                //}
+            }
         }
         else
         {

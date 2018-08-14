@@ -31,6 +31,30 @@ public enum GameJiTaiType
 public class XkGameCtrl : SSGameMono
 {
     /// <summary>
+    /// 击杀彩票战车或boss时,是否忽略玩家索引.
+    /// </summary>
+    public bool IsCaiPiaoHuLuePlayerIndex = false;
+    /// <summary>
+    /// 彩票移动的数据信息.
+    /// </summary>
+    public SSCaiPiaoFlyData m_CaiPiaoFlyData;
+    /// <summary>
+    /// 彩票爆炸粒子透明材质.
+    /// </summary>
+    public Material m_CaiPiaoLiZiNumATouMing;
+    /// <summary>
+    /// 彩票爆炸粒子数字材质P1.
+    /// </summary>
+    public Material[] m_CaiPiaoLiZiNumArrayP1;
+    /// <summary>
+    /// 彩票爆炸粒子数字材质P2.
+    /// </summary>
+    public Material[] m_CaiPiaoLiZiNumArrayP2;
+    /// <summary>
+    /// 彩票爆炸粒子数字材质P3.
+    /// </summary>
+    public Material[] m_CaiPiaoLiZiNumArrayP3;
+    /// <summary>
     /// 主角镜头运动路径总控制组件.
     /// </summary>
     internal AiPathGroupCtrl m_AiPathGroup;
@@ -391,7 +415,7 @@ public class XkGameCtrl : SSGameMono
 			{
 				Screen.SetResolution(1360, 768, false);
 			}
-			else if (!XkGameCtrl.IsGameOnQuit)
+			else if (!IsGameOnQuit)
 			{
 				if (!Screen.fullScreen
 					|| Screen.currentResolution.width != 1360
@@ -635,31 +659,40 @@ public class XkGameCtrl : SSGameMono
             }
         }
 #endif
-        //if (!pcvr.bIsHardWare) {
-            //			if (IsCartoonShootTest) {
-            //				if (Input.GetKeyUp(KeyCode.N)) {
-            //					if (!XkGameCtrl.IsGameOnQuit && (Application.loadedLevel+1) < Application.levelCount) {
-            //						System.GC.Collect();
-            //						Application.LoadLevel((Application.loadedLevel+1));
-            //					}
-            //				}
-            //			}
+        if (!pcvr.bIsHardWare)
+        {
+            if (Input.GetKeyUp(KeyCode.P))
+            {
+                AudioBeiJingCtrl.StopGameBeiJingAudio();
+            }
+            //if (IsCartoonShootTest)
+            //{
+            //    if (Input.GetKeyUp(KeyCode.N))
+            //    {
+            //        if (!XkGameCtrl.IsGameOnQuit && (Application.loadedLevel + 1) < Application.levelCount)
+            //        {
+            //            System.GC.Collect();
+            //            Application.LoadLevel((Application.loadedLevel + 1));
+            //        }
+            //    }
+            //}
 
-            //			if (Input.GetKeyUp(KeyCode.P)) {
-            //				float bloodVal = 5000f;
-            //				SubGamePlayerHealth(PlayerEnum.PlayerOne, bloodVal, true);
-            //				SubGamePlayerHealth(PlayerEnum.PlayerTwo, bloodVal, true);
-            //				SubGamePlayerHealth(PlayerEnum.PlayerThree, bloodVal, true);
-            //				SubGamePlayerHealth(PlayerEnum.PlayerFour, bloodVal, true);
-            //XKPlayerCamera.GetInstanceFeiJi().HandlePlayerCameraShake();
-            //JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
-            //XKDaoJuGlobalDt.SetTimeFenShuBeiLv(PlayerEnum.PlayerOne);
-            //ActivePlayerToGame(PlayerEnum.PlayerOne, true);
-            //XKGameStageCtrl.GetInstance().MoveIntoStageUI();
-            //XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
-            //BossRemoveAllNpcAmmo();
-            //			}
-        //}
+            //if (Input.GetKeyUp(KeyCode.P))
+            //{
+            //    float bloodVal = 5000f;
+            //    SubGamePlayerHealth(PlayerEnum.PlayerOne, bloodVal, true);
+            //    SubGamePlayerHealth(PlayerEnum.PlayerTwo, bloodVal, true);
+            //    SubGamePlayerHealth(PlayerEnum.PlayerThree, bloodVal, true);
+            //    SubGamePlayerHealth(PlayerEnum.PlayerFour, bloodVal, true);
+                //XKPlayerCamera.GetInstanceFeiJi().HandlePlayerCameraShake();
+                //JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+                //XKDaoJuGlobalDt.SetTimeFenShuBeiLv(PlayerEnum.PlayerOne);
+                //ActivePlayerToGame(PlayerEnum.PlayerOne, true);
+                //XKGameStageCtrl.GetInstance().MoveIntoStageUI();
+                //XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                //BossRemoveAllNpcAmmo();
+                //			}
+        }
 		CheckNpcTranFromList();
 	}
 

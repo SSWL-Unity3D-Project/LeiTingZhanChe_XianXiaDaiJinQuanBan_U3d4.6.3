@@ -24,7 +24,7 @@ public class CeShiGunAimObjCtrl : MonoBehaviour {
 		//}
 
 		if (!isClickFireBtDown) {
-			SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(false);
+			//SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(false);
 			return;
 		}
 
@@ -35,7 +35,7 @@ public class CeShiGunAimObjCtrl : MonoBehaviour {
 
 		float dis = Vector3.Distance(vecA, vecB);
 		if (dis <= 99f) {
-			SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(true);
+			//SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(true);
 			AimObjKeyArray[AimObjCount] = 1;
 		}
 		else {
@@ -50,7 +50,7 @@ public class CeShiGunAimObjCtrl : MonoBehaviour {
 			}
 
 			if (!isHitObj) {
-				SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(false);
+				//SetPanelUiRoot.GetInstance().SetHitAimObjInfoActive(false);
 			}
 		}
 	}

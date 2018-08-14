@@ -10,7 +10,7 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 是否是硬件版.
     /// </summary>
-    static public bool bIsHardWare = true;
+    static public bool bIsHardWare = false;
     /// <summary>
     /// 是否校验hid.
     /// </summary>
@@ -51,6 +51,7 @@ public class pcvr : MonoBehaviour
                 Debug.LogWarning("StartPrintPlayerCaiPiao -> indexVal was wrong! indexVal ==== " + indexVal);
                 return;
             }
+
             pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
             if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
             {

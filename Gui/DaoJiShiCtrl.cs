@@ -137,9 +137,9 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
 		tweenScaleCom = DaoJiShiObj.AddComponent<TweenScale>();
 		tweenScaleCom.enabled = false;
-		tweenScaleCom.duration = 2.2f;
-		tweenScaleCom.from = new Vector3(6f, 6f, 1f);
-		tweenScaleCom.to = new Vector3(4f, 4f, 1f);
+		tweenScaleCom.duration = 2f;
+		tweenScaleCom.from = new Vector3(1.2f, 1.2f, 1f);
+		tweenScaleCom.to = new Vector3(1f, 1f, 1f);
 		EventDelegate.Add(tweenScaleCom.onFinished, delegate{
 			ChangeDaoJiShiVal();
 		});

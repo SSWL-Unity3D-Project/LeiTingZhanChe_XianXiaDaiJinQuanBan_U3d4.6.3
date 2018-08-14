@@ -191,7 +191,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
         if (IsCheLiangMoveType && RealNpcTran != null)
         {
-            RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+            //RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+            RealNpcTran.forward = Vector3.MoveTowards(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
         }
 
         if (!IsDoFireAnimation
@@ -708,6 +709,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
         IsCaiPiaoZhanChe = true;
         //彩票战车npc.
         IsZhanCheNpc = true;
+        //彩票战车或boss设置为车辆运动.
+        IsCheLiangMoveType = true;
     }
     
     public void MoveNpcByItween()
@@ -741,21 +744,21 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
-		Transform[] tranArray = new Transform[2];
+		//Transform[] tranArray = new Transform[2];
         Vector3[] nodesArray = new Vector3[2];
-        tranArray[0] = NpcTran;
+        //tranArray[0] = NpcTran;
         nodesArray[0] = NpcTran.position;
-        if (IsCaiPiaoZhanChe)
-        {
-            //彩票boss或战车类型npc获取路径最后一个点.
-            MarkCount = NpcPathTran.childCount - 1;
-        }
+        //if (IsCaiPiaoZhanChe)
+        //{
+        //    //彩票boss或战车类型npc获取路径最后一个点.
+        //    MarkCount = NpcPathTran.childCount - 1;
+        //}
         //MarkCount = NpcPathTran.childCount - 1; //test.
 
         if (MarkCount >= NpcPathTran.childCount || MarkCount < 0) {
 			MarkCount = 0; //fixed MarkCount
 		}
-		tranArray[1] = NpcPathTran.GetChild(MarkCount);
+		//tranArray[1] = NpcPathTran.GetChild(MarkCount);
         nodesArray[1] = m_PathNodeList[MarkCount];
 
         MarkCount++;
@@ -784,10 +787,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
                 MarkTranAimForward = nodesArray[1] - nodesArray[0];
                 MarkTranAimForward.y = 0f;
                 MarkTranAimForward = MarkTranAimForward.normalized;
-                if (RealNpcTran != null)
-                {
-                    RealNpcTran.forward = MarkTranAimForward;
-                }
+                //if (RealNpcTran != null)
+                //{
+                //    RealNpcTran.forward = MarkTranAimForward;
+                //}
                 //Debug.Log("********************************************* boss *************** isOrienttopath == " + isOrienttopath);
             }
 
@@ -796,7 +799,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			}
 
 			//Debug.Log("********************************* name " + gameObject.name);
-            iTween.MoveTo(NpcObj, iTween.Hash("path", tranArray,
+            iTween.MoveTo(NpcObj, iTween.Hash("path", nodesArray,
 			                                  "speed", MvSpeed,
 			                                  "orienttopath", isOrienttopath,
 			                                  "easeType", iTween.EaseType.linear));
@@ -823,6 +826,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
         Vector3 posA = NpcObj.transform.position;
         Vector3 posB = MarkNpcMovePos;
+        if (IsCaiPiaoZhanChe)
+        {
+            //彩票战车或boss的高度值归零.
+            posA.y = posB.y = 0f;
+        }
         float dis = Vector3.Distance(posA, posB);
 		float disMin = MvSpeed * Time.deltaTime;
 		if (MarkCount >= NpcPathTran.childCount) {
@@ -833,7 +841,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		if (dis > disMin) {
 			return;
 		}
-//		Debug.Log("Unity:"+"CheckMoveNpcOnCompelteITween -> npc has moved to markPoint");
+		//Debug.Log("Unity:"+"CheckMoveNpcOnCompelteITween -> npc has moved to markPoint. npcName ==== " + gameObject.name);
 		IsMoveToMarkPoint = true;
 
 		if (NpcState == NpcType.FlyNpc) {
@@ -976,22 +984,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		SetIsAimPlayerByFire(false);
 //		Debug.Log("Unity:"+"DelayResetIsAimPlayerByFire***name "+gameObject.name);
 	}
-
-	void DelayPlayFireAction()
-	{
-//		if (IsDelayFireAction) {
-//			return;
-//		}
-//
-//		if (!IsZaiTiNpc) {
-//			IsDelayFireAction = true;
-//		}
-//		Debug.Log("Unity:"+"DelayPlayFireAction***name "+gameObject.name);
-//		float rv = Random.Range(TimeMinFire, TimeMaxFire);
-//		SetIsAimPlayerByFire(true);
-//		StartCoroutine(DelayResetIsAimPlayerByFire(rv));
-	}
-
+    
 	void DelayMakeNpcMoveDoRun3()
 	{
 		if (ITweenScriptNpc != null)
@@ -1189,23 +1182,30 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			markScript = markTran.GetComponent<NpcMark>();
 		}
 
-		//Debug.Log("Unity:"+"MoveNpcOnCompelteITween...npc is "+NpcObj.name);
-		if (markScript.AnimatorTime > 0f) {
-			switch (MoveStyle) {
-			case UITweener.Style.Loop:
-				if (MoveStyle == UITweener.Style.Loop) {
-					SetNpcCheLunIsRun(false);
-				}
-				Invoke("DelayMoveNpcWaitAnimationEnd", markScript.AnimatorTime);
-				break;
-			default:
-				if (markScript.AniName != AnimatorNameNPC.Null) {
-					Invoke("DelayMoveNpcWaitAnimationEnd", markScript.AnimatorTime);
-				}
-				break;
-			}
-			return;
-		}
+        //Debug.Log("Unity:"+"MoveNpcOnCompelteITween...npc is "+NpcObj.name);
+        if (IsCaiPiaoZhanChe == false)
+        {
+            if (markScript.AnimatorTime > 0f)
+            {
+                switch (MoveStyle)
+                {
+                    case UITweener.Style.Loop:
+                        if (MoveStyle == UITweener.Style.Loop)
+                        {
+                            SetNpcCheLunIsRun(false);
+                        }
+                        Invoke("DelayMoveNpcWaitAnimationEnd", markScript.AnimatorTime);
+                        break;
+                    default:
+                        if (markScript.AniName != AnimatorNameNPC.Null)
+                        {
+                            Invoke("DelayMoveNpcWaitAnimationEnd", markScript.AnimatorTime);
+                        }
+                        break;
+                }
+                return;
+            }
+        }
 		MoveNpcByItween();
 	}
 

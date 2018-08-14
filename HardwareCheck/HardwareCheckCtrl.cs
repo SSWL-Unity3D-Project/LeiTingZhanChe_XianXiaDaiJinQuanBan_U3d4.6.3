@@ -36,7 +36,7 @@ public class HardwareCheckCtrl : MonoBehaviour
 	void Start()
 	{
 		//pcvr.TKMoveSt = TKMoveSt;
-		Screen.SetResolution(1280, 720, false);
+		Screen.SetResolution(1360, 768, false);
 		Instance = this;
 		IsTestHardWare = true;
 		JiaMiCeShiObj.SetActive(IsJiaMiCeShi);

@@ -52,8 +52,9 @@ public class GameMovieCtrl : SSGameMono
 		{
             XKGlobalData.GetInstance();
 			//Debug.Log("Unity:!!!!!!GetInstance!!!!!!");
-			AudioListener.volume = (float)XKGlobalData.GameAudioVolume / 10f;
-			if (AudioListCtrl.GetInstance() != null)
+			//AudioListener.volume = (float)XKGlobalData.GameAudioVolume / 10f;
+			AudioListener.volume = 1f;
+            if (AudioListCtrl.GetInstance() != null)
 			{
 				AudioListCtrl.GetInstance().CloseGameAudioBJ();
 			}
@@ -79,13 +80,13 @@ public class GameMovieCtrl : SSGameMono
 			//IsTestXiaoScreen = true; //test
 			if (!XkGameCtrl.IsGameOnQuit)
 			{
-				if (Screen.fullScreen
-					|| Screen.currentResolution.width != 1280
-					|| Screen.currentResolution.height != 720)
+				if (!Screen.fullScreen
+					|| Screen.currentResolution.width != 1360
+					|| Screen.currentResolution.height != 768)
 				{
 					if (!IsTestLJGame && !IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1280, 720, false);
+						Screen.SetResolution(1360, 768, true);
 					}
 				}
 			}
