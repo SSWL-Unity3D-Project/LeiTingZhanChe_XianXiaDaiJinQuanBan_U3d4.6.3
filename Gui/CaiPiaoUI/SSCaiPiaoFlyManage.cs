@@ -56,7 +56,7 @@ public class SSCaiPiaoFlyManage : SSGameMono
     {
         if (m_FlyCaiPiaoPrefab == null)
         {
-            UnityLogWarning("CreatFlyCaiPiao -> m_FlyCaiPiaoPrefab was null..............");
+            //UnityLogWarning("CreatFlyCaiPiao -> m_FlyCaiPiaoPrefab was null..............");
             return;
         }
         m_CaiPiaoCount++;
@@ -111,17 +111,25 @@ public class SSCaiPiaoFlyManage : SSGameMono
                 {
                     m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheCaiPiaoFlyDt.MaxCaiPiao;
                     m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheCaiPiaoFlyDt.TimeFly;
+                    m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheFlyCaiPiaoPrefab;
                     break;
                 }
             case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
                 {
                     m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_SuiJiCaiPiaoFlyDt.MaxCaiPiao;
                     m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_SuiJiCaiPiaoFlyDt.TimeFly;
+                    m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;
                     break;
                 }
         }
 
-        m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;
+        if (m_FlyCaiPiaoPrefab == null)
+        {
+            UnityLogWarning("Init -> m_FlyCaiPiaoPrefab was null. type ======== " + type);
+            Destroy(this);
+            return;
+        }
+
         m_LastCaiPiaoTime = Time.time;
         m_CaiPiaoCount = 0;
         IndexPlayer = indexPlayer;
