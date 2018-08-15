@@ -281,9 +281,14 @@ public class XkGameCtrl : SSGameMono
 		try
 		{
 			_Instance = this;
-			//pcvr.OpenDongGanState();
-			//pcvr.OpenAllPlayerFangXiangPanPower();
-			switch (XKGlobalData.GameDiff)
+#if !UNITY_EDITOR
+            //发布出来游戏后强制修改.
+            IsCaiPiaoHuLuePlayerIndex = false;
+#endif
+
+            //pcvr.OpenDongGanState();
+            //pcvr.OpenAllPlayerFangXiangPanPower();
+            switch (XKGlobalData.GameDiff)
 			{
 				case "0":
 					PlayerXueLiangMax = 14000f;

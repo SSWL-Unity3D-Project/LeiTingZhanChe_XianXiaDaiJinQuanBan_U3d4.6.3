@@ -709,8 +709,14 @@ public class XKNpcMoveCtrl : MonoBehaviour
         IsCaiPiaoZhanChe = true;
         //彩票战车npc.
         IsZhanCheNpc = true;
-        //彩票战车或boss设置为车辆运动.
-        IsCheLiangMoveType = true;
+        if (NpcMoveType == NpcJiFenEnum.FeiJi)
+        {
+        }
+        else
+        {
+            //彩票战车或boss设置为车辆运动.
+            IsCheLiangMoveType = true;
+        }
     }
     
     public void MoveNpcByItween()

@@ -3,7 +3,11 @@
 public class SSCaiPiaoFlyData : MonoBehaviour
 {
     /// <summary>
-    /// 飞出的彩票预制.
+    /// 战车被击爆后飞出的彩票预制.
+    /// </summary>
+    public GameObject m_ZhanCheFlyCaiPiaoPrefab;
+    /// <summary>
+    /// 随机道具爆炸后飞出的彩票预制.
     /// </summary>
     public GameObject m_FlyCaiPiaoPrefab;
     /// <summary>
