@@ -81,7 +81,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                 return _ZhanCheDeCai;
             }
         }
-        int _SuiJiDaoJuDeCai = 0;
+        //int _SuiJiDaoJuDeCai = 0;
         /// <summary>
         /// 随机道具得彩累积数量.
         /// </summary>
@@ -90,7 +90,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             set
             {
                 XKGlobalData.GetInstance().SetDaoJuCaiChi(value);
-                _SuiJiDaoJuDeCai = value;
+                //_SuiJiDaoJuDeCai = value;
             }
             get
             {
@@ -564,9 +564,12 @@ public class SSCaiPiaoDataManage : SSGameMono
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.AddYuZhiCaiPiao(huiShouCaiPiao);
             ZhengChangDeCai = deCaiVal;
 
-            //这个时候应该打印出玩家的正常产得彩数量.
-            Debug.Log("Unity: ResetZhengChangDeCai -> index ========== " + index + ", ZhengChangDeCai ==== " + ZhengChangDeCai + ", deCaiBiLi == " + deCaiBiLi);
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, deCaiVal, GameCaiPiaoData.DeCaiState.ZhengChang);
+            if (deCaiVal > 0)
+            {
+                //这个时候应该打印出玩家的正常产得彩数量.
+                Debug.Log("Unity: ResetZhengChangDeCai -> index ========== " + index + ", ZhengChangDeCai ==== " + ZhengChangDeCai + ", deCaiBiLi == " + deCaiBiLi);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, deCaiVal, GameCaiPiaoData.DeCaiState.ZhengChang);
+            }
             ZhengChangDeCai = 0;
         }
 
@@ -588,7 +591,29 @@ public class SSCaiPiaoDataManage : SSGameMono
 
             deCaiVal = (int)(coinStart * xuBiChuPiaoLvTmp * zhengChangChuPiaoLvTmp);
             ZhengChangDeCai += deCaiVal;
-            Debug.Log("Unity: AddPlayerZhengChangDeCai -> ZhengChangDeCai ==== " + ZhengChangDeCai);
+            Debug.Log("Unity: AddPlayerZhengChangDeCai -> ZhengChangDeCai ==== " + ZhengChangDeCai + ", indexPlayer == " + IndexPlayer);
+            
+            if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null)
+            {
+                //添加基础得彩数据.
+                XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.AddPlayerJiChuCaiPiao(IndexPlayer, deCaiVal);
+            }
+        }
+
+        /// <summary>
+        /// 减少正常得彩数量.
+        /// </summary>
+        public void SubZhengChangDeCai(int val)
+        {
+            if (ZhengChangDeCai >= val)
+            {
+                ZhengChangDeCai -= val;
+            }
+            else
+            {
+                ZhengChangDeCai = 0;
+            }
+            Debug.Log("Unity: SubZhengChangDeCai -> ZhengChangDeCai ================= " + ZhengChangDeCai + ", indexPlayer == " + IndexPlayer);
         }
 
         /// <summary>
@@ -737,6 +762,21 @@ public class SSCaiPiaoDataManage : SSGameMono
 
         m_PlayerCoinData[indexVal].AddPlayerZhengChangDeCai(isPlayerXuBi);
     }
+
+    /// <summary>
+    /// 减少玩家正常得彩数据.
+    /// </summary>
+    public void SubPlayerZhengChangDeCai(PlayerEnum indexPlayer, int val)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal >= m_PlayerCoinData.Length)
+        {
+            return;
+        }
+
+        m_PlayerCoinData[indexVal].SubZhengChangDeCai(val);
+    }
+
 
     /// <summary>
     /// 重置玩家续币数量.

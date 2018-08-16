@@ -31,6 +31,14 @@ public enum GameJiTaiType
 public class XkGameCtrl : SSGameMono
 {
     /// <summary>
+    /// 玩家基础彩票信息控制.
+    /// </summary>
+    internal SSPlayerJiChuCaiPiaoData m_PlayerJiChuCaiPiaoData;
+    /// <summary>
+    /// 彩票boss最大碰撞方向触发器次数.
+    /// </summary>
+    public int m_MaxHitBossMoveTrigger = 5;
+    /// <summary>
     /// 击杀彩票战车或boss时,是否忽略玩家索引.
     /// </summary>
     public bool IsCaiPiaoHuLuePlayerIndex = false;
@@ -54,6 +62,10 @@ public class XkGameCtrl : SSGameMono
     /// 彩票爆炸粒子数字材质P3.
     /// </summary>
     public Material[] m_CaiPiaoLiZiNumArrayP3;
+    /// <summary>
+    /// npc彩票数字材质.
+    /// </summary>
+    public Material[] m_NpcCaiPiaoNumArray;
     /// <summary>
     /// 主角镜头运动路径总控制组件.
     /// </summary>
@@ -285,6 +297,11 @@ public class XkGameCtrl : SSGameMono
             //发布出来游戏后强制修改.
             IsCaiPiaoHuLuePlayerIndex = false;
 #endif
+
+            if (m_PlayerJiChuCaiPiaoData == null)
+            {
+                m_PlayerJiChuCaiPiaoData = gameObject.AddComponent<SSPlayerJiChuCaiPiaoData>();
+            }
 
             //pcvr.OpenDongGanState();
             //pcvr.OpenAllPlayerFangXiangPanPower();
@@ -2934,6 +2951,24 @@ public class XkGameCtrl : SSGameMono
         if (m_ExitUICom != null)
         {
             m_ExitUICom.RemoveSelf();
+        }
+    }
+
+    /// <summary>
+    /// 设置游戏镜头是否前进.
+    /// </summary>
+    public void SetGameCameraIsMoveing(bool isMoveing, NpcJiFenEnum state)
+    {
+        Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
+        XKTriggerStopMovePlayer.IsActiveTrigger = !isMoveing;
+        if (state == NpcJiFenEnum.Boss)
+        {
+            //boss触发镜头停止或前进.
+            //打开或关闭镜头移动的动画.
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+            {
+                XkPlayerCtrl.GetInstanceFeiJi().SetCameraMoveAni(isMoveing);
+            }
         }
     }
 

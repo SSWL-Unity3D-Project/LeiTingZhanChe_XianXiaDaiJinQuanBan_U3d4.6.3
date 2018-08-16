@@ -3,6 +3,10 @@
 public class SSCaiPiaoFlyData : MonoBehaviour
 {
     /// <summary>
+    /// 基础彩票爆炸粒子预制.
+    /// </summary>
+    public GameObject m_JiChuCaiPiaoLiZiPrefab;
+    /// <summary>
     /// 战车被击爆后飞出的彩票预制.
     /// </summary>
     public GameObject m_ZhanCheFlyCaiPiaoPrefab;
@@ -61,6 +65,27 @@ public class SSCaiPiaoFlyData : MonoBehaviour
     /// 随机道具彩票飞行数据.
     /// </summary>
     public SuiJiCaiPiaoFlyData m_SuiJiCaiPiaoFlyDt;
+
+    [System.Serializable]
+    public class ZhengChangCaiPiaoFlyData
+    {
+        /// <summary>
+        /// 几张彩票.
+        /// </summary>
+        public int MaxCaiPiao = 5;
+        /// <summary>
+        /// 彩票飞行时间.
+        /// </summary>
+        public float TimeFly = 1f;
+        /// <summary>
+        /// 彩票UI累加时长.
+        /// </summary>
+        public float TimeLeiJiaVal = 2f;
+    }
+    /// <summary>
+    /// 随机道具彩票飞行数据.
+    /// </summary>
+    public ZhengChangCaiPiaoFlyData m_ZhengChangCaiPiaoFlyDt;
 
     [System.Serializable]
     public class JPBossCaiPiaoFlyData

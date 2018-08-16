@@ -212,6 +212,11 @@ public class BuJiBaoCtrl : MonoBehaviour {
 			//XKGlobalData.GetInstance().PlayAudioHitBuJiBao();
 			if (ExplodeObj != null) {
 				GameObject obj = (GameObject)Instantiate(ExplodeObj, transform.position, transform.rotation);
+                if (obj != null)
+                {
+                    obj.transform.SetParent(XkGameCtrl.PlayerAmmoArray);
+                }
+
 				XkGameCtrl.CheckObjDestroyThisTimed(obj);
                 if (obj != null && IsCaiPiaoDaoJu)
                 {

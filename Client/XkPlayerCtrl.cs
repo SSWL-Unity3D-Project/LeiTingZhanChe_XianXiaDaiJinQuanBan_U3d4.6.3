@@ -11,6 +11,10 @@ public enum PlayerTypeEnum
 
 public class XkPlayerCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 摄像机微动的动画控制组件.
+    /// </summary>
+    public Animator m_CameraMoveAni;
     AiPathCtrl AiPathScript;
 	public PlayerTypeEnum PlayerSt = PlayerTypeEnum.FeiJi;
 	//public Transform KaQiuShaAimPoint;
@@ -1098,4 +1102,19 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 	{
 		return IsHandleRpc;
 	}
+
+    /// <summary>
+    /// 设置游戏镜头微动的动画开关.
+    /// </summary>
+    public void SetCameraMoveAni(bool isMove)
+    {
+        if (m_CameraMoveAni != null)
+        {
+            m_CameraMoveAni.SetBool("IsMove", isMove);
+        }
+        else
+        {
+            Debug.LogWarning("SetCameraMoveAni -> m_CameraMoveAni was null...............");
+        }
+    }
 }

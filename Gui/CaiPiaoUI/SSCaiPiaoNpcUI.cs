@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SSCaiPiaoLiZiManage : MonoBehaviour
+public class SSCaiPiaoNpcUI : MonoBehaviour
 {
     [System.Serializable]
     public class FixedUiPosData
@@ -25,42 +25,67 @@ public class SSCaiPiaoLiZiManage : MonoBehaviour
     /// </summary>
     public FixedUiPosData m_FixedUiPosDt;
     /// <summary>
-    /// 数字UI精灵组件.
-    /// m_NumTextureArray[0]   - 数字0.
-    /// m_NumTextureArray[max] - 数字9.
-    /// </summary>
-    Material[] m_NumMatArray;
-    /// <summary>
     /// 数字UI材质球组件.
     /// m_NumMatArray[0]   - 最高位.
     /// m_NumMatArray[max] - 最低位.
     /// </summary>
-    public ParticleSystem[] m_NumParticleArray;
+    public Renderer[] m_NumRenderArray;
 
     /// <summary>
     /// 是否隐藏高位数字的0.
     /// </summary>
-    public bool IsHiddenGaoWeiNumZero = true;
+    public bool IsHiddenGaoWeiNumZero = false;
     /// <summary>
-    /// 显示爆炸粒子的彩票UI数量信息.
+    /// 彩票信息的父级.
     /// </summary>
-    internal void ShowNumUI(int num, PlayerEnum indexPlayer)
+    public Transform m_CaiPiaoInfoParent;
+    /// <summary>
+    /// npc血量控制脚本.
+    /// </summary>
+    XKNpcHealthCtrl m_NpcHealthCom;
+    void Update()
     {
-        if (indexPlayer == PlayerEnum.Null)
+        if (m_NpcHealthCom != null && m_NpcHealthCom.IsDeathNpc)
         {
             return;
         }
 
-        if (Camera.main != null)
+        if (m_CaiPiaoInfoParent != null)
         {
-            Vector3 forwardVal = Camera.main.transform.forward;
-            forwardVal.y = 0f;
-            transform.forward = forwardVal.normalized;
-//            Vector3 angle = transform.localEulerAngles;
-//            angle.z += 180f;
-//            transform.localEulerAngles = angle;
+            if (Camera.main != null)
+            {
+                Vector3 forwardVal = Camera.main.transform.forward;
+                forwardVal.y = 0f;
+                m_CaiPiaoInfoParent.forward = forwardVal.normalized;
+            }
         }
+    }
 
+    /// <summary>
+    /// 隐藏数字信息.
+    /// </summary>
+    internal void HiddenNumUI()
+    {
+        if (m_CaiPiaoInfoParent != null)
+        {
+            m_CaiPiaoInfoParent.gameObject.SetActive(false);
+        }
+        enabled = false;
+    }
+
+    /// <summary>
+    /// 显示爆炸粒子的彩票UI数量信息.
+    /// </summary>
+    internal void ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, XKNpcHealthCtrl healthCom)
+    {
+        if (m_CaiPiaoInfoParent != null)
+        {
+            m_CaiPiaoInfoParent.gameObject.SetActive(true);
+        }
+        enabled = true;
+        m_NpcHealthCom = healthCom;
+
+        int num = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
         string numStr = num.ToString();
         if (m_FixedUiPosDt != null && m_FixedUiPosDt.IsFixPosX)
         {
@@ -76,27 +101,8 @@ public class SSCaiPiaoLiZiManage : MonoBehaviour
                 }
             }
         }
-
-        switch(indexPlayer)
-        {
-            case PlayerEnum.PlayerOne:
-                {
-                    m_NumMatArray = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumArrayP1;
-                    break;
-                }
-            case PlayerEnum.PlayerTwo:
-                {
-                    m_NumMatArray = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumArrayP2;
-                    break;
-                }
-            case PlayerEnum.PlayerThree:
-                {
-                    m_NumMatArray = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumArrayP3;
-                    break;
-                }
-        }
-
-        int max = m_NumParticleArray.Length;
+        
+        int max = m_NumRenderArray.Length;
         int numVal = num;
         int valTmp = 0;
         int powVal = 0;
@@ -105,7 +111,7 @@ public class SSCaiPiaoLiZiManage : MonoBehaviour
             if (max - i > numStr.Length && IsHiddenGaoWeiNumZero)
             {
                 //隐藏数据高位的0.
-                m_NumParticleArray[i].renderer.material = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumATouMing;
+                m_NumRenderArray[i].material = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumATouMing;
             }
             else
             {
@@ -113,7 +119,7 @@ public class SSCaiPiaoLiZiManage : MonoBehaviour
                 powVal = (int)Mathf.Pow(10, max - i - 1);
                 valTmp = numVal / powVal;
                 //UnityLog("ShowNumUI -> valTmp ====== " + valTmp);
-                m_NumParticleArray[i].renderer.material = m_NumMatArray[valTmp];
+                m_NumRenderArray[i].material = XkGameCtrl.GetInstance().m_NpcCaiPiaoNumArray[valTmp];
                 //m_UISpriteArray[i].spriteName = valTmp.ToString();
                 numVal -= valTmp * powVal;
             }

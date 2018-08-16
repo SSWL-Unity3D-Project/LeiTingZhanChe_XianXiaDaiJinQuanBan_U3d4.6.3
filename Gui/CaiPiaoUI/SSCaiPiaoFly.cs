@@ -37,6 +37,11 @@ public class SSCaiPiaoFly : SSGameMono
                             time = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_SuiJiCaiPiaoFlyDt.TimeLeiJiaVal;
                             break;
                         }
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang:
+                        {
+                            time = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhengChangCaiPiaoFlyDt.TimeLeiJiaVal;
+                            break;
+                        }
                 }
                 SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer);
             }

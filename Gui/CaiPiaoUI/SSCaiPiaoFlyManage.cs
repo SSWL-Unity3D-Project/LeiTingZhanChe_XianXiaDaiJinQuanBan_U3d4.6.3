@@ -121,6 +121,13 @@ public class SSCaiPiaoFlyManage : SSGameMono
                     m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;
                     break;
                 }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang:
+                {
+                    m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhengChangCaiPiaoFlyDt.MaxCaiPiao;
+                    m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhengChangCaiPiaoFlyDt.TimeFly;
+                    m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;
+                    break;
+                }
         }
 
         if (m_FlyCaiPiaoPrefab == null)

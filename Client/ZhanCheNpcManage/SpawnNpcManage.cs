@@ -380,8 +380,8 @@ public class SpawnNpcManage : MonoBehaviour
             type = ZhanCheRulerData.ZhanCheJiBaoState.State4;
         }
 
-        Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> " + coinDt[0].XuBiVal + ", " + coinDt[1].XuBiVal + ", " + coinDt[2].XuBiVal
-            + ", type ====== " + type);
+        //Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> " + coinDt[0].XuBiVal + ", " + coinDt[1].XuBiVal + ", " + coinDt[2].XuBiVal
+        //    + ", type ====== " + type);
         ZhanCheRulerData.ZhanCheJiBaoRuler ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
         float rv = Random.Range(0f, 100f) / 100f;
         if (rv < ruler.MaxJiBaoGaiLv)
@@ -396,7 +396,7 @@ public class SpawnNpcManage : MonoBehaviour
         {
             index = coinDt[2].IndexPlayer;
         }
-        Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> index ============= " + index);
+        //Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> index ============= " + index);
         return index;
     }
 
@@ -701,6 +701,7 @@ public class SpawnNpcManage : MonoBehaviour
             GameObject obj = data.CreatPointNpc();
             if (obj != null)
             {
+                XKNpcMoveCtrl npcMove = null;
                 switch (npcType)
                 {
                     case NpcState.ZhanChe:
@@ -722,6 +723,34 @@ public class SpawnNpcManage : MonoBehaviour
                             }
                             m_ZhanCheJPBossData.JPBossData.AddNpcToList(obj);
 
+                            npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                            if (npcMove != null)
+                            {
+                                switch(pointState)
+                                {
+                                    case SpawnPointState.Up:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
+                                            break;
+                                        }
+                                    case SpawnPointState.Down:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
+                                            break;
+                                        }
+                                    case SpawnPointState.Left:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
+                                            break;
+                                        }
+                                    case SpawnPointState.Right:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
+                                            break;
+                                        }
+                                }
+                            }
+
                             if (XKBossLXCtrl.GetInstance() != null)
                             {
                                 //播放boss来袭UI.
@@ -738,6 +767,42 @@ public class SpawnNpcManage : MonoBehaviour
                                 XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Boss);
                             }
                             m_ZhanCheJPBossData.SuperJPBossData.AddNpcToList(obj);
+
+
+                            npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                            if (npcMove != null)
+                            {
+                                switch (pointState)
+                                {
+                                    case SpawnPointState.Up:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
+                                            break;
+                                        }
+                                    case SpawnPointState.Down:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
+                                            break;
+                                        }
+                                    case SpawnPointState.Left:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
+                                            break;
+                                        }
+                                    case SpawnPointState.Right:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
+                                            break;
+                                        }
+                                }
+                            }
+
+                            if (XKBossLXCtrl.GetInstance() != null)
+                            {
+                                //播放boss来袭UI.
+                                XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                                AudioBeiJingCtrl.StopGameBeiJingAudio();
+                            }
                             break;
                         }
                 }

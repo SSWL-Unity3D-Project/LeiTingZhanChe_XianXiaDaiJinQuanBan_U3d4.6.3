@@ -3,6 +3,10 @@ using System.Collections;
 
 public class XKNpcHealthCtrl : MonoBehaviour {
 	public NpcJiFenEnum NpcJiFen = NpcJiFenEnum.ShiBing; //控制主角所击杀npc的积分逻辑.
+    /// <summary>
+    /// 飘分点.
+    /// </summary>
+    public Transform m_PiaoFenPoint;
 	[Range(0, 999999)] public int JiFenVal = 1;
 	[Range(0f, 10000f)] public float PlayerDamage = 1f;
 
@@ -61,6 +65,12 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
     void Update()
 	{
+        if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
+        {
+            //彩票战车或boss不进行检测.
+            return;
+        }
+
         if (m_XKDaPaoCom != null && m_XKDaPaoCom.SpawnPointScript == null)
         {
             if (Time.frameCount % 15 == 0 && !IsDeathNpc)
@@ -192,7 +202,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		CheckNpcDeathExplode();
 		if (!IsYouTongNpc) {
 			XkGameCtrl.GetInstance().AddPlayerKillNpc(playerScript.PlayerIndex, NpcJiFen, JiFenVal);
-		}
+            ShowPiaoFen(playerScript.PlayerIndex);
+        }
 
 		if (NpcScript != null) {
 			IsDeathNpc = true;
@@ -233,6 +244,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		return NpcScript;
 	}
 
+    /// <summary>
+    /// npc彩票显示组件.
+    /// </summary>
+    public SSCaiPiaoNpcUI m_CaiPiaoNpcUI;
 	public void SetNpcMoveScript(XKNpcMoveCtrl script)
 	{
 		IsSpawnObj = true;
@@ -242,6 +257,25 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		}
 		NpcNameInfo = script.name;
 		ResetNpcHealthInfo();
+
+        if (m_CaiPiaoNpcUI != null)
+        {
+            if (NpcScript != null)
+            {
+                if (NpcScript.IsCaiPiaoZhanChe == true)
+                {
+                    if (NpcScript.GetIsBossNpc() == true)
+                    {
+                        m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss, this);
+                    }
+                    else
+                    {
+                        m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, this);
+                    }
+                }
+                NpcScript.m_CaiPiaoNpcUI = m_CaiPiaoNpcUI;
+            }
+        }
 	}
 
 	public bool GetIsDeathNpc()
@@ -442,7 +476,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 					break;
 				default:
 					XkGameCtrl.GetInstance().AddPlayerKillNpc(playerSt, NpcJiFen, JiFenVal);
-					break;
+                    ShowPiaoFen(playerSt);
+                    break;
 				}
 //				if (isAddKillNpcNum) {
 //					switch (NpcJiFen) {
@@ -485,10 +520,26 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType);
                     }
                 }
+                else
+                {
+                    //普通npc被击杀.
+                    if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                    {
+                        //随机送出正常得彩.
+                        XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                    }
+                }
             }
-			else if (CannonScript != null) {
+			else if (CannonScript != null)
+            {
 				CannonScript.OnRemoveCannon(playerSt, 1);
-			}
+                //炮台类npc被击杀.
+                if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                {
+                    //随机送出正常得彩.
+                    XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                }
+            }
 		}
 	}
 
@@ -681,4 +732,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		bossAmount = bossAmount < 0f ? 0f : bossAmount;
 		return bossAmount;
 	}
+
+    void ShowPiaoFen(PlayerEnum indexPlayer)
+    {
+        if (JiFenVal <= 0)
+        {
+            return;
+        }
+
+        if (m_PiaoFenPoint == null)
+        {
+            return;
+        }
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.ShowNpcPiaoFenUI(indexPlayer, JiFenVal, m_PiaoFenPoint.position);
+        }
+    }
 }
