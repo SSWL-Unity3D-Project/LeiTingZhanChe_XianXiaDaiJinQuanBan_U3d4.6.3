@@ -30,7 +30,28 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
     {
-		StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type, exp));
+        //StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type, exp));
+        if (m_GameUIBottomLeft == null)
+        {
+            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
+            return;
+        }
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+        if (gmDataPrefab != null)
+        {
+            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+            SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+            if (caiPiaoZhuanPan != null)
+            {
+                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+        }
     }
 
 	IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
