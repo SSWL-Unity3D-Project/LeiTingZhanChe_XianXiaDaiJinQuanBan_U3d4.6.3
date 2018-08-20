@@ -56,12 +56,14 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     PlayerEnum m_IndexPlayer;
     Vector3 m_StartPos;
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
-    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    GameObject m_ExplosionPrefab;
+    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
     {
         m_IndexPlayer = indexPlayer;
         m_CaiPiaoNum = caiPiaoNum;
         m_DeCaiState = type;
         m_StartPos = pos;
+        m_ExplosionPrefab = exp;
         //if (m_CaiPiaoInfoParent != null)
         //{
         //    m_CaiPiaoInfoParent.SetActive(false);
@@ -74,12 +76,15 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
 
     IEnumerator DelayShowCaiPiaoInfo()
     {
+        yield return new WaitForSeconds(m_TimeShowExp);
+        ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos);
+
         yield return new WaitForSeconds(m_TimePlay);
         if (m_Animator != null)
         {
             m_Animator.enabled = false;
         }
-        ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos);
+        Destroy(gameObject);
     }
     
     /// <summary>
@@ -87,7 +92,15 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// </summary>
     void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos)
     {
-		//Debug.LogWarning("Unity: ShowCaiPiaoZhanCheBossFlyCaiPiao -> deCaiType ========= " + deCaiType);
+        //Debug.LogWarning("Unity: ShowCaiPiaoZhanCheBossFlyCaiPiao -> deCaiType ========= " + deCaiType);
+
+        if (m_ExplosionPrefab != null)
+        {
+            GameObject objExplode = (GameObject)Instantiate(m_ExplosionPrefab, startPos, Quaternion.identity);
+            objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
+            XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
+        }
+
         if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
         {
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
@@ -117,7 +130,6 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
                 Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
             }
         }
-		Destroy(gameObject);
     }
 
     /// <summary>

@@ -28,12 +28,12 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 创建战车boss彩票转盘.
     /// </summary>
-    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
     {
-		StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type));
+		StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type, exp));
     }
 
-	IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+	IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
 	{
 		yield return new WaitForSeconds(1f);
 		if (m_GameUIBottomLeft == null)
@@ -50,7 +50,7 @@ public class SSGameUICtrl : SSGameMono
 			SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
 			if (caiPiaoZhuanPan != null)
 			{
-				caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type);
+				caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
 			}
 		}
 		else
