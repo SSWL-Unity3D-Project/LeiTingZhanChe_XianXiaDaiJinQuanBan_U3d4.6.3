@@ -3,6 +3,10 @@ using System.Collections;
 
 public class XKNpcHealthCtrl : MonoBehaviour {
 	public NpcJiFenEnum NpcJiFen = NpcJiFenEnum.ShiBing; //控制主角所击杀npc的积分逻辑.
+    /// <summary>
+    /// 飘分点.
+    /// </summary>
+    public Transform m_PiaoFenPoint;
 	[Range(0, 999999)] public int JiFenVal = 1;
 	[Range(0f, 10000f)] public float PlayerDamage = 1f;
 
@@ -54,6 +58,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			NpcScript.SetIsBossNpc(true);
 		}
     }
+
+    float m_LastFanWeiHouTime = 0f;
     XKPlayerMvFanWei m_FanWeiHou;
     public bool IsHitFanWeiHou = false;
     //public static int TestNum = 0;
@@ -61,27 +67,37 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
     void Update()
 	{
+        //if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
+        //{
+        //    //彩票战车或boss不进行检测.
+        //    return;
+        //}
+
         if (m_XKDaPaoCom != null && m_XKDaPaoCom.SpawnPointScript == null)
         {
-            if (Time.frameCount % 15 == 0 && !IsDeathNpc)
+            if (Time.time - m_LastFanWeiHouTime > 1f)
             {
-                if (m_FanWeiHou != null && !IsHitFanWeiHou)
+                m_LastFanWeiHouTime = Time.time;
+                if (!IsDeathNpc)
                 {
-                    Vector3 posTA = m_FanWeiHou.transform.position;
-                    Vector3 posTB = transform.position;
-                    posTA.y = posTB.y = 0f;
-                    Vector3 vecForward = -m_FanWeiHou.transform.forward;
-                    Vector3 vecAB = posTB - posTA;
-                    vecForward.y = vecAB.y = 0f;
-                    if (Vector3.Dot(vecForward, vecAB) < 0f)
+                    if (m_FanWeiHou != null && !IsHitFanWeiHou)
                     {
-                        float dis = Vector3.Distance(posTA, posTB);
-                        if (dis > 15f && dis < 40f)
+                        Vector3 posTA = m_FanWeiHou.transform.position;
+                        Vector3 posTB = transform.position;
+                        posTA.y = posTB.y = 0f;
+                        Vector3 vecForward = -m_FanWeiHou.transform.forward;
+                        Vector3 vecAB = posTB - posTA;
+                        vecForward.y = vecAB.y = 0f;
+                        if (Vector3.Dot(vecForward, vecAB) < 0f)
                         {
-                            //Debug.LogError("======== remove test name =============== " + m_XKDaPaoCom.name);
-                            IsHitFanWeiHou = true;
-                            m_XKDaPaoCom.OnRemoveCannon(PlayerEnum.Null, 0, 1f);
-                            return;
+                            float dis = Vector3.Distance(posTA, posTB);
+                            if (dis > 15f && dis < 40f)
+                            {
+                                //Debug.LogError("======== remove test name =============== " + m_XKDaPaoCom.name);
+                                IsHitFanWeiHou = true;
+                                m_XKDaPaoCom.OnRemoveCannon(PlayerEnum.Null, 0, 1f);
+                                return;
+                            }
                         }
                     }
                 }
@@ -90,35 +106,39 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
         if (NpcScript == null && CannonScript != null)
         {
-            if (Time.frameCount % 15 == 0 && !IsDeathNpc)
+            if (Time.time - m_LastFanWeiHouTime > 1f)
             {
-                if (m_FanWeiHou != null && !IsHitFanWeiHou)
+                m_LastFanWeiHouTime = Time.time;
+                if (!IsDeathNpc)
                 {
-                    Vector3 posTA = m_FanWeiHou.transform.position;
-                    Vector3 posTB = transform.position;
-                    posTA.y = posTB.y = 0f;
-                    Vector3 vecForward = -m_FanWeiHou.transform.forward;
-                    Vector3 vecAB = posTB - posTA;
-                    vecForward.y = vecAB.y = 0f;
-                    if (Vector3.Dot(vecForward, vecAB) < 0f)
+                    if (m_FanWeiHou != null && !IsHitFanWeiHou)
                     {
-                        if (Vector3.Distance(posTA, posTB) > 15f)
+                        Vector3 posTA = m_FanWeiHou.transform.position;
+                        Vector3 posTB = transform.position;
+                        posTA.y = posTB.y = 0f;
+                        Vector3 vecForward = -m_FanWeiHou.transform.forward;
+                        Vector3 vecAB = posTB - posTA;
+                        vecForward.y = vecAB.y = 0f;
+                        if (Vector3.Dot(vecForward, vecAB) < 0f)
                         {
-                            //Debug.LogError("remove test name =============== " + CannonScript.DaPaoCtrlScript.name
-                            //        + ", TestNumRecord == " + TestNumRecord);
-                            IsHitFanWeiHou = true;
-                            CannonScript.OnRemoveCannon(PlayerEnum.Null, 1);
-                            return;
+                            if (Vector3.Distance(posTA, posTB) > 15f)
+                            {
+                                //Debug.LogError("remove test name =============== " + CannonScript.DaPaoCtrlScript.name
+                                //        + ", TestNumRecord == " + TestNumRecord);
+                                IsHitFanWeiHou = true;
+                                CannonScript.OnRemoveCannon(PlayerEnum.Null, 1);
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
 
-		if (Time.realtimeSinceStartup - TimeLastVal < 10f) {
+		if (Time.time - TimeLastVal < 10f) {
 			return;
 		}
-		TimeLastVal = Time.realtimeSinceStartup;
+		TimeLastVal = Time.time;
 
 		if (!IsSpawnObj) {
 			return;
@@ -192,7 +212,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		CheckNpcDeathExplode();
 		if (!IsYouTongNpc) {
 			XkGameCtrl.GetInstance().AddPlayerKillNpc(playerScript.PlayerIndex, NpcJiFen, JiFenVal);
-		}
+            ShowPiaoFen(playerScript.PlayerIndex);
+        }
 
 		if (NpcScript != null) {
 			IsDeathNpc = true;
@@ -233,6 +254,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		return NpcScript;
 	}
 
+    /// <summary>
+    /// npc彩票显示组件.
+    /// </summary>
+    public SSCaiPiaoNpcUI m_CaiPiaoNpcUI;
 	public void SetNpcMoveScript(XKNpcMoveCtrl script)
 	{
 		IsSpawnObj = true;
@@ -242,7 +267,27 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		}
 		NpcNameInfo = script.name;
 		ResetNpcHealthInfo();
-	}
+
+        if (m_CaiPiaoNpcUI != null)
+        {
+            if (NpcScript != null)
+            {
+                if (NpcScript.IsCaiPiaoZhanChe == true)
+                {
+                    if (NpcScript.GetIsBossNpc() == true)
+                    {
+                        m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss, this);
+                    }
+                    else
+                    {
+                        m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, this);
+                    }
+                }
+                NpcScript.m_CaiPiaoNpcUI = m_CaiPiaoNpcUI;
+            }
+        }
+        TimeLastVal = Time.time;
+    }
 
 	public bool GetIsDeathNpc()
 	{
@@ -442,7 +487,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 					break;
 				default:
 					XkGameCtrl.GetInstance().AddPlayerKillNpc(playerSt, NpcJiFen, JiFenVal);
-					break;
+                    ShowPiaoFen(playerSt);
+                    break;
 				}
 //				if (isAddKillNpcNum) {
 //					switch (NpcJiFen) {
@@ -485,10 +531,26 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType);
                     }
                 }
+                else
+                {
+                    //普通npc被击杀.
+                    if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                    {
+                        //随机送出正常得彩.
+                        XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                    }
+                }
             }
-			else if (CannonScript != null) {
+			else if (CannonScript != null)
+            {
 				CannonScript.OnRemoveCannon(playerSt, 1);
-			}
+                //炮台类npc被击杀.
+                if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                {
+                    //随机送出正常得彩.
+                    XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                }
+            }
 		}
 	}
 
@@ -551,7 +613,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	}
 
 	void ResetNpcHealthInfo()
-	{
+    {
+        TimeLastVal = Time.time;
         IsHitFanWeiHou = false;
         CheckNpcRigidbody();
 		XkGameCtrl.GetInstance().AddNpcTranToList(transform);
@@ -597,15 +660,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
                 if (objExplode != null)
                 {
-                    SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
-                    if (caiPiaoLiZi != null)
-                    {
-                        caiPiaoLiZi.ShowNumUI(value, indexPlayer);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
-                    }
+                    Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, pos);
+                    //SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
+                    //if (caiPiaoLiZi != null)
+                    //{
+                    //    caiPiaoLiZi.ShowNumUI(value, indexPlayer);
+                    //}
+                    //else
+                    //{
+                    //    Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+                    //}
                 }
             }
 
@@ -681,4 +746,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		bossAmount = bossAmount < 0f ? 0f : bossAmount;
 		return bossAmount;
 	}
+
+    void ShowPiaoFen(PlayerEnum indexPlayer)
+    {
+        if (JiFenVal <= 0)
+        {
+            return;
+        }
+
+        if (m_PiaoFenPoint == null)
+        {
+            return;
+        }
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.ShowNpcPiaoFenUI(indexPlayer, JiFenVal, m_PiaoFenPoint.position);
+        }
+    }
 }

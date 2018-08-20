@@ -1,3 +1,4 @@
+//#define NOT_CREAT_GAME_NPC
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -324,8 +325,12 @@ public class XKSpawnNpcPoint : MonoBehaviour
         //    //test.
         //    return;
         //}
-        //return; //test.
-		if (XkGameCtrl.GetInstance().IsCartoonShootTest && NpcObj == null) {
+#if NOT_CREAT_GAME_NPC
+        //不产生npc,测试用.
+        return;
+#endif
+
+        if (XkGameCtrl.GetInstance().IsCartoonShootTest && NpcObj == null) {
 			return;
 		}
 		

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class XKPlayerCamera : MonoBehaviour
@@ -58,10 +57,14 @@ public class XKPlayerCamera : MonoBehaviour
 
 	void Awake()
 	{
-		List<Transform> daoJuList = new List<Transform>(DaoJuSpawnPointArray.GetComponentsInChildren<Transform>());
-		daoJuList.RemoveAt(0);
-		DaoJuSpawnPoint = daoJuList.ToArray();
-        DaoJuSpawnPointArray.gameObject.SetActive(false);
+        if (DaoJuSpawnPointArray != null)
+        {
+            DaoJuSpawnPointArray.gameObject.SetActive(true);
+            List<Transform> daoJuList = new List<Transform>(DaoJuSpawnPointArray.GetComponentsInChildren<Transform>());
+            daoJuList.RemoveAt(0);
+            DaoJuSpawnPoint = daoJuList.ToArray();
+            DaoJuSpawnPointArray.gameObject.SetActive(false);
+        }
     }
 
 	// Use this for initialization

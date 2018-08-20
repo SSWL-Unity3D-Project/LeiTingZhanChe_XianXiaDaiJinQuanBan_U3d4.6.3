@@ -11,6 +11,10 @@ public enum PlayerTypeEnum
 
 public class XkPlayerCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 摄像机微动的动画控制组件.
+    /// </summary>
+    public Animator m_CameraMoveAni;
     AiPathCtrl AiPathScript;
 	public PlayerTypeEnum PlayerSt = PlayerTypeEnum.FeiJi;
 	//public Transform KaQiuShaAimPoint;
@@ -121,21 +125,20 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			InstanceCartoon = this;
 			break;
 		}
-
-		if (PlayerSt != PlayerTypeEnum.CartoonCamera) {
+        if (PlayerSt != PlayerTypeEnum.CartoonCamera) {
 			XkGameCtrl.GetInstance().ChangeAudioListParent();
 		}
 		PlayerObj = gameObject;
 		PlayerTran = transform;
 		AimSpawnPoint = new List<XKSpawnNpcPoint>();
-//		NetViewCom = GetComponent<NetworkView>();
-//		if ((XkGameCtrl.GameModeVal == GameMode.LianJi && Network.peerType == NetworkPeerType.Disconnected)
-//		    || XkGameCtrl.GameModeVal != GameMode.LianJi) {
-//			NetViewCom.enabled = false;
-//		}
-	}
 
-	void DelaySetFeiJiNpcInfo()
+        if (m_SpawnNpcManage != null)
+        {
+            m_SpawnNpcManage.gameObject.SetActive(true);
+        }
+    }
+
+    void DelaySetFeiJiNpcInfo()
 	{
 		if (PlayerSt != PlayerTypeEnum.FeiJi) {
 			return;
@@ -222,8 +225,8 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 //		else {
 //			UpdatePlayerTransform();
 //		}
-
-		SmothMovePlayerCamera();
+        UpdateCameraWeiDongPos();
+        SmothMovePlayerCamera();
 		CheckIsDelayMovePlayer();
 //		if (PlayerSt == PlayerTypeEnum.FeiJi
 //		         || PlayerSt == PlayerTypeEnum.CartoonCamera) {
@@ -551,6 +554,14 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		if (!IsStartMovePlayerByMark) {
 			StartCoroutine(MovePlayerByMarkSpeed());
 			IsStartMovePlayerByMark = true;
+
+            if (PlayerSt == PlayerTypeEnum.FeiJi)
+            {
+                if (m_SpawnNpcManage != null)
+                {
+                    m_SpawnNpcManage.MakeAllCreatNpcPointsToLand();
+                }
+            }
 		}
 	}
 
@@ -716,9 +727,21 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 					transform.forward = Vector3.Lerp(transform.forward, forwardVal, dTime * SpeedA * 0.5f);
 				}
 			}
-//			Debug.Log("Unity:"+"SpeedA "+SpeedA+", ds "+ds+", dTime "+dTime);
+            //Debug.Log("Unity:"+"SpeedA "+SpeedA+", ds "+ds+", dTime "+dTime + ", disAimNode " + disAimNode);
 
-			if (disAimNode <= ds) {
+            Vector3 posA = transform.position;
+            Vector3 posB = EndPos;
+            posA.y = posB.y = 0f;
+            Vector3 forwardValTmp = Vector3.Normalize(posB - posA);
+            Vector3 forwardSelf = transform.forward;
+            forwardSelf.y = 0f;
+            float dotVal = Vector3.Dot(forwardValTmp, forwardSelf.normalized);
+            //if (dotVal <= 0f)
+            //{
+            //    Debug.LogWarning("Unity: dorVal ================= " + dotVal);
+            //}
+
+            if (disAimNode <= ds || dotVal <= 0f) {
 //				Debug.Log("Unity:"+"Over, ds "+ds+", realDis "+Vector3.Distance(transform.position, EndPos)+", time "+dTime);
 				countNode++;
 				float disVal = ds - disAimNode;
@@ -733,7 +756,11 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 					if (disVal > disNode) {
 						disVal = disVal - disNode;
 						count++;
-						transform.position = PathNodes[countNode];
+
+                        if (dotVal > 0f)
+                        {
+                            transform.position = PathNodes[countNode];
+                        }
 						SmothMovePlayerCamera();
 					}
 					else {
@@ -741,14 +768,18 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 					}
 				}
 				countNode += count;
-				/*if (count > 0) {
+                /*if (count > 0) {
 					string outPut = PlayerSt == PlayerTypeEnum.FeiJi ? "feiJi: " : "tanKe: ";
 					outPut += "countNode "+countNode+",count "+count+", maxCountNode "+maxCountNode;
 					Debug.Log("Unity:"+outPut);
 				}*/
 
-				if (countNode < (maxCountNode - 1) && (countNode+1) < PathNodes.Length) {
-					transform.position = EndPos;
+                if (countNode < (maxCountNode - 1) && (countNode + 1) < PathNodes.Length)
+                {
+                    if (dotVal > 0f)
+                    { 
+                        transform.position = EndPos;
+                    }
 					SmothMovePlayerCamera();
 					EndPos = PathNodes[countNode+1]; //更新EndPos.
 					ForwardMoveVal = Vector3.Normalize(EndPos - transform.position); //更新ForwardMoveVal.
@@ -779,7 +810,10 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 					timeLastVal = Time.realtimeSinceStartup;
 					timeRotationVal = 0f;
 					SpeedA = SpeedB;
-					transform.position = EndPos;
+                    if (dotVal > 0f)
+                    {
+                        transform.position = EndPos;
+                    }
 					SmothMovePlayerCamera();
 
 					if (!MovePlayerOnCompelteITween()) {
@@ -1098,4 +1132,47 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 	{
 		return IsHandleRpc;
 	}
+
+    /// <summary>
+    /// 设置游戏镜头微动的动画开关.
+    /// </summary>
+    public void SetCameraMoveAni(bool isMove)
+    {
+        if (m_CameraMoveAni != null)
+        {
+            //Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
+            m_CameraWeiDongPos = m_CameraMoveAni.transform.position;
+            IsCameraPosWeiDong = isMove;
+            m_CameraMoveAni.SetBool("IsMove", isMove);
+        }
+        else
+        {
+            Debug.LogWarning("SetCameraMoveAni -> m_CameraMoveAni was null...............");
+        }
+    }
+
+    /// <summary>
+    /// 摄像机位置微动.
+    /// </summary>
+    bool IsCameraPosWeiDong = false;
+    Vector3 m_CameraWeiDongPos;
+    /// <summary>
+    /// 更新镜头微动坐标.
+    /// </summary>
+    void UpdateCameraWeiDongPos()
+    {
+        if (m_CameraMoveAni == null)
+        {
+            return;
+        }
+
+        if (IsCameraPosWeiDong == false)
+        {
+            return;
+        }
+
+        Vector3 forwardVal = transform.forward;
+        forwardVal.y = 0f;
+        transform.position = m_CameraWeiDongPos + forwardVal * m_CameraMoveAni.transform.localPosition.z;
+    }
 }

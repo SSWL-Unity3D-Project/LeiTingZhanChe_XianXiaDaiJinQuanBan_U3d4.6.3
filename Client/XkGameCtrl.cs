@@ -31,6 +31,22 @@ public enum GameJiTaiType
 public class XkGameCtrl : SSGameMono
 {
     /// <summary>
+    /// Boss出场后npc是否继续发射子弹.
+    /// </summary>
+    public bool IsCreatAmmoOnBoss = false;
+    /// <summary>
+    /// 玩家基础彩票信息控制.
+    /// </summary>
+    internal SSPlayerJiChuCaiPiaoData m_PlayerJiChuCaiPiaoData;
+    /// <summary>
+    /// 左右产生的彩票boss最大碰撞方向触发器次数.
+    /// </summary>
+    public int m_MaxHitBossMoveTrigger = 5;
+    /// <summary>
+    /// 前后产生的彩票boss最大碰撞方向触发器次数.
+    /// </summary>
+    public int m_MaxHitQHBossMoveTrigger = 5;
+    /// <summary>
     /// 击杀彩票战车或boss时,是否忽略玩家索引.
     /// </summary>
     public bool IsCaiPiaoHuLuePlayerIndex = false;
@@ -54,6 +70,10 @@ public class XkGameCtrl : SSGameMono
     /// 彩票爆炸粒子数字材质P3.
     /// </summary>
     public Material[] m_CaiPiaoLiZiNumArrayP3;
+    /// <summary>
+    /// npc彩票数字材质.
+    /// </summary>
+    public Material[] m_NpcCaiPiaoNumArray;
     /// <summary>
     /// 主角镜头运动路径总控制组件.
     /// </summary>
@@ -286,7 +306,11 @@ public class XkGameCtrl : SSGameMono
             IsCaiPiaoHuLuePlayerIndex = false;
 #endif
 
-            //pcvr.OpenDongGanState();
+            if (m_PlayerJiChuCaiPiaoData == null)
+            {
+                m_PlayerJiChuCaiPiaoData = gameObject.AddComponent<SSPlayerJiChuCaiPiaoData>();
+            }
+            
             //pcvr.OpenAllPlayerFangXiangPanPower();
             switch (XKGlobalData.GameDiff)
 			{
@@ -2466,7 +2490,7 @@ public class XkGameCtrl : SSGameMono
 			}
 
 			if (PlayerHealthArray[0] <= 0f) {
-				Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerOne is death!");
+				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerOne is death!");
 				PlayerHealthArray[0] = 0f;
 				PlayerQuanShu[0] = 1;
 				SetActivePlayerOne(false);
@@ -2492,7 +2516,7 @@ public class XkGameCtrl : SSGameMono
 			}
 
 			if (PlayerHealthArray[1] <= 0f) {
-				Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerTwo is death!");
+				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerTwo is death!");
 				PlayerHealthArray[1] = 0f;
 				PlayerQuanShu[1] = 1;
 				SetActivePlayerTwo(false);
@@ -2546,7 +2570,7 @@ public class XkGameCtrl : SSGameMono
 			}
 
 			if (PlayerHealthArray[3] <= 0f) {
-				Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerFour is death!");
+				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerFour is death!");
 				PlayerHealthArray[3] = 0f;
 				PlayerQuanShu[3] = 1;
 				SetActivePlayerFour(false);
@@ -2934,6 +2958,24 @@ public class XkGameCtrl : SSGameMono
         if (m_ExitUICom != null)
         {
             m_ExitUICom.RemoveSelf();
+        }
+    }
+
+    /// <summary>
+    /// 设置游戏镜头是否前进.
+    /// </summary>
+    public void SetGameCameraIsMoveing(bool isMoveing, NpcJiFenEnum state)
+    {
+        //Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
+        XKTriggerStopMovePlayer.IsActiveTrigger = !isMoveing;
+        if (state == NpcJiFenEnum.Boss)
+        {
+            //boss触发镜头停止或前进.
+            //打开或关闭镜头移动的动画.
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+            {
+                XkPlayerCtrl.GetInstanceFeiJi().SetCameraMoveAni(!isMoveing);
+            }
         }
     }
 
