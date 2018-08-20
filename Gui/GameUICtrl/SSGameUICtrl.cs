@@ -30,28 +30,34 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
-        if (m_GameUIBottomLeft == null)
-        {
-            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
-            return;
-        }
-
-        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
-        if (gmDataPrefab != null)
-        {
-            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
-            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
-            SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
-            if (caiPiaoZhuanPan != null)
-            {
-                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type);
-            }
-        }
-        else
-        {
-            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
-        }
+		StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type));
     }
+
+	IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+	{
+		yield return new WaitForSeconds(1f);
+		if (m_GameUIBottomLeft == null)
+		{
+			UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
+			yield break;
+		}
+		
+		GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+		if (gmDataPrefab != null)
+		{
+			UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+			GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+			SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+			if (caiPiaoZhuanPan != null)
+			{
+				caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type);
+			}
+		}
+		else
+		{
+			UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+		}
+	}
 
     /// <summary>
     /// npc飘分控制组件.
