@@ -361,19 +361,19 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			return;
 		}
 
-        switch (NpcJiFen)
-        {
-            case NpcJiFenEnum.Boss:
-                if (!XKBossXueTiaoCtrl.GetInstance().GetIsCanSubXueTiaoAmount())
-                {
-                    if (NpcDamageCom != null)
-                    {
-                        NpcDamageCom.PlayNpcDamageEvent();
-                    }
-                    return;
-                }
-                break;
-        }
+        //switch (NpcJiFen)
+        //{
+        //    case NpcJiFenEnum.Boss:
+        //        if (!XKBossXueTiaoCtrl.GetInstance().GetIsCanSubXueTiaoAmount())
+        //        {
+        //            if (NpcDamageCom != null)
+        //            {
+        //                NpcDamageCom.PlayNpcDamageEvent();
+        //            }
+        //            return;
+        //        }
+        //        break;
+        //}
 
         if (CountActivePlayer != XkGameCtrl.PlayerActiveNum) {
 			if (CountActivePlayer != 0) {

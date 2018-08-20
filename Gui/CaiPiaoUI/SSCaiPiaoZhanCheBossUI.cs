@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// 战车Boss彩票转盘UI.
@@ -29,6 +30,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// 修改UI坐标数据信息.
     /// </summary>
     public FixedUiPosData m_FixedUiPosDt;
+    /// <summary>
+    /// 修改彩票UI坐标数据信息.
+    /// </summary>
+    public FixedUiPosData m_CaiPiaoUiPosDt;
     int m_CaiPiaoNum;
     /// <summary>
     /// 彩票数字.
@@ -42,6 +47,8 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// 彩票信息.
     /// </summary>
     public GameObject m_CaiPiaoInfoParent;
+    public float m_TimePlay = 3f;
+    public Animator m_Animator;
     PlayerEnum m_IndexPlayer;
     public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos)
     {
@@ -52,6 +59,14 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
             m_CaiPiaoInfoParent.SetActive(false);
         }
         transform.localPosition = pos;
+        StartCoroutine(DelayShowCaiPiaoInfo());
+    }
+
+    IEnumerator DelayShowCaiPiaoInfo()
+    {
+        yield return new WaitForSeconds(m_TimePlay);
+        m_Animator.enabled = false;
+        OnEndAnimation();
     }
 
     /// <summary>
@@ -90,6 +105,21 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
                     Vector3 posTmp = m_FixedUiPosDt.UIParent.localPosition;
                     posTmp.x = m_FixedUiPosDt.m_PosXArray[len - 1];
                     m_FixedUiPosDt.UIParent.localPosition = posTmp;
+                }
+            }
+        }
+
+        if (m_CaiPiaoUiPosDt != null && m_CaiPiaoUiPosDt.IsFixPosX)
+        {
+            if (m_CaiPiaoUiPosDt.UIParent != null)
+            {
+                int len = numStr.Length;
+                if (m_CaiPiaoUiPosDt.m_PosXArray.Length >= len)
+                {
+                    //动态修改UI数据的父级坐标.
+                    Vector3 posTmp = m_CaiPiaoUiPosDt.UIParent.localPosition;
+                    posTmp.x = m_CaiPiaoUiPosDt.m_PosXArray[len - 1];
+                    m_CaiPiaoUiPosDt.UIParent.localPosition = posTmp;
                 }
             }
         }

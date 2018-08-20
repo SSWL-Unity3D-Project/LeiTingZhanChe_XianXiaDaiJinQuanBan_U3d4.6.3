@@ -13,7 +13,7 @@ public class SSCaiPiaoYanHua : SSGameMono
     /// <summary>
     /// 产生烟花的间隔时间.
     /// </summary>
-    float m_TimeYanHua = 0.2f;
+    float m_TimeYanHua = 0.6f;
     float m_LastTimeYanHua = 0f;
     bool IsCreatYanHua = false;
     public void Init(float timeMax)
@@ -32,6 +32,7 @@ public class SSCaiPiaoYanHua : SSGameMono
             {
                 if (Time.time - m_LastTimeYanHua >= m_TimeYanHua)
                 {
+                    m_LastTimeYanHua = Time.time;
                     CreatYanHuaLiZi();
                 }
             }
@@ -58,7 +59,8 @@ public class SSCaiPiaoYanHua : SSGameMono
 
         if (liZiPrefab != null && point != null)
         {
-            Instantiate(liZiPrefab, XkGameCtrl.NpcAmmoArray, point);
+            GameObject obj = (GameObject)Instantiate(liZiPrefab, XkGameCtrl.NpcAmmoArray, point);
+            obj.transform.position += Vector3.up * 2.5f;
         }
     }
 }

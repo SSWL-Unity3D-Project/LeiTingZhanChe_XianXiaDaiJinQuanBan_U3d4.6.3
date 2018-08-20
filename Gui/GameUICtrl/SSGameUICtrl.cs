@@ -24,7 +24,125 @@ public class SSGameUICtrl : SSGameMono
         }
         CreatNpcPiaoFenUICom();
     }
-    
+
+    /// <summary>
+    /// npc飘分控制组件.
+    /// </summary>
+    internal SSNpcPiaoFenCtrl m_NpcPiaoFenCom;
+    /// <summary>
+    /// 创建npc飘分UI组件.
+    /// </summary>
+    void CreatNpcPiaoFenUICom()
+    {
+        if (m_GameUIBottomLeft == null)
+        {
+            UnityLogWarning("CreatNpcPiaoFenUICom -> m_GameUIBottomLeft was null.........");
+            return;
+        }
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/NpcPiaoFen/NpcPiaoFenCtrl");
+        if (gmDataPrefab != null)
+        {
+            UnityLog("CreatNpcPiaoFenUICom...");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+            m_NpcPiaoFenCom = obj.GetComponent<SSNpcPiaoFenCtrl>();
+            if (m_NpcPiaoFenCom != null)
+            {
+                m_NpcPiaoFenCom.Init();
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatNpcPiaoFenUICom -> gmDataPrefab was null");
+        }
+    }
+
+    /// <summary>
+    /// 展示npc飘分UI信息.
+    /// </summary>
+    public void ShowNpcPiaoFenUI(PlayerEnum indexVal, int fenShuVal, Vector3 piaoFenPos)
+    {
+        if (m_NpcPiaoFenCom == null)
+        {
+            UnityLogWarning("ShowNpcPiaoFenUI -> m_NpcPiaoFenCom was null.............");
+            return;
+        }
+        m_NpcPiaoFenCom.ShowFenShuInfo(indexVal, fenShuVal, piaoFenPos);
+    }
+
+    /// <summary>
+    /// 创建战车boss彩票转盘.
+    /// </summary>
+    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos)
+    {
+        if (m_GameUIBottomLeft == null)
+        {
+            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
+            return;
+        }
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+        if (gmDataPrefab != null)
+        {
+            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+            SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+            if (caiPiaoZhuanPan != null)
+            {
+                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos);
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+        }
+    }
+
+    /// <summary>
+    /// npc飘分控制组件.
+    /// </summary>
+    internal SSNpcPiaoFenCtrl m_NpcPiaoFenCom;
+    /// <summary>
+    /// 创建npc飘分UI组件.
+    /// </summary>
+    void CreatNpcPiaoFenUICom()
+    {
+        if (m_GameUIBottomLeft == null)
+        {
+            UnityLogWarning("CreatNpcPiaoFenUICom -> m_GameUIBottomLeft was null.........");
+            return;
+        }
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/NpcPiaoFen/NpcPiaoFenCtrl");
+        if (gmDataPrefab != null)
+        {
+            UnityLog("CreatNpcPiaoFenUICom...");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+            m_NpcPiaoFenCom = obj.GetComponent<SSNpcPiaoFenCtrl>();
+            if (m_NpcPiaoFenCom != null)
+            {
+                m_NpcPiaoFenCom.Init();
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatNpcPiaoFenUICom -> gmDataPrefab was null");
+        }
+    }
+
+    /// <summary>
+    /// 展示npc飘分UI信息.
+    /// </summary>
+    public void ShowNpcPiaoFenUI(PlayerEnum indexVal, int fenShuVal, Vector3 piaoFenPos)
+    {
+        if (m_NpcPiaoFenCom == null)
+        {
+            UnityLogWarning("ShowNpcPiaoFenUI -> m_NpcPiaoFenCom was null.............");
+            return;
+        }
+        m_NpcPiaoFenCom.ShowFenShuInfo(indexVal, fenShuVal, piaoFenPos);
+    }
+
     /// <summary>
     /// 创建战车boss彩票转盘.
     /// </summary>
