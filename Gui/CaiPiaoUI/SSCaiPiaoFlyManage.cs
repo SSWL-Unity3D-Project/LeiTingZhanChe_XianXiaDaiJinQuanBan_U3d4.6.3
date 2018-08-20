@@ -83,9 +83,9 @@ public class SSCaiPiaoFlyManage : SSGameMono
     }
 
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
-    public void Init(Transform startTr, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    public void Init(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
-        m_CaiPiaoStartPos = startTr.position;
+        m_CaiPiaoStartPos = startPos;
         switch (indexPlayer)
         {
             case PlayerEnum.PlayerOne:

@@ -108,12 +108,12 @@ public class SSCaiPiaoFlyData : MonoBehaviour
     /// </summary>
     public JPBossCaiPiaoFlyData m_JPBossCaiPiaoFlyDt;
 
-    public void InitCaiPiaoFly(Transform startTr, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    public void InitCaiPiaoFly(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
         SSCaiPiaoFlyManage caiPiaoFlyManage = gameObject.AddComponent<SSCaiPiaoFlyManage>();
         if (caiPiaoFlyManage != null)
         {
-            caiPiaoFlyManage.Init(startTr, indexPlayer, type);
+            caiPiaoFlyManage.Init(startPos, indexPlayer, type);
         }
     }
 

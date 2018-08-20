@@ -232,7 +232,7 @@ public class SSPlayerJiChuCaiPiaoData : SSGameMono
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
             {
                 //初始化飞出的彩票逻辑.
-                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(obj.transform, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang);
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(obj.transform.position, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang);
             }
             else
             {

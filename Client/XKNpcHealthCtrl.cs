@@ -660,8 +660,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
                 if (objExplode != null)
                 {
-                    Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, pos);
+                    //Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, objExplode.transform.position, deCaiType);
                     //SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
                     //if (caiPiaoLiZi != null)
                     //{
@@ -673,37 +673,36 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     //}
                 }
             }
+            
+            //if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
+            //{
+            //    if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            //    {
+            //        //初始化飞出的彩票逻辑.
+            //        XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform.position, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+            //    }
+            //    else
+            //    {
+            //        Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+            //    }
+            //}
+            //else if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+            //{
+            //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //    {
+            //        SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer);
+            //    }
 
-
-            if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
-            {
-                if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
-                {
-                    //初始化飞出的彩票逻辑.
-                    XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
-                }
-                else
-                {
-                    Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
-                }
-            }
-            else if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
-            {
-                if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                {
-                    SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer);
-                }
-
-                if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
-                {
-                    //初始化烟花粒子的产生.
-                    XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitPlayCaiPiaoYanHua();
-                }
-                else
-                {
-                    Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
-                }
-            }
+            //    if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            //    {
+            //        //初始化烟花粒子的产生.
+            //        XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitPlayCaiPiaoYanHua();
+            //    }
+            //    else
+            //    {
+            //        Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+            //    }
+            //}
         }
     }
 

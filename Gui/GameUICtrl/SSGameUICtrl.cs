@@ -28,7 +28,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 创建战车boss彩票转盘.
     /// </summary>
-    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos)
+    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
         if (m_GameUIBottomLeft == null)
         {
@@ -44,7 +44,7 @@ public class SSGameUICtrl : SSGameMono
             SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
             if (caiPiaoZhuanPan != null)
             {
-                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos);
+                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type);
             }
         }
         else

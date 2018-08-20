@@ -237,7 +237,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
                     if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
                     {
                         //初始化飞出的彩票逻辑.
-                        XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(obj.transform, playerSt, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu);
+                        XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(obj.transform.position, playerSt, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu);
                     }
                     else
                     {

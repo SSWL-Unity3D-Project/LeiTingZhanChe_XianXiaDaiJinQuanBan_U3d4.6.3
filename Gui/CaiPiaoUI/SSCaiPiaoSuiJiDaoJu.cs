@@ -41,7 +41,7 @@ public class SSCaiPiaoSuiJiDaoJu : SSGameMono
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
             {
                 //初始化飞出的彩票逻辑.
-                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu);
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform.position, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu);
             }
             else
             {

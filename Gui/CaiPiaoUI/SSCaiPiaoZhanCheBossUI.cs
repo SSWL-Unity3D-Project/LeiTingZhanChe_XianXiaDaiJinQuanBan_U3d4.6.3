@@ -46,19 +46,25 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// <summary>
     /// 彩票信息.
     /// </summary>
-    public GameObject m_CaiPiaoInfoParent;
+    //public GameObject m_CaiPiaoInfoParent;
     public float m_TimePlay = 3f;
     public Animator m_Animator;
     PlayerEnum m_IndexPlayer;
-    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos)
+    Vector3 m_StartPos;
+    SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
+    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
         m_IndexPlayer = indexPlayer;
         m_CaiPiaoNum = caiPiaoNum;
-        if (m_CaiPiaoInfoParent != null)
-        {
-            m_CaiPiaoInfoParent.SetActive(false);
-        }
-        transform.localPosition = pos;
+        m_DeCaiState = type;
+        m_StartPos = pos;
+        //if (m_CaiPiaoInfoParent != null)
+        //{
+        //    m_CaiPiaoInfoParent.SetActive(false);
+        //}
+        Vector3 posUI = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(pos);
+        transform.localPosition = posUI;
+        ShowCaiPiaoInfo();
         StartCoroutine(DelayShowCaiPiaoInfo());
     }
 
@@ -69,13 +75,49 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         {
             m_Animator.enabled = false;
         }
-        OnEndAnimation();
+        ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos);
+    }
+    
+    /// <summary>
+    /// 显示战车和boss的飞行彩票.
+    /// </summary>
+    void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos)
+    {
+        if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
+        {
+            if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            {
+                //初始化飞出的彩票逻辑.
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform.position, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+            }
+            else
+            {
+                Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+            }
+        }
+        else if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+        {
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer);
+            }
+
+            if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            {
+                //初始化烟花粒子的产生.
+                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitPlayCaiPiaoYanHua();
+            }
+            else
+            {
+                Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
+            }
+        }
     }
 
     /// <summary>
-    /// 动画结束.
+    /// 显示彩票信息.
     /// </summary>
-    public void OnEndAnimation()
+    void ShowCaiPiaoInfo()
     {
         int indexVal = (int)m_IndexPlayer - 1;
         if (indexVal >= 0 && indexVal <= 2)
@@ -91,10 +133,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
             return;
         }
 
-        if (m_CaiPiaoInfoParent != null)
-        {
-            m_CaiPiaoInfoParent.SetActive(true);
-        }
+        //if (m_CaiPiaoInfoParent != null)
+        //{
+        //    m_CaiPiaoInfoParent.SetActive(true);
+        //}
 
         string numStr = caiPiaoVal.ToString();
         if (m_FixedUiPosDt != null && m_FixedUiPosDt.IsFixPosX)
