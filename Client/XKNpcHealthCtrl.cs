@@ -58,6 +58,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			NpcScript.SetIsBossNpc(true);
 		}
     }
+
+    float m_LastFanWeiHouTime = 0f;
     XKPlayerMvFanWei m_FanWeiHou;
     public bool IsHitFanWeiHou = false;
     //public static int TestNum = 0;
@@ -65,33 +67,37 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
     void Update()
 	{
-        if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
-        {
-            //彩票战车或boss不进行检测.
-            return;
-        }
+        //if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
+        //{
+        //    //彩票战车或boss不进行检测.
+        //    return;
+        //}
 
         if (m_XKDaPaoCom != null && m_XKDaPaoCom.SpawnPointScript == null)
         {
-            if (Time.frameCount % 15 == 0 && !IsDeathNpc)
+            if (Time.time - m_LastFanWeiHouTime > 1f)
             {
-                if (m_FanWeiHou != null && !IsHitFanWeiHou)
+                m_LastFanWeiHouTime = Time.time;
+                if (!IsDeathNpc)
                 {
-                    Vector3 posTA = m_FanWeiHou.transform.position;
-                    Vector3 posTB = transform.position;
-                    posTA.y = posTB.y = 0f;
-                    Vector3 vecForward = -m_FanWeiHou.transform.forward;
-                    Vector3 vecAB = posTB - posTA;
-                    vecForward.y = vecAB.y = 0f;
-                    if (Vector3.Dot(vecForward, vecAB) < 0f)
+                    if (m_FanWeiHou != null && !IsHitFanWeiHou)
                     {
-                        float dis = Vector3.Distance(posTA, posTB);
-                        if (dis > 15f && dis < 40f)
+                        Vector3 posTA = m_FanWeiHou.transform.position;
+                        Vector3 posTB = transform.position;
+                        posTA.y = posTB.y = 0f;
+                        Vector3 vecForward = -m_FanWeiHou.transform.forward;
+                        Vector3 vecAB = posTB - posTA;
+                        vecForward.y = vecAB.y = 0f;
+                        if (Vector3.Dot(vecForward, vecAB) < 0f)
                         {
-                            //Debug.LogError("======== remove test name =============== " + m_XKDaPaoCom.name);
-                            IsHitFanWeiHou = true;
-                            m_XKDaPaoCom.OnRemoveCannon(PlayerEnum.Null, 0, 1f);
-                            return;
+                            float dis = Vector3.Distance(posTA, posTB);
+                            if (dis > 15f && dis < 40f)
+                            {
+                                //Debug.LogError("======== remove test name =============== " + m_XKDaPaoCom.name);
+                                IsHitFanWeiHou = true;
+                                m_XKDaPaoCom.OnRemoveCannon(PlayerEnum.Null, 0, 1f);
+                                return;
+                            }
                         }
                     }
                 }
@@ -100,35 +106,39 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
         if (NpcScript == null && CannonScript != null)
         {
-            if (Time.frameCount % 15 == 0 && !IsDeathNpc)
+            if (Time.time - m_LastFanWeiHouTime > 1f)
             {
-                if (m_FanWeiHou != null && !IsHitFanWeiHou)
+                m_LastFanWeiHouTime = Time.time;
+                if (!IsDeathNpc)
                 {
-                    Vector3 posTA = m_FanWeiHou.transform.position;
-                    Vector3 posTB = transform.position;
-                    posTA.y = posTB.y = 0f;
-                    Vector3 vecForward = -m_FanWeiHou.transform.forward;
-                    Vector3 vecAB = posTB - posTA;
-                    vecForward.y = vecAB.y = 0f;
-                    if (Vector3.Dot(vecForward, vecAB) < 0f)
+                    if (m_FanWeiHou != null && !IsHitFanWeiHou)
                     {
-                        if (Vector3.Distance(posTA, posTB) > 15f)
+                        Vector3 posTA = m_FanWeiHou.transform.position;
+                        Vector3 posTB = transform.position;
+                        posTA.y = posTB.y = 0f;
+                        Vector3 vecForward = -m_FanWeiHou.transform.forward;
+                        Vector3 vecAB = posTB - posTA;
+                        vecForward.y = vecAB.y = 0f;
+                        if (Vector3.Dot(vecForward, vecAB) < 0f)
                         {
-                            //Debug.LogError("remove test name =============== " + CannonScript.DaPaoCtrlScript.name
-                            //        + ", TestNumRecord == " + TestNumRecord);
-                            IsHitFanWeiHou = true;
-                            CannonScript.OnRemoveCannon(PlayerEnum.Null, 1);
-                            return;
+                            if (Vector3.Distance(posTA, posTB) > 15f)
+                            {
+                                //Debug.LogError("remove test name =============== " + CannonScript.DaPaoCtrlScript.name
+                                //        + ", TestNumRecord == " + TestNumRecord);
+                                IsHitFanWeiHou = true;
+                                CannonScript.OnRemoveCannon(PlayerEnum.Null, 1);
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
 
-		if (Time.realtimeSinceStartup - TimeLastVal < 10f) {
+		if (Time.time - TimeLastVal < 10f) {
 			return;
 		}
-		TimeLastVal = Time.realtimeSinceStartup;
+		TimeLastVal = Time.time;
 
 		if (!IsSpawnObj) {
 			return;
@@ -276,7 +286,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 NpcScript.m_CaiPiaoNpcUI = m_CaiPiaoNpcUI;
             }
         }
-	}
+        TimeLastVal = Time.time;
+    }
 
 	public bool GetIsDeathNpc()
 	{
@@ -602,7 +613,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	}
 
 	void ResetNpcHealthInfo()
-	{
+    {
+        TimeLastVal = Time.time;
         IsHitFanWeiHou = false;
         CheckNpcRigidbody();
 		XkGameCtrl.GetInstance().AddNpcTranToList(transform);

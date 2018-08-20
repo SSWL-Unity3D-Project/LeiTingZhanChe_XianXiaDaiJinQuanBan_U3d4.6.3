@@ -35,7 +35,7 @@ public class XKPlayerAutoFire : MonoBehaviour
 	 */
 	public Transform PaoTaFireTr;
 	Transform CameraTran;
-	LayerMask FireLayer;
+	internal LayerMask FireLayer;
 	/// <summary>
 	/// 主角向前发射子弹的起始点.
 	/// AmmoStartPosOne[0 - 3] -> 左前,右前,左后,右后.
@@ -139,7 +139,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	PlayerAmmoType PSAmmoTypeVal = PlayerAmmoType.Null;
 	float TimeAimPlayerPOne;
 	float TimeAimPlayerPTwo;
-	PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
+	internal PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	XKPlayerMoveCtrl PlayerMoveScript;
 	const int JI_QIANG_INDEX = 0;
 	const int ZHU_PAO_INDEX = 1;
@@ -245,7 +245,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			InputEventCtrl.GetInstance().ClickDaoDanBtFourEvent += ClickFireDaoDanBtEvent;
 			break;
 		}
-	}
+        CreatPlayerXiaoFeiJi();
+    }
 
 	void InitPlayerAmmoList()
 	{
@@ -435,19 +436,37 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			return;
 		}
 
-		if (!IsActiveFireBtJQ) {
-			return;
-		}
-
 		if (!CheckIsActivePlayer()) {
 			return;
 		}
 
-//		if (DaoJiShiCtrl.GetInstance().GetIsPlayDaoJishi()) {
-//			return;
-//		}
+        bool isSpawnAmmo = CheckIsSpawnPlayerAmmo(JI_QIANG_INDEX);
+        if (!isSpawnAmmo)
+        {
+            return;
+        }
+        LastFireTimeJiQiang = Time.time;
 
-		if (Camera.main == null) {
+        if (isSpawnAmmo == true)
+        {
+            if (IsQianHouFire == true)
+            {
+                MakeAllXiaoFeiJiFire();
+            }
+        }
+
+        if (!IsActiveFireBtJQ)
+        {
+            return;
+        }
+
+        //if (DaoJiShiCtrl.GetInstance().GetIsPlayDaoJishi())
+        //{
+        //    return;
+        //}
+
+        if (Camera.main == null)
+        {
 			return;
 		}
 
@@ -457,12 +476,6 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			}
 			return;
 		}
-
-		bool isSpawnAmmo = CheckIsSpawnPlayerAmmo(JI_QIANG_INDEX);
-		if (!isSpawnAmmo) {
-			return;
-		}
-		LastFireTimeJiQiang = Time.time;
 		CheckPlayerHouZuoLi(JiQiangAmmoSt, JI_QIANG_INDEX);
 
 		if (!IsJiQiangSanDanFire) {
@@ -470,11 +483,13 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			SpawnJiQiangAmmo(1);
 		}
 
-		if (IsQianHouFire || IsJiQiangSanDanFire) {
-			if (!IsJiQiangSanDanFire) {
-				SpawnJiQiangAmmo(2);
-				SpawnJiQiangAmmo(3);
-			}
+        SpawnJiQiangAmmo(2);
+        SpawnJiQiangAmmo(3);
+        if (IsQianHouFire || IsJiQiangSanDanFire) {
+			//if (!IsJiQiangSanDanFire) {
+			//	SpawnJiQiangAmmo(2);
+			//	SpawnJiQiangAmmo(3);
+			//}
 
 			if (IsJiQiangSanDanFire) {
 				int max = AmmoStartPosOne.Length;
@@ -487,7 +502,30 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		}
 	}
 
-	bool IsQianHouFire = false;
+    bool _IsQianHouFire = false;
+    /// <summary>
+    /// 前后发射子弹道具.
+    /// 改装为添加2个小飞机给玩家坦克.
+    /// </summary>
+	bool IsQianHouFire
+    {
+        set
+        {
+            _IsQianHouFire = value;
+            if (_IsQianHouFire == true)
+            {
+                ShowAllXiaoFeiJi();
+            }
+            else
+            {
+                HiddenAllXiaoFeiJi();
+            }
+        }
+        get
+        {
+            return _IsQianHouFire;
+        }
+    }
 	public void SetIsQianHouFire(bool isFire)
 	{
 		if (IsQianHouFire == isFire) {
@@ -1517,4 +1555,94 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			}
 		}
 	}
+
+    public void ResetInfo()
+    {
+        IsHuoLiAllOpen = false;
+        IsPaiJiPaoFire = false;
+        IsQiangJiFire = false;
+        IsQianHouFire = false;
+        IsSanDanZPFire = false;
+    }
+
+    public Transform[] m_XiaoFeiJiFollowPoints = new Transform[2];
+    /// <summary>
+    /// 玩家小飞机数据列表.
+    /// </summary>
+    List<SSPlayerXiaoFeiJi> m_PlayerXiaoFeiJiList = new List<SSPlayerXiaoFeiJi>();
+    /// <summary>
+    /// 创建玩家小飞机.
+    /// </summary>
+    void CreatPlayerXiaoFeiJi()
+    {
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/Player/PlayerXiaoFeiJi");
+        if (gmDataPrefab != null)
+        {
+            GameObject obj = null;
+            SSPlayerXiaoFeiJi xiaoFeiJi = null;
+            int length = m_XiaoFeiJiFollowPoints.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (m_XiaoFeiJiFollowPoints[i] != null)
+                {
+                    obj = (GameObject)Instantiate(gmDataPrefab);
+                    xiaoFeiJi = obj.GetComponent<SSPlayerXiaoFeiJi>();
+                    if (xiaoFeiJi != null)
+                    {
+                        xiaoFeiJi.Init(this, m_XiaoFeiJiFollowPoints[i]);
+                        m_PlayerXiaoFeiJiList.Add(xiaoFeiJi);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Unity: CreatPlayerXiaoFeiJi -> xiaoFeiJi was null");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示所有小飞机.
+    /// </summary>
+    void ShowAllXiaoFeiJi()
+    {
+        int length = m_PlayerXiaoFeiJiList.Count;
+        for (int i = 0; i < length; i++)
+        {
+            if (m_PlayerXiaoFeiJiList[i] != null)
+            {
+                m_PlayerXiaoFeiJiList[i].ShowSelf();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 隐藏所有小飞机.
+    /// </summary>
+    void HiddenAllXiaoFeiJi()
+    {
+        int length = m_PlayerXiaoFeiJiList.Count;
+        for (int i = 0; i < length; i++)
+        {
+            if (m_PlayerXiaoFeiJiList[i] != null)
+            {
+                m_PlayerXiaoFeiJiList[i].HiddenSelf();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有小飞机发射子弹.
+    /// </summary>
+    void MakeAllXiaoFeiJiFire()
+    {
+        int length = m_PlayerXiaoFeiJiList.Count;
+        for (int i = 0; i < length; i++)
+        {
+            if (m_PlayerXiaoFeiJiList[i] != null)
+            {
+                m_PlayerXiaoFeiJiList[i].CreatFeiJiAmmo();
+            }
+        }
+    }
 }

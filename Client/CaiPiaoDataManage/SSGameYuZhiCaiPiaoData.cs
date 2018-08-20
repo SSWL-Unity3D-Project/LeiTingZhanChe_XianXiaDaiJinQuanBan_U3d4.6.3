@@ -120,7 +120,7 @@ public class SSGameYuZhiCaiPiaoData
     /// <summary>
     /// 战车彩票每次取出的比例.
     /// </summary>
-    float ZhanCheQuChuBiLi = 0.1f;
+    float ZhanCheQuChuBiLi = 0.03f;
     int _ZhanCheCaiPiaoVal = 0;
     /// <summary>
     /// 战车彩票数量.

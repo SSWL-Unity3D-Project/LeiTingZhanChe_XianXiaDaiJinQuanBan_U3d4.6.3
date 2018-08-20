@@ -9,6 +9,9 @@ public class SSNpcPiaoFenMove : MonoBehaviour
     public UISprite[] FenShuSprite;
     [Range(0.1f, 10f)]
     public float PiaoFenTime = 0.5f;
+    [Range(0.1f, 10f)]
+    public float XuHuaTime = 0.5f;
+    UISprite m_SpriteUI;
     //	[Range(0, 999999)]public int FenShuTest = 123456;
     // Update is called once per frame
     //	void Update()
@@ -38,7 +41,11 @@ public class SSNpcPiaoFenMove : MonoBehaviour
             powVal = (int)Mathf.Pow(10, max - i - 1);
             valTmp = numVal / powVal;
             FenShuSprite[i].enabled = true;
-            FenShuSprite[i].atlas = fenShuAtlas;
+            if (fenShuAtlas != null)
+            {
+                FenShuSprite[i].atlas = fenShuAtlas;
+            }
+
             if (!isShowZero)
             {
                 if (valTmp != 0)
@@ -54,6 +61,16 @@ public class SSNpcPiaoFenMove : MonoBehaviour
             numVal -= valTmp * powVal;
         }
 
+        if (m_SpriteUI == null)
+        {
+            m_SpriteUI = gameObject.GetComponent<UISprite>();
+        }
+
+        if (m_SpriteUI != null)
+        {
+            m_SpriteUI.alpha = 1f;
+        }
+
         transform.localPosition = startPos;
         transform.localEulerAngles = Vector3.zero;
         transform.localScale = new Vector3(1f, 1f, 1f);
@@ -63,11 +80,17 @@ public class SSNpcPiaoFenMove : MonoBehaviour
         twPos.to = startPos + new Vector3(0f, 50f, 0f);
         twPos.duration = PiaoFenTime;
         twPos.PlayForward();
+        EventDelegate.Add(twPos.onFinished, delegate {
+            StartXuHuaUI();
+        });
+    }
 
+    void StartXuHuaUI()
+    {
         TweenAlpha twAlp = gameObject.AddComponent<TweenAlpha>();
         twAlp.from = 1f;
         twAlp.to = 0f;
-        twAlp.duration = PiaoFenTime;
+        twAlp.duration = XuHuaTime;
         twAlp.PlayForward();
 
         EventDelegate.Add(twAlp.onFinished, delegate {
@@ -78,9 +101,16 @@ public class SSNpcPiaoFenMove : MonoBehaviour
     void HiddenFenShu()
     {
         TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
-        DestroyObject(twPos);
+        if (twPos != null)
+        {
+            DestroyObject(twPos);
+        }
+
         TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
-        DestroyObject(twAlp);
+        if (twAlp != null)
+        {
+            DestroyObject(twAlp);
+        }
         gameObject.SetActive(false);
     }
 }

@@ -52,6 +52,7 @@ public class SSCaiPiaoBossMove : MonoBehaviour
         m_MoveDir = 1f;
         IsMoveNpc = true;
         IsHitCenterTrigger = true;
+        m_CountHitFanWeiTrigger = 0;
         //停止镜头移动.
         XkGameCtrl.GetInstance().SetGameCameraIsMoveing(false, NpcJiFenEnum.Boss);
     }
@@ -133,8 +134,34 @@ public class SSCaiPiaoBossMove : MonoBehaviour
     /// </summary>
     void ChangeMoveDirection()
     {
+        if (IsMoveNpc == false)
+        {
+            return;
+        }
+
         m_CountHitFanWeiTrigger++;
-        if (m_CountHitFanWeiTrigger >= XkGameCtrl.GetInstance().m_MaxHitBossMoveTrigger)
+        int max = 2;
+        if (m_NpcMoveCom != null)
+        {
+            switch (m_NpcMoveCom.m_TriggerDir)
+            {
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Qian:
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Hou:
+                    {
+                        max = XkGameCtrl.GetInstance().m_MaxHitQHBossMoveTrigger;
+                        break;
+                    }
+
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Zuo:
+                case SSTriggerCaiPiaoBossMove.TriggerDir.You:
+                    {
+                        max = XkGameCtrl.GetInstance().m_MaxHitBossMoveTrigger;
+                        break;
+                    }
+            }
+        }
+
+        if (m_CountHitFanWeiTrigger >= max)
         {
             //彩票boss的特殊移动逻辑结束.
             CloseMove();

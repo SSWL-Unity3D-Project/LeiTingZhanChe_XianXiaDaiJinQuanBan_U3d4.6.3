@@ -38,4 +38,17 @@ public class SSNpcDateManage : MonoBehaviour
     {
         return NpcList.Count > 0 ? true : false;
     }
+
+    /// <summary>
+    /// 通过索引获取npc.
+    /// </summary>
+    public GameObject GetNpcByIndex(int index)
+    {
+        GameObject obj = null;
+        if (NpcList.Count > index)
+        {
+            obj = NpcList[index];
+        }
+        return obj;
+    }
 }

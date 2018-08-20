@@ -656,6 +656,28 @@ public class SpawnNpcManage : MonoBehaviour
     }
 #endif
 
+    public GameObject GetCaiPiaoNpc()
+    {
+        GameObject npc = m_ZhanCheJPBossData.ZhanCheData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+
+        npc = m_ZhanCheJPBossData.JPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+
+        npc = m_ZhanCheJPBossData.SuperJPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+        return null;
+    }
+
     public void ResetCreatNpcInfo(NpcState type)
     {
         Debug.Log("ResetCreatNpcInfo -> type =================== " + type);
@@ -960,5 +982,87 @@ public class SpawnNpcManage : MonoBehaviour
             Debug.LogWarning("Unity: npcPrefab was null! rv ============ " + rv + ", type == " + type);
         }
         return npcPrefab;
+    }
+    
+    /// <summary>
+    /// 使对象坐标贴地.
+    /// </summary>
+    void MakePintToLand(Transform tr)
+    {
+        if (tr != null)
+        {
+            RaycastHit hitInfo;
+            Vector3 startPos = tr.position + Vector3.up * 20f;
+            Vector3 forwardVal = Vector3.down;
+            Physics.Raycast(startPos, forwardVal, out hitInfo, 200f, XkGameCtrl.GetInstance().LandLayer);
+            if (hitInfo.collider != null)
+            {
+                tr.position = hitInfo.point + Vector3.up * 5f;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有路径点贴地.
+    /// </summary>
+    void MakePathNodeToLand(Transform tr)
+    {
+        if (tr != null)
+        {
+            int max = tr.childCount;
+            for (int i = 0; i < max; i++)
+            {
+                MakePintToLand(tr.GetChild(i));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使产生点贴地.
+    /// </summary>
+    void MakeSpawnPointToLand(SSCreatNpcData dt)
+    {
+        if (dt != null)
+        {
+            MakePintToLand(dt.transform);
+            int length = dt.m_NpcPathGp.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (dt.m_NpcPathGp[i] != null)
+                {
+                    MakePathNodeToLand(dt.m_NpcPathGp[i].transform);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有产生点贴地.
+    /// </summary>
+    void MakeAllSpawnPonitsToLand(SSCreatNpcData[] spawnPoints)
+    {
+        int length = spawnPoints.Length;
+        for (int i = 0; i < length; i++)
+        {
+            if (spawnPoints[i] != null)
+            {
+                MakeSpawnPointToLand(spawnPoints[i]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有创建彩票战车或boss的产生点和路径点贴地.
+    /// </summary>
+    public void MakeAllCreatNpcPointsToLand()
+    {
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_DownSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_UpSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_LeftSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_RightSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.DownSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.UpSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.LeftSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.RightSpawnPointGp);
     }
 }

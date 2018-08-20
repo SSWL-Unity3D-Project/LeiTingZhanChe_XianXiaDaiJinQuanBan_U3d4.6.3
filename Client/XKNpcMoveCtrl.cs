@@ -146,7 +146,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		//XkGameCtrl.GetInstance().AddNpcTranToList(NpcTran);
 		MakeLandNpcMoveToLand();
 		Invoke("DelayChangeNpcParent", 0.2f);
-	}
+    }
 
 	void DelayChangeNpcParent()
 	{
@@ -724,6 +724,15 @@ public class XKNpcMoveCtrl : MonoBehaviour
         {
             //彩票战车或boss设置为车辆运动.
             IsCheLiangMoveType = true;
+        }
+
+        if (RealNpcTran != null)
+        {
+            XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
+            if (healthScript != null)
+            {
+                healthScript.SetNpcMoveScript(this);
+            }
         }
     }
     
@@ -1336,7 +1345,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     public void TriggerRemovePointNpc(int key, XKCannonCtrl cannonScriptVal = null,
 	                                  PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
 	{
-        Debug.LogWarning("Unity: TriggerRemovePointNpc -> ************* key == " + key + ", npcName == " + gameObject.name);
+        //Debug.LogWarning("Unity: TriggerRemovePointNpc -> ************* key == " + key + ", npcName == " + gameObject.name);
 		if (IsDeathNPC)
         {
 			return;

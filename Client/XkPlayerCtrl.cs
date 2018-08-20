@@ -125,21 +125,20 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			InstanceCartoon = this;
 			break;
 		}
-
-		if (PlayerSt != PlayerTypeEnum.CartoonCamera) {
+        if (PlayerSt != PlayerTypeEnum.CartoonCamera) {
 			XkGameCtrl.GetInstance().ChangeAudioListParent();
 		}
 		PlayerObj = gameObject;
 		PlayerTran = transform;
 		AimSpawnPoint = new List<XKSpawnNpcPoint>();
-//		NetViewCom = GetComponent<NetworkView>();
-//		if ((XkGameCtrl.GameModeVal == GameMode.LianJi && Network.peerType == NetworkPeerType.Disconnected)
-//		    || XkGameCtrl.GameModeVal != GameMode.LianJi) {
-//			NetViewCom.enabled = false;
-//		}
-	}
 
-	void DelaySetFeiJiNpcInfo()
+        if (m_SpawnNpcManage != null)
+        {
+            m_SpawnNpcManage.gameObject.SetActive(true);
+        }
+    }
+
+    void DelaySetFeiJiNpcInfo()
 	{
 		if (PlayerSt != PlayerTypeEnum.FeiJi) {
 			return;
@@ -226,8 +225,8 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 //		else {
 //			UpdatePlayerTransform();
 //		}
-
-		SmothMovePlayerCamera();
+        UpdateCameraWeiDongPos();
+        SmothMovePlayerCamera();
 		CheckIsDelayMovePlayer();
 //		if (PlayerSt == PlayerTypeEnum.FeiJi
 //		         || PlayerSt == PlayerTypeEnum.CartoonCamera) {
@@ -555,6 +554,14 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		if (!IsStartMovePlayerByMark) {
 			StartCoroutine(MovePlayerByMarkSpeed());
 			IsStartMovePlayerByMark = true;
+
+            if (PlayerSt == PlayerTypeEnum.FeiJi)
+            {
+                if (m_SpawnNpcManage != null)
+                {
+                    m_SpawnNpcManage.MakeAllCreatNpcPointsToLand();
+                }
+            }
 		}
 	}
 
@@ -1110,11 +1117,39 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
     {
         if (m_CameraMoveAni != null)
         {
+            //Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
+            m_CameraWeiDongPos = m_CameraMoveAni.transform.position;
+            IsCameraPosWeiDong = isMove;
             m_CameraMoveAni.SetBool("IsMove", isMove);
         }
         else
         {
             Debug.LogWarning("SetCameraMoveAni -> m_CameraMoveAni was null...............");
         }
+    }
+
+    /// <summary>
+    /// 摄像机位置微动.
+    /// </summary>
+    bool IsCameraPosWeiDong = false;
+    Vector3 m_CameraWeiDongPos;
+    /// <summary>
+    /// 更新镜头微动坐标.
+    /// </summary>
+    void UpdateCameraWeiDongPos()
+    {
+        if (m_CameraMoveAni == null)
+        {
+            return;
+        }
+
+        if (IsCameraPosWeiDong == false)
+        {
+            return;
+        }
+
+        Vector3 forwardVal = transform.forward;
+        forwardVal.y = 0f;
+        transform.position = m_CameraWeiDongPos + forwardVal * m_CameraMoveAni.transform.localPosition.z;
     }
 }

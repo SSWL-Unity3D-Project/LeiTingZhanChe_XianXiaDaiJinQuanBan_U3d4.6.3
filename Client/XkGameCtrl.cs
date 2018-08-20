@@ -35,9 +35,13 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     internal SSPlayerJiChuCaiPiaoData m_PlayerJiChuCaiPiaoData;
     /// <summary>
-    /// 彩票boss最大碰撞方向触发器次数.
+    /// 左右产生的彩票boss最大碰撞方向触发器次数.
     /// </summary>
     public int m_MaxHitBossMoveTrigger = 5;
+    /// <summary>
+    /// 前后产生的彩票boss最大碰撞方向触发器次数.
+    /// </summary>
+    public int m_MaxHitQHBossMoveTrigger = 5;
     /// <summary>
     /// 击杀彩票战车或boss时,是否忽略玩家索引.
     /// </summary>
@@ -302,8 +306,7 @@ public class XkGameCtrl : SSGameMono
             {
                 m_PlayerJiChuCaiPiaoData = gameObject.AddComponent<SSPlayerJiChuCaiPiaoData>();
             }
-
-            //pcvr.OpenDongGanState();
+            
             //pcvr.OpenAllPlayerFangXiangPanPower();
             switch (XKGlobalData.GameDiff)
 			{
@@ -2967,7 +2970,7 @@ public class XkGameCtrl : SSGameMono
             //打开或关闭镜头移动的动画.
             if (XkPlayerCtrl.GetInstanceFeiJi() != null)
             {
-                XkPlayerCtrl.GetInstanceFeiJi().SetCameraMoveAni(isMoveing);
+                XkPlayerCtrl.GetInstanceFeiJi().SetCameraMoveAni(!isMoveing);
             }
         }
     }

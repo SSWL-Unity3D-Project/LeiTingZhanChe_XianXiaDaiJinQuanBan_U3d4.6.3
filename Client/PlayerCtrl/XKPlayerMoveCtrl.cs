@@ -1114,6 +1114,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 		}
 		gameObject.SetActive(false);
 		IsDeathPlayer = true;
+        
+        if (FireScript)
+        {
+            FireScript.ResetInfo();
+        }
 
 		ResetIsWuDiState();
 		if (DeathExplodPrefab != null && key == 0) {
