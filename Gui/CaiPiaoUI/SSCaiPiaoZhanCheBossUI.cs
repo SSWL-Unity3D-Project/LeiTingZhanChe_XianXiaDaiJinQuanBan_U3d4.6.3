@@ -65,7 +65,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     IEnumerator DelayShowCaiPiaoInfo()
     {
         yield return new WaitForSeconds(m_TimePlay);
-        m_Animator.enabled = false;
+        if (m_Animator != null)
+        {
+            m_Animator.enabled = false;
+        }
         OnEndAnimation();
     }
 
