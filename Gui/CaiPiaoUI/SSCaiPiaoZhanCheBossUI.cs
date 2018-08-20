@@ -5,7 +5,7 @@ using UnityEngine;
 /// 战车Boss彩票转盘UI.
 /// 该对象必须挂上DestroyThisTimed.
 /// </summary>
-[RequireComponent(typeof(DestroyThisTimed))]
+//[RequireComponent(typeof(DestroyThisTimed))]
 public class SSCaiPiaoZhanCheBossUI : SSGameMono
 {
     [System.Serializable]
@@ -83,12 +83,13 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// </summary>
     void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos)
     {
+		//Debug.LogWarning("Unity: ShowCaiPiaoZhanCheBossFlyCaiPiao -> deCaiType ========= " + deCaiType);
         if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
         {
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
             {
                 //初始化飞出的彩票逻辑.
-                XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(transform.position, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+				XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(startPos, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
             }
             else
             {
@@ -112,6 +113,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
                 Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
             }
         }
+		Destroy(gameObject);
     }
 
     /// <summary>
