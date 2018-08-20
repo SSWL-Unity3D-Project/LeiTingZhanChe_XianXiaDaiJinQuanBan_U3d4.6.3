@@ -7,7 +7,7 @@ public class SSTriggerCamerBox : MonoBehaviour
         XKNpcMoveCtrl npcMoveCom = other.gameObject.GetComponent<XKNpcMoveCtrl>();
         if (npcMoveCom != null && npcMoveCom.IsCaiPiaoZhanChe)
         {
-            //Debug.Log("SSTriggerCamerBox******************name === " + npcMoveCom.name);
+            //Debug.Log("Unity: SSTriggerCamerBox******************name === " + npcMoveCom.name);
             if (npcMoveCom.GetIsBossNpc() == true)
             {
                 //Boss走出镜头范围.
@@ -17,11 +17,17 @@ public class SSTriggerCamerBox : MonoBehaviour
                     XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Default);
                 }
                 npcMoveCom.TriggerRemovePointNpc(0);
+                //boss删除后切换背景音效.
+                AudioBeiJingCtrl.StopGameBeiJingAudio();
+                //镜头继续移动.
+                XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.Boss);
             }
             else
             {
                 //彩票战车npc走出镜头范围.
                 npcMoveCom.TriggerRemovePointNpc(0);
+                //镜头继续移动.
+                XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.CheLiang);
             }
         }
     }

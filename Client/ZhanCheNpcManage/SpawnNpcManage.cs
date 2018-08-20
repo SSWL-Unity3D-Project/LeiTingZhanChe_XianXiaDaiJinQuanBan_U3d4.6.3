@@ -380,8 +380,8 @@ public class SpawnNpcManage : MonoBehaviour
             type = ZhanCheRulerData.ZhanCheJiBaoState.State4;
         }
 
-        Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> " + coinDt[0].XuBiVal + ", " + coinDt[1].XuBiVal + ", " + coinDt[2].XuBiVal
-            + ", type ====== " + type);
+        //Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> " + coinDt[0].XuBiVal + ", " + coinDt[1].XuBiVal + ", " + coinDt[2].XuBiVal
+        //    + ", type ====== " + type);
         ZhanCheRulerData.ZhanCheJiBaoRuler ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
         float rv = Random.Range(0f, 100f) / 100f;
         if (rv < ruler.MaxJiBaoGaiLv)
@@ -396,7 +396,7 @@ public class SpawnNpcManage : MonoBehaviour
         {
             index = coinDt[2].IndexPlayer;
         }
-        Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> index ============= " + index);
+        //Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> index ============= " + index);
         return index;
     }
 
@@ -656,9 +656,53 @@ public class SpawnNpcManage : MonoBehaviour
     }
 #endif
 
+    /// <summary>
+    /// 获取是否有彩票boss.
+    /// </summary>
+    public bool GetIsHaveCaiPiaoBoss()
+    {
+        GameObject npc = m_ZhanCheJPBossData.JPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return true;
+        }
+
+        npc = m_ZhanCheJPBossData.SuperJPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 获取彩票战车或boss.
+    /// </summary>
+    public GameObject GetCaiPiaoNpc()
+    {
+        GameObject npc = m_ZhanCheJPBossData.ZhanCheData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+
+        npc = m_ZhanCheJPBossData.JPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+
+        npc = m_ZhanCheJPBossData.SuperJPBossData.GetNpcByIndex(0);
+        if (npc != null)
+        {
+            return npc;
+        }
+        return null;
+    }
+
     public void ResetCreatNpcInfo(NpcState type)
     {
-        Debug.Log("ResetCreatNpcInfo -> type =================== " + type);
+        //Debug.Log("ResetCreatNpcInfo -> type =================== " + type);
         switch (type)
         {
             case NpcState.ZhanChe:
@@ -701,6 +745,7 @@ public class SpawnNpcManage : MonoBehaviour
             GameObject obj = data.CreatPointNpc();
             if (obj != null)
             {
+                XKNpcMoveCtrl npcMove = null;
                 switch (npcType)
                 {
                     case NpcState.ZhanChe:
@@ -722,6 +767,34 @@ public class SpawnNpcManage : MonoBehaviour
                             }
                             m_ZhanCheJPBossData.JPBossData.AddNpcToList(obj);
 
+                            npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                            if (npcMove != null)
+                            {
+                                switch(pointState)
+                                {
+                                    case SpawnPointState.Up:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
+                                            break;
+                                        }
+                                    case SpawnPointState.Down:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
+                                            break;
+                                        }
+                                    case SpawnPointState.Left:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
+                                            break;
+                                        }
+                                    case SpawnPointState.Right:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
+                                            break;
+                                        }
+                                }
+                            }
+
                             if (XKBossLXCtrl.GetInstance() != null)
                             {
                                 //播放boss来袭UI.
@@ -738,6 +811,42 @@ public class SpawnNpcManage : MonoBehaviour
                                 XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Boss);
                             }
                             m_ZhanCheJPBossData.SuperJPBossData.AddNpcToList(obj);
+
+
+                            npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                            if (npcMove != null)
+                            {
+                                switch (pointState)
+                                {
+                                    case SpawnPointState.Up:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
+                                            break;
+                                        }
+                                    case SpawnPointState.Down:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
+                                            break;
+                                        }
+                                    case SpawnPointState.Left:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
+                                            break;
+                                        }
+                                    case SpawnPointState.Right:
+                                        {
+                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
+                                            break;
+                                        }
+                                }
+                            }
+
+                            if (XKBossLXCtrl.GetInstance() != null)
+                            {
+                                //播放boss来袭UI.
+                                XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                                AudioBeiJingCtrl.StopGameBeiJingAudio();
+                            }
                             break;
                         }
                 }
@@ -895,5 +1004,87 @@ public class SpawnNpcManage : MonoBehaviour
             Debug.LogWarning("Unity: npcPrefab was null! rv ============ " + rv + ", type == " + type);
         }
         return npcPrefab;
+    }
+    
+    /// <summary>
+    /// 使对象坐标贴地.
+    /// </summary>
+    void MakePintToLand(Transform tr)
+    {
+        if (tr != null)
+        {
+            RaycastHit hitInfo;
+            Vector3 startPos = tr.position + Vector3.up * 20f;
+            Vector3 forwardVal = Vector3.down;
+            Physics.Raycast(startPos, forwardVal, out hitInfo, 200f, XkGameCtrl.GetInstance().LandLayer);
+            if (hitInfo.collider != null)
+            {
+                tr.position = hitInfo.point + Vector3.up * 5f;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有路径点贴地.
+    /// </summary>
+    void MakePathNodeToLand(Transform tr)
+    {
+        if (tr != null)
+        {
+            int max = tr.childCount;
+            for (int i = 0; i < max; i++)
+            {
+                MakePintToLand(tr.GetChild(i));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使产生点贴地.
+    /// </summary>
+    void MakeSpawnPointToLand(SSCreatNpcData dt)
+    {
+        if (dt != null)
+        {
+            MakePintToLand(dt.transform);
+            int length = dt.m_NpcPathGp.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (dt.m_NpcPathGp[i] != null)
+                {
+                    MakePathNodeToLand(dt.m_NpcPathGp[i].transform);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有产生点贴地.
+    /// </summary>
+    void MakeAllSpawnPonitsToLand(SSCreatNpcData[] spawnPoints)
+    {
+        int length = spawnPoints.Length;
+        for (int i = 0; i < length; i++)
+        {
+            if (spawnPoints[i] != null)
+            {
+                MakeSpawnPointToLand(spawnPoints[i]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使所有创建彩票战车或boss的产生点和路径点贴地.
+    /// </summary>
+    public void MakeAllCreatNpcPointsToLand()
+    {
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_DownSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_UpSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_LeftSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.Boss_RightSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.DownSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.UpSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.LeftSpawnPointGp);
+        MakeAllSpawnPonitsToLand(m_NpcData.RightSpawnPointGp);
     }
 }

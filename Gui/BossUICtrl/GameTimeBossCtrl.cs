@@ -22,7 +22,7 @@ public class GameTimeBossCtrl : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update()
+	void TmpUpdate()
 	{
 //		if (Input.GetKeyUp(KeyCode.P)) {
 //			ActiveIsCheckTimeSprite(740); //test
@@ -46,8 +46,9 @@ public class GameTimeBossCtrl : MonoBehaviour
 		/*Debug.Log("Unity:"+"TimeBossUse *** "+TimeBossUse
 		          +", TimeBossVal *** "+TimeBossVal);*/
 		timeVal = timeVal < 0 ? 0 : timeVal;
-		//Debug.Log("Unity:"+"GetTimeBossResidual -> timeVal "+timeVal);
-		return timeVal;
+        //Debug.Log("Unity:"+"GetTimeBossResidual -> timeVal "+timeVal);
+        //return timeVal;
+        return 1;
 	}
 
 	public void ActiveIsCheckTimeSprite(int miaoShuVal = 180)

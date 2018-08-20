@@ -82,7 +82,7 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 
 	public void HiddenBossXueTiao()
 	{
-		BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(false);
+		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(false);
 		gameObject.SetActive(false);
 		GameTimeBossCtrl.GetInstance().HiddenGameTime();
 	}
@@ -94,7 +94,7 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 		IsCanSubXueTiaoAmount = false;
 		BossXueTiaoHongSprite.fillAmount = 0f;
 		BossXueTiaoSprite.fillAmount = 0f;
-		BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
+		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		XKTriggerStopMovePlayer.IsActiveTrigger = true;
 		GameTimeCtrl.GetInstance().HiddenGameTime();
 		//BossXueTiaoSprite.fillAmount = 1f;

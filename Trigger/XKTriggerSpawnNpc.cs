@@ -63,6 +63,10 @@ public class XKTriggerSpawnNpc : MonoBehaviour
 		XkGameCtrl.GetInstance().ChangeBoxColliderSize(transform);
 	}
 
+    /// <summary>
+    /// 碰上触发器的时间记录信息.
+    /// </summary>
+    float m_LastTriggerTime = -1000f;
 	public string TestNpcName;
 	void OnTriggerEnter(Collider other)
 	{
@@ -83,8 +87,15 @@ public class XKTriggerSpawnNpc : MonoBehaviour
 			return;
 		}
 
-		//Debug.Log("Unity:"+"XKTriggerSpawnNpc::OnTriggerEnter -> hit "+other.name);
-		for (int i = 0; i < SpawnPointArray.Length; i++) {
+        if (Time.time - m_LastTriggerTime < 60f)
+        {
+            //冷却时间.
+            return;
+        }
+        m_LastTriggerTime = Time.time;
+
+        //Debug.Log("Unity:"+"XKTriggerSpawnNpc::OnTriggerEnter -> hit "+other.name);
+        for (int i = 0; i < SpawnPointArray.Length; i++) {
 //			if (SpawnPointArray[i].NpcObj.name != TestNpcName || SpawnPointArray[i].NpcFangZhen != null) {
 //					continue; //test
 //			}

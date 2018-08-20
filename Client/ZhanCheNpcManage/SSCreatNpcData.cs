@@ -14,6 +14,10 @@ public class SSCreatNpcData : MonoBehaviour
     void Start()
     {
         m_SpawnPoint = gameObject.GetComponent<XKSpawnNpcPoint>();
+        if (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+        }
     }
 
     /// <summary>

@@ -63,7 +63,7 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     public void AddYuZhiCaiPiao(int val)
     {
-        UnityEngine.Debug.Log("Unity: AddYuZhiCaiPiao -> val ================ " + val);
+        //UnityEngine.Debug.Log("Unity: AddYuZhiCaiPiao -> val ================ " + val);
 
         int zhanCheCaiPiaoAdd = (int)(val * ZhanCheCaiPiaoBiLi);
         int jpBossCaiPiaoAdd = (int)(val * JPBossCaiPiaoBiLi);
@@ -120,7 +120,7 @@ public class SSGameYuZhiCaiPiaoData
     /// <summary>
     /// 战车彩票每次取出的比例.
     /// </summary>
-    float ZhanCheQuChuBiLi = 0.1f;
+    float ZhanCheQuChuBiLi = 0.03f;
     int _ZhanCheCaiPiaoVal = 0;
     /// <summary>
     /// 战车彩票数量.

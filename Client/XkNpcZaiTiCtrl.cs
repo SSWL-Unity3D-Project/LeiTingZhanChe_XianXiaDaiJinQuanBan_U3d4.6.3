@@ -256,6 +256,21 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 			return;
 		}
 
+        if (XkGameCtrl.GetInstance().IsCreatAmmoOnBoss == false)
+        {
+            if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveCaiPiaoBoss() == true)
+            {
+                if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe == true)
+                {
+                }
+                else
+                {
+                    //有彩票boss产生,不再继续发射子弹.
+                    return;
+                }
+            }
+        }
+
 		GameObject obj = null;
 		Transform tran = null;
 		for (int i = 0; i < TimeTeShuFire.Length; i++) {

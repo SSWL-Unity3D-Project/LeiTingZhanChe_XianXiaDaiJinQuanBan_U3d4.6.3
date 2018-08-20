@@ -6,6 +6,10 @@ using UnityStandardAssets.Utility;
 public class XKNpcMoveCtrl : MonoBehaviour
 {
     /// <summary>
+    /// 彩票boss的产生方位信息.
+    /// </summary>
+    internal SSTriggerCaiPiaoBossMove.TriggerDir m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Center;
+    /// <summary>
     /// 可以被哪个玩家击爆.
     /// </summary>
     public PlayerEnum m_IndexPlayerJiBao;
@@ -57,7 +61,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	GameObject NpcObj;
 	Transform NpcTran;
 	Transform NpcPathTran;
-	float MvSpeed;
+	internal float MvSpeed;
 	int MarkCount;
 	string CurrentRunAnimation;
 	bool IsDeathNPC;
@@ -85,6 +89,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	Transform MarkTranAim;
 	Vector3 MarkTranAimForward;
 	[Range(0.001f, 1f)]public float CheLiangRotSpeed = 0.5f;
+    /// <summary>
+    /// boss碰上中心停止镜头触发器后的特殊运动速度.
+    /// </summary>
+    public float m_BossTeShuMoveSpeed = 1f;
 	NpcPathCtrl NpcPathScript;
 //	int IndexNpc;
 	int IndexFirePointGroup;
@@ -138,7 +146,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		//XkGameCtrl.GetInstance().AddNpcTranToList(NpcTran);
 		MakeLandNpcMoveToLand();
 		Invoke("DelayChangeNpcParent", 0.2f);
-	}
+    }
 
 	void DelayChangeNpcParent()
 	{
@@ -717,6 +725,15 @@ public class XKNpcMoveCtrl : MonoBehaviour
             //彩票战车或boss设置为车辆运动.
             IsCheLiangMoveType = true;
         }
+
+        if (RealNpcTran != null)
+        {
+            XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
+            if (healthScript != null)
+            {
+                healthScript.SetNpcMoveScript(this);
+            }
+        }
     }
     
     public void MoveNpcByItween()
@@ -830,6 +847,13 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
+        if (m_CaiPiaoBossMoveCom != null
+            && m_CaiPiaoBossMoveCom.IsMoveNpc == true)
+        {
+            //彩票boss正在进行特殊移动.
+            return;
+        }
+
         Vector3 posA = NpcObj.transform.position;
         Vector3 posB = MarkNpcMovePos;
         if (IsCaiPiaoZhanChe)
@@ -850,15 +874,41 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		//Debug.Log("Unity:"+"CheckMoveNpcOnCompelteITween -> npc has moved to markPoint. npcName ==== " + gameObject.name);
 		IsMoveToMarkPoint = true;
 
-		if (NpcState == NpcType.FlyNpc) {
-			if (MarkCount >= NpcPathTran.childCount) {
+
+        if (IsCaiPiaoZhanChe == true)
+        {
+            if (IsBossNpc == false)
+            {
+                //Debug.Log("Unity:"+ "CheckMoveNpcOnCompelteITween -> MarkCount ==== " + MarkCount
+                //    + ", NpcPathTran.childCount ======== " + NpcPathTran.childCount
+                //    + ", npcName ====== " + gameObject.name);
+                //彩票战车
+                if (MarkCount == 2)
+                {
+                    //战车npc走到路径第2个点时停止镜头移动.
+                    XkGameCtrl.GetInstance().SetGameCameraIsMoveing(false, NpcJiFenEnum.CheLiang);
+                }
+
+                if (MarkCount == NpcPathTran.childCount - 1)
+                {
+                    //战车npc走到路径倒数第2个点时打开镜头移动.
+                    XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.CheLiang);
+                }
+            }
+        }
+
+        if (NpcState == NpcType.FlyNpc)
+        {
+			if (MarkCount >= NpcPathTran.childCount)
+            {
 				return;
 			}
-//			Debug.Log("Unity:"+"MarkCount***"+MarkCount);
+			//Debug.Log("Unity:"+"MarkCount***"+MarkCount);
 
 			//MarkTranAim = NpcPathTran.GetChild(MarkCount);
 			NpcMark markScript = NpcPathTran.GetChild(MarkCount).GetComponent<NpcMark>();
-			if (markScript != null) {
+			if (markScript != null)
+            {
 				SetIsDoFireAnimation(markScript.IsFireFeiJiNpc);
 			}
 			//MarkNpcMove = MarkTranAim;
@@ -867,6 +917,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			IsMoveToMarkPoint = false;
 			return;
 		}
+
 		MoveNpcOnCompelteITween();
 	}
 
@@ -1171,17 +1222,24 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			
 			Transform markTran = NpcPathTran.GetChild(MarkCount - 1);
 			markScript = markTran.GetComponent<NpcMark>();
-			MvSpeed = markScript.MvSpeed;
-			IsWuDi = markScript.IsWuDi;
-			if (!IsDoFireAnimation) {
-				PlayNpcAnimation(markScript.AniName);
-			}
-			
-			if (markScript.IsDoFireAction) {
-				MarkScriptVal = markScript;
-				MakeNpcDoFireAnimation();
-				return;
-			}
+            if (IsCaiPiaoZhanChe == false)
+            {
+                //普通npc获取路径点上的速度.
+                MvSpeed = markScript.MvSpeed;
+			    IsWuDi = markScript.IsWuDi;
+
+                if (!IsDoFireAnimation)
+                {
+                    PlayNpcAnimation(markScript.AniName);
+                }
+
+                if (markScript.IsDoFireAction)
+                {
+                    MarkScriptVal = markScript;
+                    MakeNpcDoFireAnimation();
+                    return;
+                }
+            }
 		}
 		else {
 			Transform markTran = NpcPathTran.GetChild(MarkCount - 1);
@@ -1267,34 +1325,58 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		StartCoroutine(DestroyNetNpcObj(NpcObj, RemoveNpcTime));
 	}
 
-	//void CallServerRemoveNpc()
-	//{
-	//}
+    //void CallServerRemoveNpc()
+    //{
+    //}
 
-	//void CallServerRemoveCannon(int cannonIndex)
-	//{
-	//}
+    //void CallServerRemoveCannon(int cannonIndex)
+    //{
+    //}
 
-	public void TriggerRemovePointNpc(int key, XKCannonCtrl cannonScriptVal = null,
+    /// <summary>
+    /// 彩票boss特殊移动控制脚本.
+    /// </summary>
+    internal SSCaiPiaoBossMove m_CaiPiaoBossMoveCom;
+
+    /// <summary>
+    /// npc彩票显示组件.
+    /// </summary>
+    internal SSCaiPiaoNpcUI m_CaiPiaoNpcUI;
+    public void TriggerRemovePointNpc(int key, XKCannonCtrl cannonScriptVal = null,
 	                                  PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
 	{
-		//if (cannonScriptVal != null && CannonScript != null) {
-		//	int max = CannonScript.Length;
-		//	if (max > 1) {
-		//		for (int i = 0; i < max; i++) {
-		//			if (CannonScript[i] != null && CannonScript[i] == cannonScriptVal) {
-		//				CallServerRemoveCannon(i);
-		//				break;
-		//			}
-		//		}
-		//	}
-		//}
-
-		if (IsDeathNPC) {
+        //Debug.LogWarning("Unity: TriggerRemovePointNpc -> ************* key == " + key + ", npcName == " + gameObject.name);
+		if (IsDeathNPC)
+        {
 			return;
 		}
 		IsDeathNPC = true;
 		HandleNpcDeathInfo();
+
+        if (IsCaiPiaoZhanChe == true)
+        {
+            if (IsBossNpc == true)
+            {
+                //彩票boss被删除.
+                //使镜头继续移动.
+                XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.Boss);
+                if (m_CaiPiaoBossMoveCom != null)
+                {
+                    m_CaiPiaoBossMoveCom.ResetInfo();
+                }
+            }
+            else
+            {
+                //彩票战车被删除.
+                //使镜头继续移动.
+                XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.CheLiang);
+            }
+
+            if (m_CaiPiaoNpcUI != null)
+            {
+                m_CaiPiaoNpcUI.HiddenNumUI();
+            }
+        }
 
 		//XkGameCtrl.ClearNpcSpawnAllAmmo(gameObject);
 		//CallServerRemoveNpc();
@@ -1635,6 +1717,13 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		if (Network.peerType == NetworkPeerType.Client) {
 			return;
 		}
+
+        if (IsCaiPiaoZhanChe == true)
+        {
+            //彩票战车或boss不用进行检测.
+            //有镜头触发器来控制它们的删除逻辑.
+            return;
+        }
 		
 		XkPlayerCtrl scriptFJ = XkPlayerCtrl.GetInstanceFeiJi();
 		XkPlayerCtrl scriptTK = XkPlayerCtrl.GetInstanceTanKe();
@@ -1796,6 +1885,9 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// 是否是boss.
+    /// </summary>
 	bool IsBossNpc;
 	public void SetIsBossNpc(bool isBoss)
 	{
@@ -1805,6 +1897,13 @@ public class XKNpcMoveCtrl : MonoBehaviour
             IsZhanCheNpc = false;
             //彩票JPBoss.
             IsJPBossNpc = true;
+
+            if (m_CaiPiaoBossMoveCom == null)
+            {
+                //添加彩票Boss特殊移动脚本.
+                m_CaiPiaoBossMoveCom = gameObject.AddComponent<SSCaiPiaoBossMove>();
+                m_CaiPiaoBossMoveCom.m_NpcMoveCom = this;
+            }
         }
 	}
 	
@@ -1835,6 +1934,65 @@ public class XKNpcMoveCtrl : MonoBehaviour
                 m_PathNodeList.Add(pathTr.GetChild(i).position);
             }
         }
+    }
+
+    /// <summary>
+    /// 关闭boss的正常移动.
+    /// </summary>
+    public void CloseBossMoveing()
+    {
+        iTween tweenMove = gameObject.GetComponent<iTween>();
+        if (tweenMove != null)
+        {
+            tweenMove.isRunning = false;
+            tweenMove.isPaused = true;
+            Destroy(tweenMove);
+        }
+    }
+
+    /// <summary>
+    /// 恢复boss的正常运动.
+    /// </summary>
+    public void RestartMoveingBoss()
+    {
+        //Debug.Log("**************************move 1111111111111111");
+        if (IsDeathNPC)
+        {
+            return;
+        }
+
+        if (NpcPathTran == null)
+        {
+            //Debug.Log("Unity:"+"The npc has no path! name "+gameObject.name);
+            return;
+        }
+        
+        Vector3[] nodesArray = new Vector3[2];
+        nodesArray[0] = NpcTran.position;
+        if (MarkCount >= NpcPathTran.childCount || MarkCount < 0)
+        {
+            MarkCount = 0; //fixed MarkCount
+        }
+        nodesArray[1] = m_PathNodeList[MarkCount];
+        
+        MarkNpcMovePos = nodesArray[1];
+        IsMoveToMarkPoint = false;
+
+        bool isOrienttopath = true;
+        if (IsCaiPiaoZhanChe)
+        {
+            isOrienttopath = false;
+            MarkTranAimForward = nodesArray[1] - nodesArray[0];
+            MarkTranAimForward.y = 0f;
+            MarkTranAimForward = MarkTranAimForward.normalized;
+            //Debug.Log("********************************************* boss *************** isOrienttopath == " + isOrienttopath);
+        }
+
+        //Debug.Log("********************************* name " + gameObject.name);
+        iTween.MoveTo(NpcObj, iTween.Hash("path", nodesArray,
+                                          "speed", MvSpeed,
+                                          "orienttopath", isOrienttopath,
+                                          "easeType", iTween.EaseType.linear));
     }
 }
 

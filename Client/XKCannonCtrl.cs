@@ -386,8 +386,24 @@ public class XKCannonCtrl : MonoBehaviour {
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}
+            
+            if (XkGameCtrl.GetInstance().IsCreatAmmoOnBoss == false)
+            {
+                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveCaiPiaoBoss() == true)
+                {
+                    if (NpcMoveScript != null && NpcMoveScript.IsCaiPiaoZhanChe == true)
+                    {
+                    }
+                    else
+                    {
+                        //有彩票boss产生,不再继续发射子弹.
+                        yield return new WaitForSeconds(0.1f);
+                        continue;
+                    }
+                }
+            }
 
-			if (!isBackPaoGuan) {
+            if (!isBackPaoGuan) {
 				PaoGuan.position -= PaoGuan.forward * speed;
 				count++;
 				if (count >= maxCount) {
@@ -493,8 +509,24 @@ public class XKCannonCtrl : MonoBehaviour {
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}
+            
+            if (XkGameCtrl.GetInstance().IsCreatAmmoOnBoss == false)
+            {
+                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveCaiPiaoBoss() == true)
+                {
+                    if (NpcMoveScript != null && NpcMoveScript.IsCaiPiaoZhanChe == true)
+                    {
+                    }
+                    else
+                    {
+                        //有彩票boss产生,不再继续发射子弹.
+                        yield return new WaitForSeconds(0.1f);
+                        continue;
+                    }
+                }
+            }
 
-			count--;
+            count--;
 			if (count < 0 || count >= SpawnAmmoPoint.Length) {
 				yield break;
 			}
