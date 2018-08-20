@@ -640,10 +640,6 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			return;
 		}
 
-		GameObject objExplode = null;
-		objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
-		objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
-		XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
 
         if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe)
         {
@@ -658,10 +654,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
             {
                 int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
-                if (objExplode != null)
+                if (DeathExplodePoint != null)
                 {
                     //Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, objExplode.transform.position, deCaiType);
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, DeathExplodePoint.position, deCaiType, DeathExplode);
                     //SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
                     //if (caiPiaoLiZi != null)
                     //{
@@ -703,6 +699,13 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             //        Debug.LogWarning("CreatLiZi -> m_CaiPiaoFlyData was null............");
             //    }
             //}
+        }
+        else
+        {
+            GameObject objExplode = null;
+            objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
+            objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
+            XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
         }
     }
 

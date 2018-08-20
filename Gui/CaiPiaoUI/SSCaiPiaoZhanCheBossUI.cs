@@ -48,6 +48,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// </summary>
     //public GameObject m_CaiPiaoInfoParent;
     public float m_TimePlay = 3f;
+    /// <summary>
+    /// 显示爆炸.
+    /// </summary>
+    public float m_TimeShowExp = 2f;
     public Animator m_Animator;
     PlayerEnum m_IndexPlayer;
     Vector3 m_StartPos;
