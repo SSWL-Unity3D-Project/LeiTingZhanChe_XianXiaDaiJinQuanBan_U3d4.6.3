@@ -69,8 +69,8 @@ public class XKTriggerSpawnNpc : MonoBehaviour
     float m_LastTriggerTime = -1000f;
 	public string TestNpcName;
 	void OnTriggerEnter(Collider other)
-	{
-		if (IsDonnotSpawnNpcTest) {
+    {
+        if (IsDonnotSpawnNpcTest) {
 			return; //test.
 		}
 
@@ -87,12 +87,17 @@ public class XKTriggerSpawnNpc : MonoBehaviour
 			return;
 		}
 
-        if (Time.time - m_LastTriggerTime < 60f)
+        if (Time.time - m_LastTriggerTime < 300f)
         {
             //冷却时间.
             return;
         }
         m_LastTriggerTime = Time.time;
+
+        if (XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua == true)
+        {
+            return;
+        }
 
         //Debug.Log("Unity:"+"XKTriggerSpawnNpc::OnTriggerEnter -> hit "+other.name);
         for (int i = 0; i < SpawnPointArray.Length; i++) {

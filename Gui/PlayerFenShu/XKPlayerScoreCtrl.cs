@@ -80,7 +80,8 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 			return;
 		}
 		instanceVal.SetActivePlayerScore(true);
-	}
+        instanceVal.SetScoreSprite();
+    }
 	
 	public static void HiddenPlayerScore(PlayerEnum indexPlayer)
 	{

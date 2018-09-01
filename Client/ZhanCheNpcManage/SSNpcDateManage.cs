@@ -7,6 +7,7 @@ public class SSNpcDateManage : MonoBehaviour
     /// Npc数据列表.
     /// </summary>
     public List<GameObject> NpcList = new List<GameObject>();
+    internal List<XKNpcMoveCtrl> NpcMoveList = new List<XKNpcMoveCtrl>();
     /// <summary>
     /// 添加npc.
     /// </summary>
@@ -15,6 +16,14 @@ public class SSNpcDateManage : MonoBehaviour
         if (!NpcList.Contains(npc))
         {
             NpcList.Add(npc);
+            XKNpcMoveCtrl npcMoveCom = npc.GetComponent<XKNpcMoveCtrl>();
+            if (npcMoveCom != null)
+            {
+                if (NpcMoveList.Contains(npcMoveCom) == false)
+                {
+                    NpcMoveList.Add(npcMoveCom);
+                }
+            }
         }
     }
 
@@ -26,6 +35,14 @@ public class SSNpcDateManage : MonoBehaviour
         if (NpcList.Contains(npc))
         {
             NpcList.Remove(npc);
+            XKNpcMoveCtrl npcMoveCom = npc.GetComponent<XKNpcMoveCtrl>();
+            if (npcMoveCom != null)
+            {
+                if (NpcMoveList.Contains(npcMoveCom) == true)
+                {
+                    NpcMoveList.Remove(npcMoveCom);
+                }
+            }
             return true;
         }
         return false;
@@ -50,5 +67,18 @@ public class SSNpcDateManage : MonoBehaviour
             obj = NpcList[index];
         }
         return obj;
+    }
+
+    /// <summary>
+    /// 获取ncpMove组件.
+    /// </summary>
+    public XKNpcMoveCtrl GetNpcMoveComByIndex(int index)
+    {
+        XKNpcMoveCtrl com = null;
+        if (NpcMoveList.Count > index)
+        {
+            com = NpcMoveList[index];
+        }
+        return com;
     }
 }

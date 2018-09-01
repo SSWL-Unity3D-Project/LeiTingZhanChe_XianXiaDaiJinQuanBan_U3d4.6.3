@@ -72,25 +72,46 @@ public class PcvrComInputEvent : MonoBehaviour
     public event EventHandel ClickPcvrBtEvent01;
     public void ClickPcvrBt01(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent01 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent01(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent01 != null)
+            {
+                ClickPcvrBtEvent01(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent02;
     public void ClickPcvrBt02(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent02 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent02(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent02 != null)
+            {
+                ClickPcvrBtEvent02(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent03;
     public void ClickPcvrBt03(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent03 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent03(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent03 != null)
+            {
+                ClickPcvrBtEvent03(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent04;
@@ -160,73 +181,136 @@ public class PcvrComInputEvent : MonoBehaviour
     public event EventHandel ClickPcvrBtEvent12;
     public void ClickPcvrBt12(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent12 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent12(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent12 != null)
+            {
+                ClickPcvrBtEvent12(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent13;
     public void ClickPcvrBt13(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent13 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent13(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent13 != null)
+            {
+                ClickPcvrBtEvent13(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent14;
     public void ClickPcvrBt14(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent14 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent14(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent14 != null)
+            {
+                ClickPcvrBtEvent14(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent15;
     public void ClickPcvrBt15(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent15 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent15(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent15 != null)
+            {
+                ClickPcvrBtEvent15(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent16;
     public void ClickPcvrBt16(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent16 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent16(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent16 != null)
+            {
+                ClickPcvrBtEvent16(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent17;
     public void ClickPcvrBt17(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent17 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent17(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent17 != null)
+            {
+                ClickPcvrBtEvent17(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent18;
     public void ClickPcvrBt18(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent18 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent18(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent18 != null)
+            {
+                ClickPcvrBtEvent18(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent19;
     public void ClickPcvrBt19(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent19 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent19(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent19 != null)
+            {
+                ClickPcvrBtEvent19(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent20;
     public void ClickPcvrBt20(pcvr.ButtonState val)
     {
-        if (ClickPcvrBtEvent20 != null)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickPcvrBtEvent20(val);
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (ClickPcvrBtEvent20 != null)
+            {
+                ClickPcvrBtEvent20(val);
+            }
         }
     }
     public event EventHandel ClickPcvrBtEvent21;

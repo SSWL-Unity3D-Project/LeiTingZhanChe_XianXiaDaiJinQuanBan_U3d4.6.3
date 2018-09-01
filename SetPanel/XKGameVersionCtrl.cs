@@ -3,18 +3,19 @@
 public class XKGameVersionCtrl : MonoBehaviour
 {
     UILabel VersionLB;
-    static string _GameVersion = "Version: V1.0_20180605";
+    static string _GameVersion = "Version: 20180901";
     public static string GameVersion
     {
         get
         {
             string val = "";
-#if UNITY_ANDROID
+/*#if UNITY_ANDROID
             val = _GameVersion + "_Apk";
 #endif
 #if UNITY_STANDALONE_WIN
             val = _GameVersion + "_Win";
-#endif
+#endif*/
+            val = _GameVersion;
             return val;
         }
     }
@@ -26,6 +27,37 @@ public class XKGameVersionCtrl : MonoBehaviour
         if (VersionLB != null)
         {
             VersionLB.text = GameVersion;
+        }
+    }
+
+    bool IsInit = false;
+    float m_LastDrawTime = 0f;
+    public void Init()
+    {
+        if (IsInit == true)
+        {
+            return;
+        }
+        IsInit = true;
+        m_LastDrawTime = Time.time;
+    }
+
+    void OnGUI()
+    {
+        if (IsInit == true)
+        {
+            if (Time.time - m_LastDrawTime < 15f)
+            {
+                Rect rect = new Rect(15f, 15f, 300f, 30f);
+                GUI.Box(rect, "");
+                GUI.color = Color.red;
+                GUI.Label(rect, GameVersion);
+            }
+            else
+            {
+                IsInit = false;
+                Destroy(this);
+            }
         }
     }
 }

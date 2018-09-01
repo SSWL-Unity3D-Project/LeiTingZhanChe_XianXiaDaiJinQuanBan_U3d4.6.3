@@ -3,6 +3,10 @@
 public class SSCaiPiaoFlyData : MonoBehaviour
 {
     /// <summary>
+    /// 彩票boss烟花粒子的高度.
+    /// </summary>
+    public float m_BossYanHuaOffsetPY = 2.5f;
+    /// <summary>
     /// 基础彩票爆炸粒子预制.
     /// </summary>
     public GameObject m_JiChuCaiPiaoLiZiPrefab;
@@ -108,12 +112,50 @@ public class SSCaiPiaoFlyData : MonoBehaviour
     /// </summary>
     public JPBossCaiPiaoFlyData m_JPBossCaiPiaoFlyDt;
 
+    void Awake()
+    {
+        Init();
+    }
+
+    void Init()
+    {
+        AddCaiPiaoFlyManageDtListCom();
+    }
+
+    /// <summary>
+    /// 彩票飞出数据管理组件.
+    /// </summary>
+    SSGameObjListManage m_CaiPiaoFlyManageDtList;
+
+    /// <summary>
+    /// 添加彩票飞出数据管理组件.
+    /// </summary>
+    void AddCaiPiaoFlyManageDtListCom()
+    {
+        if (m_CaiPiaoFlyManageDtList == null)
+        {
+            m_CaiPiaoFlyManageDtList = gameObject.AddComponent<SSGameObjListManage>();
+        }
+    }
+
+    /// <summary>
+    /// 初始化彩票飞出数据信息.
+    /// </summary>
     public void InitCaiPiaoFly(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
-        SSCaiPiaoFlyManage caiPiaoFlyManage = gameObject.AddComponent<SSCaiPiaoFlyManage>();
-        if (caiPiaoFlyManage != null)
+        if (m_CaiPiaoFlyManageDtList != null)
         {
-            caiPiaoFlyManage.Init(startPos, indexPlayer, type);
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GameData/CaiPiaoFlyManageDt");
+            GameObject obj = m_CaiPiaoFlyManageDtList.FindObjByPrefab(gmDataPrefab, transform);
+            if (obj != null)
+            {
+                //SSCaiPiaoFlyManage caiPiaoFlyManage = gameObject.AddComponent<SSCaiPiaoFlyManage>();
+                SSCaiPiaoFlyManage caiPiaoFlyManage = obj.GetComponent<SSCaiPiaoFlyManage>();
+                if (caiPiaoFlyManage != null)
+                {
+                    caiPiaoFlyManage.Init(startPos, indexPlayer, type);
+                }
+            }
         }
     }
 
@@ -126,6 +168,7 @@ public class SSCaiPiaoFlyData : MonoBehaviour
         if (yanHua != null)
         {
             yanHua.Init(m_JPBossCaiPiaoFlyDt.m_TimeLiZi);
+            SSUIRoot.GetInstance().m_GameUIManage.m_SSCaiPiaoYanHua = yanHua;
         }
     }
 }

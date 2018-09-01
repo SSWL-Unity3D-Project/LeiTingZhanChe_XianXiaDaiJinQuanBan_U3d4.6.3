@@ -46,6 +46,7 @@ public class SSCaiPiaoFly : SSGameMono
                 SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer);
             }
         }
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

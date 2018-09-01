@@ -129,6 +129,11 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     public Texture m_TouMingHead;
 	public void HandlePlayerXueTiaoInfo(float fillVal)
     {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            return;
+        }
+
         if (m_PlayerNumImg != null && m_MatNum != null)
         {
             m_MatNum.mainTexture = m_PlayerNumImg;
@@ -163,6 +168,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 			break;
 		}
 
+        //Debug.Log("Unity: SetPlayerIndex -> isActiveXT === " + isActiveXT + ", playerIndex ==== " + playerIndex);
 		NengLianTran = transform;
 		OffsetXT = NengLianTran.localPosition;
 		NengLianParentTr = NengLianTran.parent;

@@ -57,6 +57,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     Vector3 m_StartPos;
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
     GameObject m_ExplosionPrefab;
+    GameObject m_ExplosionPoint;
     public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
     {
         m_IndexPlayer = indexPlayer;
@@ -64,14 +65,27 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         m_DeCaiState = type;
         m_StartPos = pos;
         m_ExplosionPrefab = exp;
-        //if (m_CaiPiaoInfoParent != null)
-        //{
-        //    m_CaiPiaoInfoParent.SetActive(false);
-        //}
+
+        if (m_ExplosionPoint == null)
+        {
+            m_ExplosionPoint = new GameObject();
+        }
+        m_ExplosionPoint.transform.position = pos;
+        if (Camera.main != null)
+        {
+            m_ExplosionPoint.transform.SetParent(Camera.main.transform);
+        }
+
         Vector3 posUI = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(pos);
         transform.localPosition = posUI;
         ShowCaiPiaoInfo();
         StartCoroutine(DelayShowCaiPiaoInfo());
+
+        if (type == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+        {
+            //开启镜头微动.
+            XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua = true;
+        }
     }
 
     IEnumerator DelayShowCaiPiaoInfo()
@@ -93,12 +107,26 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos)
     {
         //Debug.LogWarning("Unity: ShowCaiPiaoZhanCheBossFlyCaiPiao -> deCaiType ========= " + deCaiType);
-
         if (m_ExplosionPrefab != null)
         {
+            if (m_ExplosionPoint != null)
+            {
+                startPos = m_ExplosionPoint.transform.position;
+                Destroy(m_ExplosionPoint);
+            }
             GameObject objExplode = (GameObject)Instantiate(m_ExplosionPrefab, startPos, Quaternion.identity);
             objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
             XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
+
+            SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
+            if (caiPiaoLiZi != null)
+            {
+                caiPiaoLiZi.ShowNumUI(m_CaiPiaoNum, indexPlayer);
+            }
+            else
+            {
+                Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+            }
         }
 
         if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
@@ -194,6 +222,11 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         bool isShowZero = false;
         for (int i = 0; i < max; i++)
         {
+            if (m_CaiPIaoSprite[i] == null)
+            {
+                break;
+            }
+
             powVal = (int)Mathf.Pow(10, max - i - 1);
             valTmp = numVal / powVal;
             m_CaiPIaoSprite[i].enabled = true;

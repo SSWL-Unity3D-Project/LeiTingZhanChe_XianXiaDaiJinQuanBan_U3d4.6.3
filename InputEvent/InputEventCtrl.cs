@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//#define USE_PC_INPUT_TEST
+using UnityEngine;
 
 /// <summary>
 /// 监听pc键盘鼠标按键消息组件.
@@ -388,6 +389,20 @@ public class InputEventCtrl : MonoBehaviour
 			ClickDaoDanBtFourEvent( val );
 		}
 	}
+
+    /// <summary>
+    /// 清除所有玩家的方向信息.
+    /// </summary>
+    public void ClearAllPlayerDirBtInfo()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            OnClickFangXiangUBt(i, pcvr.ButtonState.UP);
+            OnClickFangXiangDBt(i, pcvr.ButtonState.UP);
+            OnClickFangXiangLBt(i, pcvr.ButtonState.UP);
+            OnClickFangXiangRBt(i, pcvr.ButtonState.UP);
+        }
+    }
     
     /// <summary>
     /// 向左运动.
@@ -766,14 +781,19 @@ public class InputEventCtrl : MonoBehaviour
 		}
 	}
     #endregion
-    
+
+    public static bool IsUsePcInputTest = false;
     void Update()
 	{
-		if (pcvr.bIsHardWare)
+#if !USE_PC_INPUT_TEST
+        if (pcvr.bIsHardWare)
         {
 			return;
 		}
-        
+#else
+        IsUsePcInputTest = true;
+#endif
+
         if (Input.GetKeyUp(KeyCode.T)) {
 			int coinVal = XKGlobalData.CoinPlayerOne + 1;
 			XKGlobalData.SetCoinPlayerOne(coinVal);
@@ -834,153 +854,176 @@ public class InputEventCtrl : MonoBehaviour
 		//	ClickStartBtFour( pcvr.ButtonState.DOWN );
 		//}
 
-		//player_1.
-		if (Input.GetKeyDown(KeyCode.A)) {
-			ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.A)) {
-			ClickFangXiangLBtP1(pcvr.ButtonState.UP);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.D)) {
-			ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.D)) {
-			ClickFangXiangRBtP1(pcvr.ButtonState.UP);
-		}
-
-		if (Input.GetKeyDown(KeyCode.W)) {
-			ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.W)) {
-			ClickFangXiangUBtP1(pcvr.ButtonState.UP);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.S)) {
-			ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.S)) {
-			ClickFangXiangDBtP1(pcvr.ButtonState.UP);
-		}
-
-        //player_2.
-        if (Input.GetKeyDown(KeyCode.F))
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer)
         {
-            ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
+            //没有玩家激活游戏.
         }
-
-        if (Input.GetKeyUp(KeyCode.F))
+        else
         {
-            ClickFangXiangLBtP2(pcvr.ButtonState.UP);
+            //player_1.
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                ClickFangXiangLBtP1(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.D))
+            {
+                ClickFangXiangRBtP1(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.W))
+            {
+                ClickFangXiangUBtP1(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                ClickFangXiangDBtP1(pcvr.ButtonState.UP);
+            }
+
+            //player_2.
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                ClickFangXiangLBtP2(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.H))
+            {
+                ClickFangXiangRBtP2(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.T))
+            {
+                ClickFangXiangUBtP2(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.G))
+            {
+                ClickFangXiangDBtP2(pcvr.ButtonState.UP);
+            }
+
+            //player_3.
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.J))
+            {
+                ClickFangXiangLBtP3(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.L))
+            {
+                ClickFangXiangRBtP3(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.I))
+            {
+                ClickFangXiangUBtP3(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.K))
+            {
+                ClickFangXiangDBtP3(pcvr.ButtonState.UP);
+            }
+
+            //player_4.
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                ClickFangXiangLBtP4(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                ClickFangXiangRBtP4(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                ClickFangXiangUBtP4(pcvr.ButtonState.UP);
+            }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
+            }
+
+            if (Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                ClickFangXiangDBtP4(pcvr.ButtonState.UP);
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.H))
-        {
-            ClickFangXiangRBtP2(pcvr.ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.T))
-        {
-            ClickFangXiangUBtP2(pcvr.ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.G))
-        {
-            ClickFangXiangDBtP2(pcvr.ButtonState.UP);
-        }
-
-        //player_3.
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.J))
-        {
-            ClickFangXiangLBtP3(pcvr.ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            ClickFangXiangRBtP3(pcvr.ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.I))
-        {
-            ClickFangXiangUBtP3(pcvr.ButtonState.UP);
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
-        }
-
-        if (Input.GetKeyUp(KeyCode.K))
-        {
-            ClickFangXiangDBtP3(pcvr.ButtonState.UP);
-        }
-
-        //player_4.
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
-			ClickFangXiangLBtP4(pcvr.ButtonState.UP);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.RightArrow)) {
-			ClickFangXiangRBtP4(pcvr.ButtonState.UP);
-		}
-		
-		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.UpArrow)) {
-			ClickFangXiangUBtP4(pcvr.ButtonState.UP);
-		}
-
-		if (Input.GetKeyDown(KeyCode.DownArrow)) {
-			ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
-		}
-		
-		if (Input.GetKeyUp(KeyCode.DownArrow)) {
-			ClickFangXiangDBtP4(pcvr.ButtonState.UP);
-		}
 
 		//setPanel enter button
 		if (Input.GetKeyUp(KeyCode.F4)) {

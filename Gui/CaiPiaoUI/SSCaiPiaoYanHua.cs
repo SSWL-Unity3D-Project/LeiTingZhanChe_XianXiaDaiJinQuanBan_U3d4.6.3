@@ -15,13 +15,18 @@ public class SSCaiPiaoYanHua : SSGameMono
     /// </summary>
     float m_TimeYanHua = 0.6f;
     float m_LastTimeYanHua = 0f;
-    bool IsCreatYanHua = false;
+    internal bool IsCreatYanHua = false;
     public void Init(float timeMax)
     {
         m_MaxTime = timeMax;
         m_LastTimeYanHua = m_LastTime = Time.time;
         IsCreatYanHua = true;
         CreatYanHuaLiZi();
+
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+        {
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.CreatJPBossDaJiangCaiPiaoLiZi();
+        }
     }
 
     void Update()
@@ -38,8 +43,15 @@ public class SSCaiPiaoYanHua : SSGameMono
             }
             else
             {
+                //关闭镜头微动.
+                XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua = false;
                 //结束烟花的产生.
                 IsCreatYanHua = false;
+
+                if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+                {
+                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.RemoveJPBossDaJiangCaiPiaoLiZi();
+                }
                 Destroy(this);
             }
         }
@@ -60,7 +72,14 @@ public class SSCaiPiaoYanHua : SSGameMono
         if (liZiPrefab != null && point != null)
         {
             GameObject obj = (GameObject)Instantiate(liZiPrefab, XkGameCtrl.NpcAmmoArray, point);
-            obj.transform.position += Vector3.up * 2.5f;
+            if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
+            {
+                obj.transform.position += Vector3.up * XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_BossYanHuaOffsetPY;
+            }
+            else
+            {
+                obj.transform.position += Vector3.up * 2.5f;
+            }
         }
     }
 }

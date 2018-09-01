@@ -38,6 +38,18 @@ public class XKNpcSpawnDaoJu : SSGameMono
             //随机道具彩池的彩票积累的不够.
             return;
         }
+
+        if (Random.Range(0f, 100f) / 100f > 0.4f)
+        {
+            //没有随机上产生随机道具.
+            return;
+        }
+
+        if (XkGameCtrl.GetInstance().GetIsCreateSuiJiDaoJu() == false)
+        {
+            //产生随机道具的间隔时间未到.
+            return;
+        }
         UnityLog("CreatSuiJiDaoJu....................");
 
         GameObject suiJiDaoJuPrefab = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSuiJiDaoJuPrefab(indexPlayer);

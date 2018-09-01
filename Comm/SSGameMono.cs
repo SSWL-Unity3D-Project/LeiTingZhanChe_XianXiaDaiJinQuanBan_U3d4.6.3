@@ -15,6 +15,7 @@ public class SSGameMono : MonoBehaviour
             {
                 obj.transform.localScale = prefab.transform.localScale;
                 obj.transform.localPosition = prefab.transform.localPosition;
+                obj.transform.localEulerAngles = prefab.transform.localEulerAngles;
             }
             else
             {

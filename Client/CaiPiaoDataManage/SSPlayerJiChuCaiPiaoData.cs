@@ -202,10 +202,17 @@ public class SSPlayerJiChuCaiPiaoData : SSGameMono
         m_JiChuCaiPiaoData[indexVal].LastSongPiaoTime = Time.time;
         m_JiChuCaiPiaoData[indexVal].JiChuCaiPiaoVal -= chuPiaoVal;
 
-        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
-            //减少玩家正常得彩.
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SubPlayerZhengChangDeCai(indexPlayer, chuPiaoVal);
+            //没有激活任何玩家.
+        }
+        else
+        {
+            if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+            {
+                //减少玩家正常得彩.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SubPlayerZhengChangDeCai(indexPlayer, chuPiaoVal);
+            }
         }
 
         //可以送出基础彩票.

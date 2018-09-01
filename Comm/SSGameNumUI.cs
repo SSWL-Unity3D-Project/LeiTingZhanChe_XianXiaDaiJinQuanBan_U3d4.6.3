@@ -40,7 +40,7 @@ public class SSGameNumUI : SSGameMono
     /// <summary>
     /// 显示UI数量信息.
     /// </summary>
-    internal void ShowNumUI(int num)
+    internal void ShowNumUI(int num, string numHead = "")
     {
         string numStr = num.ToString();
         if (m_FixedUiPosDt != null && m_FixedUiPosDt.IsFixPosX)
@@ -75,7 +75,7 @@ public class SSGameNumUI : SSGameMono
                 powVal = (int)Mathf.Pow(10, max - i - 1);
                 valTmp = numVal / powVal;
                 //UnityLog("ShowNumUI -> valTmp ====== " + valTmp);
-                m_UISpriteArray[i].spriteName = valTmp.ToString();
+                m_UISpriteArray[i].spriteName = numHead + valTmp.ToString();
                 numVal -= valTmp * powVal;
             }
         }

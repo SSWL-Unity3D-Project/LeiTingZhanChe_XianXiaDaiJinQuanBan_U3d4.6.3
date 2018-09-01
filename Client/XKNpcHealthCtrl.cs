@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class XKNpcHealthCtrl : MonoBehaviour {
 	public NpcJiFenEnum NpcJiFen = NpcJiFenEnum.ShiBing; //控制主角所击杀npc的积分逻辑.
@@ -357,7 +356,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	public void OnDamageNpc(int damageNpcVal = 1, PlayerEnum playerSt = PlayerEnum.Null,
 	                        PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
 	{
-		if (IsDeathNpc) {
+		if (IsDeathNpc)
+        {
 			return;
 		}
 
@@ -374,6 +374,21 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         //        }
         //        break;
         //}
+
+
+        if (NpcDamageCom != null)
+        {
+            NpcDamageCom.PlayNpcDamageEvent();
+        }
+
+        if (NpcScript != null)
+        {
+            if (NpcScript.IsCaiPiaoZhanChe == true && NpcScript.IsEnterCameraBox == false)
+            {
+                //彩票战车和boss没有进入摄像机盒子,不计算伤害.
+                return;
+            }
+        }
 
         if (CountActivePlayer != XkGameCtrl.PlayerActiveNum) {
 			if (CountActivePlayer != 0) {
@@ -392,18 +407,16 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			CountActivePlayer = XkGameCtrl.PlayerActiveNum;
 		}
 
-		if (NpcDamageCom != null) {
-			NpcDamageCom.PlayNpcDamageEvent();
-		}
-
-		if (NpcScript == null || (NpcScript != null && !NpcScript.GetIsWuDi())) {
+		if (NpcScript == null || (NpcScript != null && !NpcScript.GetIsWuDi()))
+        {
 			PuTongAmmoCount += damageNpcVal;
 		}
 
 		int indexVal = XkGameCtrl.PlayerActiveNum - 1;
 		indexVal = indexVal < 0 ? 0 : indexVal;
 		int puTongAmmoNum = MaxPuTongAmmo[indexVal];
-		if (NpcJiFen == NpcJiFenEnum.Boss) {
+		if (NpcJiFen == NpcJiFenEnum.Boss)
+        {
 			float bossAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
 			bossAmount = bossAmount < 0f ? 0f : bossAmount;
 			XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(bossAmount, this);
@@ -425,10 +438,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         return;
                     }
 
-                    if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe))
+                    if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
                     {
-                        //战车彩池的彩票积累的不够.
-                        return;
+                        //没有激活任何玩家.
+                    }
+                    else
+                    {
+                        if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe))
+                        {
+                            //战车彩池的彩票积累的不够.
+                            return;
+                        }
                     }
                 }
 
@@ -440,11 +460,18 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         //不是可以击爆JPBoss的玩家.
                         return;
                     }
-
-                    if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss))
+                    
+                    if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
                     {
-                        //JPBoss彩池的彩票积累的不够.
-                        return;
+                        //没有激活任何玩家.
+                    }
+                    else
+                    {
+                        if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss))
+                        {
+                            //JPBoss彩池的彩票积累的不够.
+                            return;
+                        }
                     }
                 }
             }

@@ -1,4 +1,4 @@
-#define DRAW_DEBUG_CAIPIAO_INFO
+//#define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
@@ -30,6 +30,49 @@ public enum GameJiTaiType
 
 public class XkGameCtrl : SSGameMono
 {
+    /// <summary>
+    /// 彩票算法模式.
+    /// </summary>
+    public enum CaiPiaoModeSuanFa
+    {
+        /// <summary>
+        /// 动态变化.
+        /// </summary>
+        DongTai = 0,
+        /// <summary>
+        /// 固定不变.
+        /// </summary>
+        GuDing = 1,
+    }
+    /// <summary>
+    /// 彩票算法模式.
+    /// </summary>
+    public CaiPiaoModeSuanFa m_CaiPiaoMode = CaiPiaoModeSuanFa.GuDing;
+    bool _IsDisplayBossDeathYanHua = false;
+    /// <summary>
+    /// 是否在显示Boss爆炸粒子和玩家得奖烟花.
+    /// </summary>
+    internal bool IsDisplayBossDeathYanHua
+    {
+        set
+        {
+            _IsDisplayBossDeathYanHua = value;
+            if (_IsDisplayBossDeathYanHua == true)
+            {
+                //镜头开始微动.
+                SetGameCameraIsMoveing(false, NpcJiFenEnum.Boss);
+            }
+            else
+            {
+                //镜头停止微动.
+                SetGameCameraIsMoveing(true, NpcJiFenEnum.Boss);
+            }
+        }
+        get
+        {
+            return _IsDisplayBossDeathYanHua;
+        }
+    }
     /// <summary>
     /// Boss出场后npc是否继续发射子弹.
     /// </summary>
@@ -145,7 +188,8 @@ public class XkGameCtrl : SSGameMono
     [HideInInspector]
     public Transform NpcObjHiddenArray;
     public static Transform NpcAmmoArray;
-	public static Transform PlayerAmmoArray;
+    public static Transform CaiPiaoFlyArray;
+    public static Transform PlayerAmmoArray;
 	List<Transform> NpcTranList = new List<Transform>(20);
 	static List<YouLiangDianMoveCtrl> YLDLvA = new List<YouLiangDianMoveCtrl>(20);
 	static List<YouLiangDianMoveCtrl> YLDLvB = new List<YouLiangDianMoveCtrl>(20);
@@ -543,7 +587,12 @@ public class XkGameCtrl : SSGameMono
 			objMiss.transform.parent = MissionCleanup;
 			NpcAmmoArray = objMiss.transform;
 
-			objMiss = new GameObject();
+            objMiss = new GameObject();
+            objMiss.name = "CaiPiaoFlyArray";
+            objMiss.transform.parent = MissionCleanup;
+            CaiPiaoFlyArray = objMiss.transform;
+
+            objMiss = new GameObject();
 			objMiss.name = "NpcObjArray";
 			objMiss.transform.parent = MissionCleanup;
 			NpcObjArray = objMiss.transform;
@@ -582,6 +631,12 @@ public class XkGameCtrl : SSGameMono
 			AudioBeiJingCtrl.IndexBeiJingAd = 0;
 			XKGlobalData.GetInstance().PlayGuanKaBeiJingAudio();
             //pcvr.GetInstance().AddTVYaoKongBtEvent();
+
+            XKGameVersionCtrl gmVersionCom = gameObject.AddComponent<XKGameVersionCtrl>();
+            if (gmVersionCom != null)
+            {
+                gmVersionCom.Init();
+            }
 
 #if DRAW_DEBUG_CAIPIAO_INFO
             gameObject.AddComponent<SSDebugCaiPiaoInfo>();
@@ -628,9 +683,11 @@ public class XkGameCtrl : SSGameMono
 
 	public static void TestDelayActivePlayerOne()
 	{
-		if (GameMovieCtrl.IsActivePlayer) {
+		if (GameMovieCtrl.IsActivePlayer)
+        {
 			return;
 		}
+
 		XKPlayerMoveCtrl.GetInstancePOne().HiddenGamePlayer(1);
 		if (XKGlobalData.GameVersionPlayer == 0) {
 			SetActivePlayerOne(true);
@@ -688,12 +745,18 @@ public class XkGameCtrl : SSGameMono
             }
         }
 #endif
-        if (!pcvr.bIsHardWare)
-        {
-            if (Input.GetKeyUp(KeyCode.P))
-            {
-                AudioBeiJingCtrl.StopGameBeiJingAudio();
-            }
+        //if (!pcvr.bIsHardWare)
+        //{
+            //if (Input.GetKeyUp(KeyCode.P))
+            //{
+            //    OpenAllAiPlayerTank();
+            //    //AudioBeiJingCtrl.StopGameBeiJingAudio();
+            //}
+
+            //if (Input.GetKeyUp(KeyCode.L))
+            //{
+            //    CloseAllAiPlayer();
+            //}
             //if (IsCartoonShootTest)
             //{
             //    if (Input.GetKeyUp(KeyCode.N))
@@ -721,7 +784,7 @@ public class XkGameCtrl : SSGameMono
                 //XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
                 //BossRemoveAllNpcAmmo();
                 //			}
-        }
+        //}
 		CheckNpcTranFromList();
 	}
 
@@ -1700,6 +1763,18 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
 
+    /// <summary>
+    /// 重置玩家信息.
+    /// </summary>
+    public void ResetPlayerInfo(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= 0 && indexVal <= 4)
+        {
+            PlayerJiFenArray[indexVal] = 0;
+        }
+    }
+
 	public static void SetActivePlayerOne(bool isActive)
 	{
 		IsActivePlayerOne = isActive;
@@ -1708,6 +1783,10 @@ public class XkGameCtrl : SSGameMono
 		if (isActive) {
 			IsPlayGamePOne = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerOne);
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerOne);
+            }
 		}
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerOne);
@@ -1734,7 +1813,11 @@ public class XkGameCtrl : SSGameMono
 		if (isActive) {
 			IsPlayGamePTwo = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerTwo);
-		}
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerTwo);
+            }
+        }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerTwo);
 		}
@@ -1760,7 +1843,11 @@ public class XkGameCtrl : SSGameMono
 		if (isActive) {
 			IsPlayGamePThree = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerThree);
-		}
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerThree);
+            }
+        }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerThree);
 		}
@@ -1786,7 +1873,11 @@ public class XkGameCtrl : SSGameMono
 		if (isActive) {
 			IsPlayGamePFour = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerFour);
-		}
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerFour);
+            }
+        }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerFour);
 		}
@@ -2162,7 +2253,16 @@ public class XkGameCtrl : SSGameMono
 
 	public static void CheckPlayerActiveNum()
 	{
-		int countPlayer = 0;
+        if (IsActivePlayerOne == true
+            || IsActivePlayerTwo == true
+            || IsActivePlayerThree == true
+            || IsActivePlayerFour == true)
+        {
+            //激活任意一个玩家后,关闭所有Ai坦克.
+            GetInstance().CloseAllAiPlayer();
+        }
+
+        int countPlayer = 0;
 		if (IsActivePlayerOne) {
 			countPlayer++;
 			ActivePlayerToGame(PlayerEnum.PlayerOne);
@@ -2189,7 +2289,107 @@ public class XkGameCtrl : SSGameMono
 		PlayerActiveNum = countPlayer;
 	}
 
-	public static void ActivePlayerToGame(PlayerEnum indexVal, bool isChangePos = false)
+    /// <summary>
+    /// 游戏处于循环动画时,AiPlayer的数据.
+    /// </summary>
+    public class GamePlayerAiData
+    {
+        /// <summary>
+        /// 是否激活AiPlayer.
+        /// </summary>
+        internal bool IsActiveAiPlayer = false;
+    }
+    /// <summary>
+    /// 游戏处于循环动画时,AiPlayer的数据.
+    /// </summary>
+    public GamePlayerAiData m_GamePlayerAiData = new GamePlayerAiData();
+
+    /// <summary>
+    /// 打开所有主角Ai坦克.
+    /// </summary>
+    public void OpenAllAiPlayerTank()
+    {
+        if (PlayerActiveNum > 0)
+        {
+            return;
+        }
+
+        if (m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            return;
+        }
+        m_GamePlayerAiData.IsActiveAiPlayer = true;
+        ActivePlayerAiTankToGame(PlayerEnum.PlayerOne);
+        ActivePlayerAiTankToGame(PlayerEnum.PlayerTwo);
+        //ActivePlayerAiTankToGame(PlayerEnum.PlayerThree);
+        //ActivePlayerAiTankToGame(PlayerEnum.PlayerFour);
+    }
+
+    /// <summary>
+    /// 激活主角AI坦克.
+    /// </summary>
+    public static void ActivePlayerAiTankToGame(PlayerEnum indexPlayer)
+    {
+        if (XKPlayerCamera.GetInstanceFeiJi() == null)
+        {
+            return;
+        }
+
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            Debug.LogWarning("ActivePlayerAiTankToGame -> indexVal was wrong! indexVal ========== " + indexVal);
+            return;
+        }
+        
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexPlayer);
+        if (playerMoveCom != null)
+        {
+            Transform tranPoint = XKPlayerCamera.GetInstanceFeiJi().PlayerSpawnPoint[indexVal];
+            Vector3 pos = _Instance.GetActivePlayerPos(tranPoint, indexPlayer);
+            playerMoveCom.ActivePlayerToPos(pos, tranPoint.up, true);
+            if (playerMoveCom.m_PlayerAiMove != null)
+            {
+                playerMoveCom.m_PlayerAiMove.OpenPlayerAiMove();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 关闭所有Ai坦克.
+    /// </summary>
+    public void CloseAllAiPlayer()
+    {
+        if (m_GamePlayerAiData.IsActiveAiPlayer == false)
+        {
+            return;
+        }
+        m_GamePlayerAiData.IsActiveAiPlayer = false;
+
+        InputEventCtrl.GetInstance().ClearAllPlayerDirBtInfo();
+        ClosePlayerAiTank(PlayerEnum.PlayerOne);
+        ClosePlayerAiTank(PlayerEnum.PlayerTwo);
+        //ClosePlayerAiTank(PlayerEnum.PlayerThree);
+        //ClosePlayerAiTank(PlayerEnum.PlayerFour);
+    }
+
+    /// <summary>
+    /// 关闭游戏主角Ai坦克.
+    /// </summary>
+    public static void ClosePlayerAiTank(PlayerEnum indexVal)
+    {
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexVal);
+        if (playerMoveCom != null)
+        {
+            playerMoveCom.HiddenGamePlayer(1);
+            if (playerMoveCom.m_PlayerAiMove != null)
+            {
+                playerMoveCom.m_PlayerAiMove.ClosePlayerAiMove();
+            }
+        }
+    }
+
+    public static void ActivePlayerToGame(PlayerEnum indexVal, bool isChangePos = false)
 	{
 		if (XKPlayerCamera.GetInstanceFeiJi() == null) {
 			return;
@@ -2419,7 +2619,15 @@ public class XkGameCtrl : SSGameMono
 			return;
 		}
 
-		if (XKBossXueTiaoCtrl.IsWuDiPlayer) {
+        if (SSUIRoot.GetInstance().m_GameUIManage != null
+            && SSUIRoot.GetInstance().m_GameUIManage.m_SSCaiPiaoYanHua != null
+            && SSUIRoot.GetInstance().m_GameUIManage.m_SSCaiPiaoYanHua.IsCreatYanHua)
+        {
+            return;
+        }
+
+
+        if (XKBossXueTiaoCtrl.IsWuDiPlayer) {
 			return;
 		}
 
@@ -2967,6 +3175,19 @@ public class XkGameCtrl : SSGameMono
     public void SetGameCameraIsMoveing(bool isMoveing, NpcJiFenEnum state)
     {
         //Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
+
+        if (state == NpcJiFenEnum.Boss)
+        {
+            if (isMoveing == true)
+            {
+                if (IsDisplayBossDeathYanHua == true)
+                {
+                    //正在显示boss爆炸粒子和玩家得奖烟花粒子.
+                    return;
+                }
+            }
+        }
+
         XKTriggerStopMovePlayer.IsActiveTrigger = !isMoveing;
         if (state == NpcJiFenEnum.Boss)
         {
@@ -2977,6 +3198,23 @@ public class XkGameCtrl : SSGameMono
                 XkPlayerCtrl.GetInstanceFeiJi().SetCameraMoveAni(!isMoveing);
             }
         }
+    }
+
+    /// <summary>
+    /// 随机道具时间记录.
+    /// </summary>
+    float m_LastCreateSuiJiDaoJuTime = 0f;
+    /// <summary>
+    /// 获取是否可以创建随机道具.
+    /// </summary>
+    public bool GetIsCreateSuiJiDaoJu()
+    {
+        if (Time.time - m_LastCreateSuiJiDaoJuTime < 3f)
+        {
+            return false;
+        }
+        m_LastCreateSuiJiDaoJuTime = Time.time;
+        return true;
     }
 
 #if DRAW_GAME_INFO

@@ -341,13 +341,23 @@ public class SpawnNpcManage : MonoBehaviour
         /// <summary>
         /// 战车击爆规则.
         /// </summary>
-        //public ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4];
         internal ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4]
         {
             new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State1, 0.3f, 0.3f,  0.3f),
             new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State2, 0.4f, 0.25f, 0.25f),
             new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State3, 0.4f, 0.3f,  0.2f),
             new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State4, 0.4f, 0.4f,  0.1f),
+        };
+
+        /// <summary>
+        /// 战车击爆规则.
+        /// </summary>
+        internal ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRulerNew = new ZhanCheJiBaoRuler[4]
+        {
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State1, 0.15f, 0.15f,  0.15f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State2, 0.2f, 0.1f,  0.1f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State3, 0.18f, 0.14f, 0.8f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State4, 0.15f, 0.15f,  0.1f),
         };
     }
     /// <summary>
@@ -358,7 +368,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 获取可以被哪个玩家击爆,通过击爆规则的产生.
     /// </summary>
-    public PlayerEnum GetPlayerIndexByJiBaoGaiLv()
+    public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType)
     {
         PlayerEnum index = PlayerEnum.Null;
         SSCaiPiaoDataManage.PlayerCoinData[] coinDt = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSortPlayerCoinData();
@@ -382,7 +392,27 @@ public class SpawnNpcManage : MonoBehaviour
 
         //Debug.Log("Unity: GetPlayerIndexByJiBaoGaiLv::xuBiVal -> " + coinDt[0].XuBiVal + ", " + coinDt[1].XuBiVal + ", " + coinDt[2].XuBiVal
         //    + ", type ====== " + type);
-        ZhanCheRulerData.ZhanCheJiBaoRuler ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
+        ZhanCheRulerData.ZhanCheJiBaoRuler ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRulerNew[(int)type];
+        switch (npcType)
+        {
+            case NpcState.ZhanChe:
+                {
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe) >= 2)
+                    {
+                        ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
+                    }
+                    break;
+                }
+            case NpcState.JPBoss:
+                {
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss) >= 2)
+                    {
+                        ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
+                    }
+                    break;
+                }
+        }
+
         float rv = Random.Range(0f, 100f) / 100f;
         if (rv < ruler.MaxJiBaoGaiLv)
         {
@@ -563,6 +593,7 @@ public class SpawnNpcManage : MonoBehaviour
     }
 
 #if CREAT_NPC
+    float m_LastUpdateTime = 0f;
     void Update()
     {
         //if (Input.GetKeyDown(KeyCode.P))
@@ -570,9 +601,30 @@ public class SpawnNpcManage : MonoBehaviour
         //    CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState()); //test.
         //}
 
-        if (XkGameCtrl.PlayerActiveNum <= 0)
+        if (Time.time - m_LastUpdateTime < 8f)
         {
-            //没有玩家激活时.
+            //冷却时间.
+            //增加彩票战车和boss产生的间隔时间.
+            return;
+        }
+        m_LastUpdateTime = Time.time;
+
+
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活玩家.
+        }
+        else
+        {
+            if (XkGameCtrl.PlayerActiveNum <= 0)
+            {
+                //没有玩家激活时.
+                return;
+            }
+        }
+
+        if (XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua == true)
+        {
             return;
         }
 
@@ -606,18 +658,18 @@ public class SpawnNpcManage : MonoBehaviour
             }
         }
 
-        if (m_JPBossRulerData.IsPlayerXuBi)
-        {
-            //玩家已经续币.
-            if (Time.time - m_JPBossRulerData.LastXuBiTime >= m_JPBossRulerData.RandTimeXuBi)
-            {
-                //检测是否可以产生JPBoss.
-                if (!m_ZhanCheJPBossData.IsCreatJPBoss)
-                {
-                    m_ZhanCheJPBossData.IsCreatJPBoss = true;
-                }
-            }
-        }
+        //if (m_JPBossRulerData.IsPlayerXuBi)
+        //{
+        //    //玩家已经续币.
+        //    if (Time.time - m_JPBossRulerData.LastXuBiTime >= m_JPBossRulerData.RandTimeXuBi)
+        //    {
+        //        //检测是否可以产生JPBoss.
+        //        if (!m_ZhanCheJPBossData.IsCreatJPBoss)
+        //        {
+        //            m_ZhanCheJPBossData.IsCreatJPBoss = true;
+        //        }
+        //    }
+        //}
 #endif
 
         if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
@@ -661,6 +713,12 @@ public class SpawnNpcManage : MonoBehaviour
     /// </summary>
     public bool GetIsHaveCaiPiaoBoss()
     {
+        if (XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua == true)
+        {
+            //正在播放boss爆炸粒子和玩家得奖烟花特效.
+            return true;
+        }
+
         GameObject npc = m_ZhanCheJPBossData.JPBossData.GetNpcByIndex(0);
         if (npc != null)
         {
@@ -680,22 +738,31 @@ public class SpawnNpcManage : MonoBehaviour
     /// </summary>
     public GameObject GetCaiPiaoNpc()
     {
-        GameObject npc = m_ZhanCheJPBossData.ZhanCheData.GetNpcByIndex(0);
+        XKNpcMoveCtrl npc = m_ZhanCheJPBossData.ZhanCheData.GetNpcMoveComByIndex(0);
         if (npc != null)
         {
-            return npc;
+            if (npc.IsEnterCameraBox && npc.GetIsDeathNPC() == false)
+            {
+                return npc.gameObject;
+            }
         }
 
-        npc = m_ZhanCheJPBossData.JPBossData.GetNpcByIndex(0);
+        npc = m_ZhanCheJPBossData.JPBossData.GetNpcMoveComByIndex(0);
         if (npc != null)
         {
-            return npc;
+            if (npc.IsEnterCameraBox && npc.GetIsDeathNPC() == false)
+            {
+                return npc.gameObject;
+            }
         }
 
-        npc = m_ZhanCheJPBossData.SuperJPBossData.GetNpcByIndex(0);
+        npc = m_ZhanCheJPBossData.SuperJPBossData.GetNpcMoveComByIndex(0);
         if (npc != null)
         {
-            return npc;
+            if (npc.IsEnterCameraBox && npc.GetIsDeathNPC() == false)
+            {
+                return npc.gameObject;
+            }
         }
         return null;
     }
