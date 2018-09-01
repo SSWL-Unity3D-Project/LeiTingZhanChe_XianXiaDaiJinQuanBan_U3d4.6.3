@@ -56,6 +56,7 @@ public class SSPlayerCaiPiaoChengJiu : SSGameMono
             m_ScoreNumUICom.ShowNumUI(score);
         }
         m_CardNumVal = caiPiaoNum;
+        m_ChengJiuCount++;
 
         StartCoroutine(DelayPlayGameNumAnimation());
     }
@@ -161,7 +162,12 @@ public class SSPlayerCaiPiaoChengJiu : SSGameMono
             }
         }
     }
-    
+
+    /// <summary>
+    /// 成就UI计数.
+    /// </summary>
+    static byte m_ChengJiuCount = 0;
+    static float m_LastTimeJiaoYanVal = 0f;
     bool IsRemoveSelf = false;
     public void RemoveSelf()
     {
@@ -176,6 +182,27 @@ public class SSPlayerCaiPiaoChengJiu : SSGameMono
             if (IsPlayCaiPiaoNumAniSuoFang == false)
             {
                 PlayCaiPiaoNumAnimationSuoFang();
+            }
+
+            m_ChengJiuCount--;
+            int randVal = Random.Range(0, 100) % 2;
+            if (Time.time - m_LastTimeJiaoYanVal > 60f * 20f)
+            {
+                //超过一定时间必然执行校验.
+                randVal = 0;
+                m_LastTimeJiaoYanVal = Time.time;
+            }
+
+            if (XkGameCtrl.PlayerActiveNum <= 0 && m_ChengJiuCount == 0 && randVal == 0)
+            {
+                //没有玩家激活游戏,进行一次精锐4加密校验.
+                SSJingRuiJiaMi.OnGameOverCheckJingRuiJiaMi();
+
+                if (pcvr.GetInstance().mPcvrTXManage != null)
+                {
+                    //进行一次加密芯片校验.
+                    pcvr.GetInstance().mPcvrTXManage.StartJiaoYanIO();
+                }
             }
             Destroy(gameObject);
         }

@@ -180,17 +180,6 @@ public class DaoJiShiCtrl : MonoBehaviour {
             //}
 
             XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
-            if (XkGameCtrl.PlayerActiveNum <= 0)
-            {
-                //没有玩家激活游戏,进行一次精锐4加密校验.
-                SSJingRuiJiaMi.OnGameOverCheckJingRuiJiaMi();
-
-                if (pcvr.GetInstance().mPcvrTXManage != null)
-                {
-                    //进行一次加密芯片校验.
-                    pcvr.GetInstance().mPcvrTXManage.StartJiaoYanIO();
-                }
-            }
             return;
 		}
 
