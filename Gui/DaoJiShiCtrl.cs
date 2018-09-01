@@ -89,8 +89,8 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		DaoJiShiObj.SetActive(false);
 		ContinueGameObj.SetActive(false);
         //m_TVYaoKongEnterObj.SetActive(false);
-        HiddenGameOverObj();
-	}
+        GameOverObj.SetActive(false);
+    }
 
 	public void StartPlayDaoJiShi()
 	{
@@ -115,16 +115,27 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
 	public void StopDaoJiShi()
 	{
-		HiddenGameOverObj();
-		if (!IsPlayDaoJishi) {
-			return;
+        if (GameOverObj.activeInHierarchy == true)
+        {
+            if (IsInvoking("HiddenGameOverObj"))
+            {
+                CancelInvoke("HiddenGameOverObj");
+            }
+            GameOverObj.SetActive(false);
+        }
+
+        if (!IsPlayDaoJishi)
+        {
+            //重置玩家信息.
+            XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
+            XKPlayerScoreCtrl.ShowPlayerScore(PlayerIndex);
+            return;
 		}
 		IsPlayDaoJishi = false;
 		CountDaoJiShi--;
 		ContinueGameObj.SetActive(false);
 		DaoJiShiObj.SetActive(false);
         //m_TVYaoKongEnterObj.SetActive(false);
-
     }
 
 	void ShowDaoJiShiInfo()
@@ -164,10 +175,23 @@ public class DaoJiShiCtrl : MonoBehaviour {
             //玩家没有进行续币.
             //重置玩家续币信息.
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ResetPlayerXuBiInfo(PlayerIndex);
-			//if (XkGameCtrl.PlayerActiveNum <= 0 && CountDaoJiShi <= 0) {
-			//	GameOverCtrl.GetInstance().ShowGameOver();
-			//}
-			return;
+            //if (XkGameCtrl.PlayerActiveNum <= 0 && CountDaoJiShi <= 0) {
+            //	GameOverCtrl.GetInstance().ShowGameOver();
+            //}
+
+            XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
+            if (XkGameCtrl.PlayerActiveNum <= 0)
+            {
+                //没有玩家激活游戏,进行一次精锐4加密校验.
+                SSJingRuiJiaMi.OnGameOverCheckJingRuiJiaMi();
+
+                if (pcvr.GetInstance().mPcvrTXManage != null)
+                {
+                    //进行一次加密芯片校验.
+                    pcvr.GetInstance().mPcvrTXManage.StartJiaoYanIO();
+                }
+            }
+            return;
 		}
 
 		DaoJiShiCount--;
@@ -193,5 +217,11 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		}
 		CancelInvoke("HiddenGameOverObj");
 		GameOverObj.SetActive(false);
-	}
+
+        if (XkGameCtrl.PlayerActiveNum <= 0)
+        {
+            //没有激活一个玩家.
+            XkGameCtrl.GetInstance().OpenAllAiPlayerTank();
+        }
+    }
 }

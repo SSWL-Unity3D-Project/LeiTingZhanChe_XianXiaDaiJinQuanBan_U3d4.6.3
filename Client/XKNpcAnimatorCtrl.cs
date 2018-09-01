@@ -199,36 +199,18 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 			return;
 		}
 
-        //		if (Network.peerType == NetworkPeerType.Client) {
-        //			if (!IsDoHuanDanAction) {
-        //				StartSpawnNpcAmmo();
-        //				if (CountHuanDan > 0) {
-        //					CountFireAction++;
-        //					if (CountHuanDan <= CountFireAction) {
-        //						CountFireAction = 0;
-        //						PlayNPCHuanDanAction(); //Play huanDan action}
-        //					}
-        //				}
-        //			}
-        //			return;
-        //		}
-        
         if (XkGameCtrl.GetInstance().IsCreatAmmoOnBoss == false)
         {
-            if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveCaiPiaoBoss() == true)
+            if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveCaiPiaoBoss() == true
+                && Random.Range(0, 100) % 2 == 0)
             {
                 //有彩票boss产生,不再继续发射子弹.
                 return;
             }
         }
+
         //Debug.Log("************************11111 time " + Time.time);
         int rv = AddCountFireAction();
-//		if (Network.peerType == NetworkPeerType.Server) {
-//			if (XkGameCtrl.CountNpcAmmo >= XkGameCtrl.AmmoNumMaxNpc) {
-//				return;
-//			}
-//		}
-
 		if (rv != -1) {
 			StartSpawnNpcAmmo();
 		}

@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class SSCaiPiaoInfo : SSGameMono
 {
+    /// <summary>
+    /// 数字缩放动画.
+    /// </summary>
+    public Animator m_AnimationNumSuoFang;
     /// <summary>
     /// 数字动画声音.
     /// </summary>
@@ -68,7 +73,12 @@ public class SSCaiPiaoInfo : SSGameMono
                         //显示玩家当前彩票数据信息.
                         int caiPiao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoVal;
                         int caiPiaoCache = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoValCache;
-                        m_GameNumUI.ShowNumUI(caiPiao + caiPiaoCache);
+                        //m_GameNumUI.ShowNumUI(caiPiao + caiPiaoCache);
+                        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                        {
+                            //显示玩家彩票数量.
+                            SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, caiPiao + caiPiaoCache);
+                        }
                     }
                 }
 
@@ -78,6 +88,29 @@ public class SSCaiPiaoInfo : SSGameMono
                     m_AniAudio.enabled = false;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 播放彩票数字缩放动画.
+    /// </summary>
+    public void PlayCaiPiaoNumSuoFangAnimation()
+    {
+        if (m_AnimationNumSuoFang != null)
+        {
+            m_AnimationNumSuoFang.enabled = true;
+            m_AnimationNumSuoFang.SetBool("IsPlay", true);
+            StartCoroutine(DelayCloseCaiPiaoNumSuoFangAnimation());
+        }
+    }
+
+    IEnumerator DelayCloseCaiPiaoNumSuoFangAnimation()
+    {
+        yield return new WaitForSeconds(3f);
+        if (m_AnimationNumSuoFang != null)
+        {
+            m_AnimationNumSuoFang.SetBool("IsPlay", false);
+            //m_AnimationNumSuoFang.enabled = false;
         }
     }
 }

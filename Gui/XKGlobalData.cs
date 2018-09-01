@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 using System.IO;
 
@@ -16,14 +15,65 @@ public class XKGlobalData
         {
             if (pcvr.bIsHardWare)
             {
-                _CoinPlayerOne = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[0];
+                if (InputEventCtrl.IsUsePcInputTest == true)
+                {
+                    //测试模式.
+                }
+                else
+                {
+                    _CoinPlayerOne = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[0];
+                }
             }
             return _CoinPlayerOne;
         }
     }
-	public static int CoinPlayerTwo = 0;
-	public static int CoinPlayerThree = 0;
-	public static int CoinPlayerFour = 0;
+    static int _CoinPlayerTwo = 0;
+    public static int CoinPlayerTwo
+    {
+        set
+        {
+            _CoinPlayerTwo = value;
+        }
+        get
+        {
+            if (pcvr.bIsHardWare)
+            {
+                if (InputEventCtrl.IsUsePcInputTest == true)
+                {
+                    //测试模式.
+                }
+                else
+                {
+                    _CoinPlayerTwo = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[1];
+                }
+            }
+            return _CoinPlayerTwo;
+        }
+    }
+    static int _CoinPlayerThree = 0;
+    public static int CoinPlayerThree
+    {
+        set
+        {
+            _CoinPlayerThree = value;
+        }
+        get
+        {
+            if (pcvr.bIsHardWare)
+            {
+                if (InputEventCtrl.IsUsePcInputTest == true)
+                {
+                    //测试模式.
+                }
+                else
+                {
+                    _CoinPlayerThree = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[1];
+                }
+            }
+            return _CoinPlayerThree;
+        }
+    }
+    public static int CoinPlayerFour = 0;
 	public static int GameNeedCoin;
 	/**
 	 * GameVersionPlayer == 0 -> 四人版本游戏.
@@ -33,7 +83,21 @@ public class XKGlobalData
 	public static bool IsFreeMode;
 	public static string GameDiff;
 	public static int GameAudioVolume = 10;
-	static string FilePath = "";
+
+    public enum CaiPiaoPrintState
+    {
+        /// <summary>
+        /// 半票.
+        /// </summary>
+        BanPiao = 0,
+        /// <summary>
+        /// 全票.
+        /// </summary>
+        QuanPiao = 1,
+    }
+    internal CaiPiaoPrintState m_CaiPiaoPrintState = CaiPiaoPrintState.BanPiao;
+
+    static string FilePath = "";
 	static public string FileName = "../config/GameConfig.xml";
 	static public HandleJson HandleJsonObj = null;
 	float TimeValDaoDanJingGao;
@@ -100,6 +164,7 @@ public class XKGlobalData
             Instance.InitZhanCheCaiChi();
             Instance.InitDaoJuCaiChi();
             Instance.InitJPBossCaiChi();
+            Instance.InitCaiPiaoPrintState();
         }
 		return Instance;
 	}
@@ -115,6 +180,43 @@ public class XKGlobalData
 #endif
     }
     
+    /// <summary>
+    /// 初始化彩票打印半票或全票.
+    /// </summary>
+    void InitCaiPiaoPrintState()
+    {
+        int val = 0;
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "CaiPiaoPrintState");
+        if (info == null || info == "")
+        {
+            val = 0;
+        }
+        else
+        {
+            val = Convert.ToInt32(info);
+        }
+
+        m_CaiPiaoPrintState = val == 0 ? CaiPiaoPrintState.BanPiao : CaiPiaoPrintState.QuanPiao;
+    }
+
+    /// <summary>
+    /// 重置彩票打印为半票.
+    /// </summary>
+    public void ResetCaiPiaoPrintState()
+    {
+        m_CaiPiaoPrintState = CaiPiaoPrintState.BanPiao;
+        HandleJsonObj.WriteToFileXml(FileName, "CaiPiaoPrintState", "0");
+    }
+
+    /// <summary>
+    /// 设置打印彩票是半票还是全票.
+    /// </summary>
+    public void SetCaiPiaoPrintState(CaiPiaoPrintState type)
+    {
+        m_CaiPiaoPrintState = type;
+        HandleJsonObj.WriteToFileXml(FileName, "CaiPiaoPrintState", type == CaiPiaoPrintState.BanPiao ? "0" : "1");
+    }
+
     /// <summary>
     /// 预支彩池.
     /// </summary>

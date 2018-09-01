@@ -22,7 +22,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
         set
         {
             _IsZhanCheNpc = value;
-            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv();
+            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv(SpawnNpcManage.NpcState.ZhanChe);
         }
         get { return _IsZhanCheNpc; }
     }
@@ -35,7 +35,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
         set
         {
             _IsJPBossNpc = value;
-            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv();
+            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv(SpawnNpcManage.NpcState.JPBoss);
         }
         get { return _IsJPBossNpc; }
     }
@@ -203,69 +203,130 @@ public class XKNpcMoveCtrl : MonoBehaviour
             RealNpcTran.forward = Vector3.MoveTowards(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
         }
 
-        if (!IsDoFireAnimation
-		    && !IsFangZhenNpc
-		    && FireDistance > 0f
-		    && XkGameCtrl.PlayerActiveNum > 0
-		    && NpcState != NpcType.FlyNpc) {
-			Vector3 posA = NpcTran.position;
-			Vector3 posB = XkPlayerCtrl.PlayerTranFeiJi.position;
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            if (!IsDoFireAnimation
+                && !IsFangZhenNpc
+                && FireDistance > 0f
+                && XkGameCtrl.PlayerActiveNum > 0
+                && NpcState != NpcType.FlyNpc)
+            {
+                Vector3 posA = NpcTran.position;
+                Vector3 posB = XkPlayerCtrl.PlayerTranFeiJi.position;
 
-			bool isActiveFire = false;
-			for (int i = 0; i < 4; i++) {
-				switch(i) {
-				case 0:
-					if (XkGameCtrl.IsActivePlayerOne) {
-						posB = XKPlayerMoveCtrl.GetInstancePOne().transform.position;
-						posA.y = posB.y = 0f;
-						DisPlayerVal = Vector3.Distance(posA, posB);
-						if (DisPlayerVal <= FireDistance) {
-							isActiveFire = true;
-							PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
-						}
-					}
-					break;
-				case 1:
-					if (XkGameCtrl.IsActivePlayerTwo) {
-						posB = XKPlayerMoveCtrl.GetInstancePTwo().transform.position;
-						posA.y = posB.y = 0f;
-						DisPlayerVal = Vector3.Distance(posA, posB);
-						if (DisPlayerVal <= FireDistance) {
-							isActiveFire = true;
-							PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
-						}
-					}
-					break;
-				case 2:
-					if (XkGameCtrl.IsActivePlayerThree) {
-						posB = XKPlayerMoveCtrl.GetInstancePThree().transform.position;
-						posA.y = posB.y = 0f;
-						DisPlayerVal = Vector3.Distance(posA, posB);
-						if (DisPlayerVal <= FireDistance) {
-							isActiveFire = true;
-							PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePThree();
-						}
-					}
-					break;
-				case 3:
-					if (XkGameCtrl.IsActivePlayerFour) {
-						posB = XKPlayerMoveCtrl.GetInstancePFour().transform.position;
-						posA.y = posB.y = 0f;
-						DisPlayerVal = Vector3.Distance(posA, posB);
-						if (DisPlayerVal <= FireDistance) {
-							isActiveFire = true;
-							PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePFour();
-						}
-					}
-					break;
-				}
+                bool isActiveFire = false;
+                for (int i = 0; i < 2; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            posB = XKPlayerMoveCtrl.GetInstancePOne().transform.position;
+                            posA.y = posB.y = 0f;
+                            DisPlayerVal = Vector3.Distance(posA, posB);
+                            if (DisPlayerVal <= FireDistance)
+                            {
+                                isActiveFire = true;
+                                PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
+                            }
+                            break;
+                        case 1:
+                            posB = XKPlayerMoveCtrl.GetInstancePTwo().transform.position;
+                            posA.y = posB.y = 0f;
+                            DisPlayerVal = Vector3.Distance(posA, posB);
+                            if (DisPlayerVal <= FireDistance)
+                            {
+                                isActiveFire = true;
+                                PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
+                            }
+                            break;
+                    }
 
-				if (isActiveFire) {
-					MakeNpcDoFireAnimation();
-					break;
-				}
-			}
-		}
+                    if (isActiveFire)
+                    {
+                        MakeNpcDoFireAnimation();
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (!IsDoFireAnimation
+                && !IsFangZhenNpc
+                && FireDistance > 0f
+                && XkGameCtrl.PlayerActiveNum > 0
+                && NpcState != NpcType.FlyNpc)
+            {
+                Vector3 posA = NpcTran.position;
+                Vector3 posB = XkPlayerCtrl.PlayerTranFeiJi.position;
+
+                bool isActiveFire = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            if (XkGameCtrl.IsActivePlayerOne)
+                            {
+                                posB = XKPlayerMoveCtrl.GetInstancePOne().transform.position;
+                                posA.y = posB.y = 0f;
+                                DisPlayerVal = Vector3.Distance(posA, posB);
+                                if (DisPlayerVal <= FireDistance)
+                                {
+                                    isActiveFire = true;
+                                    PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
+                                }
+                            }
+                            break;
+                        case 1:
+                            if (XkGameCtrl.IsActivePlayerTwo)
+                            {
+                                posB = XKPlayerMoveCtrl.GetInstancePTwo().transform.position;
+                                posA.y = posB.y = 0f;
+                                DisPlayerVal = Vector3.Distance(posA, posB);
+                                if (DisPlayerVal <= FireDistance)
+                                {
+                                    isActiveFire = true;
+                                    PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (XkGameCtrl.IsActivePlayerThree)
+                            {
+                                posB = XKPlayerMoveCtrl.GetInstancePThree().transform.position;
+                                posA.y = posB.y = 0f;
+                                DisPlayerVal = Vector3.Distance(posA, posB);
+                                if (DisPlayerVal <= FireDistance)
+                                {
+                                    isActiveFire = true;
+                                    PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePThree();
+                                }
+                            }
+                            break;
+                        case 3:
+                            if (XkGameCtrl.IsActivePlayerFour)
+                            {
+                                posB = XKPlayerMoveCtrl.GetInstancePFour().transform.position;
+                                posA.y = posB.y = 0f;
+                                DisPlayerVal = Vector3.Distance(posA, posB);
+                                if (DisPlayerVal <= FireDistance)
+                                {
+                                    isActiveFire = true;
+                                    PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePFour();
+                                }
+                            }
+                            break;
+                    }
+
+                    if (isActiveFire)
+                    {
+                        MakeNpcDoFireAnimation();
+                        break;
+                    }
+                }
+            }
+        }
 
 		if (IsAimPlayer && IsDoFireAnimation && !IsFireMove && !IsMoveFirePoint) {
 			CheckNpcAimPlayer();
@@ -538,14 +599,18 @@ public class XKNpcMoveCtrl : MonoBehaviour
 				AnimatorCom.enabled = true;
 			}
 			RealNpcTran.gameObject.SetActive(true);
+        }
 
-			XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
-			if (healthScript != null) {
-				healthScript.SetNpcMoveScript(this);
-			}
-		}
-        
-		SpawnPointScript = spawnScript;
+        if (RealNpcTran != null)
+        {
+            XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
+            if (healthScript != null)
+            {
+                healthScript.SetNpcMoveScript(this);
+            }
+        }
+
+        SpawnPointScript = spawnScript;
 
 		TimeFire = SpawnPointScript.TimeFire;
 		TimeRun = SpawnPointScript.TimeRun;
@@ -714,6 +779,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     internal bool IsCaiPiaoZhanChe = false;
     internal void SetIsCaiPiaoZhanChe()
     {
+        IsEnterCameraBox = false;
         IsCaiPiaoZhanChe = true;
         //彩票战车npc.
         IsZhanCheNpc = true;
@@ -734,6 +800,14 @@ public class XKNpcMoveCtrl : MonoBehaviour
                 healthScript.SetNpcMoveScript(this);
             }
         }
+
+        Rigidbody rig = gameObject.GetComponent<Rigidbody>();
+        if (rig == null)
+        {
+            rig = gameObject.AddComponent<Rigidbody>();
+            rig.isKinematic = true;
+            rig.freezeRotation = true;
+        }
     }
     
     public void MoveNpcByItween()
@@ -748,22 +822,30 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
-        if (NpcState == NpcType.FlyNpc) {
-			List<Transform> tranList = new List<Transform>(NpcPathTran.GetComponentsInChildren<Transform>()){};
-			tranList.Remove(NpcPathTran);
+        if (NpcState == NpcType.FlyNpc)
+        {
+            if (NpcPathTran != null)
+            {
+                NpcPathTran.gameObject.SetActive(true);
+                List<Transform> tranList = new List<Transform>(NpcPathTran.GetComponentsInChildren<Transform>()) { };
+                tranList.Remove(NpcPathTran);
 
-			NpcMark markScript = tranList[0].GetComponent<NpcMark>();
-			if (markScript != null) {
-				SetIsDoFireAnimation(markScript.IsFireFeiJiNpc);
-			}
-			//MarkTranAim = tranList[0];
-			//MarkNpcMove = MarkTranAim;
-            MarkNpcMovePos = tranList[0].position;
-            MarkCount++;
-			iTween.MoveTo(NpcObj, iTween.Hash("path", tranList.ToArray(),
-			                                  "speed", MvSpeed,
-			                                  "orienttopath", true,
-			                                  "easeType", iTween.EaseType.linear));
+                NpcMark markScript = tranList[0].GetComponent<NpcMark>();
+                if (markScript != null)
+                {
+                    SetIsDoFireAnimation(markScript.IsFireFeiJiNpc);
+                }
+                //MarkTranAim = tranList[0];
+                //MarkNpcMove = MarkTranAim;
+                MarkNpcMovePos = tranList[0].position;
+                MarkCount++;
+                iTween.MoveTo(NpcObj, iTween.Hash("path", tranList.ToArray(),
+                                                  "speed", MvSpeed,
+                                                  "orienttopath", true,
+                                                  "easeType", iTween.EaseType.linear));
+
+                NpcPathTran.gameObject.SetActive(false);
+            }
 			return;
 		}
 
@@ -901,6 +983,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
         {
 			if (MarkCount >= NpcPathTran.childCount)
             {
+                if (IsCaiPiaoZhanChe == false)
+                {
+                    MakeNpcLeaveCamera();
+                }
 				return;
 			}
 			//Debug.Log("Unity:"+"MarkCount***"+MarkCount);
@@ -920,6 +1006,33 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
 		MoveNpcOnCompelteITween();
 	}
+
+    /// <summary>
+    /// 远离摄像机.
+    /// </summary>
+    bool IsLeaveCamera = false;
+    /// <summary>
+    /// 使npc远离摄像机.
+    /// </summary>
+    void MakeNpcLeaveCamera()
+    {
+        if (IsLeaveCamera == true)
+        {
+            return;
+        }
+
+        IsLeaveCamera = true;
+        Vector3[] path = new Vector3[2];
+        path[0] = transform.position;
+        Vector3 forwardVal = transform.forward;
+        forwardVal.y = 0f;
+        Vector3 pos = path[0] + forwardVal.normalized * 80f;
+        path[1] = pos;
+        iTween.MoveTo(NpcObj, iTween.Hash("path", path,
+                                          "speed", MvSpeed,
+                                          "orienttopath", true,
+                                          "easeType", iTween.EaseType.linear));
+    }
 
 	IEnumerator MoveNpcByLocalPos(Transform endTran, float speed)
 	{
@@ -1206,11 +1319,20 @@ public class XKNpcMoveCtrl : MonoBehaviour
 				return;
 			}
 			
-			if (MarkCount >= NpcPathTran.childCount) {
-				if (NpcPathScript != null && NpcPathScript.IsMoveEndFire) {
+			if (MarkCount >= NpcPathTran.childCount)
+            {
+                if (IsCaiPiaoZhanChe == false)
+                {
+                    MakeNpcLeaveCamera();
+                    return;
+                }
+
+                if (NpcPathScript != null && NpcPathScript.IsMoveEndFire)
+                {
 					MakeNpcDoFireAnimation(); //play fire animation
 				}
-				else {
+				else
+                {
 					MakeNpcPlayRootAnimation();
 				}
 				return;
@@ -1355,6 +1477,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
         if (IsCaiPiaoZhanChe == true)
         {
+            IsEnterCameraBox = false;
             if (IsBossNpc == true)
             {
                 //彩票boss被删除.
@@ -1522,7 +1645,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			isHiddenNpcTest = false;
 		}
 
-        if (NpcAniScript != null)
+        if (NpcAniScript != null && NpcAniScript.gameObject != null)
         {
             NpcAniScript.gameObject.SetActive(false);
         }
@@ -1923,16 +2046,22 @@ public class XKNpcMoveCtrl : MonoBehaviour
     {
         if (m_PathNodeList == null)
         {
-            return;
+            m_PathNodeList = new List<Vector3>();
         }
 
-        m_PathNodeList.Clear();
+        if (m_PathNodeList.Count > 0)
+        {
+            m_PathNodeList.Clear();
+        }
+
         if (pathTr != null)
         {
+            pathTr.gameObject.SetActive(true);
             for (int i = 0; i < pathTr.childCount; i++)
             {
                 m_PathNodeList.Add(pathTr.GetChild(i).position);
             }
+            pathTr.gameObject.SetActive(false);
         }
     }
 
@@ -1993,6 +2122,21 @@ public class XKNpcMoveCtrl : MonoBehaviour
                                           "speed", MvSpeed,
                                           "orienttopath", isOrienttopath,
                                           "easeType", iTween.EaseType.linear));
+    }
+
+    /// <summary>
+    /// 是否进入摄像机盒子.
+    /// </summary>
+    internal bool IsEnterCameraBox = false;
+    public void SetIsEnterCameraBox()
+    {
+        StartCoroutine(DelaySetIsEnterCameraBox());
+    }
+
+    IEnumerator DelaySetIsEnterCameraBox()
+    {
+        yield return new WaitForSeconds(3f);
+        IsEnterCameraBox = true;
     }
 }
 

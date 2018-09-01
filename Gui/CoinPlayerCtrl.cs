@@ -96,7 +96,19 @@ public class CoinPlayerCtrl : MonoBehaviour
 		CheckPlayerOneCoinCur();
 		CheckPlayerTwoCoinCur();
 		CheckPlayerThreeCoinCur();
-		CheckPlayerFourCoinCur();
+		//CheckPlayerFourCoinCur();
+
+        if (StartBtObj != null && PlayerSt != PlayerEnum.PlayerFour)
+        {
+            if (StartBtObj.activeInHierarchy == true)
+            {
+                pcvr.GetInstance().OpenPlayerStartLed(PlayerSt);
+            }
+            else
+            {
+                pcvr.GetInstance().ClosePlayerStartLed(PlayerSt);
+            }
+        }
 	}
 
 	public void HiddenPlayerCoin()

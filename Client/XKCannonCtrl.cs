@@ -257,10 +257,20 @@ public class XKCannonCtrl : MonoBehaviour {
 		Vector3 posA = Vector3.zero;
 		bool isGetCamPos = true;
 		if (PlayerMoveScript != null) {
-			if (!PlayerMoveScript.GetIsDeathPlayer()) {
-				isGetCamPos = false;
-				posA = PlayerMoveScript.transform.position;
-			}
+
+            if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+            {
+                isGetCamPos = false;
+                posA = PlayerMoveScript.transform.position;
+            }
+            else
+            {
+                if (!PlayerMoveScript.GetIsDeathPlayer())
+                {
+                    isGetCamPos = false;
+                    posA = PlayerMoveScript.transform.position;
+                }
+            }
 		}
 
 		if (isGetCamPos) {
@@ -698,49 +708,100 @@ public class XKCannonCtrl : MonoBehaviour {
 	
 	void GetAimPlayerMoveScript()
 	{
-		PlayerMoveScript = null;
-		if (XkGameCtrl.PlayerActiveNum <= 0) {
-			return;
-		}
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            PlayerMoveScript = null;
+            int count = 0;
+            int randVal = Random.Range(0, 100) % 2;
+            do
+            {
+                switch (randVal)
+                {
+                    case 0:
+                        PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
+                        break;
 
-		int count = 0;
-		int randVal = Random.Range(0, 100) % 4;
-		do {
-			switch (randVal) {
-			case 0:
-				if (XkGameCtrl.IsActivePlayerOne) {
-					PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
-				}
-				break;
-				
-			case 1:
-				if (XkGameCtrl.IsActivePlayerTwo) {
-					PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
-				}
-				break;
-				
-			case 2:
-				if (XkGameCtrl.IsActivePlayerThree) {
-					PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePThree();
-				}
-				break;
-				
-			case 3:
-				if (XkGameCtrl.IsActivePlayerFour) {
-					PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePFour();
-				}
-				break;
-			}
-			
-			if (PlayerMoveScript != null) {
-				break;
-			}
-			randVal = Random.Range(0, 100) % 4;
-			count++;
-			if (count > 8) {
-				break;
-			}
-		} while (PlayerMoveScript == null);
+                    case 1:
+                        PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
+                        break;
+
+                    case 2:
+                        PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePThree();
+                        break;
+
+                    case 3:
+                        PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePFour();
+                        break;
+                }
+
+                if (PlayerMoveScript != null)
+                {
+                    break;
+                }
+
+                randVal = Random.Range(0, 100) % 2;
+                count++;
+                if (count > 8)
+                {
+                    break;
+                }
+            } while (PlayerMoveScript == null);
+        }
+        else
+        {
+            PlayerMoveScript = null;
+            if (XkGameCtrl.PlayerActiveNum <= 0)
+            {
+                return;
+            }
+
+            int count = 0;
+            int randVal = Random.Range(0, 100) % 4;
+            do
+            {
+                switch (randVal)
+                {
+                    case 0:
+                        if (XkGameCtrl.IsActivePlayerOne)
+                        {
+                            PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePOne();
+                        }
+                        break;
+
+                    case 1:
+                        if (XkGameCtrl.IsActivePlayerTwo)
+                        {
+                            PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePTwo();
+                        }
+                        break;
+
+                    case 2:
+                        if (XkGameCtrl.IsActivePlayerThree)
+                        {
+                            PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePThree();
+                        }
+                        break;
+
+                    case 3:
+                        if (XkGameCtrl.IsActivePlayerFour)
+                        {
+                            PlayerMoveScript = XKPlayerMoveCtrl.GetInstancePFour();
+                        }
+                        break;
+                }
+
+                if (PlayerMoveScript != null)
+                {
+                    break;
+                }
+                randVal = Random.Range(0, 100) % 4;
+                count++;
+                if (count > 8)
+                {
+                    break;
+                }
+            } while (PlayerMoveScript == null);
+        }
 		//Debug.Log("Unity:"+"GetAimPlayerMoveScript -> player "+PlayerMoveScript.name);
 
 		if (IsInvoking("ResetPlayerMoveScript")) {

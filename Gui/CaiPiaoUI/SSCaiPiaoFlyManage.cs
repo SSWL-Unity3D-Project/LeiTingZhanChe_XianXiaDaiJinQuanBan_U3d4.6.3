@@ -61,7 +61,27 @@ public class SSCaiPiaoFlyManage : SSGameMono
         }
         m_CaiPiaoCount++;
 
-        GameObject obj = (GameObject)Instantiate(m_FlyCaiPiaoPrefab, XkGameCtrl.NpcAmmoArray);
+        GameObject obj = null;
+        switch (m_DeCaiState)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
+                {
+                    obj = m_ZhanCheCaiPiaoFlyObjListCom.FindObjByPrefab(m_FlyCaiPiaoPrefab, XkGameCtrl.CaiPiaoFlyArray);
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
+                {
+                    obj = m_SuiJiDaoJuCaiPiaoFlyObjListCom.FindObjByPrefab(m_FlyCaiPiaoPrefab, XkGameCtrl.CaiPiaoFlyArray);
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang:
+                {
+                    obj = m_ZhengChangCaiPiaoFlyObjListCom.FindObjByPrefab(m_FlyCaiPiaoPrefab, XkGameCtrl.CaiPiaoFlyArray);
+                    break;
+                }
+        }
+
+        //GameObject obj = (GameObject)Instantiate(m_FlyCaiPiaoPrefab, XkGameCtrl.NpcAmmoArray);
         obj.transform.position = m_CaiPiaoStartPos;
         obj.transform.localEulerAngles = new Vector3(Random.Range(0f, 180f), Random.Range(0f, 180f), Random.Range(0f, 180f));
         //初始化彩票移动信息.
@@ -78,10 +98,27 @@ public class SSCaiPiaoFlyManage : SSGameMono
         {
             //结束产生飞行彩票.
             IsCreatCaiPiao = false;
-            Destroy(this);
+            m_CaiPiaoCount = 0;
+            //Destroy(this);
+            gameObject.SetActive(false);
         }
     }
 
+    /// <summary>
+    /// 战车彩票飞出的数据管理组件.
+    /// </summary>
+    SSGameObjListManage m_ZhanCheCaiPiaoFlyObjListCom;
+    /// <summary>
+    /// 战车彩票飞出的数据管理组件.
+    /// </summary>
+    SSGameObjListManage m_SuiJiDaoJuCaiPiaoFlyObjListCom;
+    /// <summary>
+    /// 正常得彩时彩票飞出的数据管理组件.
+    /// </summary>
+    SSGameObjListManage m_ZhengChangCaiPiaoFlyObjListCom;
+    /// <summary>
+    /// 得彩类型.
+    /// </summary>
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
     public void Init(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
@@ -109,6 +146,10 @@ public class SSCaiPiaoFlyManage : SSGameMono
         {
             case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                 {
+                    if (m_ZhanCheCaiPiaoFlyObjListCom == null)
+                    {
+                        m_ZhanCheCaiPiaoFlyObjListCom = gameObject.AddComponent<SSGameObjListManage>();
+                    }
                     m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheCaiPiaoFlyDt.MaxCaiPiao;
                     m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheCaiPiaoFlyDt.TimeFly;
                     m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhanCheFlyCaiPiaoPrefab;
@@ -116,6 +157,10 @@ public class SSCaiPiaoFlyManage : SSGameMono
                 }
             case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
                 {
+                    if (m_SuiJiDaoJuCaiPiaoFlyObjListCom == null)
+                    {
+                        m_SuiJiDaoJuCaiPiaoFlyObjListCom = gameObject.AddComponent<SSGameObjListManage>();
+                    }
                     m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_SuiJiCaiPiaoFlyDt.MaxCaiPiao;
                     m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_SuiJiCaiPiaoFlyDt.TimeFly;
                     m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;
@@ -123,6 +168,10 @@ public class SSCaiPiaoFlyManage : SSGameMono
                 }
             case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhengChang:
                 {
+                    if (m_ZhengChangCaiPiaoFlyObjListCom == null)
+                    {
+                        m_ZhengChangCaiPiaoFlyObjListCom = gameObject.AddComponent<SSGameObjListManage>();
+                    }
                     m_MaxCaiPiao = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhengChangCaiPiaoFlyDt.MaxCaiPiao;
                     m_TimeFly = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_ZhengChangCaiPiaoFlyDt.TimeFly;
                     m_FlyCaiPiaoPrefab = XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_FlyCaiPiaoPrefab;

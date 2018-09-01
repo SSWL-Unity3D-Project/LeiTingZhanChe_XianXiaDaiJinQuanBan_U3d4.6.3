@@ -54,31 +54,31 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
-	IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
-	{
-		yield return new WaitForSeconds(1f);
-		if (m_GameUIBottomLeft == null)
-		{
-			UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
-			yield break;
-		}
-		
-		GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
-		if (gmDataPrefab != null)
-		{
-			UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
-			GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
-			SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
-			if (caiPiaoZhuanPan != null)
-			{
-				caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
-			}
-		}
-		else
-		{
-			UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
-		}
-	}
+    //IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
+    //{
+    //	yield return new WaitForSeconds(1f);
+    //	if (m_GameUIBottomLeft == null)
+    //	{
+    //		UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
+    //		yield break;
+    //	}
+
+    //	GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+    //	if (gmDataPrefab != null)
+    //	{
+    //		UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+    //		GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+    //		SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+    //		if (caiPiaoZhuanPan != null)
+    //		{
+    //			caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+    //		}
+    //	}
+    //	else
+    //	{
+    //		UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+    //	}
+    //}
 
     /// <summary>
     /// npc飘分控制组件.
@@ -210,7 +210,7 @@ public class SSGameUICtrl : SSGameMono
             }
         }
     }
-    
+
     /// <summary>
     /// 玩家彩票数量UI.
     /// </summary>
@@ -218,8 +218,21 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 创建玩家彩票数量UI界面.
     /// </summary>
-    void CreatCaiPiaoInfoPanel(PlayerEnum indexPlayer)
+    void CreatCaiPiaoInfoPanel(PlayerEnum indexPlayer, bool isShowCaiPiaoInfo = false)
     {
+        if (isShowCaiPiaoInfo == true)
+        {
+            //强制显示彩票界面.
+        }
+        else
+        {
+            if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+            {
+                //没有激活任何玩家.
+                return;
+            }
+        }
+
         int index = (int)indexPlayer - 1;
         if (index < 0 || index > 2)
         {
@@ -266,6 +279,7 @@ public class SSGameUICtrl : SSGameMono
         if (m_CaiPiaoInfoArray[index] != null)
         {
             UnityLog("RemoveCaiPiaoInfoPanel -> index ==== " + index);
+            RemovePlayerCaiPiaoChengJiu(indexPlayer);
             Destroy(m_CaiPiaoInfoArray[index].gameObject);
         }
     }
@@ -275,6 +289,12 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer)
     {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活任何玩家.
+            return;
+        }
+
         int indexVal = (int)indexPlayer - 1;
         if (m_CaiPiaoInfoArray[indexVal] != null)
         {
@@ -292,6 +312,12 @@ public class SSGameUICtrl : SSGameMono
 
     void SetActiveZhengZaiChuPiaoUI(PlayerEnum indexPlayer, bool isActive)
     {
+        //if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        //{
+        //    //没有激活任何玩家.
+        //    return;
+        //}
+
         int index = (int)indexPlayer - 1;
         if (index < 0 || index > 2)
         {
@@ -317,7 +343,7 @@ public class SSGameUICtrl : SSGameMono
     /// 是否删除玩家彩票UI.
     /// </summary>
     bool[] IsRemoveCaiPiaoInfo = new bool[3];
-    public void ShowPlayerCaiPiaoInfo(PlayerEnum indexPlayer, int num)
+    public void ShowPlayerCaiPiaoInfo(PlayerEnum indexPlayer, int num, bool isPlayCaiPiaoNumAni = false, bool isShowCaiPiaoInfo = false)
     {
         int index = (int)indexPlayer - 1;
         if (index < 0 || index > 2)
@@ -346,13 +372,29 @@ public class SSGameUICtrl : SSGameMono
             if (m_CaiPiaoInfoArray[index] == null)
             {
                 //创建彩票数据信息.
-                CreatCaiPiaoInfoPanel(indexPlayer);
+                CreatCaiPiaoInfoPanel(indexPlayer, isShowCaiPiaoInfo);
             }
 
             if (m_CaiPiaoInfoArray[index] != null)
             {
                 //显示彩票数量UI.
                 m_CaiPiaoInfoArray[index].ShowNumUI(num);
+
+                if (isPlayCaiPiaoNumAni == true)
+                {
+                    //播放彩票数字缩放动画.
+                    SSCaiPiaoInfo caiPiaoInfoCom = m_CaiPiaoInfoArray[index].GetComponent<SSCaiPiaoInfo>();
+                    if (caiPiaoInfoCom != null)
+                    {
+                        caiPiaoInfoCom.PlayCaiPiaoNumSuoFangAnimation();
+                    }
+                }
+
+                if (m_CaiPiaoBuZuArray[index] != null)
+                {
+                    //彩票不足UI有显示.
+                    SetActiveZhengZaiChuPiaoUI(indexPlayer, false);
+                }
             }
         }
     }
@@ -386,6 +428,12 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public void CreatCaiPiaoDaJiangPanel(PlayerEnum indexPlayer, int num)
     {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活任何玩家.
+            return;
+        }
+
         int index = (int)indexPlayer - 1;
         if (index >= 0 && index <= 2)
         {
@@ -410,6 +458,13 @@ public class SSGameUICtrl : SSGameMono
                     }
                 }
             }
+            else
+            {
+                if (m_CaiPiaoDaJiang != null)
+                {
+                    m_CaiPiaoDaJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                }
+            }
         }
         else
         {
@@ -429,4 +484,56 @@ public class SSGameUICtrl : SSGameMono
             Destroy(m_CaiPiaoDaJiang.gameObject);
         }
     }
+
+    /// <summary>
+    /// 彩票成就控制组件列表.
+    /// </summary>
+    SSPlayerCaiPiaoChengJiu[] m_PlayerCaiPiaoChengJiuArray = new SSPlayerCaiPiaoChengJiu[3];
+    /// <summary>
+    /// 创建玩家基础彩票成就UI.
+    /// </summary>
+    public void CreatePlayerCaiPiaoChengJiu(PlayerEnum indexPlayer, int caiPiaoNum)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            UnityLogWarning("CreatePlayerCaiPiaoChengJiu -> index was wrong! indexVal ==== " + indexVal);
+            return;
+        }
+
+        if (m_PlayerCaiPiaoChengJiuArray[indexVal] == null)
+        {
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/PlayerCaiPiaoChengJiu");
+            if (gmDataPrefab != null)
+            {
+                UnityLog("CreatePlayerCaiPiaoChengJiu -> indexVal ==== " + indexVal);
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
+                m_PlayerCaiPiaoChengJiuArray[indexVal] = obj.GetComponent<SSPlayerCaiPiaoChengJiu>();
+                if (m_PlayerCaiPiaoChengJiuArray[indexVal] != null)
+                {
+                    m_PlayerCaiPiaoChengJiuArray[indexVal].Init(indexPlayer, XkGameCtrl.PlayerJiFenArray[indexVal], caiPiaoNum);
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 删除玩家基础彩票成就UI.
+    /// </summary>
+    public void RemovePlayerCaiPiaoChengJiu(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            UnityLogWarning("CreatePlayerCaiPiaoChengJiu -> index was wrong! indexVal ==== " + indexVal);
+            return;
+        }
+
+        if (m_PlayerCaiPiaoChengJiuArray[indexVal] != null)
+        {
+            m_PlayerCaiPiaoChengJiuArray[indexVal].RemoveSelf();
+            m_PlayerCaiPiaoChengJiuArray[indexVal] = null;
+        }
+    }
+    internal SSCaiPiaoYanHua m_SSCaiPiaoYanHua;
 }

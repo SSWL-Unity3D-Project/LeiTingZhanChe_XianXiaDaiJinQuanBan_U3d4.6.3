@@ -9,8 +9,9 @@ public enum TKMoveState
 	YaoGanBan,			//摇杆版.
 }
 
-public class XKPlayerMoveCtrl : MonoBehaviour {
-	public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
+public class XKPlayerMoveCtrl : MonoBehaviour
+{
+    public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	TKMoveState TKMoveSt = TKMoveState.YaoGanBan;
 	public UVA LvDaiUVCom;
 	public AudioSource PlayerMoveAudio;
@@ -160,6 +161,12 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 		if (!isActivePlayer) {
 			gameObject.SetActive(false);
 		}
+
+        if (m_PlayerAiMove == null)
+        {
+            m_PlayerAiMove = gameObject.AddComponent<XKPlayerAiMove>();
+            m_PlayerAiMove.Init(this);
+        }
 	}
 
 	void FixedUpdate()
@@ -205,7 +212,9 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 		}
 		MakePlayerToLand();
 		CheckCheTiPointArray();
-	}
+
+        CheckPlayerToMainCameraDistance();
+    }
 
 	void OnCollisionEnter(Collision collision)
 	{
@@ -264,10 +273,19 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 	TK_Angle_State TKAngleSt = TK_Angle_State.Angle_0;
 	void CheckPlayerYaoGanInput()
 	{
-		if (!XkGameCtrl.GetIsActivePlayer(PlayerIndex)) {
-			PlayerRotStateYG = 1;
-			return;
-		}
+
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有玩家激活游戏.
+        }
+        else
+        {
+            if (!XkGameCtrl.GetIsActivePlayer(PlayerIndex))
+            {
+                PlayerRotStateYG = 1;
+                return;
+            }
+        }
 
 		int indexVal = (int)PlayerIndex - 1;
 		float fxVal = InputEventCtrl.PlayerFX[indexVal];
@@ -1109,7 +1127,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 	public void HiddenGamePlayer(int key = 0)
 	{
 		//Debug.Log("Unity:"+"HiddenGamePlayer -> key "+key);
-		if (!gameObject.activeSelf) {
+		if (!gameObject.activeSelf)
+        {
 			return;
 		}
 		gameObject.SetActive(false);
@@ -1121,7 +1140,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
         }
 
 		ResetIsWuDiState();
-		if (DeathExplodPrefab != null && key == 0) {
+		if (DeathExplodPrefab != null && key == 0)
+        {
 			GameObject objExplode = null;
 			objExplode = (GameObject)Instantiate(DeathExplodPrefab, PlayerTran.position, PlayerTran.rotation);
 			objExplode.transform.parent = XkGameCtrl.PlayerAmmoArray;
@@ -1140,13 +1160,23 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 
 	public void ActivePlayerWuDiState()
 	{
-		if (!XkGameCtrl.GetIsActivePlayer(PlayerIndex)) {
-			return;
-		}
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //游戏处于循环动画阶段,没有激活的玩家.
+        }
+        else
+        {
+            //游戏处于玩家战斗阶段,有激活的玩家.
+            if (!XkGameCtrl.GetIsActivePlayer(PlayerIndex))
+            {
+                return;
+            }
 
-		if (HuDunCtrl.GetInstance(PlayerIndex) != null) {
-			HuDunCtrl.GetInstance(PlayerIndex).ShowHuDunUI(XkGameCtrl.GetInstance().WuDiTime);
-		}
+            if (HuDunCtrl.GetInstance(PlayerIndex) != null)
+            {
+                HuDunCtrl.GetInstance(PlayerIndex).ShowHuDunUI(XkGameCtrl.GetInstance().WuDiTime);
+            }
+        }
 
 		IsWuDiState = true;
 		WuDiTXObj.SetActive(true);
@@ -1160,7 +1190,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 		IsWuDiState = false;
 		WuDiTXObj.SetActive(false);
 		gameObject.layer = LayerMask.NameToLayer("Player");
-		if (DaoJuCtrl.GetInstance() != null) {
+		if (DaoJuCtrl.GetInstance() != null)
+        {
 			DaoJuCtrl.GetInstance().HiddenPlayerDaoJuObj(PlayerIndex, BuJiBaoType.NLHuDun);
 		}
 	}
@@ -1510,5 +1541,44 @@ public class XKPlayerMoveCtrl : MonoBehaviour {
 	public void SetIsActiveZhuiYa(bool isActive)
 	{
 		IsActiveZhuiYa = isActive;
-	}
+    }
+
+    /// <summary>
+    /// 玩家Ai坦克运动控制组件.
+    /// </summary>
+    internal XKPlayerAiMove m_PlayerAiMove;
+
+    float m_LastCheckDisCameraTime = 0f;
+    /// <summary>
+    /// 检测玩家Ai与主摄像机的距离.
+    /// </summary>
+    void CheckPlayerToMainCameraDistance()
+    {
+        if (Time.time - m_LastCheckDisCameraTime < 5f)
+        {
+            return;
+        }
+        m_LastCheckDisCameraTime = Time.time;
+
+        if (m_PlayerAiMove.IsOpenPlayerAiMove == false)
+        {
+            return;
+        }
+
+        if (Camera.main == null)
+        {
+            return;
+        }
+
+        float dis = 0f;
+        Vector3 posA = Camera.main.transform.position;
+        Vector3 posB = transform.position;
+        posA.y = posB.y = 0f;
+        dis = Vector3.Distance(posA, posB);
+        if (dis > 200f)
+        {
+            //需要重置玩家位置了.
+            XkGameCtrl.ActivePlayerAiTankToGame(PlayerIndex);
+        }
+    }
 }

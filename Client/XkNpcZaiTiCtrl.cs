@@ -239,9 +239,9 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 			return;
 		}
 
-		if (Network.peerType == NetworkPeerType.Server) {
-			return;
-		}
+		//if (Network.peerType == NetworkPeerType.Server) {
+		//	return;
+		//}
 
 		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()
 		    || GameOverCtrl.IsShowGameOver) {

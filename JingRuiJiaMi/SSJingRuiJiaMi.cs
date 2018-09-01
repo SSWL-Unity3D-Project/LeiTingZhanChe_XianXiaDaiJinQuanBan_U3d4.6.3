@@ -79,6 +79,9 @@ public class SSJingRuiJiaMi : MonoBehaviour
 		Application.LoadLevel(1);
 	}
 
+    /// <summary>
+    /// 游戏结束后进行一次精锐4加密校验.
+    /// </summary>
 	public static void OnGameOverCheckJingRuiJiaMi()
 	{
 		if (!IsOpenJingRuiJiaMi)

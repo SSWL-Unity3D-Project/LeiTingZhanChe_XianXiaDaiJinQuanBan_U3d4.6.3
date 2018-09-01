@@ -561,6 +561,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                 {
                     m_SpawnNpcManage.MakeAllCreatNpcPointsToLand();
                 }
+                XkGameCtrl.GetInstance().OpenAllAiPlayerTank();
             }
 		}
 	}
@@ -1141,9 +1142,15 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
         if (m_CameraMoveAni != null)
         {
             //Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
-            m_CameraWeiDongPos = m_CameraMoveAni.transform.position;
-            IsCameraPosWeiDong = isMove;
-            m_CameraMoveAni.SetBool("IsMove", isMove);
+            if (isMove != IsCameraPosWeiDong)
+            {
+                if (isMove == true)
+                {
+                    m_CameraWeiDongPos = transform.position;
+                }
+                IsCameraPosWeiDong = isMove;
+                m_CameraMoveAni.SetBool("IsMove", isMove);
+            }
         }
         else
         {

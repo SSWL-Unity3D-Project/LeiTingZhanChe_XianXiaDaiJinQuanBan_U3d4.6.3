@@ -430,15 +430,65 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 	BuJiBaoType JiQiangAmmoSt = BuJiBaoType.Null;
 	BuJiBaoType ZhuPaoAmmoSt = BuJiBaoType.DaoDan;
+    float m_LastAiJiQianTime = 0f;
+    float m_AiJiQianTime = 2f;
+    bool IsAiPlayerFire = false;
+
 	void CheckPlayerJiQiangFireBt()
 	{
 		if (!ScreenDanHeiCtrl.IsStartGame) {
 			return;
 		}
 
-		if (!CheckIsActivePlayer()) {
-			return;
-		}
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //激活主角Ai坦克状态.
+            if (XkGameCtrl.GetInstance().m_AiPathGroup.m_CameraMoveType == AiPathGroupCtrl.MoveState.YuLe)
+            {
+                if (Random.Range(0, 100) % 50 != 0)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                //if (Random.Range(0, 100) % 10 != 0)
+                //{
+                //    return;
+                //}
+
+                if (Time.time - m_LastAiJiQianTime >= m_AiJiQianTime)
+                {
+                    if (IsAiPlayerFire == false)
+                    {
+                        m_AiJiQianTime = Random.Range(1f, 3f);
+                    }
+                    else
+                    {
+                        m_AiJiQianTime = Random.Range(0.5f, 2.5f);
+                    }
+                    IsAiPlayerFire = !IsAiPlayerFire;
+                    m_LastAiJiQianTime = Time.time;
+                }
+
+                if (IsAiPlayerFire == false)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if (!CheckIsActivePlayer())
+            {
+                return;
+            }
+
+            if (!IsActiveFireBtJQ)
+            {
+                return;
+            }
+        }
 
         bool isSpawnAmmo = CheckIsSpawnPlayerAmmo(JI_QIANG_INDEX);
         if (!isSpawnAmmo)
@@ -453,11 +503,6 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
             {
                 MakeAllXiaoFeiJiFire();
             }
-        }
-
-        if (!IsActiveFireBtJQ)
-        {
-            return;
         }
 
         //if (DaoJiShiCtrl.GetInstance().GetIsPlayDaoJishi())
@@ -742,13 +787,37 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 //			return;
 //		}
 
-		if (!IsActiveFireBtZP) {
-			return;
-		}
-		
-		if (!CheckIsActivePlayer()) {
-			return;
-		}
+        
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //激活主角Ai坦克状态.
+            if (XkGameCtrl.GetInstance().m_AiPathGroup.m_CameraMoveType == AiPathGroupCtrl.MoveState.YuLe)
+            {
+                if (Random.Range(0, 100) % 3 != 0)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (Random.Range(0, 100) % 30 != 0)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if (!IsActiveFireBtZP)
+            {
+                return;
+            }
+
+            if (!CheckIsActivePlayer())
+            {
+                return;
+            }
+        }
 		
 //		if (DaoJiShiCtrl.GetInstance().GetIsPlayDaoJishi()) {
 //			return;

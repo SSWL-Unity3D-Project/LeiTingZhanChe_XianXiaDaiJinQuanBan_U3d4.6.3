@@ -33,7 +33,7 @@ public class SetPanelUiRoot : MonoBehaviour
 	string FileName = XKGlobalData.FileName;
 	HandleJson HandleJsonObj;
 
-	Vector3 [] SetPanelStarPos = new Vector3[10]{
+	Vector3 [] SetPanelStarPos = new Vector3[11]{
         new Vector3(-565f, 265f, 0f),
         new Vector3(-565f, 211f, 0f),
         new Vector3(-565f, 160f, 0f),
@@ -41,6 +41,7 @@ public class SetPanelUiRoot : MonoBehaviour
         new Vector3(-565f, 49f, 0f),
         new Vector3(-565f, -4f, 0f),
         new Vector3(-565f, -58f, 0f),
+        new Vector3(108f, -58f, 0f),
         new Vector3(-11f, -112f, 0f),
         new Vector3(191f, -112f, 0f),
         new Vector3(400f, -112f, 0f),
@@ -53,6 +54,7 @@ public class SetPanelUiRoot : MonoBehaviour
 		GameDiff,
         CoinToCard,
         CardMode,
+        CaiPiaoPrintState,
 		//GameLanguage,
 		ResetFactory,
 		//GameAudioSet,
@@ -104,6 +106,7 @@ public class SetPanelUiRoot : MonoBehaviour
 		InitGameModeDuiGou();
         InitCoinToCard();
         InitPrintCaiPiaoUI();
+        InitCaiPiaoPrintState();
         //InitGameAudioValue();
 
         InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
@@ -413,6 +416,11 @@ public class SetPanelUiRoot : MonoBehaviour
                     SetPrintCaiPiaoUI(!XKGlobalData.GetInstance().IsPrintCaiPiao);
                     break;
                 }
+            case SelectSetPanelDate.CaiPiaoPrintState:
+                {
+                    UpdateCaiPiaoPrintState();
+                    break;
+                }
             case SelectSetPanelDate.CaiPiaoJiP1:
                 {
                     StartPrintCaiPiao(PlayerEnum.PlayerOne);
@@ -574,6 +582,7 @@ public class SetPanelUiRoot : MonoBehaviour
         XKGlobalData.GetInstance().ResetDaoJuCaiChi();
         XKGlobalData.GetInstance().ResetJPBossCaiChi();
         XKGlobalData.GetInstance().ResetYuZhiCaiChi();
+        ResetCaiPiaoPrintState();
     }
 
 	void InitStarImgPos()
@@ -712,4 +721,77 @@ public class SetPanelUiRoot : MonoBehaviour
 		GameAudioVolume = Convert.ToInt32(val);
 		GameAudioVolumeLB.text = GameAudioVolume.ToString();
 	}
+
+    /// <summary>
+    /// 半票UI.
+    /// </summary>
+    public GameObject m_CaiPiaoBanPiao;
+    /// <summary>
+    /// 全票UI.
+    /// </summary>
+    public GameObject m_CaiPiaoQuanPiao;
+    /// <summary>
+    /// 初始化彩票打印状态.
+    /// </summary>
+    void InitCaiPiaoPrintState()
+    {
+        XKGlobalData.CaiPiaoPrintState type = XKGlobalData.GetInstance().m_CaiPiaoPrintState;
+        if (m_CaiPiaoBanPiao != null)
+        {
+            m_CaiPiaoBanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.BanPiao ? true : false);
+        }
+
+        if (m_CaiPiaoQuanPiao != null)
+        {
+            m_CaiPiaoQuanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.QuanPiao ? true : false);
+        }
+    }
+
+    void UpdateCaiPiaoPrintState()
+    {
+        XKGlobalData.CaiPiaoPrintState type = XKGlobalData.GetInstance().m_CaiPiaoPrintState;
+        switch (type)
+        {
+            case XKGlobalData.CaiPiaoPrintState.BanPiao:
+                {
+                    type = XKGlobalData.CaiPiaoPrintState.QuanPiao;
+                    break;
+                }
+            case XKGlobalData.CaiPiaoPrintState.QuanPiao:
+                {
+                    type = XKGlobalData.CaiPiaoPrintState.BanPiao;
+                    break;
+                }
+        }
+        XKGlobalData.GetInstance().SetCaiPiaoPrintState(type);
+
+        if (m_CaiPiaoBanPiao != null)
+        {
+            m_CaiPiaoBanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.BanPiao ? true : false);
+        }
+
+        if (m_CaiPiaoQuanPiao != null)
+        {
+            m_CaiPiaoQuanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.QuanPiao ? true : false);
+        }
+    }
+
+    /// <summary>
+    /// 重置彩票打印为半票.
+    /// </summary>
+    void ResetCaiPiaoPrintState()
+    {
+        XKGlobalData.CaiPiaoPrintState type = XKGlobalData.CaiPiaoPrintState.BanPiao;
+        XKGlobalData.GetInstance().SetCaiPiaoPrintState(type);
+
+        if (m_CaiPiaoBanPiao != null)
+        {
+            m_CaiPiaoBanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.BanPiao ? true : false);
+        }
+
+        if (m_CaiPiaoQuanPiao != null)
+        {
+            m_CaiPiaoQuanPiao.SetActive(type == XKGlobalData.CaiPiaoPrintState.QuanPiao ? true : false);
+        }
+    }
 }
