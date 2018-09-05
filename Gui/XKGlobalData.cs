@@ -9,6 +9,17 @@ public class XKGlobalData
     {
         set
         {
+            if (pcvr.bIsHardWare == true)
+            {
+                if (value > 0 && _CoinPlayerOne != value)
+                {
+                    PlayTouBiAudio();
+                    if (value > _CoinPlayerOne)
+                    {
+                        Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (value - _CoinPlayerOne));
+                    }
+                }
+            }
             _CoinPlayerOne = value;
         }
         get
@@ -32,6 +43,17 @@ public class XKGlobalData
     {
         set
         {
+            if (pcvr.bIsHardWare == true)
+            {
+                if (value > 0 && _CoinPlayerTwo != value)
+                {
+                    PlayTouBiAudio();
+                    if (value > _CoinPlayerTwo)
+                    {
+                        Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (value - _CoinPlayerTwo));
+                    }
+                }
+            }
             _CoinPlayerTwo = value;
         }
         get
@@ -55,6 +77,17 @@ public class XKGlobalData
     {
         set
         {
+            if (pcvr.bIsHardWare == true)
+            {
+                if (value > 0 && _CoinPlayerThree != value)
+                {
+                    PlayTouBiAudio();
+                    if (value > _CoinPlayerThree)
+                    {
+                        Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (value - _CoinPlayerThree));
+                    }
+                }
+            }
             _CoinPlayerThree = value;
         }
         get
@@ -67,14 +100,47 @@ public class XKGlobalData
                 }
                 else
                 {
-                    _CoinPlayerThree = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[1];
+                    _CoinPlayerThree = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[2];
                 }
             }
             return _CoinPlayerThree;
         }
     }
-    public static int CoinPlayerFour = 0;
-	public static int GameNeedCoin;
+    static int _CoinPlayerFour = 0;
+    public static int CoinPlayerFour
+    {
+        set
+        {
+            if (pcvr.bIsHardWare == true)
+            {
+                if (value > 0 && _CoinPlayerFour != value)
+                {
+                    PlayTouBiAudio();
+                    if (value > _CoinPlayerFour)
+                    {
+                        Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (value - _CoinPlayerFour));
+                    }
+                }
+            }
+            _CoinPlayerFour = value;
+        }
+        get
+        {
+            if (pcvr.bIsHardWare)
+            {
+                if (InputEventCtrl.IsUsePcInputTest == true)
+                {
+                    //测试模式.
+                }
+                else
+                {
+                    _CoinPlayerFour = pcvr.GetInstance().mPcvrTXManage.PlayerCoinArray[3];
+                }
+            }
+            return _CoinPlayerFour;
+        }
+    }
+    public static int GameNeedCoin;
 	/**
 	 * GameVersionPlayer == 0 -> 四人版本游戏.
 	 * GameVersionPlayer == 1 -> 双人版本游戏.
@@ -562,13 +628,18 @@ public class XKGlobalData
 			return;
 		}
 
-		if (coin > 0 && CoinPlayerOne != coin) {
-			PlayTouBiAudio();
-            if (coin > CoinPlayerOne)
+        if (pcvr.bIsHardWare == false)
+        {
+            if (coin > 0 && CoinPlayerOne != coin)
             {
-                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerOne));
+                PlayTouBiAudio();
+                if (coin > CoinPlayerOne)
+                {
+                    Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerOne));
+                }
             }
-		}
+        }
+
 		CoinPlayerOne = coin;
 		if (CoinPlayerCtrl.GetInstanceOne() != null) {
 			CoinPlayerCtrl.GetInstanceOne().SetPlayerCoin(coin);
@@ -587,13 +658,18 @@ public class XKGlobalData
 			return;
 		}
 
-		if (coin > 0 && CoinPlayerTwo != coin) {
-			PlayTouBiAudio();
-            if (coin > CoinPlayerTwo)
+        if (pcvr.bIsHardWare == false)
+        {
+            if (coin > 0 && CoinPlayerTwo != coin)
             {
-                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerTwo));
+                PlayTouBiAudio();
+                if (coin > CoinPlayerTwo)
+                {
+                    Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerTwo));
+                }
             }
         }
+
 		CoinPlayerTwo = coin;
 		if (CoinPlayerCtrl.GetInstanceTwo() != null) {
 			CoinPlayerCtrl.GetInstanceTwo().SetPlayerCoin(coin);
@@ -606,13 +682,18 @@ public class XKGlobalData
 	
 	public static void SetCoinPlayerThree(int coin)
 	{
-		if (coin > 0 && CoinPlayerThree != coin) {
-			PlayTouBiAudio();
-            if (coin > CoinPlayerThree)
+        if (pcvr.bIsHardWare == false)
+        {
+            if (coin > 0 && CoinPlayerThree != coin)
             {
-                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerThree));
+                PlayTouBiAudio();
+                if (coin > CoinPlayerThree)
+                {
+                    Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerThree));
+                }
             }
         }
+
 		CoinPlayerThree = coin;
 		if (CoinPlayerCtrl.GetInstanceThree() != null) {
 			CoinPlayerCtrl.GetInstanceThree().SetPlayerCoin(coin);
@@ -625,13 +706,18 @@ public class XKGlobalData
 
 	public static void SetCoinPlayerFour(int coin)
 	{
-		if (coin > 0 && CoinPlayerFour != coin) {
-			PlayTouBiAudio();
-            if (coin > CoinPlayerFour)
+        if (pcvr.bIsHardWare == false)
+        {
+            if (coin > 0 && CoinPlayerFour != coin)
             {
-                Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerFour));
+                PlayTouBiAudio();
+                if (coin > CoinPlayerFour)
+                {
+                    Instance.SetTotalInsertCoins(Instance.m_TotalInsertCoins + (coin - CoinPlayerFour));
+                }
             }
         }
+
 		CoinPlayerFour = coin;
 		if (CoinPlayerCtrl.GetInstanceFour() != null) {
 			CoinPlayerCtrl.GetInstanceFour().SetPlayerCoin(coin);

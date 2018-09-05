@@ -8,24 +8,24 @@ public class SSCaiPiaoBuZu : SSGameMono
 	public void Init(PlayerEnum indexPlayer)
     {
         m_IndexPlayer = indexPlayer;
-        switch (indexPlayer)
-        {
-            case PlayerEnum.PlayerOne:
-                {
-                    InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
-                    break;
-                }
-            case PlayerEnum.PlayerTwo:
-                {
-                    InputEventCtrl.GetInstance().ClickStartBtTwoEvent += ClickStartBtTwoEvent;
-                    break;
-                }
-            case PlayerEnum.PlayerThree:
-                {
-                    InputEventCtrl.GetInstance().ClickStartBtThreeEvent += ClickStartBtThreeEvent;
-                    break;
-                }
-        }
+        //switch (indexPlayer)
+        //{
+        //    case PlayerEnum.PlayerOne:
+        //        {
+        //            InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
+        //            break;
+        //        }
+        //    case PlayerEnum.PlayerTwo:
+        //        {
+        //            InputEventCtrl.GetInstance().ClickStartBtTwoEvent += ClickStartBtTwoEvent;
+        //            break;
+        //        }
+        //    case PlayerEnum.PlayerThree:
+        //        {
+        //            InputEventCtrl.GetInstance().ClickStartBtThreeEvent += ClickStartBtThreeEvent;
+        //            break;
+        //        }
+        //}
         InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
     }
 
@@ -107,24 +107,24 @@ public class SSCaiPiaoBuZu : SSGameMono
         if (!IsRemoveSelf)
         {
             IsRemoveSelf = true;
-            switch (m_IndexPlayer)
-            {
-                case PlayerEnum.PlayerOne:
-                    {
-                        InputEventCtrl.GetInstance().ClickStartBtOneEvent -= ClickStartBtOneEvent;
-                        break;
-                    }
-                case PlayerEnum.PlayerTwo:
-                    {
-                        InputEventCtrl.GetInstance().ClickStartBtTwoEvent -= ClickStartBtTwoEvent;
-                        break;
-                    }
-                case PlayerEnum.PlayerThree:
-                    {
-                        InputEventCtrl.GetInstance().ClickStartBtThreeEvent -= ClickStartBtThreeEvent;
-                        break;
-                    }
-            }
+            //switch (m_IndexPlayer)
+            //{
+            //    case PlayerEnum.PlayerOne:
+            //        {
+            //            InputEventCtrl.GetInstance().ClickStartBtOneEvent -= ClickStartBtOneEvent;
+            //            break;
+            //        }
+            //    case PlayerEnum.PlayerTwo:
+            //        {
+            //            InputEventCtrl.GetInstance().ClickStartBtTwoEvent -= ClickStartBtTwoEvent;
+            //            break;
+            //        }
+            //    case PlayerEnum.PlayerThree:
+            //        {
+            //            InputEventCtrl.GetInstance().ClickStartBtThreeEvent -= ClickStartBtThreeEvent;
+            //            break;
+            //        }
+            //}
             InputEventCtrl.GetInstance().ClickSetMoveBtEvent -= ClickSetMoveBtEvent;
             Destroy(gameObject);
         }

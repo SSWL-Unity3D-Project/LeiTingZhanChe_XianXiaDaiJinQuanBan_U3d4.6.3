@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class SSCaiPiaoInfo : SSGameMono
@@ -53,13 +54,68 @@ public class SSCaiPiaoInfo : SSGameMono
         }
     }
 
+    public void Init(PlayerEnum indexPlayer)
+    {
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtOneEvent += ClickStartBtOneEvent;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtTwoEvent += ClickStartBtTwoEvent;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    InputEventCtrl.GetInstance().ClickStartBtThreeEvent += ClickStartBtThreeEvent;
+                    break;
+                }
+        }
+    }
+
+    private void ClickStartBtOneEvent(pcvr.ButtonState val)
+    {
+        if (val == pcvr.ButtonState.UP)
+        {
+            PcvrRestartPrintCaiPiao(PlayerEnum.PlayerOne);
+        }
+    }
+
+    private void ClickStartBtTwoEvent(pcvr.ButtonState val)
+    {
+        if (val == pcvr.ButtonState.UP)
+        {
+            PcvrRestartPrintCaiPiao(PlayerEnum.PlayerTwo);
+        }
+    }
+
+    private void ClickStartBtThreeEvent(pcvr.ButtonState val)
+    {
+        if (val == pcvr.ButtonState.UP)
+        {
+            PcvrRestartPrintCaiPiao(PlayerEnum.PlayerThree);
+        }
+    }
+    
+    /// <summary>
+    /// 重新开始出票.
+    /// </summary>
+    void PcvrRestartPrintCaiPiao(PlayerEnum indexPlayer)
+    {
+        //这里添加pcvr重新出票的代码.
+        pcvr.GetInstance().RestartPrintCaiPiao(indexPlayer);
+    }
+
     void Update()
     {
         if (m_GameNumUI != null && IsInitCaiPiaoAni)
         {
             if (Time.time - TimeLastCaiPiaoAni <= TimeCaiPiaoAni)
             {
-                m_GameNumUI.ShowNumUI(Random.Range(1000, 9999));
+                m_GameNumUI.ShowNumUI(UnityEngine.Random.Range(1000, 9999));
             }
             else
             {
@@ -111,6 +167,35 @@ public class SSCaiPiaoInfo : SSGameMono
         {
             m_AnimationNumSuoFang.SetBool("IsPlay", false);
             //m_AnimationNumSuoFang.enabled = false;
+        }
+    }
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf(PlayerEnum indexPlayer)
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+
+            switch (indexPlayer)
+            {
+                case PlayerEnum.PlayerOne:
+                    {
+                        InputEventCtrl.GetInstance().ClickStartBtOneEvent -= ClickStartBtOneEvent;
+                        break;
+                    }
+                case PlayerEnum.PlayerTwo:
+                    {
+                        InputEventCtrl.GetInstance().ClickStartBtTwoEvent -= ClickStartBtTwoEvent;
+                        break;
+                    }
+                case PlayerEnum.PlayerThree:
+                    {
+                        InputEventCtrl.GetInstance().ClickStartBtThreeEvent -= ClickStartBtThreeEvent;
+                        break;
+                    }
+            }
+            Destroy(gameObject);
         }
     }
 }

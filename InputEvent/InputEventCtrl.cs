@@ -782,6 +782,9 @@ public class InputEventCtrl : MonoBehaviour
 	}
     #endregion
 
+    /// <summary>
+    /// 用PC输入测试硬件IO.
+    /// </summary>
     public static bool IsUsePcInputTest = false;
     void Update()
 	{

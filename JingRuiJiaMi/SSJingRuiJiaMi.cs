@@ -6,7 +6,7 @@ public class SSJingRuiJiaMi : MonoBehaviour
 	/// <summary>
 	/// 是否开启精锐加密校验.
 	/// </summary>
-	static bool IsOpenJingRuiJiaMi = false;
+	static bool IsOpenJingRuiJiaMi = true;
 	static SSJingRuiJiaMi _Instance;
 	public static SSJingRuiJiaMi GetInstance()
 	{
@@ -21,7 +21,13 @@ public class SSJingRuiJiaMi : MonoBehaviour
 	void Start()
 	{
 		_Instance = this;
-		if (IsOpenJingRuiJiaMi)
+        XKGameVersionCtrl gmVersionCom = gameObject.AddComponent<XKGameVersionCtrl>();
+        if (gmVersionCom != null)
+        {
+            gmVersionCom.Init();
+        }
+
+        if (IsOpenJingRuiJiaMi)
 		{
 			CreatJiaMiJianCeUI();
 			StartJingRuiJiaMi();

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class pcvr : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 是否是硬件版.
     /// </summary>
-    static public bool bIsHardWare = false;
+    static public bool bIsHardWare = true;
     /// <summary>
     /// 是否校验hid.
     /// </summary>
@@ -57,7 +58,41 @@ public class pcvr : MonoBehaviour
                 return;
             }
 
-            pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+            if (IsOpenDelayPrintPlayerCaiPiao[indexVal - 1] == false)
+            {
+                pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+                if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
+                {
+                    pcvrTXManage.CaiPiaoPrintCmd cmd = pcvrTXManage.CaiPiaoPrintCmd.BanPiaoPrint;
+                    if (XKGlobalData.GetInstance().m_CaiPiaoPrintState == XKGlobalData.CaiPiaoPrintState.QuanPiao)
+                    {
+                        cmd = pcvrTXManage.CaiPiaoPrintCmd.QuanPiaoPrint;
+                    }
+                    mPcvrTXManage.SetCaiPiaoPrintCmd(cmd, indexCaiPiaoJi, caiPiao);
+                }
+                else
+                {
+                    StartCoroutine(DelayCheckPrintPlayerCaiPiao(indexPlayer, caiPiao));
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 彩票机打印状态标记.
+    /// </summary>
+    bool[] IsOpenDelayPrintPlayerCaiPiao = new bool[4];
+    /// <summary>
+    /// 延迟检测玩家彩票机是否可以打印彩票.
+    /// </summary>
+    IEnumerator DelayCheckPrintPlayerCaiPiao(PlayerEnum indexPlayer, int caiPiao)
+    {
+        int indexVal = (int)indexPlayer;
+        IsOpenDelayPrintPlayerCaiPiao[indexVal - 1] = true;
+        pcvrTXManage.CaiPiaoJi indexCaiPiaoJi = (pcvrTXManage.CaiPiaoJi)(indexVal - 1);
+        do
+        {
+            yield return new WaitForSeconds(0.1f);
             if (mPcvrTXManage.GetIsCanPrintCaiPiao(indexCaiPiaoJi) == true)
             {
                 pcvrTXManage.CaiPiaoPrintCmd cmd = pcvrTXManage.CaiPiaoPrintCmd.BanPiaoPrint;
@@ -66,8 +101,11 @@ public class pcvr : MonoBehaviour
                     cmd = pcvrTXManage.CaiPiaoPrintCmd.QuanPiaoPrint;
                 }
                 mPcvrTXManage.SetCaiPiaoPrintCmd(cmd, indexCaiPiaoJi, caiPiao);
+                break;
             }
         }
+        while (true);
+        IsOpenDelayPrintPlayerCaiPiao[indexVal - 1] = false;
     }
 
     /// <summary>
@@ -202,7 +240,7 @@ public class pcvr : MonoBehaviour
                 {
                     if (mPcvrTXManage != null)
                     {
-                        indexValLed = i + 4;
+                        indexValLed = i + 3;
                         mPcvrTXManage.LedState[indexValLed] = !IsOpenLedStart;
                     }
                 }
@@ -239,7 +277,7 @@ public class pcvr : MonoBehaviour
             {
                 LedStart[indexVal - 1] = false;
 
-                int indexValLed = indexVal + 3;
+                int indexValLed = indexVal + 2;
                 mPcvrTXManage.LedState[indexValLed] = false;
             }
         }

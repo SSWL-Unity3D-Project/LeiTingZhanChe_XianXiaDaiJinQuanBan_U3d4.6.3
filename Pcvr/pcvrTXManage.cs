@@ -986,13 +986,14 @@ public class pcvrTXManage : MonoBehaviour
     /// </summary>
     public void SetCaiPiaoPrintCmd(CaiPiaoPrintCmd printCmd, CaiPiaoJi indexCaiPiaoJi, int caiPiaoCount)
     {
-        Debug.Log("SetCaiPiaoPrintState -> printCmd " + printCmd + ", indexCaiPiaoJi " + indexCaiPiaoJi + ", caiPiaoCount " + caiPiaoCount);
+        //Debug.Log("SetCaiPiaoPrintState -> printCmd " + printCmd + ", indexCaiPiaoJi " + indexCaiPiaoJi + ", caiPiaoCount " + caiPiaoCount);
         CaiPiaoPrintCmdVal[(int)indexCaiPiaoJi] = printCmd;
         if (printCmd == CaiPiaoPrintCmd.QuanPiaoPrint || printCmd == CaiPiaoPrintCmd.BanPiaoPrint)
         {
             CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi] = printCmd;
             CaiPiaoCountPrint[(int)indexCaiPiaoJi] = caiPiaoCount;
             CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] = CaiPiaoPrintState.Null;
+            //CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] = 0;
         }
     }
 
@@ -1007,7 +1008,7 @@ public class pcvrTXManage : MonoBehaviour
                 {
                     if (CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] != CaiPiaoPrintState.WuXiao)
                     {
-                        Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print wuXiao!");
+                        //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print wuXiao!");
                     }
 
                     if (CaiPiaoCountPrint[(int)indexCaiPiaoJi] > 0 && CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] <= 3)
@@ -1018,7 +1019,7 @@ public class pcvrTXManage : MonoBehaviour
                 }
             case CaiPiaoPrintState.Succeed:
                 {
-                    Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print succeed!");
+                    //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print succeed!");
                     SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     if (CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] != CaiPiaoPrintState.Succeed)
                     {
@@ -1030,7 +1031,7 @@ public class pcvrTXManage : MonoBehaviour
                 }
             case CaiPiaoPrintState.Failed:
                 {
-                    Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print failed! failedCount " + CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]);
+                    //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print failed! failedCount " + CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]);
                     SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]++;
                     if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > 3)
@@ -1088,7 +1089,7 @@ public class pcvrTXManage : MonoBehaviour
             {
                 IsCleanHidCoinArray[indexVal] = true;
                 PlayerCoinArray[indexVal] += PlayerCoinHidArray[indexVal];
-                Debug.Log(indexPlayer + " insert coin, coinNum -> " + PlayerCoinArray[indexVal]);
+                //Debug.Log(indexPlayer + " insert coin, coinNum -> " + PlayerCoinArray[indexVal]);
                 PcvrComInputEvent.GetInstance().OnPlayerInsertCoin(indexPlayer, PlayerCoinArray[indexVal]);
             }
         }

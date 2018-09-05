@@ -82,9 +82,10 @@ public class SetPanelUiRoot : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		_Instance = this;
-		if(HandleJsonObj == null) {
+        if (HandleJsonObj == null) {
 			HandleJsonObj = HandleJson.GetInstance();
 		}
 		Time.timeScale = 1.0f;

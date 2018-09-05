@@ -251,6 +251,12 @@ public class SSGameUICtrl : SSGameMono
                     GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[index]);
                     m_CaiPiaoInfoArray[index] = obj.GetComponent<SSGameNumUI>();
                     SetActiveZhengZaiChuPiaoUI(indexPlayer, true);
+
+                    SSCaiPiaoInfo caiPiaoInfoCom = obj.GetComponent<SSCaiPiaoInfo>();
+                    if (caiPiaoInfoCom != null)
+                    {
+                        caiPiaoInfoCom.Init(indexPlayer);
+                    }
                 }
                 else
                 {
@@ -280,7 +286,13 @@ public class SSGameUICtrl : SSGameMono
         {
             UnityLog("RemoveCaiPiaoInfoPanel -> index ==== " + index);
             RemovePlayerCaiPiaoChengJiu(indexPlayer);
-            Destroy(m_CaiPiaoInfoArray[index].gameObject);
+            //Destroy(m_CaiPiaoInfoArray[index].gameObject);
+
+            SSCaiPiaoInfo caiPiaoInfoCom = m_CaiPiaoInfoArray[index].GetComponent<SSCaiPiaoInfo>();
+            if (caiPiaoInfoCom != null)
+            {
+                caiPiaoInfoCom.RemoveSelf(indexPlayer);
+            }
         }
     }
 
@@ -359,6 +371,12 @@ public class SSGameUICtrl : SSGameMono
             {
                 IsRemoveCaiPiaoInfo[index] = true;
                 StartCoroutine(DelayRemoveCaiPiaoInfoPanle(indexPlayer));
+            }
+
+            if (m_CaiPiaoInfoArray[index] != null)
+            {
+                //显示彩票数量UI.
+                m_CaiPiaoInfoArray[index].ShowNumUI(num);
             }
         }
         else
