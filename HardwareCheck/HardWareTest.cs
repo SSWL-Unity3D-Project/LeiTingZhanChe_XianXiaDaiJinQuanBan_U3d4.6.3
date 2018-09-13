@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 public class HardWareTest : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class HardWareTest : MonoBehaviour
         PcvrComInputEvent.GetInstance().ClickPcvrBtEvent24 += ClickPcvrBtEvent24;
         PcvrComInputEvent.GetInstance().ClickPcvrBtEvent25 += ClickPcvrBtEvent25;
         PcvrComInputEvent.GetInstance().ClickPcvrBtEvent26 += ClickPcvrBtEvent26;
+        
+        PcvrComInputEvent.GetInstance().OnCaiPiaJiChuPiaoEvent += OnCaiPiaJiChuPiaoEvent;
     }
 
     public void CheckReadComMsg(byte[] buffer)
@@ -49,6 +52,69 @@ public class HardWareTest : MonoBehaviour
         UpdateCaiPiaoJiInfo(buffer[44], buffer[15], buffer[16]);
     }
 
+    /// <summary>
+    /// 彩票机输入信息.
+    /// </summary>
+    string[] m_InputValueCaiPiaoJi = new string[3];
+    /// <summary>
+    /// 1号彩票机输入信息改变时响应.
+    /// </summary>
+    public void OnChangedInputCaiPiaoInfoP1(string inputVal)
+    {
+        //UnityEngine.Debug.Log("OnChangedInputCaiPiaoInfoP1 -> inputVal ==== " + inputVal);
+        m_InputValueCaiPiaoJi[0] = inputVal;
+    }
+
+    /// <summary>
+    /// 2号彩票机输入信息改变时响应.
+    /// </summary>
+    public void OnChangedInputCaiPiaoInfoP2(string inputVal)
+    {
+        //UnityEngine.Debug.Log("OnChangedInputCaiPiaoInfoP2 -> inputVal ==== " + inputVal);
+        m_InputValueCaiPiaoJi[1] = inputVal;
+    }
+
+    /// <summary>
+    /// 3号彩票机输入信息改变时响应.
+    /// </summary>
+    public void OnChangedInputCaiPiaoInfoP3(string inputVal)
+    {
+        //UnityEngine.Debug.Log("OnChangedInputCaiPiaoInfoP3 -> inputVal ==== " + inputVal);
+        m_InputValueCaiPiaoJi[2] = inputVal;
+    }
+    
+    /// <summary>
+    /// 判断是否为正数.
+    /// </summary>
+    public bool IsInt(string value)
+    {
+        if (value == null)
+        {
+            return false;
+        }
+        return Regex.IsMatch(value, @"^[+-]?\d*$");
+    }
+
+    /// <summary>
+    /// 彩票机出票数据信息.
+    /// </summary>
+    int[] m_CaiPiaoOutValue = new int[3];
+    /// <summary>
+    /// 彩票机出票数据信息Label.
+    /// </summary>
+    public UILabel[] m_CaiPiaoOutLabel = new UILabel[3];
+    /// <summary>
+    /// 当彩票机出票时.
+    /// </summary>
+    private void OnCaiPiaJiChuPiaoEvent(pcvrTXManage.CaiPiaoJi val)
+    {
+        m_CaiPiaoOutValue[(int)val]++;
+        m_CaiPiaoOutLabel[(int)val].text = m_CaiPiaoOutValue[(int)val].ToString();
+    }
+
+    /// <summary>
+    /// 彩票机状态信息.
+    /// </summary>
     public UILabel[] CaiPiaoJiLbArray;
     /// <summary>
     /// 更新彩票机状态信息.
@@ -92,6 +158,7 @@ public class HardWareTest : MonoBehaviour
     {
         string btGroupName = btGroup.name;
         string btPrintName = btPrint.name;
+        //UnityEngine.Debug.Log("btGroupName ==== " + btGroupName + ", btPrintName ==== " + btPrintName);
         pcvrTXManage.CaiPiaoJi caiPiaoJi = pcvrTXManage.CaiPiaoJi.Null;
         pcvrTXManage.CaiPiaoPrintCmd printCmd = pcvrTXManage.CaiPiaoPrintCmd.WuXiao;
         switch (btGroupName)
@@ -134,9 +201,37 @@ public class HardWareTest : MonoBehaviour
                 }
         }
 
-        if (pcvr.GetInstance().mPcvrTXManage.GetIsCanPrintCaiPiao(caiPiaoJi))
+        bool isInt = IsInt(m_InputValueCaiPiaoJi[(int)caiPiaoJi]);
+        if (isInt == false)
         {
-            pcvr.GetInstance().mPcvrTXManage.SetCaiPiaoPrintCmd(printCmd, caiPiaoJi, countCaiPiao);
+            //非整形数据,停止打印彩票.
+            printCmd = pcvrTXManage.CaiPiaoPrintCmd.StopPrint;
+        }
+        else
+        {
+            countCaiPiao = Convert.ToInt32(m_InputValueCaiPiaoJi[(int)caiPiaoJi]);
+            if (countCaiPiao < 1)
+            {
+                //非有效数据,
+                printCmd = pcvrTXManage.CaiPiaoPrintCmd.StopPrint;
+            }
+        }
+
+        if (printCmd == pcvrTXManage.CaiPiaoPrintCmd.StopPrint)
+        {
+            pcvr.GetInstance().mPcvrTXManage.SetCaiPiaoPrintCmd(printCmd, caiPiaoJi, 0);
+        }
+        else
+        {
+            if (pcvr.GetInstance().mPcvrTXManage.GetIsCanPrintCaiPiao(caiPiaoJi))
+            {
+                if (printCmd == pcvrTXManage.CaiPiaoPrintCmd.BanPiaoPrint || printCmd == pcvrTXManage.CaiPiaoPrintCmd.QuanPiaoPrint)
+                {
+                    //清空彩票机已经打印的彩票数量信息.
+                    m_CaiPiaoOutValue[(int)caiPiaoJi] = 0;
+                }
+                pcvr.GetInstance().mPcvrTXManage.SetCaiPiaoPrintCmd(printCmd, caiPiaoJi, countCaiPiao);
+            }
         }
     }
 

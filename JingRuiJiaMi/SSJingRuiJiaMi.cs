@@ -6,7 +6,7 @@ public class SSJingRuiJiaMi : MonoBehaviour
 	/// <summary>
 	/// 是否开启精锐加密校验.
 	/// </summary>
-	static bool IsOpenJingRuiJiaMi = true;
+	static bool IsOpenJingRuiJiaMi = false;
 	static SSJingRuiJiaMi _Instance;
 	public static SSJingRuiJiaMi GetInstance()
 	{

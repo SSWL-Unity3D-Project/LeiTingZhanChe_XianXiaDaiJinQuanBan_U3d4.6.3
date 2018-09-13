@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define TEST_SHOW_PLAYER_CAIPIAO
+using System.Collections;
 using UnityEngine;
 
 public class pcvr : MonoBehaviour
@@ -283,4 +284,94 @@ public class pcvr : MonoBehaviour
         }
     }
     #endregion
+    
+#if TEST_SHOW_PLAYER_CAIPIAO
+    private void OnGUI()
+    {
+        string info = "";
+        Rect rectVal = new Rect(15f, 15f, Screen.width - 30f, 25f);
+        
+        info = "CaiPiJiP1: ";
+        byte[] buffer = MyCOMDevice.ComThreadClass.ReadByteMsg;
+        //UpdateCaiPiaoJiInfo(buffer[44], buffer[15], buffer[16]);
+        pcvrTXManage.CaiPiaoPrintState type = (pcvrTXManage.CaiPiaoPrintState)buffer[44];
+        switch (type)
+        {
+            case pcvrTXManage.CaiPiaoPrintState.WuXiao:
+                {
+                    info += "无效";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Failed:
+                {
+                    info += "失败";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Succeed:
+                {
+                    info += "成功";
+                    break;
+                }
+        }
+        
+        info += ", CaiPiJiP2: ";
+        type = (pcvrTXManage.CaiPiaoPrintState)buffer[15];
+        switch (type)
+        {
+            case pcvrTXManage.CaiPiaoPrintState.WuXiao:
+                {
+                    info += "无效";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Failed:
+                {
+                    info += "失败";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Succeed:
+                {
+                    info += "成功";
+                    break;
+                }
+        }
+
+        info += ", CaiPiJiP3: ";
+        type = (pcvrTXManage.CaiPiaoPrintState)buffer[16];
+        switch (type)
+        {
+            case pcvrTXManage.CaiPiaoPrintState.WuXiao:
+                {
+                    info += "无效";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Failed:
+                {
+                    info += "失败";
+                    break;
+                }
+            case pcvrTXManage.CaiPiaoPrintState.Succeed:
+                {
+                    info += "成功";
+                    break;
+                }
+        }
+        rectVal = new Rect(15f, 45f, Screen.width - 30f, 25f);
+        GUI.Box(rectVal, "");
+        GUI.Label(rectVal, info);
+
+        info = "PcvrCaiPiaoP1: " + mPcvrTXManage.CaiPiaoCountPrint[0].ToString()
+            + ", PcvrCaiPiaoP2: " + mPcvrTXManage.CaiPiaoCountPrint[1].ToString()
+            + ", PcvrCaiPiaoP3: " + mPcvrTXManage.CaiPiaoCountPrint[2].ToString();
+        rectVal = new Rect(15f, 75f, Screen.width - 30f, 25f);
+        GUI.Box(rectVal, "");
+        GUI.Label(rectVal, info);
+
+        info = "PcvrCaiPiaoPrintFailedP1: " + mPcvrTXManage.CaiPiaoPrintFailedCount[0].ToString()
+            + ", PcvrCaiPiaoPrintFailedP2: " + mPcvrTXManage.CaiPiaoPrintFailedCount[1].ToString()
+            + ", PcvrCaiPiaoPrintFailedP3: " + mPcvrTXManage.CaiPiaoPrintFailedCount[2].ToString();
+        rectVal = new Rect(15f, 105f, Screen.width - 30f, 25f);
+        GUI.Box(rectVal, "");
+        GUI.Label(rectVal, info);
+    }
+#endif
 }

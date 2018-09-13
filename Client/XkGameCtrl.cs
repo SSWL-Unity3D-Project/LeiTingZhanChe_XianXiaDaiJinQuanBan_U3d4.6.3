@@ -1777,6 +1777,7 @@ public class XkGameCtrl : SSGameMono
 
 	public static void SetActivePlayerOne(bool isActive)
 	{
+        Debug.Log("Unity: SetActivePlayerOne -> isActive ======== " + isActive);
 		IsActivePlayerOne = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
 		CheckPlayerActiveNum();

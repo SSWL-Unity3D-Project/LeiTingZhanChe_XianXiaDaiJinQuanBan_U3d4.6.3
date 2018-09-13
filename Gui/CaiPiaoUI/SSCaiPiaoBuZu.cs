@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class SSCaiPiaoBuZu : SSGameMono
 {
-    PlayerEnum m_IndexPlayer;
+    //PlayerEnum m_IndexPlayer;
     // Use this for initialization
 	public void Init(PlayerEnum indexPlayer)
     {
-        m_IndexPlayer = indexPlayer;
+        //m_IndexPlayer = indexPlayer;
         //switch (indexPlayer)
         //{
         //    case PlayerEnum.PlayerOne:

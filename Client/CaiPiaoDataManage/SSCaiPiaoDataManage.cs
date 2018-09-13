@@ -1,4 +1,4 @@
-﻿//#define TEST_SHOW_PLAYER_CAIPIAO
+﻿#define TEST_SHOW_PLAYER_CAIPIAO
 //#define TEST_OUT_PRINT_CARD
 //#define CREATE_SUPER_JPBOSS
 using System.Collections.Generic;
