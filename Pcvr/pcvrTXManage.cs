@@ -92,6 +92,17 @@ public class pcvrTXManage : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public byte[] CaiPiaoPrintFailedCount = new byte[m_CaiPiaoJiCount];
+    /// <summary>
+    /// 彩票机缺票状态.
+    /// true  -> 缺票.
+    /// false -> 有票.
+    /// </summary>
+    bool[] CaiPiaoJiQuePiaoState = new bool[m_CaiPiaoJiCount];
+    /// <summary>
+    /// 最大允许彩票打印失败次数.
+    /// 当失败次数超过该数值时,认为当前彩票机处于缺票状态.
+    /// </summary>
+    int MaxCaiPiaoPrintFailed = 3;
     CaiPiaoPrintState[] CaiPiaoJiPrintStArray = new CaiPiaoPrintState[m_CaiPiaoJiCount];
     /// <summary>
     /// 是否清除hid币值.
@@ -992,9 +1003,9 @@ public class pcvrTXManage : MonoBehaviour
             return true;
         }
 
-        if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] >= 3)
+        if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > MaxCaiPiaoPrintFailed || CaiPiaoJiQuePiaoState[(int)indexCaiPiaoJi] == true)
         {
-            //目前打印彩票失败次数大于3时,可以继续开启打印彩票(认为彩票机没有彩票了).
+            //目前打印彩票失败次数大于MaxCaiPiaoPrintFailed时,可以继续开启打印彩票(认为彩票机没有彩票了).
             return true;
         }
         return false;
@@ -1056,9 +1067,42 @@ public class pcvrTXManage : MonoBehaviour
     }
 
     /// <summary>
-    /// 设置彩票机打印命令.
+    /// 外部设置彩票机打印命令.
     /// </summary>
     public void SetCaiPiaoPrintCmd(CaiPiaoPrintCmd printCmd, CaiPiaoJi indexCaiPiaoJi, int caiPiaoCount)
+    {
+        //Debug.Log("SetCaiPiaoPrintState -> printCmd " + printCmd + ", indexCaiPiaoJi " + indexCaiPiaoJi + ", caiPiaoCount " + caiPiaoCount);
+        CaiPiaoPrintCmdVal[(int)indexCaiPiaoJi] = printCmd;
+        if (CaiPiaoPrintCmd.StopPrint == printCmd)
+        {
+            //记录停止打印彩票命令.
+            CaiPiaoStopPrintCmdRecord[(int)indexCaiPiaoJi] = CaiPiaoPrintCmd.StopPrint;
+        }
+        else
+        {
+            if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > MaxCaiPiaoPrintFailed || CaiPiaoJiQuePiaoState[(int)indexCaiPiaoJi] == true)
+            {
+                //彩票机无票了,强制发送一个停止打印消息,将IO板子里的彩票机信息重置.
+                CaiPiaoStopPrintCmdRecord[(int)indexCaiPiaoJi] = CaiPiaoPrintCmd.StopPrint;
+                //清除彩票打印失败信息.
+                CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] = 0;
+            }
+        }
+
+        if (printCmd == CaiPiaoPrintCmd.QuanPiaoPrint || printCmd == CaiPiaoPrintCmd.BanPiaoPrint)
+        {
+            //记录彩票打印信息.
+            CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi] = printCmd;
+            CaiPiaoCountPrint[(int)indexCaiPiaoJi] = caiPiaoCount;
+            CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] = CaiPiaoPrintState.Null;
+        }
+    }
+
+
+    /// <summary>
+    /// 内部设置彩票机打印命令.
+    /// </summary>
+    void PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd printCmd, CaiPiaoJi indexCaiPiaoJi, int caiPiaoCount)
     {
         //Debug.Log("SetCaiPiaoPrintState -> printCmd " + printCmd + ", indexCaiPiaoJi " + indexCaiPiaoJi + ", caiPiaoCount " + caiPiaoCount);
         CaiPiaoPrintCmdVal[(int)indexCaiPiaoJi] = printCmd;
@@ -1070,10 +1114,10 @@ public class pcvrTXManage : MonoBehaviour
 
         if (printCmd == CaiPiaoPrintCmd.QuanPiaoPrint || printCmd == CaiPiaoPrintCmd.BanPiaoPrint)
         {
+            //记录彩票打印信息.
             CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi] = printCmd;
             CaiPiaoCountPrint[(int)indexCaiPiaoJi] = caiPiaoCount;
             CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] = CaiPiaoPrintState.Null;
-            //CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] = 0;
         }
     }
 
@@ -1091,9 +1135,9 @@ public class pcvrTXManage : MonoBehaviour
                         //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print wuXiao!");
                     }
 
-                    if (CaiPiaoCountPrint[(int)indexCaiPiaoJi] > 0 && CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] <= 3)
+                    if (CaiPiaoCountPrint[(int)indexCaiPiaoJi] > 0 && CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] <= MaxCaiPiaoPrintFailed)
                     {
-                        SetCaiPiaoPrintCmd(CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi], indexCaiPiaoJi, CaiPiaoCountPrint[(int)indexCaiPiaoJi]);
+                        PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi], indexCaiPiaoJi, CaiPiaoCountPrint[(int)indexCaiPiaoJi]);
                     }
                     break;
                 }
@@ -1107,17 +1151,19 @@ public class pcvrTXManage : MonoBehaviour
                         PcvrComInputEvent.GetInstance().OnCaiPiaJiChuPiao(indexCaiPiaoJi);
                     }
                     CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] = 0;
+                    CaiPiaoJiQuePiaoState[(int)indexCaiPiaoJi] = false;
                     break;
                 }
             case CaiPiaoPrintState.Failed:
                 {
                     //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print failed! failedCount " + CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]);
-                    SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
+                    PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]++;
-                    if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > 3)
+                    if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > MaxCaiPiaoPrintFailed)
                     {
                         //彩票机无票了.
                         PcvrComInputEvent.GetInstance().OnCaiPiaJiWuPiao(indexCaiPiaoJi);
+                        CaiPiaoJiQuePiaoState[(int)indexCaiPiaoJi] = true;
                     }
                     break;
                 }
@@ -1125,13 +1171,14 @@ public class pcvrTXManage : MonoBehaviour
                 {
                     //本次连续彩票最后一张完成.
                     Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print LianDaOver!");
-                    SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
+                    PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     if (CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] != CaiPiaoPrintState.LianDaOver)
                     {
                         CaiPiaoCountPrint[(int)indexCaiPiaoJi] -= 1;
                         PcvrComInputEvent.GetInstance().OnCaiPiaJiChuPiao(indexCaiPiaoJi);
                     }
                     CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] = 0;
+                    CaiPiaoJiQuePiaoState[(int)indexCaiPiaoJi] = false;
                     break;
                 }
         }
