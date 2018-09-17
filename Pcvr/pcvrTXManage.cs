@@ -93,6 +93,10 @@ public class pcvrTXManage : MonoBehaviour
     [HideInInspector]
     public byte[] CaiPiaoPrintFailedCount = new byte[m_CaiPiaoJiCount];
     /// <summary>
+    /// 彩票打印记录的时间.
+    /// </summary>
+    float[] CaiPiaoLastTimeVal = new float[m_CaiPiaoJiCount];
+    /// <summary>
     /// 彩票机缺票状态.
     /// true  -> 缺票.
     /// false -> 有票.
@@ -1139,12 +1143,23 @@ public class pcvrTXManage : MonoBehaviour
                     {
                         PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmdRecord[(int)indexCaiPiaoJi], indexCaiPiaoJi, CaiPiaoCountPrint[(int)indexCaiPiaoJi]);
                     }
+
+                    if (CaiPiaoCountPrint[(int)indexCaiPiaoJi] > 0 && CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] <= MaxCaiPiaoPrintFailed)
+                    {
+                        if (Time.time - CaiPiaoLastTimeVal[(int)indexCaiPiaoJi] > 1f)
+                        {
+                            //彩票机的打印成功或失败消息超过一定时间没有收到,此时需要重置IO板彩票打印消息,即发送一次停止打印消息,并且将打印失败次数清零.
+                            CaiPiaoLastTimeVal[(int)indexCaiPiaoJi] = Time.time;
+                            PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
+                        }
+                    }
                     break;
                 }
             case CaiPiaoPrintState.Succeed:
                 {
                     //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print succeed!");
                     //SetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
+                    CaiPiaoLastTimeVal[(int)indexCaiPiaoJi] = Time.time;
                     if (CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] != CaiPiaoPrintState.Succeed)
                     {
                         CaiPiaoCountPrint[(int)indexCaiPiaoJi] -= 1;
@@ -1157,6 +1172,7 @@ public class pcvrTXManage : MonoBehaviour
             case CaiPiaoPrintState.Failed:
                 {
                     //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print failed! failedCount " + CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]);
+                    CaiPiaoLastTimeVal[(int)indexCaiPiaoJi] = Time.time;
                     PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi]++;
                     if (CaiPiaoPrintFailedCount[(int)indexCaiPiaoJi] > MaxCaiPiaoPrintFailed)
@@ -1170,7 +1186,8 @@ public class pcvrTXManage : MonoBehaviour
             case CaiPiaoPrintState.LianDaOver:
                 {
                     //本次连续彩票最后一张完成.
-                    Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print LianDaOver!");
+                    //Debug.Log("CaiPiaoJi_" + indexCaiPiaoJi + " -> print LianDaOver!");
+                    CaiPiaoLastTimeVal[(int)indexCaiPiaoJi] = Time.time;
                     PcvrSelfSetCaiPiaoPrintCmd(CaiPiaoPrintCmd.StopPrint, indexCaiPiaoJi, 0);
                     if (CaiPiaoJiPrintStArray[(int)indexCaiPiaoJi] != CaiPiaoPrintState.LianDaOver)
                     {
