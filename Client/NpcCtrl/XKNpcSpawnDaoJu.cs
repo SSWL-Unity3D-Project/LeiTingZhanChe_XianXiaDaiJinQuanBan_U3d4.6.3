@@ -27,11 +27,11 @@ public class XKNpcSpawnDaoJu : SSGameMono
             return;
         }
 
-        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PlayerCoinData[indexVal].XuBiVal <= 0)
-        {
-            //不是续币玩家.
-            return;
-        }
+        //if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PlayerCoinData[indexVal].XuBiVal <= 0)
+        //{
+        //    //不是续币玩家.
+        //    return;
+        //}
 
         if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu))
         {

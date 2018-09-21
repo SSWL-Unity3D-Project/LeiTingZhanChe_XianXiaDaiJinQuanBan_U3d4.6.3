@@ -107,16 +107,55 @@ public class XueKuangCtrl : MonoBehaviour
 			break;
 		}
 		CoinDiKuang.mainTexture = CoinDKTexture[indexVal];
-        
-        if (XKGlobalData.GameVersionPlayer == 0)
+
+        if (pcvr.IsHongDDShouBing)
         {
-            XueKuangNum.mainTexture = XueKuangTexture[indexVal];
+            if (XKGlobalData.GameVersionPlayer == 0)
+            {
+                XueKuangNum.mainTexture = XueKuangTexture[indexVal];
+                if (indexVal == 1)
+                {
+                    if (m_WeiXinHead != null)
+                    {
+                        int indexUrl = (int)PlayerSt - 1;
+                        m_WeiXinHead.gameObject.SetActive(true);
+                        string url = pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerHeadUrl(indexUrl);
+                        XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(url, m_WeiXinHead);
+                    }
+                }
+                else
+                {
+                    if (m_WeiXinHead != null)
+                    {
+                        m_WeiXinHead.mainTexture = m_TouMingHead;
+                        m_WeiXinHead.gameObject.SetActive(false);
+                    }
+                }
+            }
+            else
+            {
+                if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
+                {
+                    XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
+                }
+            }
         }
         else
         {
-            if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
+            if (XKGlobalData.GameVersionPlayer == 0)
             {
-                XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
+                XueKuangNum.mainTexture = XueKuangTexture[indexVal];
+                if (m_WeiXinHead != null)
+                {
+                    m_WeiXinHead.gameObject.SetActive(indexVal == 1 ? true : false);
+                }
+            }
+            else
+            {
+                if (PlayerSt == PlayerEnum.PlayerThree || PlayerSt == PlayerEnum.PlayerFour)
+                {
+                    XueKuangNum.mainTexture = XueKuangGmTexture[indexVal];
+                }
             }
         }
         

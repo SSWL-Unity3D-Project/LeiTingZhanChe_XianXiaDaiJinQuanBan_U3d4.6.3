@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.IO;
+using Assets.XKGame.Script.Comm;
 
 public class XKGlobalData
 {
@@ -349,7 +350,7 @@ public class XKGlobalData
     /// <summary>
     /// JP大奖彩池.
     /// </summary>
-    internal int m_JPBossCaiChi = 0;
+    internal float m_JPBossCaiChi = 0;
     /// <summary>
     /// 初始化JP大奖彩池.
     /// </summary>
@@ -361,7 +362,8 @@ public class XKGlobalData
             info = "0";
         }
 
-        int val = Convert.ToInt32(info);
+        //int val = Convert.ToInt32(info);
+        float val = MathConverter.StringToFloat(info);
         m_JPBossCaiChi = val;
     }
 
@@ -376,7 +378,7 @@ public class XKGlobalData
     /// <summary>
     /// 设置JP大奖彩池.
     /// </summary>
-    public void SetJPBossCaiChi(int val)
+    public void SetJPBossCaiChi(float val)
     {
         m_JPBossCaiChi = val;
         HandleJsonObj.WriteToFileXml(FileName, "JPBossCaiChi", val.ToString());
@@ -385,7 +387,7 @@ public class XKGlobalData
     /// <summary>
     /// 道具彩池.
     /// </summary>
-    internal int m_DaoJuCaiChi = 0;
+    internal float m_DaoJuCaiChi = 0;
     /// <summary>
     /// 初始化道具彩池.
     /// </summary>
@@ -397,7 +399,8 @@ public class XKGlobalData
             info = "0";
         }
 
-        int val = Convert.ToInt32(info);
+        //int val = Convert.ToInt32(info);
+        float val = MathConverter.StringToFloat(info);
         m_DaoJuCaiChi = val;
     }
 
@@ -412,7 +415,7 @@ public class XKGlobalData
     /// <summary>
     /// 设置道具彩池.
     /// </summary>
-    public void SetDaoJuCaiChi(int val)
+    public void SetDaoJuCaiChi(float val)
     {
         m_DaoJuCaiChi = val;
         HandleJsonObj.WriteToFileXml(FileName, "DaoJuCaiChi", val.ToString());
@@ -421,7 +424,7 @@ public class XKGlobalData
     /// <summary>
     /// 战车彩池.
     /// </summary>
-    internal int m_ZhanCheCaiChi = 0;
+    internal float m_ZhanCheCaiChi = 0;
     /// <summary>
     /// 初始化战车彩池.
     /// </summary>
@@ -433,7 +436,8 @@ public class XKGlobalData
             info = "0";
         }
 
-        int val = Convert.ToInt32(info);
+        //int val = Convert.ToInt32(info);
+        float val = MathConverter.StringToFloat(info);
         m_ZhanCheCaiChi = val;
     }
 
@@ -448,7 +452,7 @@ public class XKGlobalData
     /// <summary>
     /// 设置战车彩池.
     /// </summary>
-    public void SetZhanCheCaiChi(int val)
+    public void SetZhanCheCaiChi(float val)
     {
         m_ZhanCheCaiChi = val;
         HandleJsonObj.WriteToFileXml(FileName, "ZhanCheCaiChi", val.ToString());
@@ -561,10 +565,19 @@ public class XKGlobalData
         HandleJsonObj.WriteToFileXml(FileName, "PrintCard", IsPrintCaiPiao == true ? "0" : "1");
     }
 
+    int _CoinToCard = 1;
     /// <summary>
     /// 一币兑换彩票数.
+    /// 1币兑换代金券数(1币等于1张1元代金券).
     /// </summary>
-    internal int m_CoinToCard = 20;
+    internal int m_CoinToCard
+    {
+        get { return _CoinToCard; }
+        set
+        {
+            //_CoinToCard = value; //代金券版本,不允许修改本数值.
+        }
+    }
     /// <summary>
     /// 初始化1币兑换彩票数.
     /// </summary>

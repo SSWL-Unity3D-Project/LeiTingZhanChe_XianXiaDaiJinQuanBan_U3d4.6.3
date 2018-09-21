@@ -98,7 +98,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		CheckPlayerThreeCoinCur();
 		//CheckPlayerFourCoinCur();
 
-        if (StartBtObj != null && PlayerSt != PlayerEnum.PlayerFour)
+        if (pcvr.bIsHardWare == true && StartBtObj != null && PlayerSt != PlayerEnum.PlayerFour)
         {
             if (StartBtObj.activeInHierarchy == true)
             {
@@ -229,29 +229,29 @@ public class CoinPlayerCtrl : MonoBehaviour
 	void SubCoinPlayerOne()
 	{
 		XKGlobalData.CoinPlayerOne -= XKGlobalData.GameNeedCoin;
-        pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.GameNeedCoin);
         SetPlayerCoin(XKGlobalData.CoinPlayerOne);
+        pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerTwo()
 	{
 		XKGlobalData.CoinPlayerTwo -= XKGlobalData.GameNeedCoin;
-		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerTwo, XKGlobalData.GameNeedCoin);
 		SetPlayerCoin(XKGlobalData.CoinPlayerTwo);
+		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerTwo, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerThree()
 	{
 		XKGlobalData.CoinPlayerThree -= XKGlobalData.GameNeedCoin;
-		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerThree, XKGlobalData.GameNeedCoin);
 		SetPlayerCoin(XKGlobalData.CoinPlayerThree);
+		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerThree, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerFour()
 	{
 		XKGlobalData.CoinPlayerFour -= XKGlobalData.GameNeedCoin;
-		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerFour, XKGlobalData.GameNeedCoin);
 		SetPlayerCoin(XKGlobalData.CoinPlayerFour);
+		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerFour, XKGlobalData.GameNeedCoin);
 	}
 
 	void CheckPlayerOneCoinCur()
@@ -275,8 +275,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 #if USE_AUTO_START_GAME
                 //运营模式.
                 //玩家币值如果大于启动币数则自动开始.
-                if (XkGameCtrl.GetInstance() != null
-                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerOne))
+                if (XkGameCtrl.GetInstance() != null)
                 {
                     InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.DOWN);
                     InputEventCtrl.GetInstance().ClickStartBtOne(pcvr.ButtonState.UP);
@@ -312,8 +311,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 #if USE_AUTO_START_GAME
                 //运营模式.
                 //玩家币值如果大于启动币数则自动开始.
-                if (XkGameCtrl.GetInstance() != null
-                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerTwo))
+                if (XkGameCtrl.GetInstance() != null)
                 {
                     InputEventCtrl.GetInstance().ClickStartBtTwo(pcvr.ButtonState.DOWN);
                     InputEventCtrl.GetInstance().ClickStartBtTwo(pcvr.ButtonState.UP);
@@ -349,8 +347,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 #if USE_AUTO_START_GAME
                 //运营模式.
                 //玩家币值如果大于启动币数则自动开始.
-                if (XkGameCtrl.GetInstance() != null
-                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerThree))
+                if (XkGameCtrl.GetInstance() != null)
                 {
                     InputEventCtrl.GetInstance().ClickStartBtThree(pcvr.ButtonState.DOWN);
                     InputEventCtrl.GetInstance().ClickStartBtThree(pcvr.ButtonState.UP);
@@ -386,8 +383,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 #if USE_AUTO_START_GAME
                 //运营模式.
                 //玩家币值如果大于启动币数则自动开始.
-                if (XkGameCtrl.GetInstance() != null
-                    && XkGameCtrl.GetInstance().GetPlayerIsPlayDaoJiShiUI(PlayerEnum.PlayerFour))
+                if (XkGameCtrl.GetInstance() != null)
                 {
                     InputEventCtrl.GetInstance().ClickStartBtFour(pcvr.ButtonState.DOWN);
                     InputEventCtrl.GetInstance().ClickStartBtFour(pcvr.ButtonState.UP);

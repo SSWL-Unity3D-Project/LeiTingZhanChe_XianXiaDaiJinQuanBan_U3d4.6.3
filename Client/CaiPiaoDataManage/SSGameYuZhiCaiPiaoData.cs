@@ -19,7 +19,7 @@ public class SSGameYuZhiCaiPiaoData
         set
         {
             XKGlobalData.GetInstance().SetYuZhiCaiChi(value);
-            _YuZhiCaiPiaoVal = value;
+            //_YuZhiCaiPiaoVal = value; //代金券版本关闭预支彩池.
         }
         get
         {

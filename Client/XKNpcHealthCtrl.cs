@@ -32,7 +32,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	public int PuTongAmmoCount;
 	public bool IsOpenCameraShake;
     public bool IsDeathNpc;
-	XKNpcMoveCtrl NpcScript;
+	internal XKNpcMoveCtrl NpcScript;
 	XKCannonCtrl CannonScript;
 	float TimeHitBoss;
 	BoxCollider BoxColCom;
@@ -444,7 +444,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     }
                     else
                     {
-                        if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe))
+                        if (!XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsChuCaiPiaoByDeCaiState(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, NpcScript.m_DaiJinQuanState))
                         {
                             //战车彩池的彩票积累的不够.
                             return;
@@ -555,7 +555,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
                     if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
                     {
-                        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType);
+                        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType,
+                            SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, NpcScript.m_DaiJinQuanState);
                     }
                 }
                 else
@@ -680,7 +681,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
             if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
             {
-                int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
+                int value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType, SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang,
+                    NpcScript.m_DaiJinQuanState);
                 if (DeathExplodePoint != null)
                 {
                     //Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);

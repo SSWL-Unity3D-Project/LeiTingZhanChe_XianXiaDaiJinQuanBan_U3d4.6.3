@@ -4,21 +4,21 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
 {
     void OnGUI()
     {
-        float width = Screen.width - 20f;
+        float width = 0.8f * Screen.width;
         float hight = 25f;
 
         string info = "gameCaiPiaoInfo: ";
         //一币兑换彩票数.
         info += "coinToCard == " + XKGlobalData.GetInstance().m_CoinToCard;
         //战车彩池数据.
-        int zhanCheJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai;
-        info += ", zhanCheJiangChi == " + zhanCheJiangChi;
+        float zhanCheJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai;
+        info += ", zhanCheJiangChi == " + zhanCheJiangChi.ToString("f2");
         //JPBoss彩池数据.
-        int jpBossJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai;
-        info += ", jpBossJiangChi == " + jpBossJiangChi;
+        float jpBossJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai;
+        info += ", jpBossJiangChi == " + jpBossJiangChi.ToString("f2");
         //随机道具彩池数据.
-        int daoJuJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDeCai;
-        info += ", daoJuJiangChi == " + daoJuJiangChi;
+        float daoJuJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDeCai;
+        info += ", daoJuJiangChi == " + daoJuJiangChi.ToString("f2");
         //预制彩池数据.
         int yuZhiJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.YuZhiCaiPiaoVal;
         info += ", yuZhiJiangChi == " + yuZhiJiangChi;
@@ -35,7 +35,7 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
             //动态修改高度.
             hight = ((info.Length * 8f) / width) * hight;
         }
-        Rect rect = new Rect(10f, 10f, width, hight);
+        Rect rect = new Rect(10f, 40f, width, hight);
         GUI.Box(rect, "");
         GUI.Label(rect, info);
     }

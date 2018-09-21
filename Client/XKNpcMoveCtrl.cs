@@ -13,6 +13,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// 可以被哪个玩家击爆.
     /// </summary>
     public PlayerEnum m_IndexPlayerJiBao;
+    /// <summary>
+    /// 彩票战车npc的代金券变量.
+    /// </summary>
+    internal SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20;
     bool _IsZhanCheNpc = false;
     /// <summary>
     /// 是否是战车npc.
@@ -22,7 +26,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
         set
         {
             _IsZhanCheNpc = value;
-            m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv(SpawnNpcManage.NpcState.ZhanChe);
+            if (value == true)
+            {
+                m_IndexPlayerJiBao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetPlayerIndexByJiBaoGaiLv(SpawnNpcManage.NpcState.ZhanChe, m_DaiJinQuanState);
+            }
         }
         get { return _IsZhanCheNpc; }
     }
@@ -781,8 +788,20 @@ public class XKNpcMoveCtrl : MonoBehaviour
     {
         IsEnterCameraBox = false;
         IsCaiPiaoZhanChe = true;
+
+        int rv = Random.Range(0, 100) % 2;
+        if (rv == 0)
+        {
+            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20;
+        }
+        else
+        {
+            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50;
+        }
+
         //彩票战车npc.
         IsZhanCheNpc = true;
+    
         if (NpcMoveType == NpcJiFenEnum.FeiJi)
         {
         }

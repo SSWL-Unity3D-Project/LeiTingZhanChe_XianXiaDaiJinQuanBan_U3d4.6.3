@@ -368,7 +368,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 获取可以被哪个玩家击爆,通过击爆规则的产生.
     /// </summary>
-    public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType)
+    public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuan = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20)
     {
         PlayerEnum index = PlayerEnum.Null;
         SSCaiPiaoDataManage.PlayerCoinData[] coinDt = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSortPlayerCoinData();
@@ -397,7 +397,7 @@ public class SpawnNpcManage : MonoBehaviour
         {
             case NpcState.ZhanChe:
                 {
-                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe) >= 2)
+                    if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, daiJinQuan) >= 2)
                     {
                         ruler = m_ZhanCheRulerData.m_ZhanCheJiBaoRuler[(int)type];
                     }

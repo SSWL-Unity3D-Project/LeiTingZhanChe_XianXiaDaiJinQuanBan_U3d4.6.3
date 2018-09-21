@@ -116,10 +116,21 @@ public class SSPlayerJiChuCaiPiaoData : SSGameMono
     }
 
     /// <summary>
+    /// 是否出基础彩票.
+    /// </summary>
+    bool IsOutJiChuCaiPiao = false;
+
+    /// <summary>
     /// 检测玩家送票信息.
     /// </summary>
     public void CheckPlayerSongPiaoInfo(PlayerEnum indexPlayer, Vector3 pos)
     {
+        if (IsOutJiChuCaiPiao == false)
+        {
+            //不出基础彩票.
+            return;
+        }
+
         if (XKTriggerYuLeCtrl.IsActiveYuLeTrigger == true)
         {
             //娱乐触发器激活后不去送基础彩票.

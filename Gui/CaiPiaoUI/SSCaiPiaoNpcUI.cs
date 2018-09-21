@@ -85,7 +85,10 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
         enabled = true;
         m_NpcHealthCom = healthCom;
 
-        int num = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType);
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJiQuan = healthCom.NpcScript.m_DaiJinQuanState;
+        int num = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiType,
+            SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, daiJiQuan);
+
         string numStr = num.ToString();
         if (m_FixedUiPosDt != null && m_FixedUiPosDt.IsFixPosX)
         {

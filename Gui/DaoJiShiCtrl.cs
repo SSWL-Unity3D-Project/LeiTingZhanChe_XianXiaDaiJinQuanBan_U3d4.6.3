@@ -98,7 +98,23 @@ public class DaoJiShiCtrl : MonoBehaviour {
 			return;
 		}
 
-		if (IsPlayDaoJishi) {
+
+        if (XkGameCtrl.GetInstance().GetPlayerIsCanContinuePlayGame(PlayerIndex) == true)
+        {
+            //玩家币值充足,可以继续进行游戏.
+            return;
+        }
+        else
+        {
+            //玩家币值不足,需要进行充值.
+            if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+            {
+                //玩家币值不足,通知游戏服务端拉起手机微信复活重置界面.
+                pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerDeath("0");
+            }
+        }
+
+        if (IsPlayDaoJishi) {
 			return;
 		}
 		IsPlayDaoJishi = true;
@@ -211,6 +227,12 @@ public class DaoJiShiCtrl : MonoBehaviour {
         {
             //没有激活一个玩家.
             XkGameCtrl.GetInstance().OpenAllAiPlayerTank();
+        }
+
+        //游戏倒计时结束后清空玩家所得彩票数(代金券)
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+        {
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ClearPlayerCaiPiaoData(PlayerIndex);
         }
     }
 }

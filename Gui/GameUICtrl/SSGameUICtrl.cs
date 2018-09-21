@@ -422,7 +422,7 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     IEnumerator DelayRemoveCaiPiaoInfoPanle(PlayerEnum indexPlayer)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0f);
         int index = (int)indexPlayer - 1;
         if (index < 0 || index > 2)
         {

@@ -1,10 +1,16 @@
 //#define DRAW_FPS
 using UnityEngine;
-using System;
 
 public class XKGameFPSCtrl : MonoBehaviour
 {
     public static bool IsShowGameFPS;
+#if !DRAW_FPS
+    void Start()
+    {
+        Destroy(gameObject);
+    }
+#endif
+
 #if DRAW_FPS
     /// <summary>
     /// The update interval.

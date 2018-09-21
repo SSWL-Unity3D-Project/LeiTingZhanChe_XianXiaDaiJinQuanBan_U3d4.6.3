@@ -1,18 +1,44 @@
 ﻿//#define TEST_SHOW_PLAYER_CAIPIAO
-using System.Collections;
 using UnityEngine;
+using System.Collections;
+using Assets.XKGame.Script.HongDDGamePad;
 
 public class pcvr : MonoBehaviour
 {
+    /// <summary>
+    /// 是否是硬件版.
+    /// </summary>
+    static public bool bIsHardWare = false;
+	
+    #region 红点点微信虚拟游戏手柄控制单元
+    /// <summary>
+    /// 是否为红点点微信手柄操作模式.
+    /// </summary>
+    public static bool IsHongDDShouBing = false;
+
+    /// <summary>
+    /// 红点点微信虚拟游戏手柄控制接口.
+    /// </summary>
+    internal HongDDGamePadInterface m_HongDDGamePadInterface;
+
+    /// <summary>
+    /// 创建红点点微信虚拟游戏手柄消息接口组件.
+    /// </summary>
+    void CreatHongDDGanePadInterface()
+    {
+        m_HongDDGamePadInterface = gameObject.AddComponent<HongDDGamePadInterface>();
+        if (m_HongDDGamePadInterface != null)
+        {
+            m_HongDDGamePadInterface.CreatHongDDGanePad();
+        }
+    }
+    #endregion
+	
     public enum ButtonState : int
     {
         UP = 1,
         DOWN = -1
     }
-    /// <summary>
-    /// 是否是硬件版.
-    /// </summary>
-    static public bool bIsHardWare = true;
     /// <summary>
     /// 是否校验hid.
     /// </summary>
@@ -35,6 +61,7 @@ public class pcvr : MonoBehaviour
             {
                 MyCOMDevice.GetInstance();
             }
+            Instance.CreatHongDDGanePadInterface();
         }
         return Instance;
     }
@@ -160,6 +187,7 @@ public class pcvr : MonoBehaviour
     }
     #endregion
 
+    #region 减币操作
     public void SubPlayerCoin(PlayerEnum indexPlayer, int subNum)
     {
         if (!bIsHardWare)
@@ -180,6 +208,7 @@ public class pcvr : MonoBehaviour
             mPcvrTXManage.SubPlayerCoin(subNum, indexPlayerCoin);
         }
     }
+    #endregion
 
     #region Start Led
     float m_LastStartLedTime = 0f;

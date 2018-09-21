@@ -1,7 +1,9 @@
-//#define DRAW_DEBUG_CAIPIAO_INFO
+#define TEST_UPDATA_GAME
+#define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public enum NpcJiFenEnum
 {
@@ -47,7 +49,7 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 彩票算法模式.
     /// </summary>
-    public CaiPiaoModeSuanFa m_CaiPiaoMode = CaiPiaoModeSuanFa.GuDing;
+    internal CaiPiaoModeSuanFa m_CaiPiaoMode = CaiPiaoModeSuanFa.GuDing;
     bool _IsDisplayBossDeathYanHua = false;
     /// <summary>
     /// 是否在显示Boss爆炸粒子和玩家得奖烟花.
@@ -734,7 +736,36 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
 
-	void Update()
+    float m_LastClearTxtTime = 0f;
+    /// <summary>
+    /// 检测是否清理log信息.
+    /// </summary>
+    void CheckClearTxt()
+    {
+        if (Time.time - m_LastClearTxtTime > 60 * 30)
+        {
+            m_LastClearTxtTime = Time.time;
+            ClearTxt();
+        }
+    }
+
+    /// <summary>
+    /// 清理log信息.
+    /// </summary>
+    void ClearTxt()
+    {
+        Debug.Log("");
+        string filePath = Application.dataPath + "/output_log.txt";
+        if (true == File.Exists(filePath))
+        {
+            FileStream stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write);
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
+            stream.Close();
+        }
+    }
+
+    void Update()
     {
 #if DRAW_GAME_INFO
         if (!pcvr.bIsHardWare)
@@ -745,6 +776,23 @@ public class XkGameCtrl : SSGameMono
             }
         }
 #endif
+
+#if TEST_UPDATA_GAME
+        if (!pcvr.bIsHardWare)
+        {
+            if (Input.GetKeyUp(KeyCode.P))
+            {
+                //ClearTxt();
+
+                if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+                {
+                    //测试玩家充值信息.
+                    pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().SToC_PlayerPayStateInfo("0"); //test
+                }
+            }
+        }
+#endif
+
         //if (!pcvr.bIsHardWare)
         //{
             //if (Input.GetKeyUp(KeyCode.P))
@@ -1803,7 +1851,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        //pcvr.GetInstance().SetIndexPlayerActiveGameState(0, (byte)(isActive == true ? 1 : 0));
+        pcvr.GetInstance().m_HongDDGamePadInterface.SetIndexPlayerActiveGameState(0, (byte)(isActive == true ? 1 : 0));
     }
 
 	public static void SetActivePlayerTwo(bool isActive)
@@ -1833,7 +1881,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        //pcvr.GetInstance().SetIndexPlayerActiveGameState(1, (byte)(isActive == true ? 1 : 0));
+        pcvr.GetInstance().m_HongDDGamePadInterface.SetIndexPlayerActiveGameState(1, (byte)(isActive == true ? 1 : 0));
     }
 	
 	public static void SetActivePlayerThree(bool isActive)
@@ -1863,7 +1911,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        //pcvr.GetInstance().SetIndexPlayerActiveGameState(2, (byte)(isActive == true ? 1 : 0));
+        pcvr.GetInstance().m_HongDDGamePadInterface.SetIndexPlayerActiveGameState(2, (byte)(isActive == true ? 1 : 0));
     }
 
 	public static void SetActivePlayerFour(bool isActive)
@@ -1893,7 +1941,7 @@ public class XkGameCtrl : SSGameMono
 				StopMovie();
 			}
         }
-        //pcvr.GetInstance().SetIndexPlayerActiveGameState(3, (byte)(isActive == true ? 1 : 0));
+        pcvr.GetInstance().m_HongDDGamePadInterface.SetIndexPlayerActiveGameState(3, (byte)(isActive == true ? 1 : 0));
     }
 
 	static void SetPlayerFireMaxAmmoCount()
@@ -3216,6 +3264,44 @@ public class XkGameCtrl : SSGameMono
         }
         m_LastCreateSuiJiDaoJuTime = Time.time;
         return true;
+    }
+    
+    /// <summary>
+    /// 获取玩家是否可以继续游戏.
+    /// </summary>
+    public bool GetPlayerIsCanContinuePlayGame(PlayerEnum indexPlayer)
+    {
+        bool isCanPlay = false;
+        int coin = 0;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    coin = XKGlobalData.CoinPlayerOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    coin = XKGlobalData.CoinPlayerTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    coin = XKGlobalData.CoinPlayerThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    coin = XKGlobalData.CoinPlayerFour;
+                    break;
+                }
+        }
+
+        if (coin >= XKGlobalData.GameNeedCoin)
+        {
+            isCanPlay = true;
+        }
+        return isCanPlay;
     }
 
 #if DRAW_GAME_INFO

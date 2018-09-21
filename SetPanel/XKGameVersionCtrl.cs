@@ -48,7 +48,7 @@ public class XKGameVersionCtrl : MonoBehaviour
         {
             if (Time.time - m_LastDrawTime < 15f)
             {
-                Rect rect = new Rect(15f, 15f, 300f, 30f);
+                Rect rect = new Rect(15f, 15f, 260f, 25f);
                 GUI.Box(rect, "");
                 GUI.color = Color.red;
                 GUI.Label(rect, GameVersion);

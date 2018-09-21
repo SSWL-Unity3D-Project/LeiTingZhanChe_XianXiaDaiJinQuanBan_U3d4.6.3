@@ -110,7 +110,9 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
             // Send message to the server.
             _wabData.WebSocket.Send(msgToSend);
+#if UNITY_EDITOR
             Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend);
+#endif
         }
         else
         {
@@ -180,7 +182,9 @@ public class WebSocketSimpet : MonoBehaviour
         {
             if (message == m_XinTiaoReturnMsg)
             {
+#if UNITY_EDITOR
                 Debug.Log("Unity:"+"XinTiao Check Success!");
+#endif
                 IsCheckXinTiaoMsg = false;
             }
             return;
