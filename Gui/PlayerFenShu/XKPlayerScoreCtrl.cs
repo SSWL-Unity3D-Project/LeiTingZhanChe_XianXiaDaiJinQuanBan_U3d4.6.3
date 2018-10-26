@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XKPlayerScoreCtrl : MonoBehaviour
 {
@@ -216,6 +215,10 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 			    || JiFenJieMianCtrl.GetInstance() == null) {
 				isActive = false;
 			}
+            else if (gameObject.activeInHierarchy == false)
+            {
+                isActive = false;
+            }
 		}
 		ZuiGaoFenObj.SetActive(isActive);
 	}

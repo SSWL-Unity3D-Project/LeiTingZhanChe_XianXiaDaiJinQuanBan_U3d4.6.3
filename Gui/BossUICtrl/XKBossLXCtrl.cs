@@ -52,7 +52,7 @@ public class XKBossLXCtrl : MonoBehaviour
 
     public void StartPlayBossLaiXi()
 	{
-		Debug.Log("Unity:"+"StartPlayBossLaiXi...");
+		//Debug.Log("Unity:"+"StartPlayBossLaiXi...");
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		TimeLastBossLX = Time.time;
 		XKGlobalData.GetInstance().PlayAudioBossLaiXi();

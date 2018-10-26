@@ -14,7 +14,7 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 是否为红点点微信手柄操作模式.
     /// </summary>
-    public static bool IsHongDDShouBing = false;
+    public static bool IsHongDDShouBing = true;
 
     /// <summary>
     /// 红点点微信虚拟游戏手柄控制接口.
@@ -66,7 +66,7 @@ public class pcvr : MonoBehaviour
         return Instance;
     }
 
-    void FixedUpdate()
+    void FixedUpdateTest()
     {
         UpdateStartLedState();
     }

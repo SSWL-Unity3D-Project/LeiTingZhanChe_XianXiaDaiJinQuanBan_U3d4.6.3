@@ -114,6 +114,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
         {
             UnityEngine.Debug.Log("Unity: CToS_OnPlayerDeath -> args == " + args);
         }
+
+        /// <summary>
+        /// 当玩家收到代金券时,游戏将信息发送给服务器.
+        /// </summary>
+        public void CToS_OnPlayerReceiveDaiJinQuan(string args)
+        {
+            UnityEngine.Debug.Log("Unity: CToS_OnPlayerReceiveDaiJinQuan -> args == " + args);
+        }
         #endregion
 
         #region 服务器或手柄发送给游戏客户端的消息.

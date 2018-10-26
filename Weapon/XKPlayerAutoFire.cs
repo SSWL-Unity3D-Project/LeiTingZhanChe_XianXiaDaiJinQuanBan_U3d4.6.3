@@ -411,8 +411,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, FireRayDirLen, FireLayer.value)) {
 				//Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
 				if (ammoScript.AmmoType != PlayerAmmoType.ChuanTouAmmo) {
-					firePos = hit.point;
-				}
+                    XKPlayerMvFanWei fanWeiCom = hit.collider.GetComponent<XKPlayerMvFanWei>();
+                    if (fanWeiCom == null || fanWeiCom.FanWeiState == PointState.Qian)
+                    {
+                        firePos = hit.point;
+                    }
+
+                    //if (fanWeiCom != null)
+                    //{
+                    //    Debug.Log("******************* type ======== " + fanWeiCom.FanWeiState);
+                    //}
+                }
 			}
 		}
 		else {
@@ -864,7 +873,6 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		Vector3 firePos = Vector3.zero;
 		Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;
 		Vector3 posTmp = Camera.main.ScreenToWorldPoint(mousePos);
-		Vector3 ammoForward = Vector3.Normalize( posTmp - ammoSpawnPos );
 		RaycastHit hit;
 		if (!IsPSAutoFire) {
 			firePos = FirePosValTmp * ammoSpawnForward + ammoSpawnPos;
@@ -872,11 +880,12 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, FireRayDirLen, FireLayer.value)) {
 				//Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
 				if (ammoScript.AmmoType != PlayerAmmoType.ChuanTouAmmo) {
-					firePos = hit.point;
+                    firePos = hit.point;
 				}
 			}
 		}
 		else {
+		    Vector3 ammoForward = Vector3.Normalize( posTmp - ammoSpawnPos );
 			ammoForward = obj.transform.forward;
 			firePos = FirePosValTmp * ammoForward + ammoSpawnPos;
 			if (Physics.Raycast(ammoSpawnPos, ammoForward, out hit, FireRayDirLen, FireLayer.value)) {

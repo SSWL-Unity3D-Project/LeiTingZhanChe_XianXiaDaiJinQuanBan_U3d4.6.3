@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿//#define NOT_SHOW_DAOJISHI_UI //不显示倒计时UI.
+using UnityEngine;
 
 public class DaoJiShiCtrl : MonoBehaviour {
 	public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
@@ -114,11 +114,26 @@ public class DaoJiShiCtrl : MonoBehaviour {
             }
         }
 
-        if (IsPlayDaoJishi) {
+        if (IsPlayDaoJishi)
+        {
 			return;
 		}
 		IsPlayDaoJishi = true;
-		CountDaoJiShi++;
+
+#if NOT_SHOW_DAOJISHI_UI
+        if (pcvr.IsHongDDShouBing == true)
+        {
+            //微信支付版本不显示倒计时数字信息.
+            ContinueGameObj.SetActive(true);
+            return;
+        }
+#endif
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerDaiJinQunUI(PlayerIndex);
+        }
+        CountDaoJiShi++;
 		DaoJiShiCount = 9;
 		DaoJiShiSprite.spriteName = "daoJiShi9";
         //m_TVYaoKongEnterObj.SetActive(true);
@@ -174,6 +189,23 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		tweenScaleCom.PlayForward();
 	}
 
+    /// <summary>
+    /// 微信玩家关闭倒计时界面,当玩家续费失败后.
+    /// </summary>
+    internal void WXPlayerStopGameDaoJiShi()
+    {
+        if (IsPlayDaoJishi == false)
+        {
+            return;
+        }
+        StopDaoJiShi();
+        ShowGameOverObj();
+        //玩家没有进行续币.
+        //重置玩家续币信息.
+        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ResetPlayerXuBiInfo(PlayerIndex);
+        XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
+    }
+
 	void ChangeDaoJiShiVal()
 	{
 		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
@@ -222,17 +254,41 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		}
 		CancelInvoke("HiddenGameOverObj");
 		GameOverObj.SetActive(false);
-
+#if NOT_SHOW_DAOJISHI_UI //不显示倒计时UI.
         if (XkGameCtrl.PlayerActiveNum <= 0)
         {
             //没有激活一个玩家.
             XkGameCtrl.GetInstance().OpenAllAiPlayerTank();
         }
+#else
+        if (XkGameCtrl.PlayerActiveNum <= 0)
+        {
+            //没有激活一个玩家.
+            bool isDisplay = GetIsHaveDaoJiShiDisplaying();
+            if (isDisplay == false)
+            {
+                XkGameCtrl.GetInstance().OpenAllAiPlayerTank();
+            }
+        }
+#endif
 
         //游戏倒计时结束后清空玩家所得彩票数(代金券)
         if (XkPlayerCtrl.GetInstanceFeiJi() != null)
         {
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ClearPlayerCaiPiaoData(PlayerIndex);
         }
+    }
+
+    /// <summary>
+    /// 获取当前是否有倒计时在显示.
+    /// </summary>
+    bool GetIsHaveDaoJiShiDisplaying()
+    {
+        bool isDisplay = false;
+        if (InstanceOne.IsPlayDaoJishi || InstanceTwo.IsPlayDaoJishi || InstanceThree.IsPlayDaoJishi)
+        {
+            isDisplay = true;
+        }
+        return isDisplay;
     }
 }

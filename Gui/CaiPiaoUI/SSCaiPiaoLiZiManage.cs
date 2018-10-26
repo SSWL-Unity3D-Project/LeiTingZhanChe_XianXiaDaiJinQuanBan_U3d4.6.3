@@ -105,11 +105,20 @@ public class SSCaiPiaoLiZiManage : MonoBehaviour
             if (max - i > numStr.Length && IsHiddenGaoWeiNumZero)
             {
                 //隐藏数据高位的0.
-                m_NumParticleArray[i].renderer.material = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumATouMing;
+                if (m_NumParticleArray[i] != null)
+                {
+                    m_NumParticleArray[i].gameObject.SetActive(false);
+                    m_NumParticleArray[i].renderer.material = XkGameCtrl.GetInstance().m_CaiPiaoLiZiNumATouMing;
+                }
             }
             else
             {
                 //m_UISpriteArray[i].enabled = true;
+
+                if (m_NumParticleArray[i] != null && m_NumParticleArray[i].gameObject.activeInHierarchy == false)
+                {
+                    m_NumParticleArray[i].gameObject.SetActive(true);
+                }
                 powVal = (int)Mathf.Pow(10, max - i - 1);
                 valTmp = numVal / powVal;
                 //UnityLog("ShowNumUI -> valTmp ====== " + valTmp);

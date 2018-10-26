@@ -415,13 +415,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		int indexVal = XkGameCtrl.PlayerActiveNum - 1;
 		indexVal = indexVal < 0 ? 0 : indexVal;
 		int puTongAmmoNum = MaxPuTongAmmo[indexVal];
-		if (NpcJiFen == NpcJiFenEnum.Boss)
+        if (NpcScript != null)
+        {
+            if (NpcScript.IsZhanCheNpc || NpcScript.IsJPBossNpc)
+            {
+                //当没有玩家激活游戏时,彩票战车和JPBoss采用原血量的一定比例来计算.
+                puTongAmmoNum = (int)(XkGameCtrl.GetInstance().m_ZhanCheBossBloodPer * puTongAmmoNum);
+            }
+        }
+
+        if (NpcJiFen == NpcJiFenEnum.Boss)
         {
 			float bossAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
 			bossAmount = bossAmount < 0f ? 0f : bossAmount;
 			XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(bossAmount, this);
 		}
-
+        
 		/*Debug.Log("Unity:"+"OnDamageNpc -> "
 		          +", nameNpc "+NpcNameInfo
 		          +", puTongAmmoNum "+puTongAmmoNum);*/

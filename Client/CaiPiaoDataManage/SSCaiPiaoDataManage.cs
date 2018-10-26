@@ -404,9 +404,9 @@ public class SSCaiPiaoDataManage : SSGameMono
             if (val > 0)
             {
                 //此时彩票机应该给对应玩家出val张彩票.
-                Debug.Log("Unity: SubGameDeCaiValByDeCaiState -> index ====== " + index
+                /*Debug.Log("Unity: SubGameDeCaiValByDeCaiState -> index ====== " + index
                     + ", chuPiaoVal ====== " + val
-                    + ", type ======= " + type);
+                    + ", type ======= " + type);*/
                 XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, val, type);
             }
         }
@@ -1245,6 +1245,19 @@ public class SSCaiPiaoDataManage : SSGameMono
                     SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
                 }
             }
+        }
+        
+        if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+        {
+            //将玩家得到的代金券信息发送到服务器.
+            string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
+            pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerReceiveDaiJinQuan(args);
+        }
+
+        if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)
+        {
+            //记录游戏支出的代金券信息.
+            XKGlobalData.GetInstance().m_GameWXPayDataManage.WriteGamePayRebateInfo(caiPiao);
         }
 
         XKGlobalData.GetInstance().SetTotalOutPrintCards(XKGlobalData.GetInstance().m_TotalOutPrintCards + caiPiao);

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define USE_WX_GAME_PAD_ACTIVE_PLAYER
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -277,13 +278,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// </summary>
             public int Index = -1;
             /// <summary>
+            /// 玩家Id.
+            /// </summary>
+            public int m_UserId = 0;
+            /// <summary>
             /// 游戏外设操作设备.
             /// </summary>
             public GamePadType m_GamePadType = GamePadType.Null;
-            public TVYaoKongPlayerData(int indexVal, GamePadType pad)
+            public TVYaoKongPlayerData(int indexVal, GamePadType pad, int userId)
             {
                 Index = indexVal;
                 m_GamePadType = pad;
+                m_UserId = userId;
             }
 
             public void Reset()
@@ -364,7 +370,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 m_GmWXLoginDt[index].IsActiveGame = true;
                                 m_GmWXLoginDt[index].m_GamePadType = GamePadType.TV_YaoKongQi;
                                 m_PlayerHeadUrl[index] = "";
-                                m_GmTVLoginDt = new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi);
+                                m_GmTVLoginDt = new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi, 0);
                                 InputEventCtrl.GetInstance().OnClickGameStartBt(index);
                             }
                         }
@@ -434,20 +440,32 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 4个玩家激活游戏的列表状态(0 未激活, 1 激活).
         /// </summary>
-        private byte[] m_IndexPlayerActiveGameState = new byte[4];
+        private byte[] m_IndexPlayerActiveGameState = new byte[3];
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)
         {
             m_IndexPlayerActiveGameState[index] = activeState;
             if (activeState == (int)PlayerActiveState.WeiJiHuo)
             {
+                int userId = 0;
+                bool isExitWeiXin = false;
                 GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.Index.Equals(index); });
                 if (playerDt != null)
                 {
+                    if (playerDt.m_PlayerWeiXinData != null)
+                    {
+                        userId = playerDt.m_PlayerWeiXinData.userId;
+                    }
+
+                    isExitWeiXin = playerDt.IsExitWeiXin;
                     if (playerDt.IsExitWeiXin == true)
                     {
                         //玩家已经退出微信.
                         Debug.Log("Unity:" + "player have exit weiXin! clean the player data...");
-                        m_GamePlayerData.Remove(playerDt);
+                        int coin = XKGlobalData.GetInstance().GetCoinPlayer((PlayerEnum)(playerDt.Index + 1));
+                        if (coin < XKGlobalData.GameNeedCoin)
+                        {
+                            m_GamePlayerData.Remove(playerDt);
+                        }
                     }
                     else
                     {
@@ -465,13 +483,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         case GamePadType.WeiXin_ShouBing:
                             {
                                 //微信手柄玩家血值耗尽了.
-                                m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing));
+                                //此数据需要优化.
+                                m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing, userId));
                                 break;
                             }
                         case GamePadType.TV_YaoKongQi:
                             {
                                 //电视遥控器玩家血值耗尽了.
-                                m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi));
+                                m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi, 0));
                                 if (m_GmTVLoginDt != null)
                                 {
                                     //关闭玩家发射子弹的按键消息.
@@ -481,6 +500,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 }
                                 break;
                             }
+                    }
+
+                    if (isExitWeiXin == true)
+                    {
+                        m_GmWXLoginDt[playerDt.Index].IsLoginWX = false;
                     }
                 }
             }
@@ -504,6 +528,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             int indexPlayer = -1;
             for (int i = 0; i < m_IndexPlayerActiveGameState.Length; i++)
             {
+                Debug.Log("Unity: ActiveGame == " + m_IndexPlayerActiveGameState[i] + ", IsLoginWX == " + m_GmWXLoginDt[i].IsLoginWX);
                 if (m_IndexPlayerActiveGameState[i] == 0)
                 {
                     if (!m_GmWXLoginDt[i].IsLoginWX)
@@ -515,6 +540,56 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
             return indexPlayer;
+        }
+
+        /// <summary>
+        /// 点击微信游戏虚拟手柄上的按键事件.
+        /// 主要用于玩家血值耗尽后的再次复活功能.
+        /// </summary>
+        void OnClickWXGamePadBt(pcvr.ButtonState val, int userId)
+        {
+            if (val == pcvr.ButtonState.DOWN)
+            {
+                Debug.Log("Unity: pcvr -> OnClickWXGamePadBt...");
+                int count = m_TVYaoKongPlayerDt.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    TVYaoKongPlayerData playerDt = m_TVYaoKongPlayerDt[i];
+                    if (playerDt != null && playerDt.m_UserId == userId)
+                    {
+                        int indexPlayer = playerDt.Index;
+                        //清理最后一个血值耗尽的玩家信息.
+                        m_TVYaoKongPlayerDt.RemoveAt(i);
+
+                        if (indexPlayer > -1 && indexPlayer < 4)
+                        {
+                            switch (playerDt.m_GamePadType)
+                            {
+                                case GamePadType.WeiXin_ShouBing:
+                                    {
+                                        if (m_GmWXLoginDt[indexPlayer].IsLoginWX)
+                                        {
+                                            if (!m_GmWXLoginDt[indexPlayer].IsActiveGame)
+                                            {
+                                                Debug.Log("Unity: click WXGamePad EnterBt -> active " + indexPlayer + " player!");
+                                                CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance((PlayerEnum)(indexPlayer + 1));
+                                                if (playerCoinCom != null)
+                                                {
+                                                    playerCoinCom.SetActiveMianFeiTiYanUI(false);
+                                                }
+                                                AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2);
+                                                m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
+                                                InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
+                                            }
+                                        }
+                                        break;
+                                    }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -535,25 +610,52 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         || val == PlayerShouBingFireBt.fireXDown.ToString())
                     {
                         InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
                     }
 
                     if (val == PlayerShouBingFireBt.fireAUp.ToString()
                         || val == PlayerShouBingFireBt.fireXUp.ToString())
                     {
                         InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
                     }
 
                     if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
                     {
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
                         InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
                     }
 
                     if (val == PlayerShouBingFireBt.fireBUp.ToString()
                         || val == PlayerShouBingFireBt.fireYUp.ToString())
                     {
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
                         InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
                     }
+                }
+                else
+                {
+#if USE_WX_GAME_PAD_ACTIVE_PLAYER
+                    //test 通过微信游戏手柄的按键消息来激活对应玩家的游戏.
+                    //处于没有激活状态的玩家才可以进行游戏操作.
+                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    {
+                        OnClickWXGamePadBt(pcvr.ButtonState.DOWN, userId);
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        OnClickWXGamePadBt(pcvr.ButtonState.DOWN, userId);
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                    }
+                    //test
+#endif
                 }
             }
         }
@@ -724,6 +826,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         //玩家血值耗尽,清理玩家微信数据.
                         m_GamePlayerData.Remove(playerDt);
+                        m_GmWXLoginDt[playerDt.Index].IsLoginWX = false;
                         Debug.Log("Unity:" + "OnEventPlayerExitBox -> clear player weiXin data...");
                     }
                 }
@@ -739,6 +842,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
             if (playerDt != null)
             {
+                PlayerEnum indexPlayer = (PlayerEnum)(playerDt.Index + 1);
+                DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(indexPlayer);
+                if (daoJiShiCom != null)
+                {
+                    daoJiShiCom.WXPlayerStopGameDaoJiShi();
+                }
                 m_GamePlayerData.Remove(playerDt);
             }
         }
@@ -875,7 +984,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 if (m_HongDDGamePadWXPay != null)
                 {
-                    //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //test.
+                    m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
                     if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
                     {
                         if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(val.userId) == true)
@@ -885,12 +994,20 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
                             //直接打开微信小程序游戏手柄.
                             m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                            CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance((PlayerEnum)(indexPlayer + 1));
+                            if (playerCoinCom != null)
+                            {
+                                playerCoinCom.SetActiveMianFeiTiYanUI(true);
+                            }
                         }
                         else
                         {
                             //该玩家不可以试玩游戏.
                             //拉起玩家手机微信小程序支付界面.
                             m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+                            //测试:直接给玩家2个游戏币.
+                            AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
                         }
                     }
                     else
@@ -940,6 +1057,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 if (index > -1 && index < 4)
                 {
                     PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+                    CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance(indexPlayer);
+                    if (playerCoinCom != null)
+                    {
+                        playerCoinCom.SetActiveMianFeiTiYanUI(false);
+                    }
                     AddWeiXinGameCoinToPlayer(indexPlayer, coin);
                 }
             }
@@ -951,6 +1073,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         void AddWeiXinGameCoinToPlayer(PlayerEnum playerIndex, int coin)
         {
             Debug.Log("Unity: AddGameCoinToPlayer -> playerIndex === " + playerIndex + ", coin ===== " + coin);
+            if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)
+            {
+                XKGlobalData.GetInstance().m_GameWXPayDataManage.WriteGamePayRevenueInfo(coin);
+            }
+
             switch (playerIndex)
             {
                 case PlayerEnum.PlayerOne:
@@ -979,6 +1106,6 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
             }
         }
-        #endregion
+#endregion
     }
 }

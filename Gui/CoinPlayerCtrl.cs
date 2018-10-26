@@ -4,6 +4,14 @@ using UnityEngine;
 public class CoinPlayerCtrl : MonoBehaviour
 {
 	public PlayerEnum PlayerSt = PlayerEnum.Null;
+    /// <summary>
+    /// "免费体验"界面.
+    /// </summary>
+    public GameObject m_MianFeiTiYanUI;
+    /// <summary>
+    /// 复活次数UI界面.
+    /// </summary>
+    public GameObject m_FuHuoCiShuObj;
 	public UISprite CoinSpriteA; //ShiWei
 	public UISprite CoinSpriteB; //GeWei
 	public UISprite NeedCoinSpriteA; //ShiWei
@@ -37,6 +45,35 @@ public class CoinPlayerCtrl : MonoBehaviour
 		return _InstanceFour;
 	}
 
+    public static CoinPlayerCtrl GetInstance(PlayerEnum indexPlayer)
+    {
+        CoinPlayerCtrl instance = null;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    instance = _InstanceOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    instance = _InstanceTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    instance = _InstanceThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    instance = _InstanceFour;
+                    break;
+                }
+        }
+        return instance;
+    }
+    
 	// Use this for initialization
 	void Start()
 	{
@@ -78,6 +115,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 			gameObject.SetActive(false);
 			break;
 		}
+        SetActiveMianFeiTiYanUI(false);
 	}
 
 	void Update()
@@ -450,4 +488,20 @@ public class CoinPlayerCtrl : MonoBehaviour
 		}
 		//ZhanDouScript.ShowZhanDouObj();
 	}
+
+    /// <summary>
+    /// 控制"免费体验"UI的显示和隐藏.
+    /// </summary>
+    public void SetActiveMianFeiTiYanUI(bool isActive)
+    {
+        if (m_FuHuoCiShuObj != null)
+        {
+            m_FuHuoCiShuObj.SetActive(!isActive);
+        }
+
+        if (m_MianFeiTiYanUI != null)
+        {
+            m_MianFeiTiYanUI.SetActive(isActive);
+        }
+    }
 }

@@ -23,6 +23,57 @@ public class SSGameUICtrl : SSGameMono
             SSUIRoot.GetInstance().m_GameUIManage = this;
         }
         CreatNpcPiaoFenUICom();
+
+        //if (pcvr.IsHongDDShouBing == true && System.DateTime.Now.Year < 2018)
+        //{
+        //    //系统时间错误,请检查系统时间.
+        //    CreatFixSystemTimeUI();
+        //}
+    }
+
+    /// <summary>
+    /// 游戏营收UI界面.
+    /// </summary>
+    SSGamePayUI m_PayDataPanel = null;
+    /// <summary>
+    /// 创建游戏营收数据表UI界面.
+    /// </summary>
+    internal void CreatGamePayDataPanel()
+    {
+        if (m_GameUICenter == null)
+        {
+            UnityLogWarning("CreatGamePayDataPanel -> m_GameUICenter was null.........");
+            return;
+        }
+
+        if (m_PayDataPanel == null)
+        {
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/PayDataUI/Panel-PayDataUI");
+            if (gmDataPrefab != null)
+            {
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_PayDataPanel = obj.GetComponent<SSGamePayUI>();
+                if (m_PayDataPanel != null)
+                {
+                    m_PayDataPanel.Init();
+                }
+            }
+            else
+            {
+                UnityLogWarning("CreatGamePayDataPanel -> gmDataPrefab was null");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏营收数据表UI界面.
+    /// </summary>
+    internal void RemoveGamePayDataPanel()
+    {
+        if (m_PayDataPanel != null)
+        {
+            m_PayDataPanel.RemoveSelf();
+        }
     }
 
     /// <summary>
@@ -40,7 +91,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
         if (gmDataPrefab != null)
         {
-            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+            //UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
             SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
             if (caiPiaoZhuanPan != null)
@@ -554,4 +605,149 @@ public class SSGameUICtrl : SSGameMono
         }
     }
     internal SSCaiPiaoYanHua m_SSCaiPiaoYanHua;
+
+    /// <summary>
+    /// 是否产生修改系统时间UI.
+    /// </summary>
+    bool IsCreatFixSystemTime = false;
+    /// <summary>
+    /// 创建修改系统时间UI提示.
+    /// </summary>
+    internal void CreatFixSystemTimeUI()
+    {
+        if (IsCreatFixSystemTime == false)
+        {
+            IsCreatFixSystemTime = true;
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/FixSystemTime/FixTime");
+            if (gmDataPrefab != null)
+            {
+                Instantiate(gmDataPrefab, m_GameUICenter);
+            }
+            else
+            {
+                UnityLogWarning("CreatFixSystemTimeUI -> gmDataPrefab was null!");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 游戏弹幕控制脚本.
+    /// </summary>
+    DanMuTextUI m_DanMuTextUI = null;
+    /// <summary>
+    /// 产生游戏弹幕UI界面.
+    /// </summary>
+    internal void CreatDanMuTextUI()
+    {
+        Debug.Log("Unity: CreatDanMuTextUI...");
+        if (m_DanMuTextUI == null)
+        {
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/DanMuTextUI/DanMuTextUI");
+            if (gmDataPrefab != null)
+            {
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_DanMuTextUI = obj.GetComponent<DanMuTextUI>();
+                m_DanMuTextUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatDanMuTextUI -> gmDataPrefab was null!");
+            }
+        }
+    }
+
+    internal void RemoveDanMuTextUI()
+    {
+        Debug.Log("Unity: RemoveDanMuTextUI...");
+        if (m_DanMuTextUI != null)
+        {
+            m_DanMuTextUI.RemoveSelf();
+            m_DanMuTextUI = null;
+        }
+    }
+
+    /// <summary>
+    /// 是否产生网络故障UI界面.
+    /// </summary>
+    GameObject m_WangLuoGuZhangUI;
+    /// <summary>
+    /// 产生网络故障UI界面.
+    /// </summary>
+    internal void CreatWangLuoGuZhangUI()
+    {
+        if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
+        {
+            //微信虚拟游戏手柄二维码信息存在时,不去创建网络故障UI.
+            return;
+        }
+
+        Debug.Log("Unity: CreatWangLuoGuZhangUI...");
+        if (m_WangLuoGuZhangUI == null)
+        {
+            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/wangLuoGuZhang/WangLuoGuZhang");
+            if (gmDataPrefab != null)
+            {
+                m_WangLuoGuZhangUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            }
+            else
+            {
+                UnityLogWarning("CreatWangLuoGuZhangUI -> gmDataPrefab was null!");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除网络故障UI界面.
+    /// </summary>
+    internal void RemoveWangLuoGuZhangUI()
+    {
+        Debug.Log("Unity: RemoveWangLuoGuZhangUI...");
+        if (m_WangLuoGuZhangUI != null)
+        {
+            Destroy(m_WangLuoGuZhangUI);
+            m_WangLuoGuZhangUI = null;
+        }
+    }
+
+    GameObject[] m_DaiJinQuanYiCunRuArray = new GameObject[3];
+    /// <summary>
+    /// 产生"代金券已存入我的卡包中"UI界面.
+    /// </summary>
+    internal void CreatPlayerDaiJinQuanUI(PlayerEnum indexPlayer)
+    {
+        Debug.Log("Unity: CreatPlayerDaiJinQuanUI...");
+        int index = (int)indexPlayer - 1;
+        if (index >= 0 && index <= 2)
+        {
+            if (m_DaiJinQuanYiCunRuArray[index] == null)
+            {
+                GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/DaiJinQuanUI/DaiJinQuanYiCunRu");
+                if (gmDataPrefab != null)
+                {
+                    m_DaiJinQuanYiCunRuArray[index] = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[index]);
+                }
+                else
+                {
+                    UnityLogWarning("CreatPlayerDaiJinQuanUI -> gmDataPrefab was null!");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除"代金券已存入我的卡包中"UI界面.
+    /// </summary>
+    internal void RemovePlayerDaiJinQunUI(PlayerEnum indexPlayer)
+    {
+        Debug.Log("Unity: RemovePlayerDaiJinQunUI...");
+        int index = (int)indexPlayer - 1;
+        if (index >= 0 && index <= 2)
+        {
+            if (m_DaiJinQuanYiCunRuArray[index] != null)
+            {
+                Destroy(m_DaiJinQuanYiCunRuArray[index]);
+                m_DaiJinQuanYiCunRuArray[index] = null;
+            }
+        }
+    }
 }

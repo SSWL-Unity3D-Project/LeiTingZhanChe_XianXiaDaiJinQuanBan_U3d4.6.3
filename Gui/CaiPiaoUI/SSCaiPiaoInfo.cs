@@ -40,6 +40,7 @@ public class SSCaiPiaoInfo : SSGameMono
     PlayerEnum IndexPlayer = PlayerEnum.Null;
     public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer)
     {
+#if OPEN_CAIPIAO_ANIMATION
         IndexPlayer = indexPlayer;
         TimeCaiPiaoAni = timeVal;
         TimeLastCaiPiaoAni = Time.time;
@@ -50,6 +51,15 @@ public class SSCaiPiaoInfo : SSGameMono
             m_AniAudio.enabled = true;
             m_AniAudio.loop = true;
 			m_AniAudio.Play();
+        }
+#else
+        IndexPlayer = indexPlayer;
+        ShowPlayerCaiPiaoInfo();
+#endif
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerDaiJinQuanUI(indexPlayer);
         }
     }
 
@@ -120,27 +130,35 @@ public class SSCaiPiaoInfo : SSGameMono
             {
                 //结束彩票数字动画.
                 IsInitCaiPiaoAni = false;
-                if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                {
-                    int indexVal = (int)IndexPlayer - 1;
-                    if (SSUIRoot.GetInstance().m_GameUIManage)
-                    {
-                        //显示玩家当前彩票数据信息.
-                        int caiPiao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoVal;
-                        int caiPiaoCache = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoValCache;
-                        //m_GameNumUI.ShowNumUI(caiPiao + caiPiaoCache);
-                        if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                        {
-                            //显示玩家彩票数量.
-                            SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, caiPiao + caiPiaoCache);
-                        }
-                    }
-                }
+                ShowPlayerCaiPiaoInfo();
 
                 if (m_AniAudio != null)
                 {
 					m_AniAudio.Stop();
                     m_AniAudio.enabled = false;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 展示玩家彩票信息.
+    /// </summary>
+    void ShowPlayerCaiPiaoInfo()
+    {
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            int indexVal = (int)IndexPlayer - 1;
+            if (SSUIRoot.GetInstance().m_GameUIManage)
+            {
+                //显示玩家当前彩票数据信息.
+                int caiPiao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoVal;
+                int caiPiaoCache = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_PcvrPrintCaiPiaoData[indexVal].CaiPiaoValCache;
+                //m_GameNumUI.ShowNumUI(caiPiao + caiPiaoCache);
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    //显示玩家彩票数量.
+                    SSUIRoot.GetInstance().m_GameUIManage.ShowPlayerCaiPiaoInfo(IndexPlayer, caiPiao + caiPiaoCache);
                 }
             }
         }

@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
-public class SetPanelCtrl : MonoBehaviour {
+public class SetPanelCtrl : MonoBehaviour
+{
 	static private SetPanelCtrl Instance = null;
 	static public SetPanelCtrl GetInstance()
 	{
@@ -16,11 +17,25 @@ public class SetPanelCtrl : MonoBehaviour {
 	// Use this for initialization
 	void Start()
 	{
-		//Debug.Log("Unity:"+"SetPanelCtrl::init...");
-		InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
-	}
+        //Debug.Log("Unity:"+"SetPanelCtrl::init...");
+        InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
+        InputEventCtrl.GetInstance().ClickSetEnterBtEvent += ClickSetEnterBtEvent;
+    }
 
-	void ClickSetEnterBtEvent(pcvr.ButtonState val)
+    private void ClickSetMoveBtEvent(pcvr.ButtonState val)
+    {
+        if (val == pcvr.ButtonState.UP)
+        {
+            return;
+        }
+        
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreatGamePayDataPanel();
+        }
+    }
+
+    void ClickSetEnterBtEvent(pcvr.ButtonState val)
 	{
 		if (HardwareCheckCtrl.IsTestHardWare) {
 			return;
@@ -30,13 +45,13 @@ public class SetPanelCtrl : MonoBehaviour {
 			return;
 		}
 
-		if (Application.loadedLevel == (int)GameLevel.SetPanel) {
+        if (Application.loadedLevel == (int)GameLevel.SetPanel) {
 			return;
 		}
 		loadLevelSetPanel();
 	}
 
-	void loadLevelSetPanel()
+    void loadLevelSetPanel()
 	{
 		if (XkGameCtrl.IsLoadingLevel) {
 //			Debug.Log("Unity:"+"*************Loading...");
@@ -44,7 +59,7 @@ public class SetPanelCtrl : MonoBehaviour {
 		}
 		
 		if (!XkGameCtrl.IsGameOnQuit) {
-			System.GC.Collect();
+			GC.Collect();
 			Application.LoadLevel( (int)GameLevel.SetPanel );
 		}
 	}

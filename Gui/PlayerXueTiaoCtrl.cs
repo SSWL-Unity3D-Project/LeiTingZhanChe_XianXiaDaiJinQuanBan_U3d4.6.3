@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define USE_PLAYER_WX_HEAD
+using UnityEngine;
 
 public class PlayerXueTiaoCtrl : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     [HideInInspector]
 	public PlayerEnum PlayerSt = PlayerEnum.Null;
 	public Renderer NengLiangRenderer;
+    /// <summary>
+    /// 头像材质球.
+    /// </summary>
     public Material m_MatNum;
 	Transform CameraTran;
 	Transform NengLianTran;
@@ -58,16 +62,18 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 	void Start()
 	{
 		CameraTran = Camera.main != null ? Camera.main.transform : null;
+#if !USE_PLAYER_WX_HEAD
         if (m_PlayerNumImg != null && m_MatNum != null)
         {
             m_MatNum.mainTexture = m_PlayerNumImg;
         }
-
-        //if (m_TouMingHead != null)
-        //{
-        //    //m_HeadUrl = "";
-        //    m_MatNum.mainTexture = m_TouMingHead;
-        //}
+#else
+        if (m_TouMingHead != null)
+        {
+            //m_HeadUrl = "";
+            m_MatNum.mainTexture = m_TouMingHead;
+        }
+#endif
     }
 
     // Update is called once per frame
@@ -125,7 +131,10 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		}
 	}
 
-    //string m_HeadUrl = "";
+    /// <summary>
+    /// 微信头像url.
+    /// </summary>
+    string m_HeadUrl = "";
     public Texture m_TouMingHead;
 	public void HandlePlayerXueTiaoInfo(float fillVal)
     {
@@ -133,11 +142,34 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
         {
             return;
         }
-
+#if !USE_PLAYER_WX_HEAD
         if (m_PlayerNumImg != null && m_MatNum != null)
         {
             m_MatNum.mainTexture = m_PlayerNumImg;
         }
+#else
+        if (pcvr.IsHongDDShouBing)
+        {
+            int indexVal = (int)PlayerSt - 1;
+            string wxHeadUrl = pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerHeadUrl(indexVal);
+            if (wxHeadUrl == "")
+            {
+                m_MatNum.mainTexture = m_PlayerNumImg;
+            }
+            else
+            {
+                if (m_HeadUrl != wxHeadUrl)
+                {
+                    m_HeadUrl = wxHeadUrl;
+                    XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(m_HeadUrl, m_MatNum);
+                }
+            }
+        }
+        else
+        {
+            m_MatNum.mainTexture = m_PlayerNumImg;
+        }
+#endif
 
         float xueLiangVal = 1f - fillVal;
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);
@@ -174,24 +206,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		NengLianParentTr = NengLianTran.parent;
 		NengLianTran.parent = XkGameCtrl.MissionCleanup;
 		gameObject.SetActive(isActiveXT);
-
-        //if (isActiveXT && pcvr.IsHongDDShouBing)
-        //{
-        //    if (pcvr.IsHongDDShouBing)
-        //    {
-        //        int indexVal = (int)PlayerSt - 1;
-        //        if (m_HeadUrl != pcvr.GetInstance().m_PlayerHeadUrl[indexVal])
-        //        {
-        //            m_HeadUrl = pcvr.GetInstance().m_PlayerHeadUrl[indexVal];
-        //            XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(m_HeadUrl, m_MatNum);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        m_MatNum.mainTexture = m_PlayerNumImg;
-        //    }
-        //}
-	}
+    }
 	
 	/**
 	 * KeyHitSt == 0 -> 血条在后.

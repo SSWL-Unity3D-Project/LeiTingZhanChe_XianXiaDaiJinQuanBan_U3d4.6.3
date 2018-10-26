@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using Assets.XKGame.Script.GamePay;
 
 public enum NpcJiFenEnum
 {
@@ -75,6 +76,11 @@ public class XkGameCtrl : SSGameMono
             return _IsDisplayBossDeathYanHua;
         }
     }
+    /// <summary>
+    /// 彩票战车和JPBoss在循环动画期间的血量与正常模式下的比例.
+    /// </summary>
+    [Range(0.1f, 1f)]
+    public float m_ZhanCheBossBloodPer = 1f;
     /// <summary>
     /// Boss出场后npc是否继续发射子弹.
     /// </summary>
@@ -765,6 +771,21 @@ public class XkGameCtrl : SSGameMono
         }
     }
 
+    public SSGameWXPayData TestGameWXPayDt;
+    public SSGameWXPayData[] TestGameWXPayDtArray;
+    void TestWriteWXPayData()
+    {
+        SSGameWXPayDataRW rw = new SSGameWXPayDataRW();
+        TestGameWXPayDt.Time = System.DateTime.Now.ToString("yyyy年MM月dd日");
+        rw.WriteToFileXml(TestGameWXPayDt);
+    }
+
+    void TestReadWXPayData()
+    {
+        SSGameWXPayDataRW rw = new SSGameWXPayDataRW();
+        TestGameWXPayDtArray = rw.ReadFromFileXml();
+    }
+
     void Update()
     {
 #if DRAW_GAME_INFO
@@ -780,15 +801,30 @@ public class XkGameCtrl : SSGameMono
 #if TEST_UPDATA_GAME
         if (!pcvr.bIsHardWare)
         {
+            //if (Input.GetKeyUp(KeyCode.L))
+            //{
+            //    //TestReadWXPayData();
+            //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //    {
+            //        SSUIRoot.GetInstance().m_GameUIManage.CreatGamePayDataPanel();
+            //    }
+            //}
+
             if (Input.GetKeyUp(KeyCode.P))
             {
+                //if (DaoJiShiCtrl.GetInstanceOne() != null)
+                //{
+                //    DaoJiShiCtrl.GetInstanceOne().WXPlayerStopGameDaoJiShi();
+                //}
+                //TestWriteWXPayData();
+                //TestReadWXPayData();
                 //ClearTxt();
 
-                if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
-                {
-                    //测试玩家充值信息.
-                    pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().SToC_PlayerPayStateInfo("0"); //test
-                }
+                //if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+                //{
+                //    //测试玩家充值信息.
+                //    pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().SToC_PlayerPayStateInfo("0"); //test
+                //}
             }
         }
 #endif
@@ -2372,6 +2408,11 @@ public class XkGameCtrl : SSGameMono
         ActivePlayerAiTankToGame(PlayerEnum.PlayerTwo);
         //ActivePlayerAiTankToGame(PlayerEnum.PlayerThree);
         //ActivePlayerAiTankToGame(PlayerEnum.PlayerFour);
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreatDanMuTextUI();
+        }
     }
 
     /// <summary>
@@ -2420,6 +2461,11 @@ public class XkGameCtrl : SSGameMono
         ClosePlayerAiTank(PlayerEnum.PlayerTwo);
         //ClosePlayerAiTank(PlayerEnum.PlayerThree);
         //ClosePlayerAiTank(PlayerEnum.PlayerFour);
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.RemoveDanMuTextUI();
+        }
     }
 
     /// <summary>
@@ -3215,6 +3261,7 @@ public class XkGameCtrl : SSGameMono
         if (m_ExitUICom != null)
         {
             m_ExitUICom.RemoveSelf();
+            m_ExitUICom = null;
         }
     }
 

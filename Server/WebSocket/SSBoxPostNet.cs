@@ -40,8 +40,9 @@ public class SSBoxPostNet : MonoBehaviour
         int indexStart = UnityEngine.Random.Range(0, 5);
         int strLen = ip.Length - indexStart;
         strLen = strLen > 6 ? 6 : strLen;
+        indexStart = ip.Length - strLen;
         ip = ip.Substring(indexStart, strLen);
-
+        
         string key = ip + (char)UnityEngine.Random.Range(97, 122)
             + (DateTime.Now.Ticks % 999999).ToString();
         string boxNum = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + key;
@@ -55,6 +56,7 @@ public class SSBoxPostNet : MonoBehaviour
         }
         HttpSendPostLoginBox();
         HttpSendGetWeiXinXiaoChengXuUrl();
+        HttpSendGetServerTimeInfo();
 
         //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
     }
@@ -90,6 +92,11 @@ public class SSBoxPostNet : MonoBehaviour
         /// 微信小程序Url获取post.
         /// </summary>
         WX_XCX_URL_POST = 1,
+        /// <summary>
+        /// 获取服务器的时间数据.
+        /// 用来与当前安卓盒子或PC机器的系统时间进行比较.
+        /// </summary>
+        ServerTimeGet = 2,
     }
 
     /// <summary>
@@ -114,7 +121,15 @@ public class SSBoxPostNet : MonoBehaviour
         /// 游戏盒子登陆url.
         /// </summary>
         public string url = "http://h5.hdiandian.com/gameBox/logon";
-        
+        /// <summary>
+        /// 域名地址.
+        /// </summary>
+        string _address = "";
+        /// <summary>
+        /// 域名地址.
+        /// </summary>
+        public string m_Address { get { return _address; } }
+
         /// <summary>
         /// 微信小程序游戏代码雷霆战车.
         /// </summary>
@@ -213,6 +228,7 @@ public class SSBoxPostNet : MonoBehaviour
         public BoxLoginData(string address, string idGame)
         {
             gameId = idGame;
+            _address = address;
             url = address + "/gameBox/logon";
             _hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=";
             hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=1";
@@ -251,6 +267,11 @@ public class SSBoxPostNet : MonoBehaviour
         if (postData.error != null)
         {
             Debug.Log("Unity:"+"PostError: " + postData.error);
+            //网络故障,请检查网络并重启游戏.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+            }
         }
         else
         {
@@ -288,12 +309,38 @@ public class SSBoxPostNet : MonoBehaviour
         if (getData.error != null)
         {
             Debug.Log("Unity:" + "GetError: " + getData.error);
+            //网络故障,请检查网络并重启游戏.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+            }
         }
         else
         {
             Debug.Log("Unity:" + cmd + " -> GetData: " + getData.text);
             switch (cmd)
             {
+                case PostCmd.ServerTimeGet:
+                    {
+                        //GetData: {"code":0,"message":"成功","data":"2018-09-28 12:58:56"}
+                        string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
+                        JsonData jd = JsonMapper.ToObject(getData.text);
+                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        {
+                            string serverTime = jd["data"].ToString().Substring(0, 10);
+                            //Debug.Log("Unity: serverTime == " + serverTime + ", systenTime == " + timeSystem);
+                            if (serverTime != timeSystem)
+                            {
+                                //系统与服务器日期信息不一致,请修改机器系统日期信息!
+                                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                                {
+                                    SSUIRoot.GetInstance().m_GameUIManage.CreatFixSystemTimeUI();
+                                }
+                            }
+                        }
+
+                        break;
+                    }
                 case PostCmd.WX_XCX_URL_POST:
                     {
                         /**
@@ -392,11 +439,27 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public void HttpSendGetWeiXinXiaoChengXuUrl()
     {
-        Debug.Log("Unity:" + "HttpSendPostWeiXinXiaoChengXuUrlPost...");
+        Debug.Log("Unity:" + "HttpSendGetWeiXinXiaoChengXuUrl...");
         //GET方法.
         string url = m_BoxLoginData.GetWeiXinXiaoChengXuUrlPostInfo(m_GamePadState);
         Debug.Log("url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.WX_XCX_URL_POST));
+    }
+
+
+    /// <summary>
+    /// 发送获取服务器系统时间的消息.
+    /// 2.2.1 盒子获取服务器时间
+    /// 地址：https://域名/wxbackstage/data/now
+    /// 注：用来判断盒子时间是否正确
+    /// </summary>
+    public void HttpSendGetServerTimeInfo()
+    {
+        Debug.Log("Unity:" + "HttpSendGetServerTimeInfo...");
+        //GET方法.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/data/now";
+        Debug.Log("url ==== " + url);
+        StartCoroutine(SendGet(url, PostCmd.ServerTimeGet));
     }
 
     /// <summary>
@@ -446,13 +509,23 @@ public class SSBoxPostNet : MonoBehaviour
 
         string str = JsonMapper.ToJson(postdata);
         byte[] postData = Encoding.UTF8.GetBytes(str);
-        PostHttpResponse postHttpResponse = new PostHttpResponse();
-        HttpWebResponse response = postHttpResponse.CreatePostHttpResponse(url, postData, encoding);
-        //打印返回值.
-        Stream stream = null; //获取响应的流.
-
+        HttpWebResponse response = null;
         try
         {
+            PostHttpResponse postHttpResponse = new PostHttpResponse();
+            response = postHttpResponse.CreatePostHttpResponse(url, postData, encoding);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning("Unity: ex == " + ex);
+            return;
+        }
+
+        //打印返回值.
+        Stream stream = null; //获取响应的流.
+        try
+        {
+            Debug.Log("Unity: response.ContentLength ==================== " + response.ContentLength);
             //以字符流的方式读取HTTP响应.
             stream = response.GetResponseStream();
             //System.Drawing.Image.FromStream(stream).Save(path);
@@ -545,6 +618,12 @@ public class SSBoxPostNet : MonoBehaviour
             //保存图片.
             pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg = texture;
             erWeiMaUI.gameObject.SetActive(true);
+
+            //删除网络故障,请检查网络并重启游戏UI.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+            }
             yield return new WaitForSeconds(0.01f);
             Resources.UnloadUnusedAssets(); //一定要清理游离资源.
         }

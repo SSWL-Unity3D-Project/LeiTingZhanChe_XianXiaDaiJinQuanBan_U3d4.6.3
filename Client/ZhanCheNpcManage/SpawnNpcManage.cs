@@ -642,7 +642,7 @@ public class SpawnNpcManage : MonoBehaviour
             if (!m_ZhanCheJPBossData.IsCreatZhanChe)
             {
                 m_ZhanCheJPBossData.IsCreatZhanChe = true;
-                Debug.Log("creat zhanCheNpc, RandTime ============= " + m_ZhanCheRulerData.RandTime);
+                //Debug.Log("creat zhanCheNpc, RandTime ============= " + m_ZhanCheRulerData.RandTime);
             }
         }
 #endif
@@ -654,7 +654,7 @@ public class SpawnNpcManage : MonoBehaviour
             if (!m_ZhanCheJPBossData.IsCreatJPBoss)
             {
                 m_ZhanCheJPBossData.IsCreatJPBoss = true;
-                Debug.Log("creat jpBoss, RandTime ============= " + m_JPBossRulerData.RandTime);
+                //Debug.Log("creat jpBoss, RandTime ============= " + m_JPBossRulerData.RandTime);
             }
         }
 

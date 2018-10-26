@@ -50,7 +50,7 @@ public class XKNpcSpawnDaoJu : SSGameMono
             //产生随机道具的间隔时间未到.
             return;
         }
-        UnityLog("CreatSuiJiDaoJu....................");
+        //UnityLog("CreatSuiJiDaoJu....................");
 
         GameObject suiJiDaoJuPrefab = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSuiJiDaoJuPrefab(indexPlayer);
         if (suiJiDaoJuPrefab != null)

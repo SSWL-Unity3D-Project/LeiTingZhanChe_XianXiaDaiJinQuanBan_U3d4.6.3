@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class XKNpcAnimatorCtrl : MonoBehaviour {
 
-	Animator AnimatorCom;
+	internal Animator AnimatorCom;
 	public GameObject AmmoPrefab;
 	public GameObject AmmoLiZiPrefab;
 	public Transform AmmoSpawnTran;

@@ -18,7 +18,7 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
         /// m_PosXArray[0]   --- 最小数据的x轴坐标.
         /// m_PosXArray[max] --- 最大数据的x轴坐标.
         /// </summary>
-        public int[] m_PosXArray;
+        public float[] m_PosXArray;
     }
     /// <summary>
     /// 修改UI坐标数据信息.

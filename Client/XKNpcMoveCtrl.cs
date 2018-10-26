@@ -772,7 +772,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			    || aniVal == AnimatorNameNPC.Run3
 			    || aniVal == AnimatorNameNPC.Run4) {
 				CurrentRunAnimation = aniVal.ToString();
-			}
+                if (NpcAniScript != null && NpcAniScript.AnimatorCom != null && NpcAniScript.AnimatorCom.speed == 0f)
+                {
+                    NpcAniScript.ResetFireAnimationSpeed();
+                }
+            }
 
 			if (NpcAniScript != null) {
 				NetNpcPlayAnimation(NpcAniScript, aniVal.ToString());

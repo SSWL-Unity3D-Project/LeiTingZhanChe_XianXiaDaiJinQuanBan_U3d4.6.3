@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Assets.XKGame.Script.Comm;
+using Assets.XKGame.Script.GamePay;
 
 public class XKGlobalData
 {
@@ -232,10 +233,12 @@ public class XKGlobalData
             Instance.InitDaoJuCaiChi();
             Instance.InitJPBossCaiChi();
             Instance.InitCaiPiaoPrintState();
+            Instance.InitGameWXPayDataManage();
+            Instance.InitDanMuInfo();
         }
 		return Instance;
 	}
-
+    
 	void InitInfo()
 	{
 #if UNITY_STANDALONE_WIN
@@ -246,7 +249,23 @@ public class XKGlobalData
         FileName = "GameConfig.xml";
 #endif
     }
-    
+
+    /// <summary>
+    /// 游戏营收数据管理.
+    /// </summary>
+    internal SSGameWXPayDataManage m_GameWXPayDataManage = null;
+    /// <summary>
+    /// 初始化游戏微信营收数据信息.
+    /// </summary>
+    void InitGameWXPayDataManage()
+    {
+        if (m_GameWXPayDataManage == null)
+        {
+            m_GameWXPayDataManage = new SSGameWXPayDataManage();
+            m_GameWXPayDataManage.Init();
+        }
+    }
+
     /// <summary>
     /// 初始化彩票打印半票或全票.
     /// </summary>
@@ -567,6 +586,43 @@ public class XKGlobalData
 
     int _CoinToCard = 1;
     /// <summary>
+    /// 弹幕信息.
+    /// </summary>
+    internal string m_DanMuInfo = "";
+    /// <summary>
+    /// 默认弹幕信息.
+    /// </summary>
+    internal string m_MoRenDanMuInfo = "代金券送不停";
+    /// <summary>
+    /// 初始化弹幕信息.
+    /// </summary>
+    void InitDanMuInfo()
+    {
+        if (HandleJsonObj != null)
+        {
+            string info = HandleJsonObj.ReadFromFileXml(FileName, "DanMuInfo");
+            if (info == null || info == "")
+            {
+                info = m_MoRenDanMuInfo;
+                HandleJsonObj.WriteToFileXml(FileName, "DanMuInfo", info);
+            }
+            m_DanMuInfo = info;
+        }
+    }
+
+    /// <summary>
+    /// 设置弹幕信息.
+    /// </summary>
+    internal void SetDanMuInfo(string info)
+    {
+        if (HandleJsonObj != null)
+        {
+            HandleJsonObj.WriteToFileXml(FileName, "DanMuInfo", info);
+        }
+        m_DanMuInfo = info;
+    }
+
+    /// <summary>
     /// 一币兑换彩票数.
     /// 1币兑换代金券数(1币等于1张1元代金券).
     /// </summary>
@@ -606,8 +662,41 @@ public class XKGlobalData
         HandleJsonObj.WriteToFileXml(FileName, "CoinToCard", m_CoinToCard.ToString());
     }
 
+    /// <summary>
+    /// 获取玩家币值信息.
+    /// </summary>
+    public int GetCoinPlayer(PlayerEnum indexPlayer)
+    {
+        int coin = 0;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    coin = CoinPlayerOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    coin = CoinPlayerTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    coin = CoinPlayerThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    coin = CoinPlayerFour;
+                    break;
+                }
+        }
+        return coin;
+    }
+
     public static void SetCoinPlayerInfo(PlayerEnum indexPlayer, int coin)
     {
+        //Debug.Log("SetCoinPlayerInfo ----------> indexPlayer == " + indexPlayer + ", coin == " + coin);
         switch (indexPlayer)
         {
             case PlayerEnum.PlayerOne:

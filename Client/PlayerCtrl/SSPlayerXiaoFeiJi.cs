@@ -18,7 +18,7 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
     // Use this for initialization
     public void Init(XKPlayerAutoFire playerWeapon, Transform followTr)
     {
-        Debug.Log("Unity: SSPlayerXiaoFeiJi.Init...............");
+        //Debug.Log("Unity: SSPlayerXiaoFeiJi.Init...............");
         m_PlayerIndex = playerWeapon.PlayerIndex;
         m_FireLayer = playerWeapon.FireLayer;
         m_FollowPoint = followTr;

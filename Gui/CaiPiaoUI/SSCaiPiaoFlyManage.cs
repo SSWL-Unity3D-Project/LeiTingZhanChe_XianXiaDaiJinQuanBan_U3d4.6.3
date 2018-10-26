@@ -122,7 +122,7 @@ public class SSCaiPiaoFlyManage : SSGameMono
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
     public void Init(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
     {
-        UnityLog("SSCaiPiaoFlyManage::Init -> indexPlayer == " + IndexPlayer + ", type ==== " + type);
+        //UnityLog("SSCaiPiaoFlyManage::Init -> indexPlayer == " + IndexPlayer + ", type ==== " + type);
         m_CaiPiaoStartPos = startPos;
         switch (indexPlayer)
         {

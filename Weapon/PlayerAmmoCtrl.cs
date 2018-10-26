@@ -1,6 +1,6 @@
-﻿#define USE_SPHERE_HIT
+﻿//#define TEST_CLOSE_SPHER_HIT
+#define USE_SPHERE_HIT
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerAmmoCtrl : MonoBehaviour {
@@ -54,7 +54,8 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		AmmoTran.parent = XkGameCtrl.PlayerAmmoArray;
 		MaxDisVal = MvSpeed * LiveTime;
 	}
-	
+
+    float m_TimeLastAmmoHit = 0f;
 	void Update()
 	{
 		if (!IsHandleRpc) {
@@ -64,7 +65,25 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		if (IsDestroyAmmo || IsChuanJiaDanHitCamColForward) {
 			return;
 		}
-		CheckPlayerAmmoForwardHitNpc();
+
+        if (AmmoType == PlayerAmmoType.DaoDanAmmo
+            || AmmoType == PlayerAmmoType.ChuanTouAmmo
+            || AmmoType == PlayerAmmoType.SanDanAmmo)
+        {
+            if (Time.time - m_TimeLastAmmoHit > 0.05f)
+            {
+                m_TimeLastAmmoHit = Time.time;
+                CheckPlayerAmmoForwardHitNpc();
+            }
+        }
+        else
+        {
+            if (Time.time - m_TimeLastAmmoHit > 0.2f)
+            {
+                m_TimeLastAmmoHit = Time.time;
+                CheckPlayerAmmoForwardHitNpc();
+            }
+        }
 	}
 
 	List<XKNpcHealthCtrl> NpcHealthList;
@@ -79,8 +98,10 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		bool isStopCheckHit = false;
 		if (AmmoType != PlayerAmmoType.PaiJiPaoAmmo) {
 			XKPlayerCheckCamera checkCam = hitObjNpc.GetComponent<XKPlayerCheckCamera>();
-			if (checkCam != null) {
-				MoveAmmoOnCompelteITween();
+			if (checkCam != null)
+            {
+                IsHitNpcAmmo = true;
+                MoveAmmoOnCompelteITween();
 				return true;
 			}
 		}
@@ -93,23 +114,31 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 			          +", NpcName "+healthScript.GetNpcName()
 			          +", AmmoDamageDis "+AmmoDamageDis);*/
 			bool isHitNpc = false;
-			switch (AmmoType) {
+			switch (AmmoType)
+            {
 			case PlayerAmmoType.ChuanTouAmmo:
 			case PlayerAmmoType.PaiJiPaoAmmo:
-				if (NpcHealthList == null) {
-					NpcHealthList = new List<XKNpcHealthCtrl>();
-				}
-				
-				if (!NpcHealthList.Contains(healthScript)) {
-					NpcHealthList.Add(healthScript);
-					isHitNpc = true;
-				}
-				break;
+                    {
+                        if (NpcHealthList == null)
+                        {
+                            NpcHealthList = new List<XKNpcHealthCtrl>();
+                        }
+
+                        if (!NpcHealthList.Contains(healthScript))
+                        {
+                            NpcHealthList.Add(healthScript);
+                            isHitNpc = true;
+                        }
+                        break;
+                    }
 			default:
-				MoveAmmoOnCompelteITween();
-				isStopCheckHit = true;
-				isHitNpc = true;
-				break;
+                    {
+                        IsHitNpcAmmo = true;
+                        MoveAmmoOnCompelteITween();
+                        isStopCheckHit = true;
+                        isHitNpc = true;
+                        break;
+                    }
 			}
 
 			if (isHitNpc) {
@@ -128,8 +157,10 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 			    || AmmoType == PlayerAmmoType.GaoBaoAmmo
 			    || AmmoType == PlayerAmmoType.PuTongAmmo
 			    || AmmoType == PlayerAmmoType.SanDanAmmo) {
-				if (hitObjNpc.layer != LayerMask.NameToLayer("Default")) {
-					MoveAmmoOnCompelteITween();
+				if (hitObjNpc.layer != LayerMask.NameToLayer("Default"))
+                {
+                    IsHitNpcAmmo = true;
+                    MoveAmmoOnCompelteITween();
 					isStopCheckHit = true;
 				}
 			}
@@ -154,7 +185,8 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		if (!ObjAmmo.activeSelf) {
 			ObjAmmo.SetActive(true);
 			IsDestroyAmmo = false;
-		}
+            IsHitNpcAmmo = false;
+        }
 
 		AmmoTran = transform;
 		PlayerState = playerIndex;
@@ -512,13 +544,27 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 
 		NpcAmmoCtrl.RemoveItweenComponents(gameObject);
 		NpcAmmoCtrl.RemoveItweenComponents(gameObject, 1);
-		if (AmmoType == PlayerAmmoType.GenZongAmmo
-		    || AmmoType == PlayerAmmoType.PaiJiPaoAmmo) {
-			CheckPlayerAmmoOverlapSphereHit();
+        if (AmmoType == PlayerAmmoType.Null)
+        {
+        }
+        else
+        {
+            if (IsHitNpcAmmo == false)
+            {
+                CheckPlayerAmmoOverlapSphereHit();
+            }
+            else
+            {
+                //Debug.Log("PlayerAmmo have hit npc! ************ AmmoType ===== " + AmmoType);
+            }
 		}
 		DaleyHiddenPlayerAmmo();
 	}
 
+    /// <summary>
+    /// 是否击中NPC.
+    /// </summary>
+    bool IsHitNpcAmmo = false;
 	void DaleyHiddenPlayerAmmo()
 	{
 		gameObject.SetActive(false);
@@ -541,52 +587,74 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 	 */
 	GameObject CheckPlayerAmmoOverlapSphereHit(int key = 0)
 	{
-		bool isBreak = false;
 		GameObject obj = null;
-		float disDamage = key == 0 ? AmmoDamageDis : 0.2f;
+#if !TEST_CLOSE_SPHER_HIT
+        bool isBreak = false;
+        float disDamage = key == 0 ? AmmoDamageDis : 0.2f;
 		XKPlayerMvFanWei playerMvFanWei = null;
 		Collider[] hits = Physics.OverlapSphere(AmmoTran.position, disDamage, PlayerAmmoHitLayer);
-		foreach (Collider c in hits) {
-			// Don't collide with triggers
-			if (c.isTrigger || IsChuanJiaDanHitCamColForward) {
-				continue;
-			}
+        Collider col = null;
+        int length = hits.Length;
+        //Debug.Log("length ======================== " + length);
+        for (int i = 0; i < length; i++)
+        {
+            col = hits[i];
+            if (col == null)
+            {
+                continue;
+            }
 
-			if (AmmoType != PlayerAmmoType.PaiJiPaoAmmo) {
-				playerMvFanWei = c.GetComponent<XKPlayerMvFanWei>();
-				if (playerMvFanWei != null) {
-					if (playerMvFanWei.FanWeiState == PointState.Hou) {
-						continue;
-					}
-					
-					if (playerMvFanWei.FanWeiState == PointState.Qian) {
-						if (AmmoType != PlayerAmmoType.ChuanTouAmmo ) {
-							isBreak = true;
-							obj = c.gameObject;
-							MoveAmmoOnCompelteITween();
-							break;
-						}
-						else {
-							IsChuanJiaDanHitCamColForward = true;
-							break;
-						}
-					}
-				}
-			}
+            // Don't collide with triggers
+            if (col.isTrigger || IsChuanJiaDanHitCamColForward)
+            {
+                continue;
+            }
 
-			switch (key) {
-			case 0:
-				isBreak = CheckAmmoHitObj(c.gameObject, PlayerState);
-				if (isBreak) {
-					break;
-				}
-				break;
-			case 1:
-				isBreak = true;
-				obj = c.gameObject;
-				break;
-			}
-		}
-		return obj;
+            if (AmmoType != PlayerAmmoType.PaiJiPaoAmmo)
+            {
+                playerMvFanWei = col.GetComponent<XKPlayerMvFanWei>();
+                if (playerMvFanWei != null)
+                {
+                    if (playerMvFanWei.FanWeiState == PointState.Hou)
+                    {
+                        continue;
+                    }
+
+                    if (playerMvFanWei.FanWeiState == PointState.Qian)
+                    {
+                        IsHitNpcAmmo = true;
+                        if (AmmoType != PlayerAmmoType.ChuanTouAmmo)
+                        {
+                            isBreak = true;
+                            obj = col.gameObject;
+                            MoveAmmoOnCompelteITween();
+                            break;
+                        }
+                        else
+                        {
+                            IsChuanJiaDanHitCamColForward = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            switch (key)
+            {
+                case 0:
+                    isBreak = CheckAmmoHitObj(col.gameObject, PlayerState);
+                    if (isBreak)
+                    {
+                        break;
+                    }
+                    break;
+                case 1:
+                    isBreak = true;
+                    obj = col.gameObject;
+                    break;
+            }
+        }
+#endif
+        return obj;
 	}
 }

@@ -6,6 +6,10 @@ public class XueKuangCtrl : MonoBehaviour
 	public PlayerEnum PlayerSt = PlayerEnum.Null;
 	public UITexture XueKuangNum;
     /// <summary>
+    /// 头像数字UI.
+    /// </summary>
+    public GameObject m_TouXiangNum;
+    /// <summary>
     /// 微信头像.
     /// </summary>
     public UITexture m_WeiXinHead;
@@ -118,7 +122,7 @@ public class XueKuangCtrl : MonoBehaviour
                     if (m_WeiXinHead != null)
                     {
                         int indexUrl = (int)PlayerSt - 1;
-                        m_WeiXinHead.gameObject.SetActive(true);
+                        SetActiveWeiXinHead(true);
                         string url = pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerHeadUrl(indexUrl);
                         XkGameCtrl.GetInstance().m_AsyImage.LoadPlayerHeadImg(url, m_WeiXinHead);
                     }
@@ -128,7 +132,7 @@ public class XueKuangCtrl : MonoBehaviour
                     if (m_WeiXinHead != null)
                     {
                         m_WeiXinHead.mainTexture = m_TouMingHead;
-                        m_WeiXinHead.gameObject.SetActive(false);
+                        SetActiveWeiXinHead(false);
                     }
                 }
             }
@@ -145,10 +149,7 @@ public class XueKuangCtrl : MonoBehaviour
             if (XKGlobalData.GameVersionPlayer == 0)
             {
                 XueKuangNum.mainTexture = XueKuangTexture[indexVal];
-                if (m_WeiXinHead != null)
-                {
-                    m_WeiXinHead.gameObject.SetActive(indexVal == 1 ? true : false);
-                }
+                SetActiveWeiXinHead(indexVal == 1 ? true : false);
             }
             else
             {
@@ -187,4 +188,17 @@ public class XueKuangCtrl : MonoBehaviour
 		}
 		return xueKuangScript;
 	}
+
+    void SetActiveWeiXinHead(bool isActive)
+    {
+        if (m_WeiXinHead != null)
+        {
+            m_WeiXinHead.gameObject.SetActive(isActive);
+        }
+
+        if (m_TouXiangNum != null)
+        {
+            m_TouXiangNum.SetActive(!isActive);
+        }
+    }
 }
