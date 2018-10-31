@@ -420,6 +420,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 查找玩家微信游戏数据.
+        /// </summary>
+        internal GamePlayerData FindGamePlayerData(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
+                return dt.Index.Equals(indexVal);
+            });
+            return playerDt;
+        }
+
+        /// <summary>
         /// 玩家激活游戏状态.
         /// </summary>
         enum PlayerActiveState
@@ -1219,6 +1231,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         const int m_GamneCoinToMoney = 100;
 #endif
+        /// <summary>
+        /// 代金券金额从元转为分的倍率.
+        /// </summary>
+        const int m_MoneyYuanToFen = 100;
 
 
         /// <summary>
@@ -1236,7 +1252,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 userId = userIdVal;
             }
         }
-        public List<LoopGetWXHddPayData> m_LoopGetWXHddPayDataList = new List<LoopGetWXHddPayData>();
+        List<LoopGetWXHddPayData> m_LoopGetWXHddPayDataList = new List<LoopGetWXHddPayData>();
         /// <summary>
         /// 查找数据.
         /// </summary>
@@ -1404,12 +1420,29 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
         /// <summary>
         /// 发送玩家获取商家代金券的信息给服务器.
+        /// indexPlayer玩家索引.
+        /// money代金券金额(元).
+        /// </summary>
+        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money)
+        {
+            GamePlayerData data = FindGamePlayerData(indexPlayer);
+            if (data != null && data.m_PlayerWeiXinData != null)
+            {
+                int userId = data.m_PlayerWeiXinData.userId;
+                int account = money * m_MoneyYuanToFen; //单位从元转为分.
+                Debug.Log("SendPostHddPlayerCouponInfo -> userId ==== " + userId + ", account ==== " + account);
+                SendPostHddPlayerCouponInfo(userId, account);
+            }
+        }
+
+        /// <summary>
+        /// 发送玩家获取商家代金券的信息给服务器.
         /// userId玩家id.
         /// account代金券金额(元).
         /// </summary>
-        internal void SendPostHddPlayerCouponInfo(int userId, int account)
+        void SendPostHddPlayerCouponInfo(int userId, int account)
         {
-            if (m_SSBoxPostNet != null)
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_BoxLoginData != null)
             {
                 //boxId 游戏盒子Id.最终应该为商家id(有的商家可能是连锁店).
                 string boxId = m_SSBoxPostNet.m_BoxLoginData.boxNumber;

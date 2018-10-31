@@ -1,6 +1,5 @@
 ﻿#define USE_LINE_CHANGE_DIR
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public enum TKMoveState
@@ -13,6 +12,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 {
     public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	TKMoveState TKMoveSt = TKMoveState.YaoGanBan;
+    /// <summary>
+    /// 新圆圈特效.
+    /// </summary>
+    public GameObject m_NewCircleTeXiao;
 	public UVA LvDaiUVCom;
 	public AudioSource PlayerMoveAudio;
 	public XKPlayerCheckCamera PlayerPointForward;
@@ -1163,6 +1166,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
             //游戏处于循环动画阶段,没有激活的玩家.
+            SetActiveNewCircleTeXiao(false);
         }
         else
         {
@@ -1176,13 +1180,14 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             {
                 HuDunCtrl.GetInstance(PlayerIndex).ShowHuDunUI(XkGameCtrl.GetInstance().WuDiTime);
             }
+            SetActiveNewCircleTeXiao(true);
         }
 
 		IsWuDiState = true;
 		WuDiTXObj.SetActive(true);
-		//gameObject.layer = LayerMask.NameToLayer("UI");
-		//Debug.Log("Unity:"+"active player wuDiState -> playerIndex "+PlayerIndex);
-	}
+        //gameObject.layer = LayerMask.NameToLayer("UI");
+        //Debug.Log("Unity:"+"active player wuDiState -> playerIndex "+PlayerIndex);
+    }
 
 	public void ResetIsWuDiState()
 	{
@@ -1579,6 +1584,14 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         {
             //需要重置玩家位置了.
             XkGameCtrl.ActivePlayerAiTankToGame(PlayerIndex);
+        }
+    }
+
+    public void SetActiveNewCircleTeXiao(bool isActive)
+    {
+        if (m_NewCircleTeXiao != null)
+        {
+            m_NewCircleTeXiao.SetActive(isActive);
         }
     }
 }

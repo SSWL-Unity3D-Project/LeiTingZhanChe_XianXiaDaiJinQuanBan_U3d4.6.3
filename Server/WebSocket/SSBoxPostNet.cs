@@ -213,6 +213,11 @@ public class SSBoxPostNet : MonoBehaviour
         //public string gameId = "16";              //游戏id.
         public string gameId = "17";                //游戏id.
 
+        /// <summary>
+        /// 红点点后台游戏屏幕码.
+        /// </summary>
+        public string screenId = "0";
+
         //测试域名.
         //string _hDianDianGamePadUrl = "http://game.hdiandian.com/gamepad/index.html?boxNumber=";
         //正式域名.
@@ -308,7 +313,7 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// 收到微信玩家在红点点平台的账户信息.
     /// </summary>
@@ -350,6 +355,24 @@ public class SSBoxPostNet : MonoBehaviour
                     {
                         //红点点线下游戏屏幕码Id.
                         //{"code":0,"message":"成功","data":{"id":10004,"boxId":"89leitingzhanche68q1q6o30765"}}
+                        JsonData jd = JsonMapper.ToObject(getData.text);
+                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        {
+                            if (m_BoxLoginData != null)
+                            {
+                                m_BoxLoginData.screenId = jd["data"]["id"].ToString();
+                                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                                {
+                                    //创建游戏红点点屏幕码UI.
+                                    int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
+                                    SSUIRoot.GetInstance().m_GameUIManage.CreatGameScreenIdUI(screenId);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("GET_HDD_GAME_SCREEN_ID -> get screenId was failed!");
+                        }
                         break;
                     }
                 case PostCmd.GET_HDD_PLAYER_PAY_DATA:
@@ -427,6 +450,9 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             if (m_BoxLoginData != null)
                             {
+                                //获取游戏红点点后台屏幕码信息.
+                                HttpSendGetGameScreenId();
+
                                 string scene = jd["data"]["scene"].ToString();
                                 string sceneTmp = m_BoxLoginData.boxNumber + "," + m_BoxLoginData.GetWXCodeGame(m_GamePadState);
                                 Debug.Log("Unity: scene == " + scene + ", sceneTmp ==== " + sceneTmp);
@@ -450,7 +476,6 @@ public class SSBoxPostNet : MonoBehaviour
                                     Debug.LogWarning("Unity: scene was wrong! scene ==== " + scene + ", sceneTmp == " + sceneTmp);
                                 }
                             }
-                            HttpSendGetGameScreenId();
                         }
                         else
                         {

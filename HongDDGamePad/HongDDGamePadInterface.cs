@@ -143,6 +143,32 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             return url;
         }
+
+
+        /// <summary>
+        /// 发送玩家获取商家代金券的信息给服务器.
+        /// indexPlayer玩家索引.
+        /// money代金券金额(元).
+        /// </summary>
+        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendPostHddPlayerCouponInfo(indexPlayer, money);
+            }
+        }
+
+        /// <summary>
+        /// 获取玩家微信数据信息.
+        /// </summary>
+        public HongDDGamePad.GamePlayerData GetGamePlayerData(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                return m_HongDDGamePadCom.FindGamePlayerData(indexPlayer);
+            }
+            return null;
+        }
         #endregion
     }
 }

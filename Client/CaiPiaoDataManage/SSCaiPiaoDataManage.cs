@@ -2,6 +2,7 @@
 //#define TEST_SHOW_PLAYER_CAIPIAO
 //#define TEST_OUT_PRINT_CARD
 //#define CREATE_SUPER_JPBOSS
+using Assets.XKGame.Script.HongDDGamePad;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -1034,6 +1035,16 @@ public class SSCaiPiaoDataManage : SSGameMono
     /// </summary>
     public void AddPlayerZhengChangDeCai(PlayerEnum index, bool isPlayerXuBi)
     {
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            HongDDGamePad.GamePlayerData data = pcvr.GetInstance().m_HongDDGamePadInterface.GetGamePlayerData(index);
+            if (data != null && data.IsMianFeiTiYanPlayer == true)
+            {
+                //微信端免费体验游戏玩家不进行奖池累加.
+                return;
+            }
+        }
+
         int indexVal = (int)index - 1;
         if (indexVal < 0 || indexVal >= m_PlayerCoinData.Length)
         {
@@ -1261,11 +1272,18 @@ public class SSCaiPiaoDataManage : SSGameMono
             }
         }
         
-        if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+        //if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+        //{
+        //    //将玩家得到的代金券信息发送到服务器.
+        //    string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
+        //    pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerReceiveDaiJinQuan(args);
+        //}
+
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
         {
             //将玩家得到的代金券信息发送到服务器.
             string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
-            pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerReceiveDaiJinQuan(args);
+            pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(indexPlayer, caiPiao);
         }
 
         if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)

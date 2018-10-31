@@ -117,11 +117,12 @@ public class ErWeiMaUI : MonoBehaviour
         {
             if (pcvr.IsHongDDShouBing)
             {
-                if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet() != null)
+                SSBoxPostNet boxCom = pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet();
+                if (boxCom != null)
                 {
                     if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg == null)
                     {
-                        pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet().DelayReloadWeiXinXiaoChengXuErWeiMa(m_ErWeiMaUI);
+                        boxCom.DelayReloadWeiXinXiaoChengXuErWeiMa(m_ErWeiMaUI);
                     }
                     else
                     {
