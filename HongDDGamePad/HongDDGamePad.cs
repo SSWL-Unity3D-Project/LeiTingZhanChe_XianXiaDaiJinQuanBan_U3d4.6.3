@@ -1172,35 +1172,70 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 XKGlobalData.GetInstance().m_GameWXPayDataManage.WriteGamePayRevenueInfo(coin);
             }
 
+            bool isMianFeiTiYanPlayer = false;
+            GamePlayerData data = FindGamePlayerData(playerIndex);
+            if (data != null)
+            {
+                isMianFeiTiYanPlayer = data.IsMianFeiTiYanPlayer;
+            }
+
             int coinTotal = 0;
             switch (playerIndex)
             {
                 case PlayerEnum.PlayerOne:
                     {
-                        XKGlobalData.CoinPlayerOne += coin;
-                        XKGlobalData.SetCoinPlayerOne(XKGlobalData.CoinPlayerOne);
-                        coinTotal = XKGlobalData.CoinPlayerOne;
+                        if (isMianFeiTiYanPlayer == false)
+                        {
+                            XKGlobalData.CoinPlayerOne += coin;
+                            coinTotal = XKGlobalData.CoinPlayerOne;
+                        }
+                        else
+                        {
+                            coinTotal = XKGlobalData.CoinPlayerOne + coin;
+                        }
+                        XKGlobalData.SetCoinPlayerOne(coinTotal);
                         break;
                     }
                 case PlayerEnum.PlayerTwo:
                     {
-                        XKGlobalData.CoinPlayerTwo += coin;
-                        XKGlobalData.SetCoinPlayerTwo(XKGlobalData.CoinPlayerTwo);
-                        coinTotal = XKGlobalData.CoinPlayerTwo;
+                        if (isMianFeiTiYanPlayer == false)
+                        {
+                            XKGlobalData.CoinPlayerTwo += coin;
+                            coinTotal = XKGlobalData.CoinPlayerTwo;
+                        }
+                        else
+                        {
+                            coinTotal = XKGlobalData.CoinPlayerTwo + coin;
+                        }
+                        XKGlobalData.SetCoinPlayerTwo(coinTotal);
                         break;
                     }
                 case PlayerEnum.PlayerThree:
                     {
-                        XKGlobalData.CoinPlayerThree += coin;
-                        XKGlobalData.SetCoinPlayerThree(XKGlobalData.CoinPlayerThree);
-                        coinTotal = XKGlobalData.CoinPlayerThree;
+                        if (isMianFeiTiYanPlayer == false)
+                        {
+                            XKGlobalData.CoinPlayerThree += coin;
+                            coinTotal = XKGlobalData.CoinPlayerThree;
+                        }
+                        else
+                        {
+                            coinTotal = XKGlobalData.CoinPlayerThree + coin;
+                        }
+                        XKGlobalData.SetCoinPlayerThree(coinTotal);
                         break;
                     }
                 case PlayerEnum.PlayerFour:
                     {
-                        XKGlobalData.CoinPlayerFour += coin;
-                        XKGlobalData.SetCoinPlayerFour(XKGlobalData.CoinPlayerFour);
-                        coinTotal = XKGlobalData.CoinPlayerFour;
+                        if (isMianFeiTiYanPlayer == false)
+                        {
+                            XKGlobalData.CoinPlayerFour += coin;
+                            coinTotal = XKGlobalData.CoinPlayerFour;
+                        }
+                        else
+                        {
+                            coinTotal = XKGlobalData.CoinPlayerFour + coin;
+                        }
+                        XKGlobalData.SetCoinPlayerFour(coinTotal);
                         break;
                     }
             }
@@ -1231,11 +1266,6 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         const int m_GamneCoinToMoney = 100;
 #endif
-        /// <summary>
-        /// 代金券金额从元转为分的倍率.
-        /// </summary>
-        const int m_MoneyYuanToFen = 100;
-
 
         /// <summary>
         /// 循环检测获取微信玩家在红点点平台的账户信息.
@@ -1429,9 +1459,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (data != null && data.m_PlayerWeiXinData != null)
             {
                 int userId = data.m_PlayerWeiXinData.userId;
-                int account = money * m_MoneyYuanToFen; //单位从元转为分.
-                Debug.Log("SendPostHddPlayerCouponInfo -> userId ==== " + userId + ", account ==== " + account);
-                SendPostHddPlayerCouponInfo(userId, account);
+                Debug.Log("SendPostHddPlayerCouponInfo -> userId ==== " + userId + ", money ==== " + money);
+                SendPostHddPlayerCouponInfo(userId, money);
             }
         }
 
