@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -23,18 +24,23 @@ public class SSBoxPostNet : MonoBehaviour
 
     public void Init()
     {
-        //NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
-        //foreach (NetworkInterface ni in nis)
-        //{
-        //    Debug.Log("Name = " + ni.Name);
-        //    Debug.Log("Des = " + ni.Description);
-        //    Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
-        //    Debug.Log("Mac地址 = " + ni.GetPhysicalAddress().ToString());
-        //    Debug.Log("------------------------------------------------");
-        //    m_BoxLoginData.boxNumber = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + ni.GetPhysicalAddress().ToString();
-        //    break;
-        //}
+        string boxNum = "";
+#if UNITY_STANDALONE_WIN
+        NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+        foreach (NetworkInterface ni in nis)
+        {
+            //Debug.Log("Name = " + ni.Name);
+            //Debug.Log("Des = " + ni.Description);
+            //Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
+            Debug.Log("Unity: Mac = " + ni.GetPhysicalAddress().ToString());
+            //Debug.Log("------------------------------------------------");
+            //boxNum = UnityEngine.Random.Range(0, 9) + ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
+            boxNum = ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
+            break;
+        }
+#endif
 
+#if UNITY_ANDROID
         string ip = Network.player.ipAddress;
         ip = ip.Replace('.', (char)UnityEngine.Random.Range(97, 122));
         int indexStart = UnityEngine.Random.Range(0, 5);
@@ -45,7 +51,8 @@ public class SSBoxPostNet : MonoBehaviour
         
         string key = ip + (char)UnityEngine.Random.Range(97, 122)
             + (DateTime.Now.Ticks % 999999).ToString();
-        string boxNum = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + key;
+        boxNum = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + key;
+#endif
         boxNum = boxNum.Length > 28 ? boxNum.Substring(0, 28) : boxNum;
         m_BoxLoginData.boxNumber = boxNum;
         Debug.Log("boxNumber == " + m_BoxLoginData.boxNumber);
@@ -59,24 +66,6 @@ public class SSBoxPostNet : MonoBehaviour
         HttpSendGetServerTimeInfo();
 
         //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
-    }
-    
-    /// <summary>
-    /// MD5加密数据算法.
-    /// </summary>
-    public string Md5Sum(string strToEncrypt)
-    {
-        byte[] bs = UTF8Encoding.UTF8.GetBytes(strToEncrypt);
-        System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5CryptoServiceProvider.Create();
-
-        byte[] hashBytes = md5.ComputeHash(bs);
-
-        string hashString = "";
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
-        }
-        return hashString.PadLeft(32, '0');
     }
 
     /// <summary>
@@ -97,6 +86,14 @@ public class SSBoxPostNet : MonoBehaviour
         /// 用来与当前安卓盒子或PC机器的系统时间进行比较.
         /// </summary>
         ServerTimeGet = 2,
+        /// <summary>
+        /// 获取红点点平台玩家账户数据.
+        /// </summary>
+        GET_HDD_PLAYER_PAY_DATA = 3,
+        /// <summary>
+        /// 获取红点点游戏屏幕码Id.
+        /// </summary>
+        GET_HDD_GAME_SCREEN_ID = 4,
     }
 
     /// <summary>
@@ -236,6 +233,19 @@ public class SSBoxPostNet : MonoBehaviour
     }
     public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
     //public BoxLoginData m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
+    
+    public enum GamePayPlatform
+    {
+        Null = 0,
+        /// <summary>
+        /// 红点点支付平台.
+        /// </summary>
+        HongDianDian = 1,
+    }
+    /// <summary>
+    /// 游戏支付平台.
+    /// </summary>
+    internal GamePayPlatform m_GamePayPlatform = GamePayPlatform.HongDianDian;
 
     /// <summary>
     /// 盒子登陆成功后返回的数据信息.
@@ -298,11 +308,27 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
+    
+    /// <summary>
+    /// 收到微信玩家在红点点平台的账户信息.
+    /// </summary>
+    public delegate void EventReceivedWXPlayerHddPayData(int userId, int money);
+    public event EventReceivedWXPlayerHddPayData OnReceivedWXPlayerHddPayData;
+    /// <summary>
+    /// 收到微信玩家的红点点游戏账户数据.
+    /// </summary>
+    void ReceivedWXPlayerHddPayData(int userId, int money)
+    {
+        if (OnReceivedWXPlayerHddPayData != null)
+        {
+            OnReceivedWXPlayerHddPayData(userId, money);
+        }
+    }
 
     /// <summary>
     /// Get网络数据.
     /// </summary>
-    IEnumerator SendGet(string _url, PostCmd cmd)
+    IEnumerator SendGet(string _url, PostCmd cmd, int userIdVal = 0)
     {
         WWW getData = new WWW(_url);
         yield return getData;
@@ -320,16 +346,61 @@ public class SSBoxPostNet : MonoBehaviour
             Debug.Log("Unity:" + cmd + " -> GetData: " + getData.text);
             switch (cmd)
             {
-                case PostCmd.ServerTimeGet:
+                case PostCmd.GET_HDD_GAME_SCREEN_ID:
                     {
-                        //GetData: {"code":0,"message":"成功","data":"2018-09-28 12:58:56"}
-                        string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
+                        //红点点线下游戏屏幕码Id.
+                        //{"code":0,"message":"成功","data":{"id":10004,"boxId":"89leitingzhanche68q1q6o30765"}}
+                        break;
+                    }
+                case PostCmd.GET_HDD_PLAYER_PAY_DATA:
+                    {
+                        //玩家在红点点平台的账户信息.
+                        //{"code":-1,"message":"NO ACCOUNT FOR THIS MEMBER"} //没有该账户.
+                        //{"code":0,"message":"成功","data":{"account":1,"memberId":93124}} //成功获取账户信息.
                         JsonData jd = JsonMapper.ToObject(getData.text);
                         if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
                         {
+                            //如果有账户信息数据,需要将账户信息数据转换为游戏币.
+                            int userId = Convert.ToInt32(jd["data"]["memberId"].ToString());
+                            int money = Convert.ToInt32(jd["data"]["account"].ToString());
+                            //money = 200; //test
+                            ReceivedWXPlayerHddPayData(userId, money);
+                        }
+                        else
+                        {
+                            //没有账户信息.
+                            //发送充值消息给微信手柄.
+                            //if (m_WebSocketSimpet != null)
+                            //{
+                            //    m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userIdVal);
+                            //}
+                            ReceivedWXPlayerHddPayData(userIdVal, 0);
+                        }
+                        break;
+                    }
+                case PostCmd.ServerTimeGet:
+                    {
+                        //GetData: {"code":0,"message":"成功","data":"2018-09-28 12:58:56"}
+                        JsonData jd = JsonMapper.ToObject(getData.text);
+                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        {
+                            string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
                             string serverTime = jd["data"].ToString().Substring(0, 10);
-                            //Debug.Log("Unity: serverTime == " + serverTime + ", systenTime == " + timeSystem);
-                            if (serverTime != timeSystem)
+                            DateTime systemTimeDt = DateTime.Now;
+                            DateTime serverTimeDt = Convert.ToDateTime(jd["data"].ToString());
+                            //test
+                            //systemTimeDt = Convert.ToDateTime("2018-10-01 15:58:56");
+                            //serverTimeDt = Convert.ToDateTime("2018-09-30 12:58:56");
+                            //test
+                            TimeSpan sp = systemTimeDt.Subtract(serverTimeDt);
+                            int daysOffset = sp.Days;
+                            //if (pcvr.GetInstance() != null)
+                            //{
+                            //    pcvr.GetInstance().AddDebugMsg("Unity: daysOffset == " + Mathf.Abs(daysOffset));
+                            //    pcvr.GetInstance().AddDebugMsg("Unity: serverTime == " + serverTime + ", systemTime == " + timeSystem);
+                            //}
+
+                            if (Mathf.Abs(daysOffset) > 1)
                             {
                                 //系统与服务器日期信息不一致,请修改机器系统日期信息!
                                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -338,7 +409,6 @@ public class SSBoxPostNet : MonoBehaviour
                                 }
                             }
                         }
-
                         break;
                     }
                 case PostCmd.WX_XCX_URL_POST:
@@ -380,6 +450,7 @@ public class SSBoxPostNet : MonoBehaviour
                                     Debug.LogWarning("Unity: scene was wrong! scene ==== " + scene + ", sceneTmp == " + sceneTmp);
                                 }
                             }
+                            HttpSendGetGameScreenId();
                         }
                         else
                         {
@@ -433,11 +504,177 @@ public class SSBoxPostNet : MonoBehaviour
         Debug.Log("url ==== " + m_BoxLoginData.url);
         StartCoroutine(SendPost(m_BoxLoginData.url, form, PostCmd.BoxLogin));
     }
-    
+
+    /// <summary>
+    /// 扣除微信玩家在红点点平台的消费数据.
+    /// </summary>
+    public class PostDataHddSubPlayerMoney
+    {
+        /// <summary>
+        /// 用户ID.
+        /// </summary>
+        public int memberId = 0;
+        /// <summary>
+        /// 消费金额，单位分，1块钱=100分.
+        /// </summary>
+        public int account = 0;
+        public PostDataHddSubPlayerMoney(int memberIdVal, int accountVal)
+        {
+            memberId = memberIdVal;
+            account = accountVal;
+        }
+    }
+
+    /// <summary>
+    /// 消费用户余额 | 域名/wxbackstage/memberAccount/spend | POST
+    /// memberId | Integer | 用户ID，等同于 UserID
+    /// account | Integer | 消费金额，单位分，1块钱=100分
+    /// </summary>
+    public void HttpSendPostHddSubPlayerMoney(int userId, int account)
+    {
+        Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
+        Debug.Log("Unity: memberId == " + userId + ", account == " + account);
+        //消费用户余额的url.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/memberAccount/spend";
+        Debug.Log("Unity: url == " + url);
+
+        Encoding encoding = Encoding.GetEncoding("utf-8");
+        PostDataHddSubPlayerMoney postDt = new PostDataHddSubPlayerMoney(userId, account);
+        //"{\"memberId\":93124,\"account\":100}" //发送的消息.
+        string jsonData = JsonMapper.ToJson(postDt);
+        byte[] postData = Encoding.UTF8.GetBytes(jsonData);
+        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
+        //打印返回值.
+        Stream stream = null; //获取响应的流.
+
+        try
+        {
+            //以字符流的方式读取HTTP响应.
+            stream = response.GetResponseStream();
+            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
+            //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
+            Debug.Log("unity: msg == " + msg);
+            
+            JsonData jd = JsonMapper.ToObject(msg);
+            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            {
+                //红点点支付平台扣费成功.
+            }
+            else
+            {
+                //红点点支付平台扣费失败.
+                Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+            }
+        }
+        finally
+        {
+            //释放资源.
+            if (stream != null)
+            {
+                stream.Close();
+            }
+
+            if (response != null)
+            {
+                response.Close();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PostDataPlayerCouponInfo
+    {
+        /// <summary>
+        /// 现金券金额，单位：分.
+        /// </summary>
+        public int worth = 0;
+        /// <summary>
+        /// 该现金券绑定的盒子ID.
+        /// </summary>
+        public string boxId = "";
+        /// <summary>
+        /// 用户ID.
+        /// </summary>
+        public int userId = 0;
+        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal)
+        {
+            worth = worthVal;
+            boxId = boxIdVal;
+            userId = userIdVal;
+        }
+    }
+
+    /// <summary>
+    /// 生成现金券 | 域名/wxbackstage/client/coupon/generate | POST
+    /// worth | Integer | 现金券金额，单位：分 | true
+    /// boxId | String | 该现金券绑定的盒子ID | true
+    /// userId | Integer | 用户ID | true
+    /// </summary>
+    public void HttpSendPostHddPlayerCouponInfo(int userId, int account, string boxId)
+    {
+        //account单位是人民币元.
+        //worth单位是人民币分.
+        int worth = account * 100; //单位从元转换为分.
+        Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
+        Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);
+        //生成现金券的url.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/coupon/generate";
+        Debug.Log("Unity: url == " + url);
+        
+        Encoding encoding = Encoding.GetEncoding("utf-8");
+        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId);
+        //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
+        string jsonData = JsonMapper.ToJson(postDt);
+        byte[] postData = Encoding.UTF8.GetBytes(jsonData);
+        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
+        //打印返回值.
+        Stream stream = null; //获取响应的流.
+
+        try
+        {
+            //以字符流的方式读取HTTP响应.
+            stream = response.GetResponseStream();
+            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            Debug.Log("unity: msg == " + msg);
+            //{"code":0,"message":"成功","data":{"id":4,"couponId":"36ecce4e-0b5c-4808-8284-18c1fad8bc27",
+            //"worth":100,"boxId":"408d5cbc1371leitingzhanche","createTime":"2018-10-27T03:41:43.025+0000",
+            //"userId":93124}}
+
+            JsonData jd = JsonMapper.ToObject(msg);
+            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            {
+                //红点点支付平台玩家代金券添加成功.
+            }
+            else
+            {
+                //红点点支付平台玩家代金券添加失败.
+                Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+            }
+        }
+        finally
+        {
+            //释放资源.
+            if (stream != null)
+            {
+                stream.Close();
+            }
+
+            if (response != null)
+            {
+                response.Close();
+            }
+        }
+    }
+
     /// <summary>
     /// 发送微信小程序Url获取的消息.
     /// </summary>
-    public void HttpSendGetWeiXinXiaoChengXuUrl()
+    void HttpSendGetWeiXinXiaoChengXuUrl()
     {
         Debug.Log("Unity:" + "HttpSendGetWeiXinXiaoChengXuUrl...");
         //GET方法.
@@ -445,21 +682,54 @@ public class SSBoxPostNet : MonoBehaviour
         Debug.Log("url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.WX_XCX_URL_POST));
     }
-
-
+    
     /// <summary>
     /// 发送获取服务器系统时间的消息.
     /// 2.2.1 盒子获取服务器时间
     /// 地址：https://域名/wxbackstage/data/now
     /// 注：用来判断盒子时间是否正确
     /// </summary>
-    public void HttpSendGetServerTimeInfo()
+    void HttpSendGetServerTimeInfo()
     {
         Debug.Log("Unity:" + "HttpSendGetServerTimeInfo...");
         //GET方法.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/data/now";
-        Debug.Log("url ==== " + url);
+        Debug.Log("HttpSendGetServerTimeInfo -> url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.ServerTimeGet));
+    }
+
+    /// <summary>
+    /// 获取用户账户余额 | 域名/wxbackstage/memberAccount/info/{userId} | GET.
+    /// </summary>
+    public void HttpSendGetPlayerPayData(int userId)
+    {
+        if (m_BoxLoginData == null)
+        {
+            Debug.LogWarning("HttpSendGetPlayerPayData -> m_BoxLoginData was null");
+            return;
+        }
+
+        //GET方法.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/memberAccount/info/" + userId.ToString();
+        Debug.Log("HttpSendGetPlayerPayData -> url ==== " + url);
+        StartCoroutine(SendGet(url, PostCmd.GET_HDD_PLAYER_PAY_DATA, userId));
+    }
+
+    /// <summary>
+    /// 获取屏幕码 | 域名/wxbackstage/client/sceneCode/{boxNumber} | GET | boxNumber
+    /// </summary>
+    void HttpSendGetGameScreenId()
+    {
+        if (m_BoxLoginData == null)
+        {
+            Debug.LogWarning("HttpSendGetGameScreenId -> m_BoxLoginData was null");
+            return;
+        }
+
+        //GET方法.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/sceneCode/" + m_BoxLoginData.boxNumber;
+        Debug.Log("HttpSendGetGameScreenId -> url ==== " + url);
+        StartCoroutine(SendGet(url, PostCmd.GET_HDD_GAME_SCREEN_ID));
     }
 
     /// <summary>
@@ -491,6 +761,10 @@ public class SSBoxPostNet : MonoBehaviour
         /// 小程序码对应的小程序入口.
         /// </summary>
         public string page = "";
+        /// <summary>
+        /// 二维码宽度.
+        /// </summary>
+        public int width = 280;
     }
 
     /// <summary>
@@ -506,14 +780,14 @@ public class SSBoxPostNet : MonoBehaviour
         Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> url   ==== " + url);
         Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> scene ==== " + postdata.scene);
         Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> page  ==== " + postdata.page);
+        Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> width  ==== " + postdata.width);
 
         string str = JsonMapper.ToJson(postdata);
         byte[] postData = Encoding.UTF8.GetBytes(str);
         HttpWebResponse response = null;
         try
         {
-            PostHttpResponse postHttpResponse = new PostHttpResponse();
-            response = postHttpResponse.CreatePostHttpResponse(url, postData, encoding);
+            response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
         }
         catch (Exception ex)
         {
@@ -635,13 +909,13 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public class PostHttpResponse
     {
-        string DefaultUserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Widows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
-        bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        static string DefaultUserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Widows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
+        static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
         {
             return true; //总是接受.
         }
 
-        public HttpWebResponse CreatePostHttpResponse(string url, byte[] jsonDataPost, Encoding charset)
+        public static HttpWebResponse CreatePostHttpResponse(string url, byte[] jsonDataPost, Encoding charset)
         {
             HttpWebRequest request = null;
             //HTTPSQ请求.
@@ -649,12 +923,13 @@ public class SSBoxPostNet : MonoBehaviour
             request = WebRequest.Create(url) as HttpWebRequest;
             request.ProtocolVersion = HttpVersion.Version10;
             request.Method = "POST";
-            request.ContentType = "application/json";
+            request.ContentType = "application/json;charset=UTF-8";
             request.UserAgent = DefaultUserAgent;
 
             using (Stream stream = request.GetRequestStream())
             {
                 stream.Write(jsonDataPost, 0, jsonDataPost.Length);
+                stream.Close();
             }
             return request.GetResponse() as HttpWebResponse;
         }

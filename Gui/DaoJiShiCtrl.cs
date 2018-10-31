@@ -277,6 +277,12 @@ public class DaoJiShiCtrl : MonoBehaviour {
         {
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ClearPlayerCaiPiaoData(PlayerIndex);
         }
+
+        CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance(PlayerIndex);
+        if (playerCoinCom != null)
+        {
+            playerCoinCom.SetActiveMianFeiTiYanUI(false);
+        }
     }
 
     /// <summary>

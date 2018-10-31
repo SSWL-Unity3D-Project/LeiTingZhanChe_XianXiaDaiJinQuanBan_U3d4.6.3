@@ -172,12 +172,36 @@ public class WebSocketSimpet : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 当用户余额消费完毕后，需要进行充值，客户端需要发送.
+    /// 发送网络消息,请求微信游戏手柄显示充值界面.
+    /// </summary>
+    public void NetSendWeiXinPadShowTopUpPanel(int userId)
+    {
+        if (m_SSBoxPostNet == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"topUp"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"topUp\"},\"_msg_name\":\"gamepad\"}";
+
+            Debug.Log("NetSendWeiXinPadShowTopUpPanel:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
+            Debug.Log("NetSendWeiXinPadShowTopUpPanel:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
 
     /// <summary>
     /// 收到WebSocket网络消息.
     /// </summary>
     public void OnMessageReceived(string message)
     {
+        //Debug.Log("OnMessageReceived -> message == " + message);
         if (IsCheckXinTiaoMsg)
         {
             if (message == m_XinTiaoReturnMsg)

@@ -185,6 +185,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		if (GameOverCtrl.IsShowGameOver) {
 			return;
 		}
+
 		XKGlobalData.GetInstance().PlayStartBtAudio();
 		SubCoinPlayerOne();
 		StartBtObj.SetActive(false);
@@ -266,28 +267,56 @@ public class CoinPlayerCtrl : MonoBehaviour
 
 	void SubCoinPlayerOne()
 	{
-		XKGlobalData.CoinPlayerOne -= XKGlobalData.GameNeedCoin;
+        if (XKGlobalData.CoinPlayerOne >= XKGlobalData.GameNeedCoin)
+        {
+            XKGlobalData.CoinPlayerOne -= XKGlobalData.GameNeedCoin;
+        }
+        else
+        {
+            XKGlobalData.CoinPlayerOne = 0;
+        }
         SetPlayerCoin(XKGlobalData.CoinPlayerOne);
         pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerOne, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerTwo()
-	{
-		XKGlobalData.CoinPlayerTwo -= XKGlobalData.GameNeedCoin;
+    {
+        if (XKGlobalData.CoinPlayerTwo >= XKGlobalData.GameNeedCoin)
+        {
+            XKGlobalData.CoinPlayerTwo -= XKGlobalData.GameNeedCoin;
+        }
+        else
+        {
+            XKGlobalData.CoinPlayerTwo = 0;
+        }
 		SetPlayerCoin(XKGlobalData.CoinPlayerTwo);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerTwo, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerThree()
-	{
-		XKGlobalData.CoinPlayerThree -= XKGlobalData.GameNeedCoin;
+    {
+        if (XKGlobalData.CoinPlayerThree >= XKGlobalData.GameNeedCoin)
+        {
+            XKGlobalData.CoinPlayerThree -= XKGlobalData.GameNeedCoin;
+        }
+        else
+        {
+            XKGlobalData.CoinPlayerThree = 0;
+        }
 		SetPlayerCoin(XKGlobalData.CoinPlayerThree);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerThree, XKGlobalData.GameNeedCoin);
 	}
 	
 	void SubCoinPlayerFour()
-	{
-		XKGlobalData.CoinPlayerFour -= XKGlobalData.GameNeedCoin;
+    {
+        if (XKGlobalData.CoinPlayerFour >= XKGlobalData.GameNeedCoin)
+        {
+            XKGlobalData.CoinPlayerFour -= XKGlobalData.GameNeedCoin;
+        }
+        else
+        {
+            XKGlobalData.CoinPlayerFour = 0;
+        }
 		SetPlayerCoin(XKGlobalData.CoinPlayerFour);
 		pcvr.GetInstance().SubPlayerCoin(PlayerEnum.PlayerFour, XKGlobalData.GameNeedCoin);
 	}

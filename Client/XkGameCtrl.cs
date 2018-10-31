@@ -355,7 +355,7 @@ public class XkGameCtrl : SSGameMono
 			_Instance = this;
 #if !UNITY_EDITOR
             //发布出来游戏后强制修改.
-            IsCaiPiaoHuLuePlayerIndex = false;
+            //IsCaiPiaoHuLuePlayerIndex = false;
 #endif
 
             if (m_PlayerJiChuCaiPiaoData == null)
@@ -2413,6 +2413,11 @@ public class XkGameCtrl : SSGameMono
         {
             SSUIRoot.GetInstance().m_GameUIManage.CreatDanMuTextUI();
         }
+
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+        {
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.ClearAllPlayerCaiPiaoData();
+        }
     }
 
     /// <summary>
@@ -3216,6 +3221,35 @@ public class XkGameCtrl : SSGameMono
 		}
 		return isActivePlayer;
 	}
+
+    /// <summary>
+    /// 获取激活游戏的唯一玩家的索引.
+    /// </summary>
+    public static PlayerEnum GetActiveOnlyOnePlayer()
+    {
+        if (PlayerActiveNum != 1)
+        {
+            return PlayerEnum.Null;
+        }
+
+        if (IsActivePlayerOne)
+        {
+            return PlayerEnum.PlayerOne;
+        }
+        else if (IsActivePlayerTwo)
+        {
+            return PlayerEnum.PlayerTwo;
+        }
+        else if (IsActivePlayerThree)
+        {
+            return PlayerEnum.PlayerThree;
+        }
+        else if (IsActivePlayerFour)
+        {
+            return PlayerEnum.PlayerFour;
+        }
+        return PlayerEnum.Null;
+    }
 
 	public static bool CheckNpcIsMoveToCameraBack(Transform npcTr)
 	{

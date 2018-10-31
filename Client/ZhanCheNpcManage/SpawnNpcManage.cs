@@ -339,7 +339,7 @@ public class SpawnNpcManage : MonoBehaviour
             }
         }
         /// <summary>
-        /// 战车击爆规则.
+        /// 战车击爆规则第二阶段.
         /// </summary>
         internal ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRuler = new ZhanCheJiBaoRuler[4]
         {
@@ -350,14 +350,14 @@ public class SpawnNpcManage : MonoBehaviour
         };
 
         /// <summary>
-        /// 战车击爆规则.
+        /// 战车击爆规则第一阶段.
         /// </summary>
         internal ZhanCheJiBaoRuler[] m_ZhanCheJiBaoRulerNew = new ZhanCheJiBaoRuler[4]
         {
-            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State1, 0.15f, 0.15f,  0.15f),
-            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State2, 0.2f, 0.1f,  0.1f),
-            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State3, 0.18f, 0.14f, 0.8f),
-            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State4, 0.15f, 0.15f,  0.1f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State1, 0.23f, 0.23f,  0.235f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State2, 0.3f, 0.2f,  0.2f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State3, 0.30f, 0.25f, 0.15f),
+            new ZhanCheJiBaoRuler( ZhanCheJiBaoState.State4, 0.25f, 0.25f,  0.20f),
         };
     }
     /// <summary>
@@ -371,6 +371,37 @@ public class SpawnNpcManage : MonoBehaviour
     public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuan = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20)
     {
         PlayerEnum index = PlayerEnum.Null;
+        if (XkGameCtrl.PlayerActiveNum <= 1)
+        {
+            float danRenGaiLv = 0.5f;
+            switch (npcType)
+            {
+                case NpcState.ZhanChe:
+                    {
+                        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, daiJinQuan) >= 2)
+                        {
+                            danRenGaiLv = 0.6f;
+                        }
+                        break;
+                    }
+                case NpcState.JPBoss:
+                    {
+                        if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJianBeiShu(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss, daiJinQuan) >= 2)
+                        {
+                            danRenGaiLv = 0.6f;
+                        }
+                        break;
+                    }
+            }
+
+            if (Random.Range(1f, 100f) / 100f <= danRenGaiLv)
+            {
+                //如果是1个玩家在玩游戏,则按照这里的逻辑执行.
+                index = XkGameCtrl.GetActiveOnlyOnePlayer();
+            }
+            return index;
+        }
+
         SSCaiPiaoDataManage.PlayerCoinData[] coinDt = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetSortPlayerCoinData();
         ZhanCheRulerData.ZhanCheJiBaoState type = ZhanCheRulerData.ZhanCheJiBaoState.State1;
         if (coinDt[0].XuBiVal == coinDt[1].XuBiVal && coinDt[1].XuBiVal == coinDt[2].XuBiVal)

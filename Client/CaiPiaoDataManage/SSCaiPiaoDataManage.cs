@@ -1234,16 +1234,30 @@ public class SSCaiPiaoDataManage : SSGameMono
             return;
         }
 
+        UnityLog("AddCaiPiaoToPlayer -> indexPlayer == " + indexPlayer + ", caiPiao == " + caiPiao + ", type == " + type);
         if (type == GameCaiPiaoData.DeCaiState.JPBoss)
         {
-            if (m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao == false)
+            //产生彩票大奖UI界面.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao = true;
-                //产生彩票大奖UI界面.
-                if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                {
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
-                }
+                SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
+            }
+            //if (m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao == false)
+            //{
+            //    m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao = true;
+            //    //产生彩票大奖UI界面.
+            //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //    {
+            //        SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
+            //    }
+            //}
+        }
+        else if (type == GameCaiPiaoData.DeCaiState.ZhanChe)
+        {
+            //产生彩票小奖UI界面.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoXiaoJiangPanel(indexPlayer, caiPiao);
             }
         }
         
@@ -1399,6 +1413,16 @@ public class SSCaiPiaoDataManage : SSGameMono
             return 0;
         }
         return m_PcvrPrintCaiPiaoData[indexVal - 1].CaiPiaoVal;
+    }
+
+    /// <summary>
+    /// 清理所有玩家的彩票数据信息.
+    /// </summary>
+    internal void ClearAllPlayerCaiPiaoData()
+    {
+        ClearPlayerCaiPiaoData(PlayerEnum.PlayerOne);
+        ClearPlayerCaiPiaoData(PlayerEnum.PlayerTwo);
+        ClearPlayerCaiPiaoData(PlayerEnum.PlayerThree);
     }
 
     /// <summary>

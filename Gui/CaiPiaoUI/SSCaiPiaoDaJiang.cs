@@ -25,4 +25,14 @@ public class SSCaiPiaoDaJiang : SSGameMono
             }
         }
     }
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Destroy(gameObject);
+        }
+    }
 }

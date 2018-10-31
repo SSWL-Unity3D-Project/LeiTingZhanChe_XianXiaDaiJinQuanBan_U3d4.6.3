@@ -298,7 +298,7 @@ public class SSGameUICtrl : SSGameMono
             {
                 if (m_PlayerUIParent[index] != null)
                 {
-                    UnityLog("CreatCaiPiaoInfoPanel...");
+                    UnityLog("CreatCaiPiaoInfoPanel -> indexPlayer ======== " + indexPlayer);
                     GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[index]);
                     m_CaiPiaoInfoArray[index] = obj.GetComponent<SSGameNumUI>();
                     SetActiveZhengZaiChuPiaoUI(indexPlayer, true);
@@ -343,6 +343,7 @@ public class SSGameUICtrl : SSGameMono
             if (caiPiaoInfoCom != null)
             {
                 caiPiaoInfoCom.RemoveSelf(indexPlayer);
+                m_CaiPiaoInfoArray[index] = null;
             }
         }
     }
@@ -491,6 +492,7 @@ public class SSGameUICtrl : SSGameMono
     /// 彩票大奖UI控制组件.
     /// </summary>
     internal SSCaiPiaoDaJiang m_CaiPiaoDaJiang;
+    float m_TimeLastDaJiang = 0f;
     /// <summary>
     /// 玩家获得JPBoss大奖时创建该界面.
     /// 创建彩票大奖UI界面.
@@ -506,8 +508,23 @@ public class SSGameUICtrl : SSGameMono
         int index = (int)indexPlayer - 1;
         if (index >= 0 && index <= 2)
         {
+            if (m_CaiPiaoXiaoJiang != null)
+            {
+                //删除小奖UI.
+                m_CaiPiaoXiaoJiang.RemoveSelf();
+                m_CaiPiaoXiaoJiang = null;
+            }
+
+            if (m_CaiPiaoDaJiang != null)
+            {
+                //删除大奖UI.
+                m_CaiPiaoDaJiang.RemoveSelf();
+                m_CaiPiaoDaJiang = null;
+            }
+
             if (m_CaiPiaoDaJiang == null)
             {
+                m_TimeLastDaJiang = Time.time;
                 GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoDaJiang");
                 if (gmDataPrefab != null)
                 {
@@ -551,6 +568,73 @@ public class SSGameUICtrl : SSGameMono
         {
             UnityLog("RemoveCaiPiaoDaJiangPanel...");
             Destroy(m_CaiPiaoDaJiang.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 彩票小奖UI控制组件.
+    /// </summary>
+    internal SSCaiPiaoDaJiang m_CaiPiaoXiaoJiang;
+    /// <summary>
+    /// 玩家获得小奖时创建该界面.
+    /// 创建彩票小奖UI界面.
+    /// </summary>
+    public void CreatCaiPiaoXiaoJiangPanel(PlayerEnum indexPlayer, int num)
+    {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活任何玩家.
+            return;
+        }
+
+        if (Time.time - m_TimeLastDaJiang <= 13f)
+        {
+            //有大奖UI在屏幕中闪烁时,不去显示小奖UI.
+            return;
+        }
+
+        int index = (int)indexPlayer - 1;
+        if (index >= 0 && index <= 2)
+        {
+            if (m_CaiPiaoXiaoJiang != null)
+            {
+                //删除小奖UI.
+                m_CaiPiaoXiaoJiang.RemoveSelf();
+                m_CaiPiaoXiaoJiang = null;
+            }
+
+            if (m_CaiPiaoXiaoJiang == null)
+            {
+                GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoXiaoJiang");
+                if (gmDataPrefab != null)
+                {
+                    if (m_GameUICenter != null)
+                    {
+                        UnityLog("CreatCaiPiaoXiaoJiangPanel...");
+                        GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                        m_CaiPiaoXiaoJiang = obj.GetComponent<SSCaiPiaoDaJiang>();
+                        if (m_CaiPiaoXiaoJiang != null)
+                        {
+                            m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                        }
+                    }
+                    else
+                    {
+                        UnityLogWarning("CreatCaiPiaoXiaoJiangPanel -> m_GameUICenter was null!");
+                    }
+                }
+            }
+            else
+            {
+                if (m_CaiPiaoXiaoJiang != null)
+                {
+                    m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                }
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatCaiPiaoXiaoJiangPanel -> index was wrong! index ======= " + index);
         }
     }
 
@@ -654,6 +738,9 @@ public class SSGameUICtrl : SSGameMono
                 UnityLogWarning("CreatDanMuTextUI -> gmDataPrefab was null!");
             }
         }
+
+        //删除彩票大奖UI界面.
+        RemoveCaiPiaoDaJiangPanel();
     }
 
     internal void RemoveDanMuTextUI()
@@ -715,6 +802,13 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     internal void CreatPlayerDaiJinQuanUI(PlayerEnum indexPlayer)
     {
+        if (DaoJiShiCtrl.GetInstance(indexPlayer) != null
+            && DaoJiShiCtrl.GetInstance(indexPlayer).IsPlayDaoJishi)
+        {
+            //倒计时显示时不再展示"代金券放入卡包"UI.
+            return;
+        }
+
         Debug.Log("Unity: CreatPlayerDaiJinQuanUI...");
         int index = (int)indexPlayer - 1;
         if (index >= 0 && index <= 2)

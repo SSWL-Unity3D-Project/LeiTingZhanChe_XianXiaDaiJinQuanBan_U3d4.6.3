@@ -1,4 +1,5 @@
-﻿#define USE_WX_GAME_PAD_ACTIVE_PLAYER
+﻿#define TEST_HDD_ZHIFU_PLATFORM
+//#define USE_WX_GAME_PAD_ACTIVE_PLAYER
 using UnityEngine;
 using System.Collections;
 using System;
@@ -94,6 +95,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 GameObject websocketObj = SpawnWebSocketBox(transform);
                 m_SSBoxPostNet = websocketObj.GetComponent<SSBoxPostNet>();
                 m_SSBoxPostNet.Init();
+                m_SSBoxPostNet.OnReceivedWXPlayerHddPayData += OnReceivedWXPlayerHddPayData;
                 m_BarcodeCam = gameObject.AddComponent<BarcodeCam>();
             }
             
@@ -271,6 +273,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 电视遥控器激活玩家时的数据信息.
         /// </summary>
+        [System.Serializable]
         public class TVYaoKongPlayerData
         {
             /// <summary>
@@ -391,11 +394,30 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// </summary>
             public bool IsExitWeiXin = false;
             /// <summary>
+            /// 是否为免费体验游戏的玩家.
+            /// </summary>
+            public bool IsMianFeiTiYanPlayer = false;
+            /// <summary>
+            /// 是否在获取微信玩家的红点点游戏账户数据.
+            /// </summary>
+            public bool IsGetWXPlayerHddPayData = false;
+            /// <summary>
             /// 玩家的微信数据信息.
             /// </summary>
             public WebSocketSimpet.PlayerWeiXinData m_PlayerWeiXinData;
         }
-        private List<GamePlayerData> m_GamePlayerData = new List<GamePlayerData>();
+        List<GamePlayerData> m_GamePlayerData = new List<GamePlayerData>();
+
+        /// <summary>
+        /// 查找玩家微信游戏数据.
+        /// </summary>
+        GamePlayerData FindGamePlayerData(int userId)
+        {
+            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
+                return dt.m_PlayerWeiXinData.userId.Equals(userId);
+            });
+            return playerDt;
+        }
 
         /// <summary>
         /// 玩家激活游戏状态.
@@ -454,6 +476,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (playerDt.m_PlayerWeiXinData != null)
                     {
                         userId = playerDt.m_PlayerWeiXinData.userId;
+                        
+                        if (playerDt.IsMianFeiTiYanPlayer == false)
+                        {
+                            //付费玩家进行扣费.
+                            //扣除玩家红点点游戏账户金币.
+                            SubWXPlayerHddPayData(userId);
+                        }
+                        else
+                        {
+                            //强制将玩家状态修改为付费玩家.
+                            playerDt.IsMianFeiTiYanPlayer = false;
+                        }
                     }
 
                     isExitWeiXin = playerDt.IsExitWeiXin;
@@ -469,8 +503,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
                     else
                     {
-                        //玩家血值耗尽应该续费了,找到玩家数据.
-                        Debug.Log("Unity:" + "player should buy game coin!");
+                        int coin = XKGlobalData.GetInstance().GetCoinPlayer((PlayerEnum)(playerDt.Index + 1));
+                        if (coin < XKGlobalData.GameNeedCoin)
+                        {
+                            //玩家血值耗尽应该续费了,找到玩家数据.
+                            Debug.Log("Unity:" + "player should buy game coin!");
+                            SendWXPadShowTopUpPanel(userId);
+                        }
                     }
                 }
 
@@ -483,8 +522,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         case GamePadType.WeiXin_ShouBing:
                             {
                                 //微信手柄玩家血值耗尽了.
-                                //此数据需要优化.
-                                m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing, userId));
+                                if (isExitWeiXin == false)
+                                {
+                                    //没有退出微信进行添加.
+                                    m_TVYaoKongPlayerDt.Add(new TVYaoKongPlayerData(index, GamePadType.WeiXin_ShouBing, userId));
+                                }
                                 break;
                             }
                         case GamePadType.TV_YaoKongQi:
@@ -528,7 +570,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             int indexPlayer = -1;
             for (int i = 0; i < m_IndexPlayerActiveGameState.Length; i++)
             {
-                Debug.Log("Unity: ActiveGame == " + m_IndexPlayerActiveGameState[i] + ", IsLoginWX == " + m_GmWXLoginDt[i].IsLoginWX);
+                //Debug.Log("Unity: ActiveGame == " + m_IndexPlayerActiveGameState[i] + ", IsLoginWX == " + m_GmWXLoginDt[i].IsLoginWX);
                 if (m_IndexPlayerActiveGameState[i] == 0)
                 {
                     if (!m_GmWXLoginDt[i].IsLoginWX)
@@ -655,6 +697,20 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
                     }
                     //test
+#else
+                    //玩家币值不够,需要拉起微信游戏手柄的充值界面.
+
+                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    {
+                        SendWXPadShowTopUpPanel(userId);
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        SendWXPadShowTopUpPanel(userId);
+                    }
 #endif
                 }
             }
@@ -824,9 +880,20 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 {
                     if (m_IndexPlayerActiveGameState[playerDt.Index] == (int)PlayerActiveState.WeiJiHuo)
                     {
+                        //删除轮询检测玩家账户的数据.
+                        RemoveLoopGetWXHddPayData(userId);
+
                         //玩家血值耗尽,清理玩家微信数据.
                         m_GamePlayerData.Remove(playerDt);
                         m_GmWXLoginDt[playerDt.Index].IsLoginWX = false;
+                        for (int i = 0; i < m_TVYaoKongPlayerDt.Count; i++)
+                        {
+                            if (m_TVYaoKongPlayerDt[i] != null && m_TVYaoKongPlayerDt[i].m_UserId == userId)
+                            {
+                                m_TVYaoKongPlayerDt.Remove(m_TVYaoKongPlayerDt[i]);
+                                break;
+                            }
+                        }
                         Debug.Log("Unity:" + "OnEventPlayerExitBox -> clear player weiXin data...");
                     }
                 }
@@ -892,7 +959,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
                 return dt.m_PlayerWeiXinData.Equals(val);
             });
-
+            
+            //发送微信玩家获得的游戏代金券信息给服务器.
+            //SendPostHddPlayerCouponInfo(val.userId, 1);//test.
+            
             int indexPlayer = -1;
             bool isGamePlayerFull = false; //游戏激活人数是否已经满了.
             bool isActivePlayer = false;
@@ -1000,6 +1070,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             {
                                 playerCoinCom.SetActiveMianFeiTiYanUI(true);
                             }
+                            //免费体验游戏的玩家.
+                            playerDt.IsMianFeiTiYanPlayer = true;
                         }
                         else
                         {
@@ -1007,13 +1079,23 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //拉起玩家手机微信小程序支付界面.
                             m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
                             //测试:直接给玩家2个游戏币.
-                            AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
+                            //AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
+                            
+                            //获取微信玩家的红点点游戏账户数据.
+                            GetWXPlayerHddPayData(val.userId);
+                            playerDt.IsMianFeiTiYanPlayer = false;
+                            playerDt.IsGetWXPlayerHddPayData = true;
                         }
                     }
                     else
                     {
                         //拉起玩家手机微信小程序支付界面.
                         m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                        //获取微信玩家的红点点游戏账户数据.
+                        GetWXPlayerHddPayData(val.userId);
+                        playerDt.IsMianFeiTiYanPlayer = false;
+                        playerDt.IsGetWXPlayerHddPayData = true;
                     }
                 }
 
@@ -1029,12 +1111,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
         internal void AddWeiXinGameCoinToPlayer(int userId, int coin)
         {
             //test start
-            if (m_GamePlayerData.Count > 0
-                && m_GamePlayerData[0] != null
-                && m_GamePlayerData[0].m_PlayerWeiXinData != null)
-            {
-                userId = m_GamePlayerData[0].m_PlayerWeiXinData.userId; //test
-            }
+            //if (m_GamePlayerData.Count > 0
+            //    && m_GamePlayerData[0] != null
+            //    && m_GamePlayerData[0].m_PlayerWeiXinData != null)
+            //{
+            //    userId = m_GamePlayerData[0].m_PlayerWeiXinData.userId; //test
+            //}
             //test end
 
             GamePlayerData playerData = null;
@@ -1078,34 +1160,277 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 XKGlobalData.GetInstance().m_GameWXPayDataManage.WriteGamePayRevenueInfo(coin);
             }
 
+            int coinTotal = 0;
             switch (playerIndex)
             {
                 case PlayerEnum.PlayerOne:
                     {
                         XKGlobalData.CoinPlayerOne += coin;
                         XKGlobalData.SetCoinPlayerOne(XKGlobalData.CoinPlayerOne);
+                        coinTotal = XKGlobalData.CoinPlayerOne;
                         break;
                     }
                 case PlayerEnum.PlayerTwo:
                     {
                         XKGlobalData.CoinPlayerTwo += coin;
                         XKGlobalData.SetCoinPlayerTwo(XKGlobalData.CoinPlayerTwo);
+                        coinTotal = XKGlobalData.CoinPlayerTwo;
                         break;
                     }
                 case PlayerEnum.PlayerThree:
                     {
                         XKGlobalData.CoinPlayerThree += coin;
                         XKGlobalData.SetCoinPlayerThree(XKGlobalData.CoinPlayerThree);
+                        coinTotal = XKGlobalData.CoinPlayerThree;
                         break;
                     }
                 case PlayerEnum.PlayerFour:
                     {
                         XKGlobalData.CoinPlayerFour += coin;
                         XKGlobalData.SetCoinPlayerFour(XKGlobalData.CoinPlayerFour);
+                        coinTotal = XKGlobalData.CoinPlayerFour;
                         break;
                     }
             }
+
+            if (coinTotal >= XKGlobalData.GameNeedCoin)
+            {
+                //玩家币值足够,则开启游戏.
+                InputEventCtrl.GetInstance().OnClickGameStartBt((int)playerIndex - 1);
+            }
         }
-#endregion
+        #endregion
+        
+        #region 微信游戏手柄玩家红点点账户信息管理
+
+#if TEST_HDD_ZHIFU_PLATFORM
+        //测试红点点支付平台逻辑.
+        /// <summary>
+        /// 游戏币和红点点金币的转换率.
+        /// 1币 == 1元人民币 == 100分.
+        /// 游戏币转换为红点点账户金币（单位为分）.
+        /// </summary>
+        const int m_GamneCoinToMoney = 1;
+#else
+        /// <summary>
+        /// 游戏币和红点点金币的转换率.
+        /// 1币 == 1元人民币 == 100分.
+        /// 游戏币转换为红点点账户金币（单位为分）.
+        /// </summary>
+        const int m_GamneCoinToMoney = 100;
+#endif
+
+
+        /// <summary>
+        /// 循环检测获取微信玩家在红点点平台的账户信息.
+        /// </summary>
+        [Serializable]
+        public class LoopGetWXHddPayData
+        {
+            /// <summary>
+            /// 用户Id.
+            /// </summary>
+            public int userId = 0;
+            public LoopGetWXHddPayData(int userIdVal)
+            {
+                userId = userIdVal;
+            }
+        }
+        public List<LoopGetWXHddPayData> m_LoopGetWXHddPayDataList = new List<LoopGetWXHddPayData>();
+        /// <summary>
+        /// 查找数据.
+        /// </summary>
+        LoopGetWXHddPayData FindLoopGetWXHddPayData(int userId)
+        {
+            LoopGetWXHddPayData data = m_LoopGetWXHddPayDataList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+            return data;
+        }
+
+        /// <summary>
+        /// 添加数据.
+        /// </summary>
+        void AddLoopGetWXHddPayData(int userId)
+        {
+            if (FindLoopGetWXHddPayData(userId) == null)
+            {
+                m_LoopGetWXHddPayDataList.Add(new LoopGetWXHddPayData(userId));
+            }
+        }
+
+        /// <summary>
+        /// 删除数据.
+        /// 当玩家游戏账户金额足够开启游戏时删除数据.
+        /// 当玩家已经退出微信游戏手柄时删除数据.
+        /// </summary>
+        void RemoveLoopGetWXHddPayData(int userId)
+        {
+            LoopGetWXHddPayData data = m_LoopGetWXHddPayDataList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+
+            if (data != null)
+            {
+                m_LoopGetWXHddPayDataList.Remove(data);
+                data = null;
+            }
+        }
+
+        /// <summary>
+        /// 循环检测玩家的充值信息.
+        /// </summary>
+        IEnumerator LoopGetWXPlayerHddPayData(int userId)
+        {
+            LoopGetWXHddPayData data = FindLoopGetWXHddPayData(userId);
+            if (data == null)
+            {
+                AddLoopGetWXHddPayData(userId);
+            }
+            else
+            {
+                Debug.Log("LoopGetWXPlayerHddPayData -> playerData have been to inserted!");
+                yield break;
+            }
+
+            float time = Time.time;
+            do
+            {
+                if (Time.time - time >= 120f)
+                {
+                    //轮询检测超时,认为玩家已经不再继续游戏了.
+                    //删除数据.
+                    RemoveLoopGetWXHddPayData(userId);
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(1.5f);
+                data = FindLoopGetWXHddPayData(userId);
+                if (data != null)
+                {
+                    //获取玩家充值信息.
+                    GetWXPlayerHddPayData(userId);
+                }
+                else
+                {
+                    //获取到玩家的有效充值数据信息了(充值金额大于等于游戏启动金额),或者玩家已经退出微信游戏手柄.
+                    yield break;
+                }
+            } while (data != null);
+        }
+
+        /// <summary>
+        /// 每次玩家登陆成功后，都需要获取玩家的账户信息.
+        /// 获取微信玩家红点点游戏账户数据.
+        /// </summary>
+        void GetWXPlayerHddPayData(int userId)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.HttpSendGetPlayerPayData(userId);
+            }
+        }
+
+        /// <summary>
+        /// 收到微信玩家的红点点游戏账户数据.
+        /// </summary>
+        void OnReceivedWXPlayerHddPayData(int userId, int money)
+        {
+            Debug.Log("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money);
+            if (money < m_GamneCoinToMoney)
+            {
+                //玩家红点点游戏平台的金额不足,应该去进行充值.
+                GamePlayerData data = FindGamePlayerData(userId);
+                if (data != null && data.IsGetWXPlayerHddPayData == true)
+                {
+                    //玩家登陆微信游戏手柄后,游戏币值不足,需要进行充值.
+                    data.IsGetWXPlayerHddPayData = false;
+                    //玩家币值不够,需要拉起微信游戏手柄的充值界面.
+                    SendWXPadShowTopUpPanel(userId);
+                }
+            }
+            else
+            {
+                //删除轮询检测玩家账户的数据.
+                RemoveLoopGetWXHddPayData(userId);
+
+                //当前有空余机位可以进行游戏.
+                //当前玩家的红点点游戏金额兑换为游戏币.
+                int coin = money / m_GamneCoinToMoney;
+                AddWeiXinGameCoinToPlayer(userId, coin);
+            }
+        }
+
+        /// <summary>
+        /// 扣除微信游戏手柄玩家的代币.
+        /// </summary>
+        void SubWXPlayerHddPayData(int userId)
+        {
+            //Debug.Log("Unity: SubWXPlayerHddPayData -> userId ============================ " + userId);
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                int subCoin = 1; //减去1个游戏币(1元1个游戏币).
+                int money = subCoin * m_GamneCoinToMoney; //扣除的红点点账户金币.
+                SendSubWXPlayerHddPayData(userId, money);
+            }
+        }
+
+        /// <summary>
+        /// 发送扣除微信玩家的红点点游戏账户消费信息.
+        /// </summary>
+        void SendSubWXPlayerHddPayData(int userId, int money)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.HttpSendPostHddSubPlayerMoney(userId, money);
+            }
+        }
+
+        /// <summary>
+        /// 发送打开微信游戏手柄充值界面.
+        /// </summary>
+        void SendWXPadShowTopUpPanel(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userId);
+            }
+            StartCoroutine(LoopGetWXPlayerHddPayData(userId));
+        }
+
+        /// <summary>
+        /// 发送玩家获取商家代金券的信息给服务器.
+        /// userId玩家id.
+        /// account代金券金额(元).
+        /// </summary>
+        internal void SendPostHddPlayerCouponInfo(int userId, int account)
+        {
+            if (m_SSBoxPostNet != null)
+            {
+                //boxId 游戏盒子Id.最终应该为商家id(有的商家可能是连锁店).
+                string boxId = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+                m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId);
+            }
+        }
+        #endregion
+
+        //private void UpdateTest()
+        //{
+        //    if (Input.GetKeyUp(KeyCode.P))
+        //    {
+        //        for (int i = 0; i < m_GamePlayerData.Count; i++)
+        //        {
+        //            if (m_GamePlayerData[i] != null && m_GamePlayerData[i].m_PlayerWeiXinData != null)
+        //            {
+        //                int userId = m_GamePlayerData[i].m_PlayerWeiXinData.userId;
+        //                SendWXPadShowTopUpPanel(userId); //test.
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.GamePay;
+using Assets.XKGame.Script.Server.GamePayManage;
 
 public class XKGlobalData
 {
@@ -634,6 +635,12 @@ public class XKGlobalData
             //_CoinToCard = value; //代金券版本,不允许修改本数值.
         }
     }
+
+    /// <summary>
+    /// 游戏商户信息配置.
+    /// </summary>
+    internal SSGameHddPayData.GameShangHuData m_ShangHuDt;
+
     /// <summary>
     /// 初始化1币兑换彩票数.
     /// </summary>
@@ -742,6 +749,11 @@ public class XKGlobalData
             }
         }
 
+        if (coin < 0)
+        {
+            coin = 0;
+        }
+
 		CoinPlayerOne = coin;
 		if (CoinPlayerCtrl.GetInstanceOne() != null) {
 			CoinPlayerCtrl.GetInstanceOne().SetPlayerCoin(coin);
@@ -772,7 +784,12 @@ public class XKGlobalData
             }
         }
 
-		CoinPlayerTwo = coin;
+        if (coin < 0)
+        {
+            coin = 0;
+        }
+
+        CoinPlayerTwo = coin;
 		if (CoinPlayerCtrl.GetInstanceTwo() != null) {
 			CoinPlayerCtrl.GetInstanceTwo().SetPlayerCoin(coin);
 		}
@@ -796,7 +813,12 @@ public class XKGlobalData
             }
         }
 
-		CoinPlayerThree = coin;
+        if (coin < 0)
+        {
+            coin = 0;
+        }
+
+        CoinPlayerThree = coin;
 		if (CoinPlayerCtrl.GetInstanceThree() != null) {
 			CoinPlayerCtrl.GetInstanceThree().SetPlayerCoin(coin);
 		}
@@ -820,7 +842,12 @@ public class XKGlobalData
             }
         }
 
-		CoinPlayerFour = coin;
+        if (coin < 0)
+        {
+            coin = 0;
+        }
+
+        CoinPlayerFour = coin;
 		if (CoinPlayerCtrl.GetInstanceFour() != null) {
 			CoinPlayerCtrl.GetInstanceFour().SetPlayerCoin(coin);
 		}
