@@ -631,7 +631,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                                 {
                                                     playerCoinCom.SetActiveMianFeiTiYanUI(false);
                                                 }
-                                                AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2);
+                                                AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 10);
                                                 m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
                                                 InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
                                             }
@@ -1055,11 +1055,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
             if (isGamePlayerFull == true)
             {
-                if (m_HongDDGamePadWXPay != null)
-                {
-                    //游戏激活人数已满.
-                    m_HongDDGamePadWXPay.CToS_GamePlayerIsFull("");
-                }
+                //if (m_HongDDGamePadWXPay != null)
+                //{
+                //    //游戏激活人数已满.
+                //    m_HongDDGamePadWXPay.CToS_GamePlayerIsFull("");
+                //}
+                //游戏激活人数已满.
+                SendWXPadGamePlayerFull(val.userId);
             }
 
             if (isActivePlayer)
@@ -1404,6 +1406,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 //当前有空余机位可以进行游戏.
                 //当前玩家的红点点游戏金额兑换为游戏币.
                 int coin = money / m_GamneCoinToMoney;
+                if (coin > 10)
+                {
+                    //最多给玩家显示9次复活信息.
+                    coin = 10;
+                }
                 AddWeiXinGameCoinToPlayer(userId, coin);
             }
         }
@@ -1478,9 +1485,21 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId);
             }
         }
+
+        /// <summary>
+        /// 发送游戏当前处于满员状态消息给微信游戏手柄.
+        /// </summary>
+        void SendWXPadGamePlayerFull(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadGamePlayerFull(userId);
+            }
+        }
         #endregion
 
-        //private void UpdateTest()
+        //private void Update()
         //{
         //    if (Input.GetKeyUp(KeyCode.P))
         //    {
@@ -1489,7 +1508,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
         //            if (m_GamePlayerData[i] != null && m_GamePlayerData[i].m_PlayerWeiXinData != null)
         //            {
         //                int userId = m_GamePlayerData[i].m_PlayerWeiXinData.userId;
-        //                SendWXPadShowTopUpPanel(userId); //test.
+        //                //SendWXPadShowTopUpPanel(userId); //test.
+        //                SendWXPadGamePlayerFull(userId); //test.
         //            }
         //        }
         //    }

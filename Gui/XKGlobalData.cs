@@ -168,7 +168,11 @@ public class XKGlobalData
 
     static string FilePath = "";
 	static public string FileName = "../config/GameConfig.xml";
-	static public HandleJson HandleJsonObj = null;
+    /// <summary>
+    /// 彩池信息配置文件.
+    /// </summary>
+    static public string FileNameCaiChi = "GameConfig.db";
+    static public HandleJson HandleJsonObj = null;
 	float TimeValDaoDanJingGao;
 	static XKGlobalData Instance;
 	public static XKGlobalData GetInstance()
@@ -331,7 +335,7 @@ public class XKGlobalData
         }
         else
         {
-            string info = HandleJsonObj.ReadFromFileXml(FileName, "YuZhiCaiChi");
+            string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "YuZhiData"); //预制彩池信息
             if (info == null || info == "")
             {
                 val = yuZhiCaiPiaoBeiLv * m_CoinToCard;
@@ -364,7 +368,7 @@ public class XKGlobalData
     public void SetYuZhiCaiChi(int val)
     {
         m_YuZhiCaiChi = val;
-        HandleJsonObj.WriteToFileXml(FileName, "YuZhiCaiChi", val.ToString());
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "YuZhiData", val.ToString()); //预制彩池信息
     }
     
     /// <summary>
@@ -376,7 +380,7 @@ public class XKGlobalData
     /// </summary>
     void InitJPBossCaiChi()
     {
-        string info = HandleJsonObj.ReadFromFileXml(FileName, "JPBossCaiChi");
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "JPBossData"); //Boss彩池信息
         if (info == null || info == "")
         {
             info = "0";
@@ -401,7 +405,7 @@ public class XKGlobalData
     public void SetJPBossCaiChi(float val)
     {
         m_JPBossCaiChi = val;
-        HandleJsonObj.WriteToFileXml(FileName, "JPBossCaiChi", val.ToString());
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "JPBossData", val.ToString()); //Boss彩池信息
     }
 
     /// <summary>
@@ -413,7 +417,7 @@ public class XKGlobalData
     /// </summary>
     void InitDaoJuCaiChi()
     {
-        string info = HandleJsonObj.ReadFromFileXml(FileName, "DaoJuCaiChi");
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "DaoJuData"); //道具彩池信息
         if (info == null || info == "")
         {
             info = "0";
@@ -438,7 +442,7 @@ public class XKGlobalData
     public void SetDaoJuCaiChi(float val)
     {
         m_DaoJuCaiChi = val;
-        HandleJsonObj.WriteToFileXml(FileName, "DaoJuCaiChi", val.ToString());
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "DaoJuData", val.ToString()); //道具彩池信息
     }
 
     /// <summary>
@@ -450,7 +454,7 @@ public class XKGlobalData
     /// </summary>
     void InitZhanCheCaiChi()
     {
-        string info = HandleJsonObj.ReadFromFileXml(FileName, "ZhanCheCaiChi");
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData"); //战车彩池信息
         if (info == null || info == "")
         {
             info = "0";
@@ -475,7 +479,7 @@ public class XKGlobalData
     public void SetZhanCheCaiChi(float val)
     {
         m_ZhanCheCaiChi = val;
-        HandleJsonObj.WriteToFileXml(FileName, "ZhanCheCaiChi", val.ToString());
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData", val.ToString()); //战车彩池信息
     }
 
     /// <summary>

@@ -25,10 +25,15 @@ public class ErWeiMaUI : MonoBehaviour
     /// 截图终点.
     /// </summary>
     public Transform m_EndTr;
+    private void Awake()
+    {
+        _Instance = this;
+    }
+
     // Use this for initialization
     void Start()
     {
-        _Instance = this;
+        //_Instance = this;
         if (pcvr.IsHongDDShouBing == false)
         {
             //不是红点点微信手柄版本游戏.
@@ -129,10 +134,10 @@ public class ErWeiMaUI : MonoBehaviour
                         m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg;
 
                         //删除网络故障,请检查网络并重启游戏UI.
-                        if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                        {
-                            SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
-                        }
+                        //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                        //{
+                        //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+                        //}
                     }
                 }
                 else

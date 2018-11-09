@@ -68,6 +68,24 @@ public class WabData
         }
     }
 
+    public void RestartOpenWebSocket()
+    {
+        // Create the WebSocket instance  
+        _webSocket = new WebSocket(new Uri(address));
+
+        if (HTTPManager.Proxy != null)
+            _webSocket.InternalRequest.Proxy = new HTTPProxy(HTTPManager.Proxy.Address, HTTPManager.Proxy.Credentials, false);
+
+        // Subscribe to the WS events  
+        _webSocket.OnOpen += OnOpen;
+        _webSocket.OnMessage += OnMessageReceived;
+        _webSocket.OnClosed += OnClosed;
+        _webSocket.OnError += OnError;
+
+        // Start connecting to the server  
+        _webSocket.Open();
+    }
+
     public void SendMsg(string msg)
     {
         // Send message to the server  
@@ -111,28 +129,60 @@ public class WabData
     {
         Debug.Log("Unity:"+string.Format("-WebSocket closed! Code: {0} Message: {1}\n", code, message));
         _webSocket = null;
-        if (m_WebSocketSimpet != null && Application.isPlaying)
-        {
-            Debug.Log("Unity:" + "OnClosed::Restart Web Socket -> url == " + Address);
-            m_WebSocketSimpet.OpenWebSocket(Address);
-        }
+        //if (m_WebSocketSimpet != null && Application.isPlaying)
+        //{
+        //    Debug.Log("Unity:" + "OnClosed::Restart Web Socket -> url == " + Address);
+        //    m_WebSocketSimpet.OpenWebSocket(Address);
+        //}
     }
 
+    float m_LastTimeError = -100f;
     /// <summary>  
     /// Called when an error occured on client side  
     /// </summary>  
     void OnError(WebSocket ws, Exception ex)
     {
+        _webSocket = null;
+        if (Time.time - m_LastTimeError < 5f)
+        {
+            return;
+        }
+        m_LastTimeError = Time.time;
+
         string errorMsg = string.Empty;
         if (ws.InternalRequest.Response != null)
             errorMsg = string.Format("Status Code from Server: {0} and Message: {1}", ws.InternalRequest.Response.StatusCode, ws.InternalRequest.Response.Message);
 
         Debug.Log("Unity:"+string.Format("-An error occured: {0}\n", ex != null ? ex.Message : "Unknown Error " + errorMsg));
-        _webSocket = null;
-        if (m_WebSocketSimpet != null && Application.isPlaying)
+        //if (m_WebSocketSimpet != null && Application.isPlaying == true)
+        //{
+        //    Debug.Log("Unity:" + "OnError::Restart Web Socket -> url == " + Address);
+        //    m_WebSocketSimpet.OpenWebSocket(Address);
+        //}
+
+        if (ex != null)
         {
-            Debug.Log("Unity:" + "OnError::Restart Web Socket -> url == " + Address);
-            m_WebSocketSimpet.OpenWebSocket(Address);
+            switch (ex.Message)
+            {
+                case "TCP Stream closed unexpectedly by the remote server":
+                    {
+                        //服务器故障.
+                        break;
+                    }
+                default:
+                    {
+                        if (Application.isPlaying == true)
+                        {
+                            //网络故障,请检查网络并重启游戏.
+                            if (SSUIRoot.GetInstance().m_GameUIManage != null
+                                && SSUIRoot.GetInstance().m_GameUIManage.m_WangLuoGuZhangUI == null)
+                            {
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+                            }
+                        }
+                        break;
+                    }
+            }
         }
     }
 }

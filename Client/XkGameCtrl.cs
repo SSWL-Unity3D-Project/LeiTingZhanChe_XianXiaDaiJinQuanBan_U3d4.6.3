@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using Assets.XKGame.Script.GamePay;
+using System.Collections;
 
 public enum NpcJiFenEnum
 {
@@ -357,6 +358,9 @@ public class XkGameCtrl : SSGameMono
             //发布出来游戏后强制修改.
             //IsCaiPiaoHuLuePlayerIndex = false;
 #endif
+
+            Application.runInBackground = true;
+            InitCheckLoadingMovieScene();
 
             if (m_PlayerJiChuCaiPiaoData == null)
             {
@@ -785,6 +789,90 @@ public class XkGameCtrl : SSGameMono
         SSGameWXPayDataRW rw = new SSGameWXPayDataRW();
         TestGameWXPayDtArray = rw.ReadFromFileXml();
     }
+    
+    float m_TimeLastMovieUnit = 30f;
+    float m_TimeLastMovie = 0f;
+    /// <summary>
+    /// 初始化加载循环动画游戏场景.
+    /// </summary>
+    void InitCheckLoadingMovieScene()
+    {
+        m_TimeLastMovie = Time.time;
+        m_TimeLastMovieUnit = Time.time;
+    }
+
+    void CheckLoadingMovieScene()
+    {
+        if (Time.time - m_TimeLastMovieUnit < 15f)
+        {
+            return;
+        }
+        m_TimeLastMovieUnit = Time.time;
+
+
+        if (DaoJiShiCtrl.GetInstanceOne().IsPlayDaoJishi == true
+            || DaoJiShiCtrl.GetInstanceTwo().IsPlayDaoJishi == true
+            || DaoJiShiCtrl.GetInstanceThree().IsPlayDaoJishi == true)
+        {
+            //有玩家正在播放倒计时.
+            //Debug.LogWarning("player have play daoJiShi...");
+            return;
+        }
+
+        //if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.GetAllPlayerIsHaveCaiPiao() == true)
+        //{
+        //    //还有玩家的彩票没有打印完.
+        //    //Debug.LogWarning("player have print caiPiao...");
+        //    return;
+        //}
+
+        if (m_GamePlayerAiData != null && m_GamePlayerAiData.IsActiveAiPlayer == false)
+        {
+            //有激活游戏的玩家.
+            //Debug.LogWarning("player have play game...");
+            return;
+        }
+
+        //if (Time.time - m_TimeLastMovie > 60f) //test
+        if (Time.time - m_TimeLastMovie > 3600f * 2f)
+        {
+            m_TimeLastMovie = Time.time;
+
+#if !UNITY_EDITOR
+            StartCoroutine(DelayLoadingMovieScene());
+#endif
+        }
+    }
+
+    IEnumerator DelayLoadingMovieScene()
+    {
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreateCompanyLogo();
+        }
+
+        float audioVol = 1f;
+        do
+        {
+            yield return new WaitForSeconds(0.1f);
+            audioVol -= 0.05f;
+            if (audioVol < 0f)
+            {
+                audioVol = 0f;
+            }
+            AudioListener.volume = audioVol;
+
+            if (audioVol <= 0f)
+            {
+                break;
+            }
+        } while (true);
+
+        yield return new WaitForSeconds(0.2f);
+        //LoadingGameMovie();
+        //RestartGame();
+        LoadingRestartGameScene();
+    }
 
     void Update()
     {
@@ -870,7 +958,8 @@ public class XkGameCtrl : SSGameMono
                 //			}
         //}
 		CheckNpcTranFromList();
-	}
+        CheckLoadingMovieScene();
+    }
 
 	void DelayResetIsLoadingLevel()
 	{
@@ -2023,8 +2112,30 @@ public class XkGameCtrl : SSGameMono
 			Application.LoadLevel((int)GameLevel.Scene_1);
 		}
 	}
+    
+    void LoadingRestartGameScene()
+    {
+        if (IsLoadingLevel)
+        {
+            return;
+        }
+        ResetGameInfo();
 
-	public static void LoadingGameMovie(int key = 0)
+        IsLoadingLevel = true;
+        SetActivePlayerOne(false);
+        SetActivePlayerTwo(false);
+        SetActivePlayerThree(false);
+        //SetActivePlayerFour(false);
+
+        if (!IsGameOnQuit)
+        {
+            Debug.Log("LoadingRestartGameScene...");
+            System.GC.Collect();
+            Application.LoadLevel((int)GameLevel.RestartGame);
+        }
+    }
+
+    public static void LoadingGameMovie(int key = 0)
 	{
 		if (XkGameCtrl.IsLoadingLevel) {
 			return;

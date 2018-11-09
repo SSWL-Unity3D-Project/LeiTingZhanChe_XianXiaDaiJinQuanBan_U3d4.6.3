@@ -34,7 +34,7 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (Time.time - m_TimeLastXinTiao >= 30f)
+        if (Time.time - m_TimeLastXinTiao >= 10f)
         {
             m_TimeLastXinTiao = Time.time;
             NetSendWebSocketXinTiaoMsg();
@@ -49,6 +49,12 @@ public class WebSocketSimpet : MonoBehaviour
                 if (m_SSBoxPostNet != null)
                 {
                     m_SSBoxPostNet.HttpSendPostLoginBox();
+                }
+
+                //网络故障,请检查网络并重启游戏.
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
                 }
             }
         }
@@ -68,16 +74,23 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     public void OpenWebSocket(string url)
     {
-        if (_wabData.WebSocket == null)
+        if (_wabData != null)
         {
+            //设置服务器地址信息.
             _wabData.Address = url;
-            _wabData.OpenWebSocket();
-            Debug.Log("Unity:"+"Opening Web Socket -> url == " + url);
-        }
-        else
-        {
-            Debug.Log("Unity:" + "Close Web Socket...");
-            _wabData.WebSocket.Close();
+
+            if (_wabData.WebSocket == null)
+            {
+                _wabData.OpenWebSocket();
+                Debug.Log("Unity:" + "Opening Web Socket -> url == " + url);
+            }
+            else
+            {
+                //Debug.Log("Unity:" + "Close Web Socket...");
+                //_wabData.WebSocket.Close();
+                Debug.Log("Unity:" + "Restart Open WebSocket...");
+                _wabData.RestartOpenWebSocket();
+            }
         }
     }
 
@@ -195,6 +208,28 @@ public class WebSocketSimpet : MonoBehaviour
             _wabData.WebSocket.Send(msgToSend);
         }
     }
+    
+    /// <summary>
+    /// 当游戏所有角色处于激活状态时，客户端需要发送游戏当前处于满员的消息给微信游戏手柄.
+    /// </summary>
+    public void NetSendWeiXinPadGamePlayerFull(int userId)
+    {
+        if (m_SSBoxPostNet == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"full"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"full\"},\"_msg_name\":\"gamepad\"}";
+
+            Debug.Log("NetSendWeiXinPadGamePlayerFull:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
 
     /// <summary>
     /// 收到WebSocket网络消息.
@@ -210,6 +245,11 @@ public class WebSocketSimpet : MonoBehaviour
                 Debug.Log("Unity:"+"XinTiao Check Success!");
 #endif
                 IsCheckXinTiaoMsg = false;
+                //删除网络故障,请检查网络并重启游戏.
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+                }
             }
             return;
         }

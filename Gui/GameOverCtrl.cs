@@ -75,4 +75,5 @@ public enum GameLevel
 	Movie = 1,
 	Scene_1 = 2,
 	SetPanel = 3,
+    RestartGame = 4,
 }

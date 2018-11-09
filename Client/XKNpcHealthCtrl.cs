@@ -705,6 +705,23 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     //{
                     //    Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
                     //}
+                    if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+                    {
+                        //只给boss产生爆炸粒子.
+                        GameObject objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
+                        objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
+                        XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
+
+                        SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
+                        if (caiPiaoLiZi != null)
+                        {
+                            caiPiaoLiZi.ShowNumUI(value, indexPlayer);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+                        }
+                    }
                 }
             }
             
@@ -740,8 +757,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         }
         else
         {
-            GameObject objExplode = null;
-            objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
+            GameObject objExplode = (GameObject)Instantiate(DeathExplode, DeathExplodePoint.position, DeathExplodePoint.rotation);
             objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
             XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
         }

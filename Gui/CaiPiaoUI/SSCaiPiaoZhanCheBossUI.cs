@@ -114,18 +114,23 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
                 startPos = m_ExplosionPoint.transform.position;
                 Destroy(m_ExplosionPoint);
             }
-            GameObject objExplode = (GameObject)Instantiate(m_ExplosionPrefab, startPos, Quaternion.identity);
-            objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
-            XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
 
-            SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
-            if (caiPiaoLiZi != null)
+            if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe)
             {
-                caiPiaoLiZi.ShowNumUI(m_CaiPiaoNum, indexPlayer);
-            }
-            else
-            {
-                Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+                //只给战车产生爆炸粒子.
+                GameObject objExplode = (GameObject)Instantiate(m_ExplosionPrefab, startPos, Quaternion.identity);
+                objExplode.transform.parent = XkGameCtrl.NpcAmmoArray;
+                XkGameCtrl.CheckObjDestroyThisTimed(objExplode);
+
+                SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
+                if (caiPiaoLiZi != null)
+                {
+                    caiPiaoLiZi.ShowNumUI(m_CaiPiaoNum, indexPlayer);
+                }
+                else
+                {
+                    Debug.LogWarning("CheckNpcDeathExplode -> caiPiaoLiZi was null.................");
+                }
             }
         }
 

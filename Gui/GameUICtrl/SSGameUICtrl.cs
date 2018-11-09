@@ -753,32 +753,47 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
+    public enum WangLuoGuZhang
+    {
+        Null = 0,
+        Post = 1,
+    }
     /// <summary>
     /// 是否产生网络故障UI界面.
     /// </summary>
-    GameObject m_WangLuoGuZhangUI;
+    internal GameObject m_WangLuoGuZhangUI;
     /// <summary>
     /// 产生网络故障UI界面.
     /// </summary>
-    internal void CreatWangLuoGuZhangUI()
+    internal void CreatWangLuoGuZhangUI(WangLuoGuZhang guZhang = WangLuoGuZhang.Null)
     {
-        if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
-        {
-            //微信虚拟游戏手柄二维码信息存在时,不去创建网络故障UI.
-            return;
-        }
+        //if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
+        //{
+        //    //微信虚拟游戏手柄二维码信息存在时,不去创建网络故障UI.
+        //    return;
+        //}
 
-        Debug.Log("Unity: CreatWangLuoGuZhangUI...");
         if (m_WangLuoGuZhangUI == null)
         {
-            GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/wangLuoGuZhang/WangLuoGuZhang");
+            string prefabPath = "Prefabs/GUI/wangLuoGuZhang/WangLuoGuZhang";
+            switch (guZhang)
+            {
+                case WangLuoGuZhang.Post:
+                    {
+                        //首次出现网络故障.
+                        prefabPath = "Prefabs/GUI/wangLuoGuZhang/WangLuoGuZhangFirst";
+                        break;
+                    }
+            }
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
+                Debug.Log("Unity: CreatWangLuoGuZhangUI......................................................");
                 m_WangLuoGuZhangUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
             }
             else
             {
-                UnityLogWarning("CreatWangLuoGuZhangUI -> gmDataPrefab was null!");
+                UnityLogWarning("CreatWangLuoGuZhangUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
             }
         }
     }
@@ -788,9 +803,9 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     internal void RemoveWangLuoGuZhangUI()
     {
-        Debug.Log("Unity: RemoveWangLuoGuZhangUI...");
         if (m_WangLuoGuZhangUI != null)
         {
+            UnityLog("RemoveWangLuoGuZhangUI...");
             Destroy(m_WangLuoGuZhangUI);
             m_WangLuoGuZhangUI = null;
         }
@@ -864,6 +879,26 @@ public class SSGameUICtrl : SSGameMono
         else
         {
             UnityLogWarning("CreatGameScreenIdUI -> gmDataPrefab was null!");
+        }
+    }
+
+    bool IsCreatCompanyLogo = false;
+    /// <summary>
+    /// 创建公司Logo.
+    /// </summary>
+    public void CreateCompanyLogo()
+    {
+        if (IsCreatCompanyLogo == true)
+        {
+            return;
+        }
+        IsCreatCompanyLogo = true;
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/Logo/Logo");
+        if (gmDataPrefab != null)
+        {
+            UnityLog("CreateCompanyLogo...");
+            Instantiate(gmDataPrefab, m_GameUICenter);
         }
     }
 }

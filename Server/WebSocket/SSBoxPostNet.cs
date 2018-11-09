@@ -62,7 +62,7 @@ public class SSBoxPostNet : MonoBehaviour
             m_WebSocketSimpet.Init(this);
         }
         HttpSendPostLoginBox();
-        HttpSendGetWeiXinXiaoChengXuUrl();
+        //HttpSendGetWeiXinXiaoChengXuUrl();
         HttpSendGetServerTimeInfo();
 
         //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
@@ -285,7 +285,7 @@ public class SSBoxPostNet : MonoBehaviour
             //网络故障,请检查网络并重启游戏.
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI( SSGameUICtrl.WangLuoGuZhang.Post );
             }
         }
         else
@@ -303,10 +303,21 @@ public class SSBoxPostNet : MonoBehaviour
                             m_BoxLoginDt.token = jd["data"]["token"].ToString();
                             Debug.Log("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
                             ConnectWebSocketServer();
+
+                            //删除网络故障,请检查网络并重启游戏.
+                            //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                            //{
+                            //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+                            //}
                         }
                         else
                         {
                             Debug.Log("Unity:"+"Login box failed! code == " + jd["code"]);
+                            //网络故障,请检查网络并重启游戏.
+                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                            {
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+                            }
                         }
                         break;
                     }
@@ -341,10 +352,10 @@ public class SSBoxPostNet : MonoBehaviour
         {
             Debug.Log("Unity:" + "GetError: " + getData.error);
             //网络故障,请检查网络并重启游戏.
-            if (SSUIRoot.GetInstance().m_GameUIManage != null)
-            {
-                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
-            }
+            //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //{
+            //    SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+            //}
         }
         else
         {
@@ -528,6 +539,9 @@ public class SSBoxPostNet : MonoBehaviour
             + ", gameId == " + m_BoxLoginData.gameId);
         Debug.Log("url ==== " + m_BoxLoginData.url);
         StartCoroutine(SendPost(m_BoxLoginData.url, form, PostCmd.BoxLogin));
+
+        //获取微信红点点游戏手柄小程序二位码.
+        HttpSendGetWeiXinXiaoChengXuUrl();
     }
 
     /// <summary>
@@ -695,16 +709,72 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
+    
+    bool IsDelayReadWeiXinXiaoChengXuErWeiMa = false;
+    /// <summary>
+    /// 读取微信小程序二维码.
+    /// </summary>
+    void DelayDelayReadWeiXinXiaoChengXuErWeiMa()
+    {
+        if (IsDelayReadWeiXinXiaoChengXuErWeiMa == false)
+        {
+            IsDelayReadWeiXinXiaoChengXuErWeiMa = true;
+            StartCoroutine(StartReadWeiXinXiaoChengXuErWeiMa());
+        }
+    }
+
+    IEnumerator StartReadWeiXinXiaoChengXuErWeiMa()
+    {
+        yield return new WaitForSeconds(3f);
+        //读取微信小程序二维码.
+        if (ErWeiMaUI.GetInstance() != null)
+        {
+            Debug.Log("Unity: Reading WeiXinXiaoChengXu ErWeiMa......");
+            ErWeiMaUI.GetInstance().ReloadGameWXPadXiaoChengXuErWeiMa();
+        }
+        else
+        {
+            Debug.LogWarning("Unity: ============================= ErWeiMaUI was null");
+        }
+    }
 
     /// <summary>
     /// 发送微信小程序Url获取的消息.
     /// </summary>
     void HttpSendGetWeiXinXiaoChengXuUrl()
     {
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null
+            && pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam() != null
+            && pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
+        {
+            //已经获取过微信小程序二维码.
+            return;
+        }
+        
+        string key = "HddGameBoxNum";
+        string boxNumRead = PlayerPrefs.GetString(key);
+        //Debug.Log("Unity: =============================== boxNumRead: " + boxNumRead
+            //+ ", boxNumber: " + m_BoxLoginData.boxNumber);
+        if (boxNumRead == m_BoxLoginData.boxNumber)
+        {
+            string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
+            //Debug.Log("Unity: path ============================= " + path);
+            if (File.Exists(path) == true)
+            {
+                DelayDelayReadWeiXinXiaoChengXuErWeiMa();
+                return;
+            }
+        }
+        else
+        {
+            Debug.Log("Setting HddGameBoxNumInfo......");
+            PlayerPrefs.SetString(key, m_BoxLoginData.boxNumber);
+        }
+        
         Debug.Log("Unity:" + "HttpSendGetWeiXinXiaoChengXuUrl...");
         //GET方法.
         string url = m_BoxLoginData.GetWeiXinXiaoChengXuUrlPostInfo(m_GamePadState);
-        Debug.Log("url ==== " + url);
+        Debug.Log("Unity: url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.WX_XCX_URL_POST));
     }
     
@@ -902,8 +972,8 @@ public class SSBoxPostNet : MonoBehaviour
     IEnumerator ReloadWeiXinXiaoChengXuErWeiMa(UITexture erWeiMaUI)
     {
         yield return new WaitForSeconds(2f);
-        int width = 430;
-        int height = 430;
+        int width = 280;
+        int height = width;
         string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
         if (File.Exists(path) == true && erWeiMaUI != null)
         {
@@ -919,10 +989,10 @@ public class SSBoxPostNet : MonoBehaviour
             erWeiMaUI.gameObject.SetActive(true);
 
             //删除网络故障,请检查网络并重启游戏UI.
-            if (SSUIRoot.GetInstance().m_GameUIManage != null)
-            {
-                SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
-            }
+            //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //{
+            //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+            //}
             yield return new WaitForSeconds(0.01f);
             Resources.UnloadUnusedAssets(); //一定要清理游离资源.
         }
