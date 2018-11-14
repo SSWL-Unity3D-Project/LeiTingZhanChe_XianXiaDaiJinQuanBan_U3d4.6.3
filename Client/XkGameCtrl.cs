@@ -1,5 +1,5 @@
 #define TEST_UPDATA_GAME
-#define DRAW_DEBUG_CAIPIAO_INFO
+//#define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
@@ -498,7 +498,7 @@ public class XkGameCtrl : SSGameMono
 
 			if (IsCartoonShootTest)
 			{
-				Screen.SetResolution(1360, 768, false);
+				Screen.SetResolution(1366, 768, false);
 			}
 			else if (!IsGameOnQuit)
 			{
@@ -508,7 +508,7 @@ public class XkGameCtrl : SSGameMono
 				{
 					if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1360, 768, true);
+						Screen.SetResolution(1366, 768, true);
 					}
 				}
 			}

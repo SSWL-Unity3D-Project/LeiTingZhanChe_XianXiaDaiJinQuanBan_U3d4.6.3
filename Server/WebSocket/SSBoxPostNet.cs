@@ -1,4 +1,5 @@
-﻿using LitJson;
+﻿#define TEST_DAI_JIN_QUAN
+using LitJson;
 using System;
 using System.Collections;
 using System.IO;
@@ -309,6 +310,9 @@ public class SSBoxPostNet : MonoBehaviour
                             //{
                             //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
                             //}
+
+                            //获取游戏红点点后台屏幕码信息.
+                            HttpSendGetGameScreenId();
                         }
                         else
                         {
@@ -372,7 +376,8 @@ public class SSBoxPostNet : MonoBehaviour
                             if (m_BoxLoginData != null)
                             {
                                 m_BoxLoginData.screenId = jd["data"]["id"].ToString();
-                                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                                if (SSUIRoot.GetInstance().m_GameUIManage != null
+                                    && SSUIRoot.GetInstance().m_GameUIManage.IsCreatGameScreenIdUI == false)
                                 {
                                     //创建游戏红点点屏幕码UI.
                                     int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
@@ -462,7 +467,7 @@ public class SSBoxPostNet : MonoBehaviour
                             if (m_BoxLoginData != null)
                             {
                                 //获取游戏红点点后台屏幕码信息.
-                                HttpSendGetGameScreenId();
+                                //HttpSendGetGameScreenId();
 
                                 string scene = jd["data"]["scene"].ToString();
                                 string sceneTmp = m_BoxLoginData.boxNumber + "," + m_BoxLoginData.GetWXCodeGame(m_GamePadState);
@@ -658,6 +663,32 @@ public class SSBoxPostNet : MonoBehaviour
         //account单位是人民币元.
         //worth单位是人民币分.
         int worth = account * 100; //单位从元转换为分.
+#if TEST_DAI_JIN_QUAN
+        //测试代金券.
+        switch (account)
+        {
+            case 1:
+                {
+                    worth = 1; //1分钱.
+                    break;
+                }
+            case 20:
+                {
+                    worth = 2; //2分钱.
+                    break;
+                }
+            case 50:
+                {
+                    worth = 3; //3分钱.
+                    break;
+                }
+            case 100:
+                {
+                    worth = 4; //4分钱.
+                    break;
+                }
+        }
+#endif
         Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
         Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);
         //生成现金券的url.
@@ -752,10 +783,13 @@ public class SSBoxPostNet : MonoBehaviour
         }
         
         string key = "HddGameBoxNum";
+        //在电脑注册表里读取的游戏盒子编号信息.
         string boxNumRead = PlayerPrefs.GetString(key);
+        //在配置文件里读取的游戏盒子编号信息.
+        string boxNumConfigRead = XKGlobalData.GetInstance().m_HddBoxNumInfo;
         //Debug.Log("Unity: =============================== boxNumRead: " + boxNumRead
             //+ ", boxNumber: " + m_BoxLoginData.boxNumber);
-        if (boxNumRead == m_BoxLoginData.boxNumber)
+        if (boxNumRead == m_BoxLoginData.boxNumber && boxNumRead == boxNumConfigRead)
         {
             string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
             //Debug.Log("Unity: path ============================= " + path);
@@ -769,6 +803,7 @@ public class SSBoxPostNet : MonoBehaviour
         {
             Debug.Log("Setting HddGameBoxNumInfo......");
             PlayerPrefs.SetString(key, m_BoxLoginData.boxNumber);
+            XKGlobalData.GetInstance().SetHddBoxNumInfo(m_BoxLoginData.boxNumber);
         }
         
         Debug.Log("Unity:" + "HttpSendGetWeiXinXiaoChengXuUrl...");
@@ -820,11 +855,15 @@ public class SSBoxPostNet : MonoBehaviour
             Debug.LogWarning("HttpSendGetGameScreenId -> m_BoxLoginData was null");
             return;
         }
-
-        //GET方法.
-        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/sceneCode/" + m_BoxLoginData.boxNumber;
-        Debug.Log("HttpSendGetGameScreenId -> url ==== " + url);
-        StartCoroutine(SendGet(url, PostCmd.GET_HDD_GAME_SCREEN_ID));
+        
+        if (SSUIRoot.GetInstance().m_GameUIManage != null
+            && SSUIRoot.GetInstance().m_GameUIManage.IsCreatGameScreenIdUI == false)
+        {
+            //GET方法.
+            string url = m_BoxLoginData.m_Address + "/wxbackstage/client/sceneCode/" + m_BoxLoginData.boxNumber;
+            Debug.Log("HttpSendGetGameScreenId -> url ==== " + url);
+            StartCoroutine(SendGet(url, PostCmd.GET_HDD_GAME_SCREEN_ID));
+        }
     }
 
     /// <summary>

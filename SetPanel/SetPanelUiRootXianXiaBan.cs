@@ -96,7 +96,7 @@ public class SetPanelUiRootXianXiaBan : SSGameMono
             if (!XkGameCtrl.IsGameOnQuit)
             {
                 Screen.showCursor = false;
-                Screen.SetResolution(1360, 768, true);
+                Screen.SetResolution(1366, 768, true);
                 System.GC.Collect();
                 Application.LoadLevel((int)GameLevel.Movie);
             }

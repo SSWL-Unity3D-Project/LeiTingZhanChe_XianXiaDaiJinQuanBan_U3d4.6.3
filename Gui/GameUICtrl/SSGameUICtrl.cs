@@ -860,11 +860,18 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
+    internal bool IsCreatGameScreenIdUI = false;
     /// <summary>
     /// 产生游戏红点点屏幕码UI.
     /// </summary>
     internal void CreatGameScreenIdUI(int screenId)
     {
+        if (IsCreatGameScreenIdUI == true)
+        {
+            return;
+        }
+        IsCreatGameScreenIdUI = true;
+
         UnityLog("CreatGameScreenIdUI...");
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/ScreenIdUI/ScreenId");
         if (gmDataPrefab != null)

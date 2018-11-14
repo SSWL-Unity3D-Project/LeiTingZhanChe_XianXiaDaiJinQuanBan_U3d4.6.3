@@ -152,7 +152,10 @@ public class XKGlobalData
 	public static bool IsFreeMode;
 	public static string GameDiff;
 	public static int GameAudioVolume = 10;
-
+    /// <summary>
+    /// 红点点游戏盒子编号信息.
+    /// </summary>
+    internal string m_HddBoxNumInfo = "";
     public enum CaiPiaoPrintState
     {
         /// <summary>
@@ -240,6 +243,7 @@ public class XKGlobalData
             Instance.InitCaiPiaoPrintState();
             Instance.InitGameWXPayDataManage();
             Instance.InitDanMuInfo();
+            Instance.InitHddBoxNumInfo();
         }
 		return Instance;
 	}
@@ -625,6 +629,35 @@ public class XKGlobalData
             HandleJsonObj.WriteToFileXml(FileName, "DanMuInfo", info);
         }
         m_DanMuInfo = info;
+    }
+
+    /// <summary>
+    /// 初始化红点点游戏盒子编号信息.
+    /// </summary>
+    void InitHddBoxNumInfo()
+    {
+        if (HandleJsonObj != null)
+        {
+            string info = HandleJsonObj.ReadFromFileXml(FileName, "HddBoxNumInfo");
+            if (info == null || info == "")
+            {
+                info = "0123456";
+                HandleJsonObj.WriteToFileXml(FileName, "HddBoxNumInfo", info);
+            }
+            m_HddBoxNumInfo = info;
+        }
+    }
+
+    /// <summary>
+    /// 设置红点点游戏盒子编号信息.
+    /// </summary>
+    internal void SetHddBoxNumInfo(string info)
+    {
+        if (HandleJsonObj != null)
+        {
+            HandleJsonObj.WriteToFileXml(FileName, "HddBoxNumInfo", info);
+        }
+        m_HddBoxNumInfo = info;
     }
 
     /// <summary>

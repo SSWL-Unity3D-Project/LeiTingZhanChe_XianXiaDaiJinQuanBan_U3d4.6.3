@@ -86,7 +86,7 @@ public class GameMovieCtrl : SSGameMono
 				{
 					if (!IsTestLJGame && !IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1360, 768, true);
+						Screen.SetResolution(1366, 768, true);
 					}
 				}
 			}
