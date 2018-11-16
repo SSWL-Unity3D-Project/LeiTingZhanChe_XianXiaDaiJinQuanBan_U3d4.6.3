@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class HuDunCtrl : MonoBehaviour {
 	public PlayerEnum PlayerSt;
 	UISprite HuDunSprite;
 	static HuDunCtrl _InstanceOne;
-	public static HuDunCtrl GetInstanceOne()
+    public static HuDunCtrl GetInstanceOne()
 	{
 		return _InstanceOne;
 	}
@@ -82,7 +81,7 @@ public class HuDunCtrl : MonoBehaviour {
 	void CheckHuDunUISprite()
 	{
 		float keyHD = -HuDunTime;
-		float fillVal = ((Time.realtimeSinceStartup - TimeStart) / keyHD) + 1f;
+		float fillVal = ((Time.time - TimeStart) / keyHD) + 1f;
 		HuDunSprite.fillAmount = Mathf.Clamp01(fillVal);
 		if (fillVal <= 0f) {
 			HiddenHuDunUI();
@@ -92,16 +91,31 @@ public class HuDunCtrl : MonoBehaviour {
 	float HuDunTime;
 	public void ShowHuDunUI(float timeVal = 1f)
 	{
-		HuDunTime = timeVal;
-		TimeStart = Time.realtimeSinceStartup;
+        //HuDunTime = timeVal;
+        IsCanResetHuDunTime = true;
+        HuDunTime = 60f;
+        TimeStart = Time.time;
 		HuDunSprite.fillAmount = 1f;
 		HuDunSprite.enabled = true;
 		gameObject.SetActive(true);
 	}
 
+    internal bool IsCanResetHuDunTime = false;
+    public void ResetHunDunTimeInfo()
+    {
+        if (IsCanResetHuDunTime == true && gameObject.activeInHierarchy == true)
+        {
+            IsCanResetHuDunTime = false;
+            HuDunTime = 3f;
+            TimeStart = Time.time;
+            HuDunSprite.fillAmount = 1f;
+        }
+    }
+
 	void HiddenHuDunUI()
-	{
-		gameObject.SetActive(false);
+    {
+        IsCanResetHuDunTime = false;
+        gameObject.SetActive(false);
 		XKPlayerMoveCtrl playerMoveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(PlayerSt);
 		if (playerMoveScript == null) {
 			return;

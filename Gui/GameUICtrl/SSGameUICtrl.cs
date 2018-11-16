@@ -31,6 +31,23 @@ public class SSGameUICtrl : SSGameMono
         //}
     }
 
+    private void Start()
+    {
+        if (pcvr.IsHongDDShouBing)
+        {
+            //红点点微信二维码游戏.
+            if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet() != null)
+            {
+                SSBoxPostNet.BoxLoginData loginDt = pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet().m_BoxLoginData;
+                if (loginDt != null && loginDt.screenId != "0")
+                {
+                    string screenId = loginDt.screenId;
+                    CreatGameScreenIdUI(System.Convert.ToInt32(screenId));
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// 游戏营收UI界面.
     /// </summary>

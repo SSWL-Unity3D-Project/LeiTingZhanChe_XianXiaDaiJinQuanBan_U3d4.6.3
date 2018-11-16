@@ -39,7 +39,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	float LastFXVal;
 	bool IsAutoMoving;
 	LayerMask TerrainLayer;
-	bool IsDeathPlayer;
+	bool IsDeathPlayer = true;
 	bool IsWuDiState = true;
 	XKPlayerAutoFire FireScript;
 	XKPlayerTiaoBanCtrl PlayerTiaoBanScript;
@@ -1163,10 +1163,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public void ActivePlayerWuDiState()
 	{
+        bool isActiveWuDiTxObj = false;
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
             //游戏处于循环动画阶段,没有激活的玩家.
-            SetActiveNewCircleTeXiao(false);
+            //SetActiveNewCircleTeXiao(false);
         }
         else
         {
@@ -1180,18 +1181,19 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             {
                 HuDunCtrl.GetInstance(PlayerIndex).ShowHuDunUI(XkGameCtrl.GetInstance().WuDiTime);
             }
-            SetActiveNewCircleTeXiao(true);
+            //SetActiveNewCircleTeXiao(true);
+            isActiveWuDiTxObj = true;
         }
-
 		IsWuDiState = true;
-		WuDiTXObj.SetActive(true);
+		WuDiTXObj.SetActive(isActiveWuDiTxObj);
+        SetActiveNewCircleTeXiao(true);
         //gameObject.layer = LayerMask.NameToLayer("UI");
-        //Debug.Log("Unity:"+"active player wuDiState -> playerIndex "+PlayerIndex);
+        //Debug.Log("Unity:"+"active player wuDiState -> playerIndex =============================== "+PlayerIndex);
     }
 
 	public void ResetIsWuDiState()
 	{
-		//Debug.Log("Unity:"+"ResetIsWuDiState -> playerIndex "+PlayerIndex);
+		Debug.Log("Unity:"+"ResetIsWuDiState -> playerIndex "+PlayerIndex);
 		IsWuDiState = false;
 		WuDiTXObj.SetActive(false);
 		gameObject.layer = LayerMask.NameToLayer("Player");

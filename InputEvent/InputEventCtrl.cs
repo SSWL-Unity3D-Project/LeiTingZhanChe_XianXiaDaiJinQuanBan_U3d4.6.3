@@ -222,6 +222,13 @@ public class InputEventCtrl : MonoBehaviour
 	
     public void OnClickFireBt(int index, pcvr.ButtonState val)
     {
+        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        {
+            huDunCom.ResetHunDunTimeInfo();
+        }
+
         switch (index)
         {
             case 0:
@@ -319,6 +326,13 @@ public class InputEventCtrl : MonoBehaviour
     
     public void OnClickDaoDanBt(int index, pcvr.ButtonState val)
     {
+        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        {
+            huDunCom.ResetHunDunTimeInfo();
+        }
+
         switch (index)
         {
             case 0:
@@ -407,9 +421,16 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向左运动.
     /// </summary>
-    public void OnClickFangXiangLBt(int indexPlayer, pcvr.ButtonState val)
+    public void OnClickFangXiangLBt(int index, pcvr.ButtonState val)
     {
-        switch (indexPlayer)
+        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        {
+            huDunCom.ResetHunDunTimeInfo();
+        }
+
+        switch (index)
         {
             case 0:
                 {
@@ -437,9 +458,16 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向右运动.
     /// </summary>
-    public void OnClickFangXiangRBt(int indexPlayer, pcvr.ButtonState val)
+    public void OnClickFangXiangRBt(int index, pcvr.ButtonState val)
     {
-        switch (indexPlayer)
+        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        {
+            huDunCom.ResetHunDunTimeInfo();
+        }
+
+        switch (index)
         {
             case 0:
                 {
@@ -467,9 +495,16 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向上运动.
     /// </summary>
-    public void OnClickFangXiangUBt(int indexPlayer, pcvr.ButtonState val)
+    public void OnClickFangXiangUBt(int index, pcvr.ButtonState val)
     {
-        switch (indexPlayer)
+        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        {
+            huDunCom.ResetHunDunTimeInfo();
+        }
+
+        switch (index)
         {
             case 0:
                 {
@@ -497,9 +532,9 @@ public class InputEventCtrl : MonoBehaviour
     /// <summary>
     /// 向下运动.
     /// </summary>
-    public void OnClickFangXiangDBt(int indexPlayer, pcvr.ButtonState val)
+    public void OnClickFangXiangDBt(int index, pcvr.ButtonState val)
     {
-        switch (indexPlayer)
+        switch (index)
         {
             case 0:
                 {
@@ -878,165 +913,197 @@ public class InputEventCtrl : MonoBehaviour
             //player_1.
             if (Input.GetKeyDown(KeyCode.A))
             {
-                ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
+                //ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
+                OnClickFangXiangLBt(0, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.A))
             {
-                ClickFangXiangLBtP1(pcvr.ButtonState.UP);
+                //ClickFangXiangLBtP1(pcvr.ButtonState.UP);
+                OnClickFangXiangLBt(0, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.D))
             {
-                ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
+                //ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
+                OnClickFangXiangRBt(0, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.D))
             {
-                ClickFangXiangRBtP1(pcvr.ButtonState.UP);
+                //ClickFangXiangRBtP1(pcvr.ButtonState.UP);
+                OnClickFangXiangRBt(0, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
+                //ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
+                OnClickFangXiangUBt(0, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.W))
             {
-                ClickFangXiangUBtP1(pcvr.ButtonState.UP);
+                //ClickFangXiangUBtP1(pcvr.ButtonState.UP);
+                OnClickFangXiangUBt(0, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
+                //ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
+                OnClickFangXiangDBt(0, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.S))
             {
-                ClickFangXiangDBtP1(pcvr.ButtonState.UP);
+                //ClickFangXiangDBtP1(pcvr.ButtonState.UP);
+                OnClickFangXiangDBt(0, pcvr.ButtonState.UP);
             }
 
             //player_2.
             if (Input.GetKeyDown(KeyCode.F))
             {
-                ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
+                //ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
+                OnClickFangXiangLBt(1, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.F))
             {
-                ClickFangXiangLBtP2(pcvr.ButtonState.UP);
+                //ClickFangXiangLBtP2(pcvr.ButtonState.UP);
+                OnClickFangXiangLBt(1, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.H))
             {
-                ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
+                //ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
+                OnClickFangXiangRBt(1, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.H))
             {
-                ClickFangXiangRBtP2(pcvr.ButtonState.UP);
+                //ClickFangXiangRBtP2(pcvr.ButtonState.UP);
+                OnClickFangXiangRBt(1, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.T))
             {
-                ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
+                //ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
+                OnClickFangXiangUBt(1, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.T))
             {
-                ClickFangXiangUBtP2(pcvr.ButtonState.UP);
+                //ClickFangXiangUBtP2(pcvr.ButtonState.UP);
+                OnClickFangXiangUBt(1, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.G))
             {
-                ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
+                //ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
+                OnClickFangXiangDBt(1, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.G))
             {
-                ClickFangXiangDBtP2(pcvr.ButtonState.UP);
+                //ClickFangXiangDBtP2(pcvr.ButtonState.UP);
+                OnClickFangXiangDBt(1, pcvr.ButtonState.UP);
             }
 
             //player_3.
             if (Input.GetKeyDown(KeyCode.J))
             {
-                ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
+                //ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
+                OnClickFangXiangLBt(2, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.J))
             {
-                ClickFangXiangLBtP3(pcvr.ButtonState.UP);
+                //ClickFangXiangLBtP3(pcvr.ButtonState.UP);
+                OnClickFangXiangLBt(2, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
+                //ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
+                OnClickFangXiangRBt(2, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.L))
             {
-                ClickFangXiangRBtP3(pcvr.ButtonState.UP);
+                //ClickFangXiangRBtP3(pcvr.ButtonState.UP);
+                OnClickFangXiangRBt(2, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
+                //ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
+                OnClickFangXiangUBt(2, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.I))
             {
-                ClickFangXiangUBtP3(pcvr.ButtonState.UP);
+                //ClickFangXiangUBtP3(pcvr.ButtonState.UP);
+                OnClickFangXiangUBt(2, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.K))
             {
-                ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
+                //ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
+                OnClickFangXiangDBt(2, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.K))
             {
-                ClickFangXiangDBtP3(pcvr.ButtonState.UP);
+                //ClickFangXiangDBtP3(pcvr.ButtonState.UP);
+                OnClickFangXiangDBt(2, pcvr.ButtonState.UP);
             }
 
             //player_4.
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
+                //ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
+                OnClickFangXiangLBt(3, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
-                ClickFangXiangLBtP4(pcvr.ButtonState.UP);
+                //ClickFangXiangLBtP4(pcvr.ButtonState.UP);
+                OnClickFangXiangLBt(3, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
+                //ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
+                OnClickFangXiangRBt(3, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.RightArrow))
             {
-                ClickFangXiangRBtP4(pcvr.ButtonState.UP);
+                //ClickFangXiangRBtP4(pcvr.ButtonState.UP);
+                OnClickFangXiangRBt(3, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
+                //ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
+                OnClickFangXiangUBt(3, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.UpArrow))
             {
-                ClickFangXiangUBtP4(pcvr.ButtonState.UP);
+                //ClickFangXiangUBtP4(pcvr.ButtonState.UP);
+                OnClickFangXiangUBt(3, pcvr.ButtonState.UP);
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
+                //ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
+                OnClickFangXiangDBt(3, pcvr.ButtonState.DOWN);
             }
 
             if (Input.GetKeyUp(KeyCode.DownArrow))
             {
-                ClickFangXiangDBtP4(pcvr.ButtonState.UP);
+                //ClickFangXiangDBtP4(pcvr.ButtonState.UP);
+                OnClickFangXiangDBt(3, pcvr.ButtonState.UP);
             }
         }
 
@@ -1060,32 +1127,32 @@ public class InputEventCtrl : MonoBehaviour
 
 		//Fire button
 		if (Input.GetKeyUp(KeyCode.Mouse0)) {
-			ClickFireBtOne( pcvr.ButtonState.UP );
-            ClickFireBtTwo(pcvr.ButtonState.UP);
-            ClickFireBtThree(pcvr.ButtonState.UP);
-            ClickFireBtFour( pcvr.ButtonState.UP );
-		}
+            OnClickFireBt(0, pcvr.ButtonState.UP);
+            OnClickFireBt(1, pcvr.ButtonState.UP);
+            OnClickFireBt(2, pcvr.ButtonState.UP);
+            OnClickFireBt(3, pcvr.ButtonState.UP);
+        }
 		
 		if (Input.GetKeyDown(KeyCode.Mouse0)) {
-			ClickFireBtOne( pcvr.ButtonState.DOWN );
-            ClickFireBtTwo(pcvr.ButtonState.DOWN);
-            ClickFireBtThree(pcvr.ButtonState.DOWN);
-            ClickFireBtFour( pcvr.ButtonState.DOWN );
-		}
+            OnClickFireBt(0, pcvr.ButtonState.DOWN);
+            OnClickFireBt(1, pcvr.ButtonState.DOWN);
+            OnClickFireBt(2, pcvr.ButtonState.DOWN);
+            OnClickFireBt(3, pcvr.ButtonState.DOWN);
+        }
 
 		if (Input.GetKeyUp(KeyCode.Mouse1)) {
-			ClickDaoDanBtOne( pcvr.ButtonState.UP );
-            ClickDaoDanBtTwo(pcvr.ButtonState.UP);
-            ClickDaoDanBtThree(pcvr.ButtonState.UP);
-            ClickDaoDanBtFour( pcvr.ButtonState.UP );
-		}
+            OnClickDaoDanBt(0, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(1, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(2, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(3, pcvr.ButtonState.UP);
+        }
 		
 		if (Input.GetKeyDown(KeyCode.Mouse1)) {
-			ClickDaoDanBtOne( pcvr.ButtonState.DOWN );
-            ClickDaoDanBtTwo(pcvr.ButtonState.DOWN);
-            ClickDaoDanBtThree(pcvr.ButtonState.DOWN);
-            ClickDaoDanBtFour( pcvr.ButtonState.DOWN );
-		}
+            OnClickDaoDanBt(0, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(1, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(2, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
+        }
 
         //test
         //if (Input.GetKeyDown(KeyCode.P))

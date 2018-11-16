@@ -566,9 +566,14 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		}
 	}
 
-	public static float TestDTimeVal;
-	public static float TestSpeed;
-	IEnumerator MovePlayerByMarkSpeed()
+	//public static float TestDTimeVal;
+	//public static float TestSpeed;
+    //float TestDis;
+    //private void OnGUI()
+    //{
+    //    GUI.Box(new Rect(15f, 15f, 150f, 30f), "dis = " + TestDis.ToString("f2"));
+    //}
+    IEnumerator MovePlayerByMarkSpeed()
 	{
 		bool isStopMove = false;
 		int countNode = 0;
@@ -646,34 +651,36 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			}
 
 			float ds = 0f;
-			float dTime = Time.realtimeSinceStartup - timeLastVal;
-			if (dTime > 1f) {
-				dTime = TimeUnitMove;
-			}
+            float dTime = TimeUnitMove;
+            //float dTime = Time.realtimeSinceStartup - timeLastVal;
+			//if (dTime > 1f) {
+			//	dTime = TimeUnitMove;
+			//}
 			/*else {
 				float minTimeUnit = 0.03f;
 				dTime = dTime > minTimeUnit ? minTimeUnit : dTime;
 			}*/
 
-			bool  isRecordDTime = false;
-			if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.FeiJiJiTai) {
-				if (PlayerSt == PlayerTypeEnum.FeiJi) {
-					isRecordDTime = true;
-				}
-			}
-			else if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.TanKeJiTai) {
-				if (PlayerSt == PlayerTypeEnum.TanKe) {
-					isRecordDTime = true;
-				}
-			}
+			//bool  isRecordDTime = false;
+			//if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.FeiJiJiTai) {
+			//	if (PlayerSt == PlayerTypeEnum.FeiJi) {
+			//		isRecordDTime = true;
+			//	}
+			//}
+			//else if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.TanKeJiTai) {
+			//	if (PlayerSt == PlayerTypeEnum.TanKe) {
+			//		isRecordDTime = true;
+			//	}
+			//}
 
-			if (isRecordDTime) {
-				TestDTimeVal = dTime;
-			}
+			//if (isRecordDTime) {
+			//	TestDTimeVal = dTime;
+			//}
 
 			//dTime = TimeUnitMove; //test
 			timeLastVal = Time.realtimeSinceStartup;
 			float disAimNode = Vector3.Distance(transform.position, EndPos);
+            //TestDis = disAimNode;
             if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().GmCamMark != null)
             {
                 SpeedA = XkGameCtrl.GetInstance().GmCamMark.GetMvSpeed();
@@ -706,12 +713,12 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 				}
 			}
 
-			if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.FeiJiJiTai && PlayerSt == PlayerTypeEnum.FeiJi) {
-				TestSpeed = SpeedA;
-			}
-			else if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.TanKeJiTai && PlayerSt == PlayerTypeEnum.TanKe) {
-				TestSpeed = SpeedA;
-			}
+			//if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.FeiJiJiTai && PlayerSt == PlayerTypeEnum.FeiJi) {
+			//	TestSpeed = SpeedA;
+			//}
+			//else if (XkGameCtrl.GameJiTaiSt == GameJiTaiType.TanKeJiTai && PlayerSt == PlayerTypeEnum.TanKe) {
+			//	TestSpeed = SpeedA;
+			//}
 
 			if (PlayerSt == PlayerTypeEnum.FeiJi
 			    || PlayerSt == PlayerTypeEnum.CartoonCamera) {
