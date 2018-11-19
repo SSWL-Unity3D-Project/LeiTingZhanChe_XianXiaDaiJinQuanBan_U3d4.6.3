@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XKDaoJuGlobalDt : MonoBehaviour
 {
-	/**
+    /**
 	 * 极速道具配置信息.
 	 */
-	[Range(1f, 100f)]public float JiSuSpeedVal = 60f;
+    [Range(1f, 100f)]public float JiSuSpeedVal = 60f;
 	/**
 	 * 极速道具摇杆版移动速度.
 	 */

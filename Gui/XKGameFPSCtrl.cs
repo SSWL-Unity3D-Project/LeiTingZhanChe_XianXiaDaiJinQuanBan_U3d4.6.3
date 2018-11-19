@@ -1,4 +1,5 @@
 //#define DRAW_FPS
+using System;
 using UnityEngine;
 
 public class XKGameFPSCtrl : MonoBehaviour
@@ -44,12 +45,12 @@ public class XKGameFPSCtrl : MonoBehaviour
 #endif
         this.timeleft = this.UpdateInterval;
 		gameObject.SetActive(IsShowGameFPS);
-		InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
+        InputEventCtrl.GetInstance().ClickSetMoveBtEvent += ClickSetMoveBtEvent;
 	}
 	
-	public void ClickSetMoveBtEvent(ButtonState val)
+	public void ClickSetMoveBtEvent(pcvr.ButtonState val)
 	{
-		if (val == ButtonState.DOWN) {
+		if (val == pcvr.ButtonState.DOWN) {
 			return;
 		}
 		IsShowGameFPS = !IsShowGameFPS;

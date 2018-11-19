@@ -42,7 +42,7 @@ public class WebSocketSimpet : MonoBehaviour
 
         if (IsCheckXinTiaoMsg)
         {
-            if (Time.time - m_TimeSendXinTiaoMsg > 10f)
+            if (Time.time - m_TimeSendXinTiaoMsg > 20f)
             {
                 IsCheckXinTiaoMsg = false;
                 Debug.Log("Unity:"+"XinTiao Check TimeOut!");

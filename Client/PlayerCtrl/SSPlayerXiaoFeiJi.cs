@@ -103,7 +103,7 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
     }
     public FeiJiWeaponData m_WeaponData;
 
-    public void CreatFeiJiAmmo()
+    public void CreatFeiJiAmmo(XKPlayerAutoFire autoFireCom)
     {
         if (m_WeaponData != null)
         {
@@ -112,7 +112,7 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
                 int length = m_WeaponData.AmmoCreatPoints.Length;
                 for (int i = 0; i < length; i++)
                 {
-                    SpawnJiQiangAmmo(i);
+                    SpawnJiQiangAmmo(i, autoFireCom);
                 }
             }
             else
@@ -177,7 +177,7 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
         return objAmmo;
     }
 
-    void SpawnJiQiangAmmo(int indexVal)
+    void SpawnJiQiangAmmo(int indexVal, XKPlayerAutoFire autoFireCom)
     {
         if (m_WeaponData.AmmoCreatPoints == null)
         {
@@ -212,6 +212,6 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
                 firePos = hit.point;
             }
         }
-        ammoScript.StartMoveAmmo(firePos, m_PlayerIndex);
+        ammoScript.StartMoveAmmo(firePos, m_PlayerIndex, autoFireCom);
     }
 }

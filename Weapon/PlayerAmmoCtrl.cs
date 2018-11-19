@@ -3,8 +3,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerAmmoCtrl : MonoBehaviour {
-	[Range(0, 100)]public int AmmoIndex = 0;
+public class PlayerAmmoCtrl : MonoBehaviour
+{
+    /// <summary>
+    /// 子弹数据信息.
+    /// </summary>
+    public SSPlayerAmmoData m_AmmmoData;
+    [Range(0, 100)]public int AmmoIndex = 0;
 	public PlayerAmmoType AmmoType = PlayerAmmoType.PuTongAmmo;
 	/**
 	 * 迫击炮的内核.
@@ -168,10 +173,19 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		return isStopCheckHit;
 	}
 
-	public void StartMoveAmmo(Vector3 firePos, PlayerEnum playerIndex,
-	                          NpcPathCtrl ammoMovePath = null, GameObject hitObjNpc = null)
+    bool IsXiaoFeiJiAmmo = false;
+    internal void SetIsXiaoFeiJiAmmo(bool isXiaoFeiJiAmmo)
+    {
+        IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
+    }
+
+	public void StartMoveAmmo(Vector3 firePos,
+        PlayerEnum playerIndex,
+        XKPlayerAutoFire autoFireCom = null,
+        NpcPathCtrl ammoMovePath = null,
+        GameObject hitObjNpc = null)
 	{
-		float disTmp = Vector3.Distance(firePos, AmmoTran.position);
+        float disTmp = Vector3.Distance(firePos, AmmoTran.position);
 		Vector3 vecA = firePos - AmmoTran.position;
 		if (disTmp < 10f
 			|| disTmp > MaxDisVal
@@ -190,7 +204,7 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 
 		AmmoTran = transform;
 		PlayerState = playerIndex;
-		MoveAmmoByItween(firePos, ammoMovePath);
+		MoveAmmoByItween(firePos, ammoMovePath, autoFireCom);
 		IsHandleRpc = true;
 	}
 
@@ -229,11 +243,41 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 		}
 		return firePos;
 	}
-
+    
 	GameObject PaiJiPaoTiShi;
-	void MoveAmmoByItween(Vector3 firePos, NpcPathCtrl ammoMovePath)
-	{
-		if (ammoMovePath == null) {
+	void MoveAmmoByItween(Vector3 firePos, NpcPathCtrl ammoMovePath, XKPlayerAutoFire autoFireCom)
+    {
+        //if (autoFireCom != null)
+        //{
+        //    SSDebug.Log("MoveAmmoByItween -> AmmoType ==== " + AmmoType + ", IsQianHouFire ==== " + autoFireCom.IsQianHouFire);
+        //    SSDebug.Log("MoveAmmoByItween -> CountAmmoStateZhuPao ==== " + autoFireCom.CountAmmoStateZhuPao
+        //        + ", CountAmmoStateJiQiang ==== " + autoFireCom.CountAmmoStateJiQiang);
+        //}
+
+        if (m_AmmmoData != null && autoFireCom != null)
+        {
+            switch (AmmoType)
+            {
+                case PlayerAmmoType.PaiJiPaoAmmo:
+                case PlayerAmmoType.ChuanTouAmmo:
+                case PlayerAmmoType.SanDanAmmo:
+                    {
+                        m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
+                        break;
+                    }
+                case PlayerAmmoType.PuTongAmmo:
+                    {
+                        if (autoFireCom.IsQianHouFire == true)
+                        {
+                            //小飞机发射的子弹.
+                            m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateJiQiang);
+                        }
+                        break;
+                    }
+            }
+        }
+
+        if (ammoMovePath == null) {
 			Vector3[] posArray = new Vector3[2];
 			posArray[0] = AmmoTran.position;
 			float lobTime = Vector3.Distance(firePos, posArray[0]) / MvSpeed;
@@ -264,8 +308,16 @@ public class PlayerAmmoCtrl : MonoBehaviour {
 				float disMV = Vector3.Distance(firePos , posArray[0]);
 				lobTime = disMV / MvSpeed;
 				float lobHeight = disMV * XKPlayerGlobalDt.GetInstance().KeyPaiJiPaoValPlayer;
-				//lobHeight = lobHeight > 10f ? 10f : lobHeight;
-				AmmoCore.transform.localPosition = Vector3.zero;
+                //lobHeight = lobHeight > 10f ? 10f : lobHeight;
+                if (m_AmmmoData != null && autoFireCom != null)
+                {
+                    GameObject objCore = m_AmmmoData.GetAmmoCore(autoFireCom.CountAmmoStateZhuPao);
+                    if (objCore != null)
+                    {
+                        AmmoCore = objCore;
+                    }
+                }
+                AmmoCore.transform.localPosition = Vector3.zero;
 				AmmoCore.transform.localEulerAngles = Vector3.zero;
 				iTween.MoveBy(AmmoCore, iTween.Hash("y", lobHeight,
 				                                    "time", lobTime/2,

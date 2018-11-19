@@ -96,8 +96,49 @@ public class XKPlayerAutoFire : MonoBehaviour
 	bool IsActiveFireBtZP; //主炮开火.
 	float LastFireTimeJiQiang = -1f;
 	float LastFireTimeZhuPao = -1f;
-	public PlayerAmmoType AmmoStateJiQiang = PlayerAmmoType.PuTongAmmo;
-	public PlayerAmmoType AmmoStateZhuPao = PlayerAmmoType.DaoDanAmmo;
+    /// <summary>
+    /// 机枪道具次数信息.
+    /// </summary>
+    internal int CountAmmoStateJiQiang = 0;
+    PlayerAmmoType _AmmoStateJiQiang = PlayerAmmoType.PuTongAmmo;
+    public PlayerAmmoType AmmoStateJiQiang
+    {
+        set
+        {
+            _AmmoStateJiQiang = value;
+        }
+        get
+        {
+            return _AmmoStateJiQiang;
+        }
+    }
+    /// <summary>
+    /// 主炮道具次数信息.
+    /// </summary>
+    internal int CountAmmoStateZhuPao = 0;
+    PlayerAmmoType _AmmoStateZhuPao = PlayerAmmoType.DaoDanAmmo;
+    public PlayerAmmoType AmmoStateZhuPao
+    {
+        set
+        {
+            if (_AmmoStateZhuPao == value)
+            {
+                if (CountAmmoStateZhuPao < 2)
+                {
+                    CountAmmoStateZhuPao++;
+                }
+            }
+            else
+            {
+                CountAmmoStateZhuPao = 0;
+            }
+            _AmmoStateZhuPao = value;
+        }
+        get
+        {
+            return _AmmoStateZhuPao;
+        }
+    }
 	/*public static PlayerAmmoType AmmoStatePOne = PlayerAmmoType.PuTongAmmo;
 	public static PlayerAmmoType AmmoStatePTwo = PlayerAmmoType.PuTongAmmo;
 	public static PlayerAmmoType AmmoStatePThree = PlayerAmmoType.PuTongAmmo;
@@ -434,7 +475,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 				}
 			}
 		}
-		ammoScript.StartMoveAmmo(firePos, PlayerIndex);
+		ammoScript.StartMoveAmmo(firePos, PlayerIndex, this);
 	}
 
 	BuJiBaoType JiQiangAmmoSt = BuJiBaoType.Null;
@@ -561,10 +602,23 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
     /// 前后发射子弹道具.
     /// 改装为添加2个小飞机给玩家坦克.
     /// </summary>
-	bool IsQianHouFire
+	internal bool IsQianHouFire
     {
         set
         {
+
+            if (_IsQianHouFire == value)
+            {
+                if (CountAmmoStateJiQiang < 2)
+                {
+                    CountAmmoStateJiQiang++;
+                }
+            }
+            else
+            {
+                CountAmmoStateJiQiang = 0;
+            }
+
             _IsQianHouFire = value;
             if (_IsQianHouFire == true)
             {
@@ -582,8 +636,13 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
     }
 	public void SetIsQianHouFire(bool isFire)
 	{
-		if (IsQianHouFire == isFire) {
-			return;
+		if (IsQianHouFire == isFire)
+        {
+            if (isFire == true)
+            {
+                IsQianHouFire = isFire;
+            }
+            return;
 		}
 		IsQianHouFire = isFire;
 		//Debug.Log("Unity:"+"SetIsQianHouFire -> isFire "+isFire);
@@ -895,7 +954,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 				}
 			}
 		}
-		ammoScript.StartMoveAmmo(firePos, PlayerIndex);
+		ammoScript.StartMoveAmmo(firePos, PlayerIndex, this);
 	}
 
 	public static int PlayerAmmoNumTest;
@@ -1235,7 +1294,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		if (hitInfo.collider != null){
 			firePos = hitInfo.point;
 		}
-		ammoScript.StartMoveAmmo(firePos, PlayerEnum.Null);
+		ammoScript.StartMoveAmmo(firePos, PlayerEnum.Null, this);
 	}
 
 	/**
@@ -1552,7 +1611,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			//Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
 			firePos = hit.point;
 		}
-		ammoScript.StartMoveAmmo(firePos, PlayerIndex);
+		ammoScript.StartMoveAmmo(firePos, PlayerIndex, this);
 	}
 	
 	public void SetAmmoStateJiQiang(PlayerAmmoType ammoType)
@@ -1719,7 +1778,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         {
             if (m_PlayerXiaoFeiJiList[i] != null)
             {
-                m_PlayerXiaoFeiJiList[i].CreatFeiJiAmmo();
+                m_PlayerXiaoFeiJiList[i].CreatFeiJiAmmo(this);
             }
         }
     }

@@ -337,7 +337,7 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 								buJiBaoScript.RemoveBuJiBao(PlayerEnum.Null); //buJiBaoScript
 							}
 						}
-						ammoScript.StartMoveAmmo(firePos, PlayerEnum.Null, AmmoMovePath);
+						ammoScript.StartMoveAmmo(firePos, PlayerEnum.Null, null, AmmoMovePath);
 					}
 				}
 
