@@ -1,13 +1,53 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-public class XKPlayerGlobalDt : MonoBehaviour
+public class XKPlayerGlobalDt : SSGameMono
 {
-	/**
+    /// <summary>
+    /// 子弹等级粒子特效数据.
+    /// </summary>
+    [System.Serializable]
+    public class AmmoDengJiLiZiData
+    {
+        /// <summary>
+        /// 发射主炮时的爆炸粒子预制.
+        /// </summary>
+        public GameObject[] LiZiPrefabArray = new GameObject[3];
+        /// <summary>
+        /// 创建粒子特效.
+        /// </summary>
+        internal void CreatLiZiTeXiao(int index, XKPlayerAutoFire autoFireCom, Transform tr)
+        {
+            //SSDebug.Log("CreatLiZiTeXiao -> index ================ " + index);
+            if (index < 0 || index >= LiZiPrefabArray.Length)
+            {
+                return;
+            }
+
+            GameObject prefab = LiZiPrefabArray[index];
+            if (prefab && autoFireCom != null)
+            {
+                autoFireCom.Instantiate(prefab, XkGameCtrl.MissionCleanup, tr);
+            }
+        }
+    }
+    /// <summary>
+    /// 迫击炮子弹等级粒子数据.
+    /// </summary>
+    public AmmoDengJiLiZiData m_PaiJiPaoAmmoDengJiLiZiDt;
+    /// <summary>
+    /// 散弹主炮子弹等级粒子数据.
+    /// </summary>
+    public AmmoDengJiLiZiData m_SanDanZhuPaoAmmoDengJiLiZiDt;
+    /// <summary>
+    /// 激光炮子弹等级粒子数据.
+    /// </summary>
+    public AmmoDengJiLiZiData m_JiGuanPaoAmmoDengJiLiZiDt;
+
+    /**
 	 * 机枪普通子弹.
 	 */
-	public GameObject PuTongJQAmmo;
+    public GameObject PuTongJQAmmo;
 	const int AmmoPuTongJQIndex = 0;
 	const PlayerAmmoType AmmoPuTongJQType = PlayerAmmoType.PuTongAmmo;
 	/**

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SSPlayerAmmoData : MonoBehaviour
+public class SSPlayerAmmoData : SSGameMono
 {
     /// <summary>
     /// 子弹真实展示对象.

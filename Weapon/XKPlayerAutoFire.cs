@@ -15,15 +15,15 @@ public enum PlayerAmmoType
 	PaiJiPaoAmmo,	//迫击炮(npc迫击炮子弹).
 }
 
-public class XKPlayerAutoFire : MonoBehaviour
+public class XKPlayerAutoFire : SSGameMono
 {
-	/**
+    /**
 	 * PaoTaRealObj[0] -> 默认炮塔.
 	 * PaoTaRealObj[1] -> 主炮穿甲弹炮塔.
 	 * PaoTaRealObj[2] -> 主炮散弹炮塔.
 	 * PaoTaRealObj[3] -> 主炮迫击炮炮塔.
 	 */
-	public GameObject[] PaoTaRealObj;
+    public GameObject[] PaoTaRealObj;
 	/**
 	 * IsLockPaoTa == true -> 子弹向镜头正前方打,炮塔转向不跟随坦克机身的转向.
 	 * IsLockPaoTa == false -> 子弹向子弹产生点方向打,炮塔转向跟随坦克机身的转向.
@@ -1484,11 +1484,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		XkGameCtrl.CheckObjDestroyThisTimed(obj);
 	}
 
-	/**
-	 * ammoType == 0 -> 主角机枪.
-	 * ammoType == 1 -> 主炮炮管.
+    /**
+	 * ammoIndex == 0 -> 主角机枪.
+	 * ammoIndex == 1 -> 主炮炮管.
 	 */
-	GameObject SpawnPlayerAmmoByAmmoType(int ammoIndex, Vector3 ammoSpawnPos, Quaternion ammoSpawnRot)
+    GameObject SpawnPlayerAmmoByAmmoType(int ammoIndex, Vector3 ammoSpawnPos, Quaternion ammoSpawnRot)
 	{
 		GameObject obj = null;
 		GameObject ammoParticle = null;
@@ -1502,15 +1502,41 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			break;
 		}
 
-		if (ammoIndex == ZHU_PAO_INDEX) {
-			switch (ammoType) {
+		if (ammoIndex == ZHU_PAO_INDEX)
+        {
+            XKPlayerGlobalDt.AmmoDengJiLiZiData ammoLiZiDt = null;
+			switch (ammoType)
+            {
+                case PlayerAmmoType.PaiJiPaoAmmo:
+                    {
+                        //迫击炮子弹.
+                        ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_PaiJiPaoAmmoDengJiLiZiDt;
+                        break;
+                    }
+                case PlayerAmmoType.SanDanAmmo:
+                    {
+                        //散弹主炮子弹.
+                        ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_SanDanZhuPaoAmmoDengJiLiZiDt;
+                        break;
+                    }
 			case PlayerAmmoType.ChuanTouAmmo:
-				ZhuPaoAmmoSt = BuJiBaoType.ChuanTouDan;
-				break;
+                    {
+                        //激光炮主炮子弹.
+                        ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_JiGuanPaoAmmoDengJiLiZiDt;
+                        ZhuPaoAmmoSt = BuJiBaoType.ChuanTouDan;
+                        break;
+                    }
 			case PlayerAmmoType.DaoDanAmmo:
-				ZhuPaoAmmoSt = BuJiBaoType.DaoDan;
-				break;
+                    {
+                        ZhuPaoAmmoSt = BuJiBaoType.DaoDan;
+                        break;
+                    }
 			}
+
+            if (ammoLiZiDt != null)
+            {
+                ammoLiZiDt.CreatLiZiTeXiao(CountAmmoStateZhuPao, this, AmmoStartPosZP[0]);
+            }
 		}
 
 		//Debug.Log("Unity:"+"ammoType "+ammoType+", PlayerIndex "+PlayerIndex+", SpawnPlayerAmmoByAmmoType");
