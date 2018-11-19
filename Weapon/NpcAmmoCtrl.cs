@@ -1,6 +1,5 @@
 ﻿#define USE_SPHERE_HIT
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// npc的子弹若要能被玩家子弹击爆,必须给npc的子弹添加Cube碰撞,否则不要添加碰撞.
@@ -533,7 +532,8 @@ public class NpcAmmoCtrl : MonoBehaviour {
 		}
 
 		if (IsDestoryNpcAmmo) {
-			Destroy(ObjAmmo, 0.05f);
+            Invoke("DelayDestroySelf", 0.05f);
+            //Destroy(ObjAmmo, 0.05f);
 		}
 		else {
 			if (TrailScript == null) {
@@ -547,6 +547,15 @@ public class NpcAmmoCtrl : MonoBehaviour {
 			Invoke("DelayHiddenNpcAmmo", 0.05f);
 		}
 	}
+
+    void DelayDestroySelf()
+    {
+        if (ObjAmmo != null)
+        {
+            Destroy(ObjAmmo);
+            ObjAmmo = null;
+        }
+    }
 
 	public void MakeNpcAmmoDestory()
 	{
