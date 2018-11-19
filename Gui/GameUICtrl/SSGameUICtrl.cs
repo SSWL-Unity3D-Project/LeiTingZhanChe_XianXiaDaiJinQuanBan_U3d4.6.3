@@ -464,6 +464,10 @@ public class SSGameUICtrl : SSGameMono
 
             if (m_CaiPiaoInfoArray[index] != null)
             {
+                if (num > 999)
+                {
+                    num = 999; //彩票数量最高为999.
+                }
                 //显示彩票数量UI.
                 m_CaiPiaoInfoArray[index].ShowNumUI(num);
 
