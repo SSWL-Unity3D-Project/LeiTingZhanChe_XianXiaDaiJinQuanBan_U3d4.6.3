@@ -100,6 +100,14 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 //			}
 //		}
 		TimeTeShuFire = new float[TimeFireAmmo.Length];
+
+        for (int i = 0; i < AmmoSpawnTranTeShu.Length; i++)
+        {
+            if (AmmoSpawnTranTeShu[i] != null)
+            {
+                AmmoSpawnTranTeShu[i].gameObject.SetActive(false);
+            }
+        }
 	}
 
 	void DelaySetRigidbodyInfo()

@@ -53,6 +53,14 @@ public class XKCannonCtrl : MonoBehaviour {
 			AudioCannonFire.playOnAwake = false;
 			AudioCannonFire.Stop();
 		}
+
+        for (int i = 0; i < SpawnAmmoPoint.Length; i++)
+        {
+            if (SpawnAmmoPoint[i] != null)
+            {
+                SpawnAmmoPoint[i].gameObject.SetActive(false);
+            }
+        }
 	}
 
 	void Start()

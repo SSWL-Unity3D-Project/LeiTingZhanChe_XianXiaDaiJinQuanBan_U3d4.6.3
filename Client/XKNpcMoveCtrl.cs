@@ -1033,7 +1033,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// <summary>
     /// 远离摄像机.
     /// </summary>
-    bool IsLeaveCamera = false;
+    public bool IsLeaveCamera = false;
     /// <summary>
     /// 使npc远离摄像机.
     /// </summary>
@@ -1047,14 +1047,28 @@ public class XKNpcMoveCtrl : MonoBehaviour
         IsLeaveCamera = true;
         Vector3[] path = new Vector3[2];
         path[0] = transform.position;
-        Vector3 forwardVal = transform.forward;
-        forwardVal.y = 0f;
-        Vector3 pos = path[0] + forwardVal.normalized * 80f;
-        path[1] = pos;
-        iTween.MoveTo(NpcObj, iTween.Hash("path", path,
-                                          "speed", MvSpeed,
-                                          "orienttopath", true,
-                                          "easeType", iTween.EaseType.linear));
+        //Vector3 forwardVal = transform.forward;
+        //forwardVal.y = 0f;
+        //Vector3 pos = path[0] + forwardVal.normalized * 80f;
+
+        //路的宽度80米.
+        Vector3 posA = path[0];
+        Vector3 posB = Camera.main.transform.position;
+        posA.y = posB.y = 0f;
+        if (Vector3.Distance(posA, posB) <= 40f)
+        {
+            //npc停在了路径中,使npc向左右运动离开路径.
+            Vector3 vecBA = posA - posB;
+            float sign = Vector3.Dot(vecBA, Camera.main.transform.right) >= 0 ? 1f : -1f;
+            Vector3 forwardVal = Camera.main.transform.right;
+            forwardVal.y = 0f;
+            Vector3 pos = path[0] + (sign * forwardVal * 80f);
+            path[1] = pos;
+            iTween.MoveTo(NpcObj, iTween.Hash("path", path,
+                                              "speed", MvSpeed,
+                                              "orienttopath", true,
+                                              "easeType", iTween.EaseType.linear));
+        }
     }
 
 	IEnumerator MoveNpcByLocalPos(Transform endTran, float speed)
@@ -1927,7 +1941,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
 	/// </summary>
 	void ResetNpcInfo()
 	{
-		IsInitNpcInfo = false;
+        IsLeaveCamera = false;
+        IsInitNpcInfo = false;
 		IsMoveToMarkPoint = false;
 		
 		IsMoveFirePoint = false;

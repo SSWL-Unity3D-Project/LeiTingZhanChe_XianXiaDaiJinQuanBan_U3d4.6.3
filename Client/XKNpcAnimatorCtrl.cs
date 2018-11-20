@@ -32,6 +32,18 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 		SetCountHuanDan(CountFirePL, TimeRootAni);
 		AnimatorCom = GetComponent<Animator>();
 		NpcScript = GetComponentInParent<XKNpcMoveCtrl>();
+        for (int i = 0; i < AmmoSpawnArray.Length; i++)
+        {
+            if (AmmoSpawnArray[i] != null)
+            {
+                AmmoSpawnArray[i].gameObject.SetActive(false);
+            }
+        }
+
+        if (AmmoSpawnTran != null)
+        {
+            AmmoSpawnTran.gameObject.SetActive(false);
+        }
 	}
 
 //	void Update()
