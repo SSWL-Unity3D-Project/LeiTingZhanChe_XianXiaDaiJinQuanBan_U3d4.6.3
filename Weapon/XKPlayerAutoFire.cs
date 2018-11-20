@@ -479,7 +479,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	}
 
 	BuJiBaoType JiQiangAmmoSt = BuJiBaoType.Null;
-	BuJiBaoType ZhuPaoAmmoSt = BuJiBaoType.DaoDan;
+    BuJiBaoType ZhuPaoAmmoSt = BuJiBaoType.DaoDan;
     float m_LastAiJiQianTime = 0f;
     float m_AiJiQianTime = 2f;
     bool IsAiPlayerFire = false;
@@ -737,9 +737,14 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	
 	bool IsSanDanZPFire = false;
 	public void SetIsSanDanZPFire(bool isFire)
-	{
-		if (IsSanDanZPFire == isFire) {
-			return;
+    {
+        if (IsSanDanZPFire == isFire)
+        {
+            if (isFire == true)
+            {
+                XKPlayerAutoFire.GetInstanceAutoFire(PlayerIndex).SetAmmoStateZhuPao(PlayerAmmoType.SanDanAmmo);
+            }
+            return;
 		}
 		IsSanDanZPFire = isFire;
 		ChangePlayerPaoTaObj(isFire == true ? PlayerAmmoType.SanDanAmmo : PlayerAmmoType.Null);
@@ -1647,6 +1652,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 	public void SetAmmoStateZhuPao(PlayerAmmoType ammoType)
 	{
+        //SSDebug.LogWarning("SetAmmoStateZhuPao -> ammoTyoe ============================== " + ammoType);
 		AmmoStateZhuPao = ammoType;
 		if (ammoType == PlayerAmmoType.ChuanTouAmmo) {
 			IsSanDanZPFire = false;
