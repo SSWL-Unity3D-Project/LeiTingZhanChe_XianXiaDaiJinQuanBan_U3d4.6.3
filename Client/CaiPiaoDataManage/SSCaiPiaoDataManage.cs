@@ -171,7 +171,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// JPBoss出票率.
         /// 100元代金券.
         /// </summary>
-        float JPBossChuPiaoLv = 0.25f;
+        float JPBossChuPiaoLv = 0.1f;
         /// <summary>
         /// 战车出票条件(游戏启动币数乘以该值).
         /// </summary>
