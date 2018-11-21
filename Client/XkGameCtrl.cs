@@ -1,5 +1,5 @@
 #define TEST_UPDATA_GAME
-//#define DRAW_DEBUG_CAIPIAO_INFO
+#define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
@@ -808,8 +808,7 @@ public class XkGameCtrl : SSGameMono
             return;
         }
         m_TimeLastMovieUnit = Time.time;
-
-
+        
         if (DaoJiShiCtrl.GetInstanceOne().IsPlayDaoJishi == true
             || DaoJiShiCtrl.GetInstanceTwo().IsPlayDaoJishi == true
             || DaoJiShiCtrl.GetInstanceThree().IsPlayDaoJishi == true)
@@ -833,8 +832,8 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        //if (Time.time - m_TimeLastMovie > 30 * 60f) //test
-        if (Time.time - m_TimeLastMovie > 3600f * 2f)
+        if (Time.time - m_TimeLastMovie > 15 * 60f) //test
+        //if (Time.time - m_TimeLastMovie > 3600f * 2f)
         {
             m_TimeLastMovie = Time.time;
 
@@ -2113,6 +2112,34 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
     
+    /// <summary>
+    /// 切换到重新连接网络的关卡.
+    /// </summary>
+    internal void LoadingReconnectServerGameScene()
+    {
+        if (IsLoadingLevel)
+        {
+            return;
+        }
+        ResetGameInfo();
+
+        IsLoadingLevel = true;
+        SetActivePlayerOne(false);
+        SetActivePlayerTwo(false);
+        SetActivePlayerThree(false);
+        //SetActivePlayerFour(false);
+
+        if (!IsGameOnQuit)
+        {
+            Debug.Log("LoadingReconnectServerGameScene...");
+            System.GC.Collect();
+            Application.LoadLevel((int)GameLevel.ReconnectServer);
+        }
+    }
+
+    /// <summary>
+    /// 切换到重启游戏的关卡.
+    /// </summary>
     void LoadingRestartGameScene()
     {
         if (IsLoadingLevel)
@@ -2151,7 +2178,7 @@ public class XkGameCtrl : SSGameMono
 		SetActivePlayerOne(false);
 		SetActivePlayerTwo(false);
 		SetActivePlayerThree(false);
-		SetActivePlayerFour(false);
+		//SetActivePlayerFour(false);
 
         //pcvr.GetInstance().ClearGameWeiXinData();
 		if (!IsGameOnQuit) {
@@ -2992,7 +3019,7 @@ public class XkGameCtrl : SSGameMono
 				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerFour is death!");
 				PlayerHealthArray[3] = 0f;
 				PlayerQuanShu[3] = 1;
-				SetActivePlayerFour(false);
+				//SetActivePlayerFour(false);
 				XKPlayerMoveCtrl.GetInstancePFour().HiddenGamePlayer();
 			}
 			break;

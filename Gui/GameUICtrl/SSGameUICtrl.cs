@@ -811,6 +811,10 @@ public class SSGameUICtrl : SSGameMono
             {
                 Debug.Log("Unity: CreatWangLuoGuZhangUI......................................................");
                 m_WangLuoGuZhangUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                if (guZhang != WangLuoGuZhang.Post)
+                {
+                    m_WangLuoGuZhangUI.AddComponent<SSWangLuoGuZhang>();
+                }
             }
             else
             {

@@ -95,7 +95,7 @@ public class SetPanelUiRoot : MonoBehaviour
 		XkGameCtrl.SetActivePlayerOne(false);
 		XkGameCtrl.SetActivePlayerTwo(false);
 		XkGameCtrl.SetActivePlayerThree(false);
-		XkGameCtrl.SetActivePlayerFour(false);
+		//XkGameCtrl.SetActivePlayerFour(false);
 		//SetGameTextInfo();
 
 		SetStarObjActive(true);

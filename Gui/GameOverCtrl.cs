@@ -76,4 +76,5 @@ public enum GameLevel
 	Scene_1 = 2,
 	SetPanel = 3,
     RestartGame = 4,
+    ReconnectServer = 5,
 }

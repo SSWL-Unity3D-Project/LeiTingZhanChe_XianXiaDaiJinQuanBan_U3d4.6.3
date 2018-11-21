@@ -451,22 +451,36 @@ public class XKGlobalData
 
     /// <summary>
     /// 战车彩池.
+    /// 20元代金券奖池.
     /// </summary>
-    internal float m_ZhanCheCaiChi = 0;
+    internal float m_ZhanCheCaiChi_20 = 0;
+    /// <summary>
+    /// 战车彩池.
+    /// 50元代金券奖池.
+    /// </summary>
+    internal float m_ZhanCheCaiChi_50 = 0;
     /// <summary>
     /// 初始化战车彩池.
     /// </summary>
     void InitZhanCheCaiChi()
     {
-        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData"); //战车彩池信息
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_20"); //战车彩池信息
         if (info == null || info == "")
         {
             info = "0";
         }
-
         //int val = Convert.ToInt32(info);
         float val = MathConverter.StringToFloat(info);
-        m_ZhanCheCaiChi = val;
+        m_ZhanCheCaiChi_20 = val;
+        
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_50"); //战车彩池信息
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+        //int val = Convert.ToInt32(info);
+        val = MathConverter.StringToFloat(info);
+        m_ZhanCheCaiChi_50 = val;
     }
 
     /// <summary>
@@ -474,16 +488,30 @@ public class XKGlobalData
     /// </summary>
     public void ResetZhanCheCaiChi()
     {
-        SetZhanCheCaiChi(0);
+        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20);
+        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50);
     }
 
     /// <summary>
     /// 设置战车彩池.
     /// </summary>
-    public void SetZhanCheCaiChi(float val)
+    public void SetZhanCheCaiChi(float val, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuan)
     {
-        m_ZhanCheCaiChi = val;
-        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData", val.ToString()); //战车彩池信息
+        switch (daiJinQuan)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20:
+                {
+                    m_ZhanCheCaiChi_20 = val;
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_20", val.ToString()); //战车彩池信息
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50:
+                {
+                    m_ZhanCheCaiChi_50 = val;
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_50", val.ToString()); //战车彩池信息
+                    break;
+                }
+        }
     }
 
     /// <summary>

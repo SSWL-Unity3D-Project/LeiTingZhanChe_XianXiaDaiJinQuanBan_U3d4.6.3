@@ -99,7 +99,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 		case PlayerEnum.PlayerFour:
 			_InstanceFour = this;
 			XKGlobalData.SetCoinPlayerFour(XKGlobalData.CoinPlayerFour);
-			InputEventCtrl.GetInstance().ClickStartBtFourEvent += ClickStartBtFourEvent;
+			//InputEventCtrl.GetInstance().ClickStartBtFourEvent += ClickStartBtFourEvent;
 			break;
 		}
 		SetGameNeedCoin(XKGlobalData.GameNeedCoin);
