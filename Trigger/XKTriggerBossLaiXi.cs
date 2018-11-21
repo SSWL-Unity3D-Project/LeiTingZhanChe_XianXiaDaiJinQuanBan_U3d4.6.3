@@ -24,8 +24,12 @@ public class XKTriggerBossLaiXi : MonoBehaviour
 		if (other.GetComponent<XkPlayerCtrl>() == null) {
 			return;
 		}
-		XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
-	}
+		//XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI();
+        }
+    }
 
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()

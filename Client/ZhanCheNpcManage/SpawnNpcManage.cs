@@ -893,10 +893,16 @@ public class SpawnNpcManage : MonoBehaviour
                                 }
                             }
 
-                            if (XKBossLXCtrl.GetInstance() != null)
+                            //if (XKBossLXCtrl.GetInstance() != null)
+                            //{
+                            //    //播放boss来袭UI.
+                            //    XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                            //    AudioBeiJingCtrl.StopGameBeiJingAudio();
+                            //}
+                            //播放boss来袭UI.
+                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
                             {
-                                //播放boss来袭UI.
-                                XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI();
                                 AudioBeiJingCtrl.StopGameBeiJingAudio();
                             }
                             break;
@@ -939,10 +945,17 @@ public class SpawnNpcManage : MonoBehaviour
                                 }
                             }
 
-                            if (XKBossLXCtrl.GetInstance() != null)
+                            //if (XKBossLXCtrl.GetInstance() != null)
+                            //{
+                            //    //播放boss来袭UI.
+                            //    XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                            //    AudioBeiJingCtrl.StopGameBeiJingAudio();
+                            //}
+
+                            //播放boss来袭UI.
+                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
                             {
-                                //播放boss来袭UI.
-                                XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI();
                                 AudioBeiJingCtrl.StopGameBeiJingAudio();
                             }
                             break;

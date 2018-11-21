@@ -34,6 +34,22 @@ public enum GameJiTaiType
 
 public class XkGameCtrl : SSGameMono
 {
+    public enum GameVersion
+    {
+        /// <summary>
+        /// 测试版.
+        /// </summary>
+        CeShiBan = 0,
+        /// <summary>
+        /// 发布版.
+        /// </summary>
+        FaBuBan = 1,
+    }
+    /// <summary>
+    /// 游戏版本控制数据.
+    /// </summary>
+    public GameVersion m_GameVersion = GameVersion.FaBuBan;
+
     /// <summary>
     /// 彩票算法模式.
     /// </summary>
@@ -832,8 +848,8 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        if (Time.time - m_TimeLastMovie > 15 * 60f) //test
-        //if (Time.time - m_TimeLastMovie > 3600f * 2f)
+        //if (Time.time - m_TimeLastMovie > 15 * 60f) //test
+        if (Time.time - m_TimeLastMovie > 3600f * 2f)
         {
             m_TimeLastMovie = Time.time;
 

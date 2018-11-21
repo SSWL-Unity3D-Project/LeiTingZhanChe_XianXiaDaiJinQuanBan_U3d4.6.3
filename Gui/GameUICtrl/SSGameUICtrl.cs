@@ -29,6 +29,20 @@ public class SSGameUICtrl : SSGameMono
         //    //系统时间错误,请检查系统时间.
         //    CreatFixSystemTimeUI();
         //}
+
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            XkGameCtrl.GameVersion gameVersion = XkGameCtrl.GetInstance().m_GameVersion;
+            switch (gameVersion)
+            {
+                case XkGameCtrl.GameVersion.CeShiBan:
+                    {
+                        //测试版游戏.
+                        CreatCeShiUI();
+                        break;
+                    }
+            }
+        }
     }
 
     private void Start()
@@ -830,6 +844,12 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_WangLuoGuZhangUI != null)
         {
+            SSWangLuoGuZhang wangLuoGuZhangCom = m_WangLuoGuZhangUI.GetComponent<SSWangLuoGuZhang>();
+            if (wangLuoGuZhangCom != null && wangLuoGuZhangCom.IsLoadingReconnectServerScene == true)
+            {
+                //准备加载网络重连关卡.
+                return;
+            }
             UnityLog("RemoveWangLuoGuZhangUI...");
             Destroy(m_WangLuoGuZhangUI);
             m_WangLuoGuZhangUI = null;
@@ -931,6 +951,85 @@ public class SSGameUICtrl : SSGameMono
         {
             UnityLog("CreateCompanyLogo...");
             Instantiate(gmDataPrefab, m_GameUICenter);
+        }
+    }
+
+    /// <summary>
+    /// Boss来袭UI界面.
+    /// </summary>
+    internal XKBossLXCtrl m_BossLaiXiUI;
+    /// <summary>
+    /// 产生Boss来袭UI界面.
+    /// </summary>
+    internal void CreatBossLaiXiUI()
+    {
+        if (m_BossLaiXiUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/BossLaiXi/BossLaiXi";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatBossLaiXiUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_BossLaiXiUI = obj.GetComponent<XKBossLXCtrl>();
+                m_BossLaiXiUI.StartPlayBossLaiXi();
+            }
+            else
+            {
+                UnityLogWarning("CreatBossLaiXiUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除Boss来袭UI界面.
+    /// </summary>
+    internal void RemoveBossLaiXiUI()
+    {
+        if (m_BossLaiXiUI != null)
+        {
+            UnityLog("RemoveBossLaiXiUI...");
+            m_BossLaiXiUI.RemoveSelf();
+            m_BossLaiXiUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+    
+    /// <summary>
+    /// 游戏测试UI界面.
+    /// </summary>
+    internal GameObject m_CeShiUI;
+    /// <summary>
+    /// 产生游戏测试UI界面.
+    /// </summary>
+    internal void CreatCeShiUI()
+    {
+        if (m_CeShiUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/CeShiUI/CeShiUI";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatCeShiUI......................................................");
+                m_CeShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            }
+            else
+            {
+                UnityLogWarning("CreatCeShiUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏测试UI界面.
+    /// </summary>
+    internal void RemoveCeShiUI()
+    {
+        if (m_CeShiUI != null)
+        {
+            UnityLog("RemoveCeShiUI...");
+            Destroy(m_CeShiUI);
+            Resources.UnloadUnusedAssets();
         }
     }
 }

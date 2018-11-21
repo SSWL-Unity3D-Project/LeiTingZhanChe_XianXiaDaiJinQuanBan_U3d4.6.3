@@ -4,6 +4,7 @@ using System.Collections;
 public class SSWangLuoGuZhang : MonoBehaviour
 {
     float m_LastTimeVal = 0f;
+    internal bool IsLoadingReconnectServerScene = false;
 	// Use this for initialization
 	void Start()
     {
@@ -38,6 +39,7 @@ public class SSWangLuoGuZhang : MonoBehaviour
     
     IEnumerator DelayLoadingMovieScene()
     {
+        IsLoadingReconnectServerScene = true;
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
             SSUIRoot.GetInstance().m_GameUIManage.CreateCompanyLogo();

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 /**
  * boss来袭UI控制.
@@ -12,19 +11,6 @@ public class XKBossLXCtrl : MonoBehaviour
     public float m_ShowTime = 2f;
     public float m_UIAlpha = 1f;
     public UITexture m_UITexture;
-	static XKBossLXCtrl _Instance;
-	public static XKBossLXCtrl GetInstance()
-	{
-		return _Instance;
-	}
-
-	// Use this for initialization
-	void Start()
-	{
-		_Instance = this;
-		HiddenBossLaiXi();
-	}
-
 	float TimeLastBossLX;
 	void Update()
 	{
@@ -67,5 +53,20 @@ public class XKBossLXCtrl : MonoBehaviour
 			DestroyObject(twAlpha);
 		}
 		gameObject.SetActive(false);
-	}
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.RemoveBossLaiXiUI();
+        }
+    }
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Destroy(gameObject);
+        }
+    }
 }

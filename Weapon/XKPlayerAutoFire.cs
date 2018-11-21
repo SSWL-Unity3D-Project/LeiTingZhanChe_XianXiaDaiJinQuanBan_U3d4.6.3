@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define TEST_AUTO_FIRE
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -1234,8 +1235,14 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 	void ClickFireBtEvent(pcvr.ButtonState state)
 	{
-		//Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
-		if (state == pcvr.ButtonState.DOWN)
+        //Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
+#if TEST_AUTO_FIRE
+        if (state == pcvr.ButtonState.UP)
+        {
+            return;
+        }
+#endif
+        if (state == pcvr.ButtonState.DOWN)
         {
 			SetIsActiveFireBtJQ(true);
 			LastFireTimeJiQiang = -100f;
@@ -1247,7 +1254,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         }
 		else
         {
-			SetIsActiveFireBtJQ(false);
+            SetIsActiveFireBtJQ(false);
 		}
     }
 
@@ -1261,8 +1268,15 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
     void ClickFireDaoDanBtEvent(pcvr.ButtonState state)
 	{
-		//Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
-		if (state == pcvr.ButtonState.DOWN)
+        //Debug.Log("Unity:"+"ClickFireBtOneEvent***state "+state);
+#if TEST_AUTO_FIRE
+        if (state == pcvr.ButtonState.UP)
+        {
+            return;
+        }
+#endif
+
+        if (state == pcvr.ButtonState.DOWN)
         {
             IsActiveFireBtZP = true;
             //if (pcvr.IsHongDDShouBing)

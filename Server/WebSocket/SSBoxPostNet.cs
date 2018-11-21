@@ -25,19 +25,26 @@ public class SSBoxPostNet : MonoBehaviour
 
     public void Init()
     {
-        string boxNum = "";
+        string boxNum = m_GamePadState.ToString();
 #if UNITY_STANDALONE_WIN
-        NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
-        foreach (NetworkInterface ni in nis)
+        try
         {
-            //Debug.Log("Name = " + ni.Name);
-            //Debug.Log("Des = " + ni.Description);
-            //Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
-            Debug.Log("Unity: Mac = " + ni.GetPhysicalAddress().ToString());
-            //Debug.Log("------------------------------------------------");
-            //boxNum = UnityEngine.Random.Range(0, 9) + ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
-            boxNum = ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
-            break;
+            NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface ni in nis)
+            {
+                //Debug.Log("Name = " + ni.Name);
+                //Debug.Log("Des = " + ni.Description);
+                //Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
+                Debug.Log("Unity: Mac = " + ni.GetPhysicalAddress().ToString());
+                //Debug.Log("------------------------------------------------");
+                //boxNum = UnityEngine.Random.Range(0, 9) + ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
+                boxNum = ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
+                break;
+            }
+        }
+        catch (Exception ex)
+        {
+            SSDebug.LogWarning("Mac get error! ex == " + ex);
         }
 #endif
 
