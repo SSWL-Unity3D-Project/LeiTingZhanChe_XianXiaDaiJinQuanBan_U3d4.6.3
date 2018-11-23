@@ -670,11 +670,11 @@ public class XkGameCtrl : SSGameMono
             gameObject.AddComponent<SSDebugCaiPiaoInfo>();
 #endif
         }
-        catch (System.Exception e)
+        catch (System.Exception ex)
 		{
 			Debug.Log("Unity:!!!!!!!!!!!!!XKGameCtrl!!!!!!!!!!!!!!!!!!");
-			Debug.LogException(e);
-			Debug.Log("Unity:2" + e.Message);
+			Debug.LogException(ex);
+			Debug.Log("Unity:2" + ex.Message);
 		}
 	}
 
@@ -848,18 +848,18 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        //if (Time.time - m_TimeLastMovie > 15 * 60f) //test
+        //if (Time.time - m_TimeLastMovie > 15f * 60f) //test
         if (Time.time - m_TimeLastMovie > 3600f * 2f)
         {
             m_TimeLastMovie = Time.time;
 
 #if !UNITY_EDITOR
-            StartCoroutine(DelayLoadingMovieScene());
+            StartCoroutine(DelayLoadingRestartGameScene());
 #endif
         }
     }
 
-    IEnumerator DelayLoadingMovieScene()
+    IEnumerator DelayLoadingRestartGameScene()
     {
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
@@ -884,8 +884,7 @@ public class XkGameCtrl : SSGameMono
         } while (true);
 
         yield return new WaitForSeconds(0.2f);
-        //LoadingGameMovie();
-        //RestartGame();
+        IsLoadingLevel = false;
         LoadingRestartGameScene();
     }
 
@@ -915,6 +914,11 @@ public class XkGameCtrl : SSGameMono
 
             if (Input.GetKeyUp(KeyCode.P))
             {
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateChuPiaoLvInfo(0.1f, 0.2f, 0.3f, 0.4f);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanInfo(100f, 200f, 300f, 400f);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(100f, 200f, 300f, 400f);
+                //SetGameCameraIsMoveing(false, NpcJiFenEnum.CheLiang);
+
                 //if (DaoJiShiCtrl.GetInstanceOne() != null)
                 //{
                 //    DaoJiShiCtrl.GetInstanceOne().WXPlayerStopGameDaoJiShi();
@@ -978,7 +982,7 @@ public class XkGameCtrl : SSGameMono
 
 	void DelayResetIsLoadingLevel()
 	{
-		XkGameCtrl.ResetIsLoadingLevel();
+		ResetIsLoadingLevel();
 		Debug.Log("Unity:!!!!!!DelayResetIsLoadingLevel!!!!!!");
 
 	}
@@ -2121,8 +2125,8 @@ public class XkGameCtrl : SSGameMono
 		}
 
 		GameMovieCtrl.GetInstance().StopPlayMovie();
-		XkGameCtrl.IsLoadingLevel = true;
-		if (!XkGameCtrl.IsGameOnQuit) {
+		IsLoadingLevel = true;
+		if (IsGameOnQuit == false) {
 			System.GC.Collect();
 			Application.LoadLevel((int)GameLevel.Scene_1);
 		}
@@ -2133,6 +2137,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     internal void LoadingReconnectServerGameScene()
     {
+        SSDebug.Log("LoadingReconnectServerGameScene -> IsLoadingLevel ================== " + IsLoadingLevel);
         if (IsLoadingLevel)
         {
             return;
@@ -2158,6 +2163,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     void LoadingRestartGameScene()
     {
+        SSDebug.Log("LoadingRestartGameScene -> IsLoadingLevel ================== " + IsLoadingLevel);
         if (IsLoadingLevel)
         {
             return;
@@ -2180,7 +2186,8 @@ public class XkGameCtrl : SSGameMono
 
     public static void LoadingGameMovie(int key = 0)
 	{
-		if (XkGameCtrl.IsLoadingLevel) {
+		if (IsLoadingLevel)
+        {
 			return;
 		}
 
@@ -3458,8 +3465,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     public void SetGameCameraIsMoveing(bool isMoveing, NpcJiFenEnum state)
     {
-        //Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
-
+        Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
         if (state == NpcJiFenEnum.Boss)
         {
             if (isMoveing == true)

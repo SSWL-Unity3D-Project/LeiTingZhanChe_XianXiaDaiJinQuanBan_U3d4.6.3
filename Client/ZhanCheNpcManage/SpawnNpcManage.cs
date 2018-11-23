@@ -368,7 +368,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 获取可以被哪个玩家击爆,通过击爆规则的产生.
     /// </summary>
-    public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuan = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20)
+    public PlayerEnum GetPlayerIndexByJiBaoGaiLv(NpcState npcType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuan = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         PlayerEnum index = PlayerEnum.Null;
         if (XkGameCtrl.PlayerActiveNum <= 1)

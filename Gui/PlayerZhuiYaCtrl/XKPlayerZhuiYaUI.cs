@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XKPlayerZhuiYaUI : MonoBehaviour
 {
@@ -29,10 +28,10 @@ public class XKPlayerZhuiYaUI : MonoBehaviour
 	
 	void HiddenPlayerFenShu()
 	{
-		TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
-		DestroyObject(twPos);
-		TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
-		DestroyObject(twAlp);
-		gameObject.SetActive(false);
+		//TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
+		//DestroyObject(twPos);
+		//TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
+		//DestroyObject(twAlp);
+        Destroy(gameObject);
 	}
 }

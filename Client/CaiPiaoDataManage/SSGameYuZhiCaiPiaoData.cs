@@ -44,8 +44,8 @@ public class SSGameYuZhiCaiPiaoData
         }
         else
         {
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_20 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_20;
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_50 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_50;
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_20;
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_02 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_50;
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai = XKGlobalData.GetInstance().m_JPBossCaiChi;
         }
     }
@@ -164,7 +164,7 @@ public class SSGameYuZhiCaiPiaoData
             if (XkPlayerCtrl.GetInstanceFeiJi() != null)
             {
                 //对战车彩池进行补充.
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_20 += subVal;
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01 += subVal;
             }
         }
     }

@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class XKFenShuBeiLvCtrl : MonoBehaviour
 {
-	public GameObject PlayerFenShuBeiLvPre;
-	List<XKFenShuBeiLvMove> FenShuBeiLvList;
-	const int MaxPlayerFS = 12;
+	//public GameObject PlayerFenShuBeiLvPre;
+	//List<XKFenShuBeiLvMove> FenShuBeiLvList;
+	//const int MaxPlayerFS = 12;
 	static  XKFenShuBeiLvCtrl _Instance;
 	public static XKFenShuBeiLvCtrl GetInstance()
 	{
@@ -16,34 +14,47 @@ public class XKFenShuBeiLvCtrl : MonoBehaviour
 	void Start()
 	{
 		_Instance = this;
-		FenShuBeiLvList = new List<XKFenShuBeiLvMove>();
-		GameObject obj = null;
-		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = (GameObject)Instantiate(PlayerFenShuBeiLvPre);
-			obj.transform.parent = transform;
-			obj.transform.localScale = new Vector3(1f, 1f, 1f);
-			obj.transform.localPosition = Vector3.zero;
-			FenShuBeiLvList.Add(obj.GetComponent<XKFenShuBeiLvMove>());
-			obj.SetActive(false);
-		}
+		//FenShuBeiLvList = new List<XKFenShuBeiLvMove>();
+		//GameObject obj = null;
+		//for (int i = 0; i < MaxPlayerFS; i++) {
+		//	obj = (GameObject)Instantiate(PlayerFenShuBeiLvPre);
+		//	obj.transform.parent = transform;
+		//	obj.transform.localScale = new Vector3(1f, 1f, 1f);
+		//	obj.transform.localPosition = Vector3.zero;
+		//	FenShuBeiLvList.Add(obj.GetComponent<XKFenShuBeiLvMove>());
+		//	obj.SetActive(false);
+		//}
 	}
 	
 	XKFenShuBeiLvMove GetXKFenShuBeiLvMove()
 	{
-		GameObject obj = null;
-		int valTmp = 0;
-		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = FenShuBeiLvList[i].gameObject;
-			if (obj.activeSelf) {
-				continue;
-			}
-			valTmp = i;
-			break;
-		}
-		return FenShuBeiLvList[valTmp];
-	}
-	
-	public void ShowPlayerFenShuBeiLv(PlayerEnum indexVal)
+		//GameObject obj = null;
+		//int valTmp = 0;
+		//for (int i = 0; i < MaxPlayerFS; i++) {
+		//	obj = FenShuBeiLvList[i].gameObject;
+		//	if (obj.activeSelf) {
+		//		continue;
+		//	}
+		//	valTmp = i;
+		//	break;
+		//}
+		//return FenShuBeiLvList[valTmp];
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/DaoJuMaoZi/FenShuBeiLv");
+        if (gmDataPrefab == null)
+        {
+            SSDebug.LogWarning("GetXKFenShuBeiLvMove -> gmDataPrefab was null");
+            return null;
+        }
+
+        GameObject obj = (GameObject)Instantiate(gmDataPrefab);
+        obj.transform.parent = transform;
+        obj.transform.localScale = new Vector3(1f, 1f, 1f);
+        obj.transform.localPosition = Vector3.zero;
+        return obj.GetComponent<XKFenShuBeiLvMove>();
+    }
+
+    public void ShowPlayerFenShuBeiLv(PlayerEnum indexVal)
 	{
 		XKFenShuBeiLvMove fenShuBeiLvMoveCom = GetXKFenShuBeiLvMove();
 		if (fenShuBeiLvMoveCom == null) {

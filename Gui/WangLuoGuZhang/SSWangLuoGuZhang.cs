@@ -33,11 +33,11 @@ public class SSWangLuoGuZhang : MonoBehaviour
                 //Debug.LogWarning("player have play game...");
                 return;
             }
-            StartCoroutine(DelayLoadingMovieScene());
+            StartCoroutine(DelayLoadingReconectServerGameScene());
         }
 	}
     
-    IEnumerator DelayLoadingMovieScene()
+    IEnumerator DelayLoadingReconectServerGameScene()
     {
         IsLoadingReconnectServerScene = true;
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -68,6 +68,8 @@ public class SSWangLuoGuZhang : MonoBehaviour
             }
         } while (true);
         yield return new WaitForSeconds(0.2f);
+
+        XkGameCtrl.IsLoadingLevel = false;
         XkGameCtrl.GetInstance().LoadingReconnectServerGameScene();
     }
 }

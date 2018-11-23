@@ -823,7 +823,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatWangLuoGuZhangUI......................................................");
+                Debug.Log("Unity: CreatWangLuoGuZhangUI................................. guZhang == " + guZhang);
                 m_WangLuoGuZhangUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 if (guZhang != WangLuoGuZhang.Post)
                 {

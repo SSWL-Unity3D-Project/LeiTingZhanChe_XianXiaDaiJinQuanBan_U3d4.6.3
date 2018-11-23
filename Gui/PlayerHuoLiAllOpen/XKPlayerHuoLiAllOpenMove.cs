@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XKPlayerHuoLiAllOpenMove : MonoBehaviour
 {
@@ -32,10 +31,11 @@ public class XKPlayerHuoLiAllOpenMove : MonoBehaviour
 	
 	void HiddenPlayerHuoLiOpen()
 	{
-		TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
-		DestroyObject(twPos);
-		TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
-		DestroyObject(twAlp);
-		gameObject.SetActive(false);
+        //TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
+        //DestroyObject(twPos);
+        //TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
+        //DestroyObject(twAlp);
+        //gameObject.SetActive(false);
+        Destroy(gameObject);
 	}
 }

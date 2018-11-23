@@ -16,7 +16,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// <summary>
     /// 彩票战车npc的代金券变量.
     /// </summary>
-    internal SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20;
+    internal SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
     bool _IsZhanCheNpc = false;
     /// <summary>
     /// 是否是战车npc.
@@ -796,11 +796,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
         int rv = Random.Range(0, 100) % 2;
         if (rv == 0)
         {
-            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20;
+            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
         }
         else
         {
-            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50;
+            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02;
         }
 
         //彩票战车npc.

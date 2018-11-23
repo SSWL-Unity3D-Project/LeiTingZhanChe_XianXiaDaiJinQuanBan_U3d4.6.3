@@ -695,6 +695,7 @@ public class SSBoxPostNet : MonoBehaviour
                     break;
                 }
         }
+        //worth = 100;
 #endif
         Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
         Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);

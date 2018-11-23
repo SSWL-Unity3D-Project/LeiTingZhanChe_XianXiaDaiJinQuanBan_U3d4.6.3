@@ -11,9 +11,9 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
         //一币兑换彩票数.
         info += "coinToCard == " + XKGlobalData.GetInstance().m_CoinToCard;
         //战车彩池数据.
-        float zhanCheJiangChi_20 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_20;
+        float zhanCheJiangChi_20 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01;
         info += ", zhanCheJiangChi_20 == " + zhanCheJiangChi_20.ToString("f2");
-        float zhanCheJiangChi_50 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_50;
+        float zhanCheJiangChi_50 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_02;
         info += ", zhanCheJiangChi_50 == " + zhanCheJiangChi_50.ToString("f2");
         //JPBoss彩池数据.
         float jpBossJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai;

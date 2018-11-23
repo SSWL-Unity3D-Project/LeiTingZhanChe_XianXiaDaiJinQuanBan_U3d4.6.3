@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
-public class XKPlayerZhuiYaCtrl : MonoBehaviour
+public class XKPlayerZhuiYaCtrl : SSGameMono
 {
-	public GameObject PlayerZhuiYaUI;
-	List<XKPlayerZhuiYaUI> ZhuiYaUIList;
-	int MaxPlayerFS = 12;
+	//public GameObject PlayerZhuiYaUI;
+	//List<XKPlayerZhuiYaUI> ZhuiYaUIList;
+	//int MaxPlayerFS = 12;
 	static XKPlayerZhuiYaCtrl _Instance;
 	public static XKPlayerZhuiYaCtrl GetInstance()
 	{
@@ -14,34 +12,46 @@ public class XKPlayerZhuiYaCtrl : MonoBehaviour
 	}
 	// Use this for initialization
 	void Start()
-	{
-		_Instance = this;
-		ZhuiYaUIList = new List<XKPlayerZhuiYaUI>();
-		GameObject obj = null;
-		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = (GameObject)Instantiate(PlayerZhuiYaUI);
-			obj.transform.parent = transform;
-			obj.transform.localScale = new Vector3(1f, 1f, 1f);
-			obj.transform.localPosition = Vector3.zero;
-			ZhuiYaUIList.Add(obj.GetComponent<XKPlayerZhuiYaUI>());
-			obj.SetActive(false);
-		}
+    {
+        _Instance = this;
+        //_Instance = this;
+		//ZhuiYaUIList = new List<XKPlayerZhuiYaUI>();
+		//GameObject obj = null;
+		//for (int i = 0; i < MaxPlayerFS; i++) {
+		//	obj = (GameObject)Instantiate(gmDataPrefab);
+		//	obj.transform.parent = transform;
+		//	obj.transform.localScale = new Vector3(1f, 1f, 1f);
+		//	obj.transform.localPosition = Vector3.zero;
+		//	ZhuiYaUIList.Add(obj.GetComponent<XKPlayerZhuiYaUI>());
+		//	obj.SetActive(false);
+		//}
 	}
 	
 	XKPlayerZhuiYaUI GetXKPlayerZhuiYaUI()
 	{
-		GameObject obj = null;
-		int valTmp = 0;
-		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = ZhuiYaUIList[i].gameObject;
-			if (obj.activeSelf) {
-				continue;
-			}
-			valTmp = i;
-			break;
-		}
-		return ZhuiYaUIList[valTmp];
-	}
+		//GameObject obj = null;
+		//int valTmp = 0;
+		//for (int i = 0; i < MaxPlayerFS; i++) {
+		//	obj = ZhuiYaUIList[i].gameObject;
+		//	if (obj.activeSelf) {
+		//		continue;
+		//	}
+		//	valTmp = i;
+		//	break;
+		//}
+		//return ZhuiYaUIList[valTmp];
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/PlayerZhuiYa/PlayerZhuiYaUI");
+        if (gmDataPrefab == null)
+        {
+            SSDebug.LogWarning("GetXKPlayerZhuiYaUI -> gmDataPrefab was null");
+            return null;
+        }
+        GameObject obj = (GameObject)Instantiate(gmDataPrefab);
+        obj.transform.parent = transform;
+        obj.transform.localScale = new Vector3(1f, 1f, 1f);
+        obj.transform.localPosition = Vector3.zero;
+        return obj.GetComponent<XKPlayerZhuiYaUI>();
+    }
 	
 	public void ShowPlayerZhuiYaUI(PlayerEnum indexVal)
 	{

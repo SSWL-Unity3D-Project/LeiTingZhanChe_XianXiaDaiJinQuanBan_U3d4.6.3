@@ -64,7 +64,11 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 	Transform AimMvToMarkTran;
 	bool IsStartMovePlayerByMark;
 	Vector3 ForwardMoveVal;
-	Vector3 EndPos;
+    /// <summary>
+    /// 游戏摄像机到目标点的最大距离.
+    /// </summary>
+    float m_MaxDistanceToNode = 1000f;
+    Vector3 EndPos;
 	Quaternion RotationStart;
 	Quaternion RotationEnd;
 	float TimeRotation;
@@ -532,7 +536,8 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		
 		EndPos = PathNodes[1];
 		ForwardMoveVal = Vector3.Normalize(EndPos - tranArray[0].position);
-		SpeedB = markScript.GetMvSpeed();
+        m_MaxDistanceToNode = Vector3.Distance(EndPos, transform.position);
+        SpeedB = markScript.GetMvSpeed();
 		float disVal = 0f;
 		int maxNodes = PathNodes.Length;
 		for (int i = 1; i < maxNodes; i++) {
@@ -749,9 +754,12 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
             //    Debug.LogWarning("Unity: dorVal ================= " + dotVal);
             //}
 
-            if (disAimNode <= ds || dotVal <= 0f) {
-//				Debug.Log("Unity:"+"Over, ds "+ds+", realDis "+Vector3.Distance(transform.position, EndPos)+", time "+dTime);
-				countNode++;
+            //bool isRun = false;
+            //if (((disAimNode <= ds || dotVal <= 0f) && isRun == true) || m_MaxDistanceToNode < disAimNode) {
+            if (disAimNode <= ds || dotVal <= 0f || (m_MaxDistanceToNode * 5f < disAimNode)) {
+                //Debug.Log("Unity:" + "Over, ds " + ds + ", m_MaxDistanceToNode " + m_MaxDistanceToNode
+                //    + ", disAimNode " + disAimNode);
+                countNode++;
 				float disVal = ds - disAimNode;
 				float disNode = 0f;
 				int count = 0;
@@ -791,6 +799,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 					SmothMovePlayerCamera();
 					EndPos = PathNodes[countNode+1]; //更新EndPos.
 					ForwardMoveVal = Vector3.Normalize(EndPos - transform.position); //更新ForwardMoveVal.
+                    m_MaxDistanceToNode = Vector3.Distance(EndPos, transform.position);
 
 //					Debug.Log("Unity:"+"***realDis "+Vector3.Distance(transform.position, EndPos));
 //					Debug.Log("Unity:"+"***ForwardMoveVal "+Vector3.Distance(ForwardMoveVal, Vector3.zero));
@@ -1148,7 +1157,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
     {
         if (m_CameraMoveAni != null)
         {
-            //Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
+            Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
             if (isMove != IsCameraPosWeiDong)
             {
                 if (isMove == true)

@@ -488,8 +488,8 @@ public class XKGlobalData
     /// </summary>
     public void ResetZhanCheCaiChi()
     {
-        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20);
-        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50);
+        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+        SetZhanCheCaiChi(0, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
     }
 
     /// <summary>
@@ -499,13 +499,13 @@ public class XKGlobalData
     {
         switch (daiJinQuan)
         {
-            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan20:
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
                 {
                     m_ZhanCheCaiChi_20 = val;
                     HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_20", val.ToString()); //战车彩池信息
                     break;
                 }
-            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.DaiJinQuan50:
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
                 {
                     m_ZhanCheCaiChi_50 = val;
                     HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_50", val.ToString()); //战车彩池信息
