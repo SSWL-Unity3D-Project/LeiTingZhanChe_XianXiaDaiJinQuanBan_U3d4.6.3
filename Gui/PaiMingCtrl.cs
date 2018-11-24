@@ -65,8 +65,12 @@ public class PaiMingCtrl : MonoBehaviour
 	const int MaxGameFenShu = 99999999;
 	public void ShowGamePaiMing()
 	{
-		//Debug.Log("Unity:"+"ShowGamePaiMing...");
-		int timeShengYu = GameTimeBossCtrl.GetInstance().GetTimeBossResidual();
+        //Debug.Log("Unity:"+"ShowGamePaiMing...");
+        int timeShengYu = 0;
+        if (GameTimeBossCtrl.GetInstance() != null)
+        {
+            timeShengYu = GameTimeBossCtrl.GetInstance().GetTimeBossResidual();
+        }
 		//timeShengYu = 51; //test.
 		BossJiFenCtrl.GetInstance().ShowBossJiFenInfo(timeShengYu);
 

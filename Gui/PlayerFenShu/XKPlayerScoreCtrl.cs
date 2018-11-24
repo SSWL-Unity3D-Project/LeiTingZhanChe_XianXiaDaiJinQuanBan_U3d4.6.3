@@ -211,9 +211,11 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 	void SetActiveZuiGaoFen(bool isActive)
 	{
 		if (isActive) {
-			if ((JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())
-			    || JiFenJieMianCtrl.GetInstance() == null) {
-				isActive = false;
+            //if ((JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())
+            //    || JiFenJieMianCtrl.GetInstance() == null) {
+            if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())
+            {
+                isActive = false;
 			}
             else if (gameObject.activeInHierarchy == false)
             {

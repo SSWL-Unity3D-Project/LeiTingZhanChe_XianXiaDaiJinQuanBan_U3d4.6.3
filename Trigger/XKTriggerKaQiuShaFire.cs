@@ -45,7 +45,7 @@ public class XKTriggerKaQiuShaFire : MonoBehaviour
 			return; //test;
 		}
 		Debug.Log("Unity:"+"XKTriggerKaQiuShaFire -> kaQiuSha fire...");
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
 			return;
 		}
 

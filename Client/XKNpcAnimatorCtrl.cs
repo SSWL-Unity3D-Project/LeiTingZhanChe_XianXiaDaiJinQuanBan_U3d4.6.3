@@ -206,7 +206,7 @@ public class XKNpcAnimatorCtrl : MonoBehaviour {
 			}
 		}
 				
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()
+		if ((JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())
 		    || GameOverCtrl.IsShowGameOver) {
 			return;
 		}

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class QuanBuTongGuanCtrl : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class QuanBuTongGuanCtrl : MonoBehaviour
 		return _Instance;
 	}
 	// Use this for initialization
-	void Start()
+	internal void Init()
 	{
 		_Instance = this;
 		HiddenQuanBuTongGuan();
@@ -42,4 +43,14 @@ public class QuanBuTongGuanCtrl : MonoBehaviour
 	{
 		HiddenQuanBuTongGuan(1);
 	}
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Destroy(gameObject);
+        }
+    }
 }

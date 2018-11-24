@@ -42,7 +42,11 @@ public class XKTriggerOpenStage : MonoBehaviour
 		if (playerScript == null) {
 			return;
 		}
-		XKGameStageCtrl.GetInstance().MoveIntoStageUI();
+
+        if (XKGameStageCtrl.GetInstance() != null)
+        {
+            XKGameStageCtrl.GetInstance().MoveIntoStageUI();
+        }
 		gameObject.SetActive(false);
 	}
 }

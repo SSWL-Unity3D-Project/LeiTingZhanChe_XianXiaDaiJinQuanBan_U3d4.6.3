@@ -672,29 +672,61 @@ public class SSBoxPostNet : MonoBehaviour
         int worth = account * 100; //单位从元转换为分.
 #if TEST_DAI_JIN_QUAN
         //测试代金券.
-        switch (account)
+        int suiJiDaoJuDaiJinQuan = 10;
+        int zhanCheDaiJinQuan_01 = 5;
+        int zhanCheDaiJinQuan_02 = 20;
+        int jpBossDaiJinQuan = 200;
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
         {
-            case 1:
-                {
-                    worth = 1; //1分钱.
-                    break;
-                }
-            case 20:
-                {
-                    worth = 2; //2分钱.
-                    break;
-                }
-            case 50:
-                {
-                    worth = 3; //3分钱.
-                    break;
-                }
-            case 100:
-                {
-                    worth = 4; //4分钱.
-                    break;
-                }
+            suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
+            zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
+            zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
+            jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
         }
+
+        if (account == suiJiDaoJuDaiJinQuan)
+        {
+            worth = 1; //1分钱.
+        }
+        else if (account == zhanCheDaiJinQuan_01)
+        {
+            worth = 2; //2分钱.
+        }
+        else if (account == zhanCheDaiJinQuan_02)
+        {
+            worth = 3; //3分钱.
+        }
+        else if (account == jpBossDaiJinQuan)
+        {
+            worth = 4; //4分钱.
+        }
+
+        //switch (account)
+        //{
+        //    case 1:
+        //        {
+        //            worth = 1; //1分钱.
+        //            break;
+        //        }
+        //    case 20:
+        //        {
+        //            worth = 2; //2分钱.
+        //            break;
+        //        }
+        //    case 50:
+        //        {
+        //            worth = 3; //3分钱.
+        //            break;
+        //        }
+        //    case 100:
+        //        {
+        //            worth = 4; //4分钱.
+        //            break;
+        //        }
+        //}
         //worth = 100;
 #endif
         Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");

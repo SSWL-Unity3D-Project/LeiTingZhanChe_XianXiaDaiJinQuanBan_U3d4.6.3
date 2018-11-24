@@ -14,7 +14,7 @@ public class GameStartTimeCtrl : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Awake()
+	internal void Init()
 	{
 		_Instance = this;
 		StartTimeTexture = GetComponent<UITexture>();
@@ -72,7 +72,10 @@ public class GameStartTimeCtrl : MonoBehaviour
 			gameObject.SetActive(false);
 			ScreenDanHeiCtrl.GetInstance().ActiveGameUiCamera();
 			XkPlayerCtrl.GetInstanceFeiJi().RestartMovePlayer();
-			GameTimeCtrl.GetInstance().ActiveIsCheckTimeSprite();
+            if (GameTimeCtrl.GetInstance() != null)
+            {
+                GameTimeCtrl.GetInstance().ActiveIsCheckTimeSprite();
+            }
 			return;
 		}
 
@@ -86,6 +89,25 @@ public class GameStartTimeCtrl : MonoBehaviour
         gameObject.SetActive(false);
         ScreenDanHeiCtrl.GetInstance().ActiveGameUiCamera();
         XkPlayerCtrl.GetInstanceFeiJi().RestartMovePlayer();
-        GameTimeCtrl.GetInstance().ActiveIsCheckTimeSprite();
+        if (GameTimeCtrl.GetInstance() != null)
+        {
+            GameTimeCtrl.GetInstance().ActiveIsCheckTimeSprite();
+        }
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.RemoveGameStartTimeUI();
+        }
+    }
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            _Instance = null;
+            Destroy(gameObject);
+        }
     }
 }

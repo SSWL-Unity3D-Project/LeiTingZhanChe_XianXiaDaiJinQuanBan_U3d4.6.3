@@ -41,7 +41,7 @@ public class XKTriggerStopMovePlayer : MonoBehaviour {
 			return; //test;
 		}
 
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
 			return;
 		}
 

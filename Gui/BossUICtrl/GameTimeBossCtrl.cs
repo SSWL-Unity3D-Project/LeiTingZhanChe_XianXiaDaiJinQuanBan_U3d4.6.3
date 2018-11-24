@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
 public class GameTimeBossCtrl : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class GameTimeBossCtrl : MonoBehaviour
 	}
 	
 	// Use this for initialization
-	void Awake()
+	internal void Init()
 	{
 		_Instance = this;
 		UIAni = GetComponent<UISpriteAnimation>();
@@ -35,7 +35,19 @@ public class GameTimeBossCtrl : MonoBehaviour
 	bool IsAddTime = true;
 	bool IsCheckTimeSprite;
 	int TimeBossVal;
-	int TimeBossUse;
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            _Instance = null;
+            Destroy(gameObject);
+        }
+    }
+
+    int TimeBossUse;
 	string TimeMiaoGeWeiStr = "";
 	/**
 	 * 获取boss战的剩余时间.
@@ -96,7 +108,10 @@ public class GameTimeBossCtrl : MonoBehaviour
 		    && TimeSprite[2].spriteName == "p1_0"
 		    && TimeSprite[1].spriteName == "p1_0"
 		    && TimeSprite[0].spriteName == "p1_0") {
-			XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(0f);
+            if (XKBossXueTiaoCtrl.GetInstance() != null)
+            {
+                XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(0f);
+            }
 			Debug.Log("Unity:"+"bossTimeOver...");
 			return;
 		}

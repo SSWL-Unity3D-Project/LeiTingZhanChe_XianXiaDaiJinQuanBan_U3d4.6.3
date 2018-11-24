@@ -400,7 +400,7 @@ public class XKCannonCtrl : MonoBehaviour {
 			if (IsStopAnimation
 			    || !IsDoFireAnimation
 			    || Time.realtimeSinceStartup - TimeStartSpawn < TimeFireDelay
-			    || JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+			    || (JiFenJieMianCtrl.GetInstance() && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())) {
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}
@@ -523,7 +523,7 @@ public class XKCannonCtrl : MonoBehaviour {
 			if (!IsDoFireAnimation
 			    || IsStopAnimation
 			    || Time.realtimeSinceStartup - TimeStartSpawn < TimeFireDelay
-			    || JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+			    || (JiFenJieMianCtrl.GetInstance() && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())) {
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}

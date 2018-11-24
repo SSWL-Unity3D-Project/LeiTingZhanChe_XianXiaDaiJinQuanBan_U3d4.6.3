@@ -589,7 +589,9 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		float timeLastVal = Time.realtimeSinceStartup;
 		float timeRotationVal = 0f;
 		do {
-			if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask() && XkGameCtrl.IsLoadingLevel) {
+			if (JiFenJieMianCtrl.GetInstance() != null
+                && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()
+                && XkGameCtrl.IsLoadingLevel) {
 				Debug.Log("Unity:"+"MovePlayerByMarkSpeed -> IsLoadingLevel "+XkGameCtrl.IsLoadingLevel
 				          +", IsShowFinishTask "+JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask());
 				yield break;

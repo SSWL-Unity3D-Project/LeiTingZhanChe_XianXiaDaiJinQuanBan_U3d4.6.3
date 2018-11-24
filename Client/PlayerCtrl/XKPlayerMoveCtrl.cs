@@ -1391,7 +1391,9 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		}
 
 		if (isResetPosition) {
-			if (!IsWuDiState && GameTimeCtrl.GetInstance().GetIsCheckTimeSprite()) {
+			if (!IsWuDiState
+                && GameTimeCtrl.GetInstance() != null
+                && GameTimeCtrl.GetInstance().GetIsCheckTimeSprite()) {
 				XkGameCtrl.GetInstance().SubGamePlayerHealth(PlayerIndex,
 				                                             XKPlayerGlobalDt.GetInstance().DamageFanWeiOut,
 				                                             true);

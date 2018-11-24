@@ -218,22 +218,18 @@ public class SSCaiPiaoDataManage : SSGameMono
                 + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
         /// <summary>
-        /// 战车出票条件(游戏启动币数乘以该值).
-        /// </summary>
-        float ZhanCheChuPiaoTiaoJian = 2.5f;
-        /// <summary>
         /// 随机道具出票条件(游戏启动币数乘以该值).
         /// 随机道具代金券.
         /// </summary>
-        float SuiJiDaoJuDaiJinQuan = 10f;
+        internal float SuiJiDaoJuDaiJinQuan = 10f;
         /// <summary>
         /// 战车代金券01出票条件(游戏启动币数乘以该值).
         /// </summary>
-        float ZhanCheDaiJinQuan_01 = 5f;
+        internal float ZhanCheDaiJinQuan_01 = 5f;
         /// <summary>
         /// 战车代金券02出票条件(游戏启动币数乘以该值).
         /// </summary>
-        float ZhanCheDaiJinQuan_02 = 20f;
+        internal float ZhanCheDaiJinQuan_02 = 20f;
         /// <summary>
         /// JPBoss出票条件(游戏启动币数乘以该值).
         /// JPBoss代金券200元.
@@ -251,7 +247,6 @@ public class SSCaiPiaoDataManage : SSGameMono
             SSDebug.Log("UpdateDaiJinQuanInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
                 + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
-        //int _SuiJiDaoJuDeCai = 0;
         /// <summary>
         /// 随机道具得彩累积数量.
         /// </summary>
@@ -260,12 +255,10 @@ public class SSCaiPiaoDataManage : SSGameMono
             set
             {
                 XKGlobalData.GetInstance().SetDaoJuCaiChi(value);
-                //_SuiJiDaoJuDeCai = value;
             }
             get
             {
                 return XKGlobalData.GetInstance().m_DaoJuCaiChi;
-                //return _SuiJiDaoJuDeCai;
             }
         }
         float _ZhanCheDeCai_01 = 0;
@@ -588,7 +581,6 @@ public class SSCaiPiaoDataManage : SSGameMono
             {
                 case DeCaiState.ZhanChe:
                     {
-                        chuPiaoTiaoJian = ZhanCheChuPiaoTiaoJian;
                         if (daiJinQuan == DaiJinQuanState.ZhanCheDaiJinQuan_02)
                         {
                             chuPiaoTiaoJian = ZhanCheDaiJinQuan_02;

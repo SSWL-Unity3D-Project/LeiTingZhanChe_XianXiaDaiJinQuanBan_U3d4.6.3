@@ -127,7 +127,10 @@ public class XunZhangZPCtrl : MonoBehaviour {
 
 	void DelayStopJiFenPanel()
 	{
-		JiFenJieMianCtrl.GetInstance().StopJiFenTime();
+        if (JiFenJieMianCtrl.GetInstance() != null)
+        {
+            JiFenJieMianCtrl.GetInstance().StopJiFenTime();
+        }
 	}
 
 	public void ShowXunZhangBJXue()

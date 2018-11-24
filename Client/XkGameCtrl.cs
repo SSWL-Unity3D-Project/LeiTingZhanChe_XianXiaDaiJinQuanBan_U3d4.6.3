@@ -1,4 +1,5 @@
-#define TEST_UPDATA_GAME
+//#define USE_CHECK_LOAD_MOVIE_SCENE
+//#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Assets.XKGame.Script.GamePay;
 using System.Collections;
+using Assets.XKGame.Script.Server.WebSocket;
 
 public enum NpcJiFenEnum
 {
@@ -914,9 +916,11 @@ public class XkGameCtrl : SSGameMono
 
             if (Input.GetKeyUp(KeyCode.P))
             {
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateChuPiaoLvInfo(0.1f, 0.2f, 0.3f, 0.4f);
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanInfo(100f, 200f, 300f, 400f);
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(100f, 200f, 300f, 400f);
+                SSServerConfigData serverConfigDt = new SSServerConfigData();
+                serverConfigDt.UpdataAllServerConfigData();
+                //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateChuPiaoLvInfo(0.1f, 0.2f, 0.3f, 0.4f);
+                //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanInfo(100f, 200f, 300f, 400f);
+                //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(100f, 200f, 300f, 400f);
                 //SetGameCameraIsMoveing(false, NpcJiFenEnum.CheLiang);
 
                 //if (DaoJiShiCtrl.GetInstanceOne() != null)
@@ -977,7 +981,9 @@ public class XkGameCtrl : SSGameMono
                 //			}
         //}
 		CheckNpcTranFromList();
+#if USE_CHECK_LOAD_MOVIE_SCENE
         CheckLoadingMovieScene();
+#endif
     }
 
 	void DelayResetIsLoadingLevel()
@@ -2232,7 +2238,10 @@ public class XkGameCtrl : SSGameMono
 			return;
 		}
 		IsActiveFinishTask = true;
-		JiFenJieMianCtrl.GetInstance().ShowFinishTaskInfo();
+        if (JiFenJieMianCtrl.GetInstance() != null)
+        {
+            JiFenJieMianCtrl.GetInstance().ShowFinishTaskInfo();
+        }
 	}
 	
 	public int GetFeiJiMarkIndex()

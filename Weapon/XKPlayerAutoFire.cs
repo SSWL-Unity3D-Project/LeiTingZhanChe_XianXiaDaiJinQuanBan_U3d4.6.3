@@ -566,7 +566,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			return;
 		}
 
-		if (GameOverCtrl.IsShowGameOver || JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (GameOverCtrl.IsShowGameOver
+            || (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())) {
 			if (GameOverCtrl.IsShowGameOver) {
 				SetIsActiveFireBtJQ(false);
 			}
@@ -901,7 +902,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			return;
 		}
 		
-		if (GameOverCtrl.IsShowGameOver || JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (GameOverCtrl.IsShowGameOver
+            || (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())) {
 			if (GameOverCtrl.IsShowGameOver) {
 				IsActiveFireBtZP = false;
 			}

@@ -25,7 +25,11 @@ public class XKTriggerBossUIOpen : MonoBehaviour
 		if (other.GetComponent<XkPlayerCtrl>() == null) {
 			return;
 		}
-		XKBossXueTiaoCtrl.GetInstance().OpenBossXueTiao(TimeBoss);
+
+        if (XKBossXueTiaoCtrl.GetInstance() != null)
+        {
+            XKBossXueTiaoCtrl.GetInstance().OpenBossXueTiao(TimeBoss);
+        }
 	}
 
 #if UNITY_EDITOR

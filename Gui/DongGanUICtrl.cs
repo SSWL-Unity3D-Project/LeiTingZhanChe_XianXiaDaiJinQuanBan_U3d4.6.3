@@ -43,7 +43,7 @@ public class DongGanUICtrl : MonoBehaviour {
 			return;
 		}
 
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (JiFenJieMianCtrl.GetInstance() && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
 			return;
 		}
 

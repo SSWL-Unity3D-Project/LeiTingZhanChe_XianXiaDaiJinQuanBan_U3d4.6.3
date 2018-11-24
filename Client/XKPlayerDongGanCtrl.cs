@@ -24,7 +24,7 @@ public class XKPlayerDongGanCtrl : MonoBehaviour {
 		//	return;
 		//}
 
-		if (!GameTimeCtrl.GetInstance().GetIsCheckTimeSprite()) {
+		if (GameTimeCtrl.GetInstance() != null && !GameTimeCtrl.GetInstance().GetIsCheckTimeSprite()) {
 			return;
 		}
 

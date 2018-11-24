@@ -451,36 +451,36 @@ public class XKGlobalData
 
     /// <summary>
     /// 战车彩池.
-    /// 20元代金券奖池.
+    /// 战车01代金券奖池.
     /// </summary>
-    internal float m_ZhanCheCaiChi_20 = 0;
+    internal float m_ZhanCheCaiChi_01 = 0;
     /// <summary>
     /// 战车彩池.
-    /// 50元代金券奖池.
+    /// 战车02代金券奖池.
     /// </summary>
-    internal float m_ZhanCheCaiChi_50 = 0;
+    internal float m_ZhanCheCaiChi_02 = 0;
     /// <summary>
     /// 初始化战车彩池.
     /// </summary>
     void InitZhanCheCaiChi()
     {
-        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_20"); //战车彩池信息
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_01"); //战车彩池信息
         if (info == null || info == "")
         {
             info = "0";
         }
         //int val = Convert.ToInt32(info);
         float val = MathConverter.StringToFloat(info);
-        m_ZhanCheCaiChi_20 = val;
+        m_ZhanCheCaiChi_01 = val;
         
-        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_50"); //战车彩池信息
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheData_02"); //战车彩池信息
         if (info == null || info == "")
         {
             info = "0";
         }
         //int val = Convert.ToInt32(info);
         val = MathConverter.StringToFloat(info);
-        m_ZhanCheCaiChi_50 = val;
+        m_ZhanCheCaiChi_02 = val;
     }
 
     /// <summary>
@@ -501,14 +501,14 @@ public class XKGlobalData
         {
             case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
                 {
-                    m_ZhanCheCaiChi_20 = val;
-                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_20", val.ToString()); //战车彩池信息
+                    m_ZhanCheCaiChi_01 = val;
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_01", val.ToString()); //战车彩池信息
                     break;
                 }
             case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
                 {
-                    m_ZhanCheCaiChi_50 = val;
-                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_50", val.ToString()); //战车彩池信息
+                    m_ZhanCheCaiChi_02 = val;
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheData_02", val.ToString()); //战车彩池信息
                     break;
                 }
         }
@@ -657,6 +657,19 @@ public class XKGlobalData
             HandleJsonObj.WriteToFileXml(FileName, "DanMuInfo", info);
         }
         m_DanMuInfo = info;
+    }
+
+    /// <summary>
+    /// 服务器更新游戏弹幕信息.
+    /// </summary>
+    internal void UpdateDanMuInfo(string info)
+    {
+        SetDanMuInfo(info);
+        if (SSUIRoot.GetInstance().m_GameUIManage != null
+            && SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI != null)
+        {
+            SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI.UpdateDanMuInfo();
+        }
     }
 
     /// <summary>

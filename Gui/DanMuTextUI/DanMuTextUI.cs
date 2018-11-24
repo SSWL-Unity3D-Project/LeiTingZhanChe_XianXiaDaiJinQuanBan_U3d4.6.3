@@ -19,6 +19,22 @@ public class DanMuTextUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 更新机台弹幕信息.
+    /// </summary>
+    internal void UpdateDanMuInfo()
+    {
+        if (m_DanMuLable != null)
+        {
+            string danMuInfo = XKGlobalData.GetInstance().m_DanMuInfo;
+            if (danMuInfo != "")
+            {
+                SSDebug.Log("UpdateDanMuInfo -> danMuInfo ===================== " + danMuInfo);
+                m_DanMuLable.text = danMuInfo;
+            }
+        }
+    }
+
     bool IsRemoveSelf = false;
     internal void RemoveSelf()
     {

@@ -44,8 +44,8 @@ public class SSGameYuZhiCaiPiaoData
         }
         else
         {
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_20;
-            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_02 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_50;
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_01;
+            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_02 = XKGlobalData.GetInstance().m_ZhanCheCaiChi_02;
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai = XKGlobalData.GetInstance().m_JPBossCaiChi;
         }
     }

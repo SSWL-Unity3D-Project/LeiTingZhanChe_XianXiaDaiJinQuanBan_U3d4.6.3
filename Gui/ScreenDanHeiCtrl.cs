@@ -225,8 +225,16 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 	void OnSreenAlphaToMin()
 	{
 		if (Network.peerType != NetworkPeerType.Server) {
-			//ZhunXingTeXiaoCtrl.GetInstance().ShowZhunXingTeXiao();
-			GameStartTimeCtrl.GetInstance().InitPlayStartTimeUI();
+            //ZhunXingTeXiaoCtrl.GetInstance().ShowZhunXingTeXiao();
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.CreatGameStartTimeUI();
+            }
+
+            if (GameStartTimeCtrl.GetInstance() != null)
+            {
+                GameStartTimeCtrl.GetInstance().InitPlayStartTimeUI();
+            }
 		}
 		else {
 			StartCameraObj.SetActive(false);

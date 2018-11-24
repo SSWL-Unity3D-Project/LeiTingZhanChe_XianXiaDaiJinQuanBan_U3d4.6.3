@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
 public class JiFenJieMianCtrl : MonoBehaviour {
 	public GameObject JiFenJieMianObj;
@@ -15,7 +15,7 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start()
+	internal void Init()
 	{
 		Instance = this;
 		TimeStartVal = Time.realtimeSinceStartup;
@@ -82,7 +82,10 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 			CoinPlayerCtrl.GetInstanceTwo().HiddenPlayerCoin();
 			CoinPlayerCtrl.GetInstanceThree().HiddenPlayerCoin();
 			CoinPlayerCtrl.GetInstanceFour().HiddenPlayerCoin();
-			GameTimeCtrl.GetInstance().HiddenGameTime();
+            if (GameTimeCtrl.GetInstance() != null)
+            {
+                GameTimeCtrl.GetInstance().HiddenGameTime();
+            }
 			DaoJuCtrl.GetInstance().HiddenAllPlayerDaoJu();
 			//DongGanUICtrl.InstanceOne.HiddenDongGanUI();
 			//DongGanUICtrl.InstanceTwo.HiddenDongGanUI();
@@ -122,7 +125,10 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 		if (CountJiFenOpen < 4) {
 			XKBossXueTiaoCtrl.IsWuDiPlayer = false;
 			XKTriggerStopMovePlayer.IsActiveTrigger = false;
-			GameTimeCtrl.GetInstance().OpenGameTime();
+            if (GameTimeCtrl.GetInstance() != null)
+            {
+                GameTimeCtrl.GetInstance().OpenGameTime();
+            }
 			
 			CoinPlayerCtrl.GetInstanceOne().ShwoPlayerCoin();
 			CoinPlayerCtrl.GetInstanceTwo().ShwoPlayerCoin();
@@ -131,8 +137,12 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 			DaoJuCtrl.GetInstance().ShowAllPlayerDaoJu();
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.Null);
 		}
-		else {
-			QuanBuTongGuanCtrl.GetInstance().ShowQuanBuTongGuan();
+		else
+        {
+            if (QuanBuTongGuanCtrl.GetInstance() != null)
+            {
+                QuanBuTongGuanCtrl.GetInstance().ShowQuanBuTongGuan();
+            }
 		}
 	}
 	int CountJiFenOpen;
@@ -147,4 +157,15 @@ public class JiFenJieMianCtrl : MonoBehaviour {
 			NetCtrl.GetInstance().MakeOtherPortStopJiFenTime();
 		}
 	}
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Instance = null;
+            Destroy(gameObject);
+        }
+    }
 }

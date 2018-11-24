@@ -41,7 +41,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	{
 		CheckNpcRigidbody();
 		if (NpcJiFen == NpcJiFenEnum.Boss) {
-			XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(-1f, this);
+            if (XKBossXueTiaoCtrl.GetInstance() != null)
+            {
+                XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(-1f, this);
+            }
 		}
 
 		gameObject.layer = LayerMask.NameToLayer(XkGameCtrl.NpcLayerInfo);
@@ -428,7 +431,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         {
 			float bossAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
 			bossAmount = bossAmount < 0f ? 0f : bossAmount;
-			XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(bossAmount, this);
+            if (XKBossXueTiaoCtrl.GetInstance() != null)
+            {
+                XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(bossAmount, this);
+            }
 		}
         
 		/*Debug.Log("Unity:"+"OnDamageNpc -> "
@@ -517,7 +523,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 			if (!IsYouTongNpc) {
 				switch (NpcJiFen) {
 				case NpcJiFenEnum.Boss:
-					if (GameTimeBossCtrl.GetInstance().GetTimeBossResidual() > 0) {
+					if (GameTimeBossCtrl.GetInstance() != null
+                            && GameTimeBossCtrl.GetInstance().GetTimeBossResidual() > 0) {
 						XkGameCtrl.GetInstance().AddPlayerKillNpc(PlayerEnum.Null, NpcJiFen, JiFenVal);
 					}
 					break;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class XKGameStageCtrl : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class XKGameStageCtrl : MonoBehaviour
 		return _Instance;
 	}
 	// Use this for initialization
-	void Start()
+	internal void Init()
 	{
 		_Instance = this;
 		StageUI = StageObj.GetComponent<UITexture>();
@@ -88,4 +89,15 @@ public class XKGameStageCtrl : MonoBehaviour
 		StageObj.SetActive(false);
 		JinGongObj.SetActive(false);
 	}
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            _Instance = null;
+            Destroy(gameObject);
+        }
+    }
 }

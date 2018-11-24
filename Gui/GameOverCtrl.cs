@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GameOverCtrl : MonoBehaviour {
 	GameObject GameOverObj;
 	public static bool IsShowGameOver;
-	static GameOverCtrl Instance;
-	public static GameOverCtrl GetInstance()
-	{
-		return Instance;
-	}
+	//static GameOverCtrl Instance;
+	//public static GameOverCtrl GetInstance()
+	//{
+	//	return Instance;
+	//}
 
 	// Use this for initialization
-	void Start()
+	internal void Init()
 	{
-		Instance = this;
+		//Instance = this;
 		IsShowGameOver = false;
 		GameOverObj = gameObject;
 		GameOverObj.SetActive(false);
@@ -52,8 +51,12 @@ public class GameOverCtrl : MonoBehaviour {
 	void HiddenGameOver()
 	{
 		GameOverObj.SetActive(false);
-		//XkGameCtrl.LoadingGameMovie(); //Back Movie Scene.
-		JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+        //XkGameCtrl.LoadingGameMovie(); //Back Movie Scene.
+
+        if (JiFenJieMianCtrl.GetInstance() != null)
+        {
+            JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+        }
 	}
 
 	void MakeServerShowGameOver()
@@ -66,6 +69,16 @@ public class GameOverCtrl : MonoBehaviour {
 			NetCtrl.GetInstance().MakeServerShowGameOver();
 		}
 	}
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Destroy(gameObject);
+        }
+    }
 }
 
 public enum GameLevel

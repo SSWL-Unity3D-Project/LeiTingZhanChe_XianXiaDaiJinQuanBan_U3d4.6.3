@@ -251,7 +251,7 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 		//	return;
 		//}
 
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()
+		if ((JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask())
 		    || GameOverCtrl.IsShowGameOver) {
 			return;
 		}

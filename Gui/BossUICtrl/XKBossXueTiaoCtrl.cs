@@ -1,9 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
 public class XKBossXueTiaoCtrl : MonoBehaviour
 {
-	public UISprite BossXueTiaoSprite;
+    /// <summary>
+    /// Boss计时器.
+    /// </summary>
+    public GameTimeBossCtrl m_GameTimeBoss;
+    public UISprite BossXueTiaoSprite;
 	public UISprite BossXueTiaoHongSprite;
 	/**
 	 * 填充血条的速度.
@@ -20,10 +24,31 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 	{
 		return _Instance;
 	}
-	// Use this for initialization
-	void Start ()
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (m_GameTimeBoss != null)
+        {
+            m_GameTimeBoss.RemoveSelf();
+        }
+
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            _Instance = null;
+            Destroy(gameObject);
+        }
+    }
+
+    // Use this for initialization
+    internal void Init ()
 	{
 		_Instance = this;
+        if (m_GameTimeBoss != null)
+        {
+            m_GameTimeBoss.Init();
+        }
 		IsWuDiPlayer = false;
 		HiddenBossXueTiao();
 	}
@@ -74,17 +99,25 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 
 	void DelayActiveJiFenJieMian()
 	{
-		if (GameTimeBossCtrl.GetInstance().GetTimeBossResidual() > 0) {
+		if (GameTimeBossCtrl.GetInstance() != null
+            && GameTimeBossCtrl.GetInstance().GetTimeBossResidual() > 0) {
 			XKGlobalData.GetInstance().PlayAudioBossShengLi();
 		}
-		JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+
+        if (JiFenJieMianCtrl.GetInstance() != null)
+        {
+            JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+        }
 	}
 
 	public void HiddenBossXueTiao()
 	{
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(false);
 		gameObject.SetActive(false);
-		GameTimeBossCtrl.GetInstance().HiddenGameTime();
+        if (GameTimeBossCtrl.GetInstance() != null)
+        {
+            GameTimeBossCtrl.GetInstance().HiddenGameTime();
+        }
 	}
 
 	public void OpenBossXueTiao(int timeVal = 180)
@@ -96,7 +129,11 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 		BossXueTiaoSprite.fillAmount = 0f;
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		XKTriggerStopMovePlayer.IsActiveTrigger = true;
-		GameTimeCtrl.GetInstance().HiddenGameTime();
+
+        if (GameTimeCtrl.GetInstance() != null)
+        {
+            GameTimeCtrl.GetInstance().HiddenGameTime();
+        }
 		//BossXueTiaoSprite.fillAmount = 1f;
 		gameObject.SetActive(true);
 		TweenAlpha TwAlpha = gameObject.AddComponent<TweenAlpha>();
@@ -111,7 +148,10 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 
 	void ChangeBossXTAlphaEnd(int timeVal)
 	{
-		GameTimeBossCtrl.GetInstance().ActiveIsCheckTimeSprite(timeVal);
+        if (GameTimeBossCtrl.GetInstance() != null)
+        {
+            GameTimeBossCtrl.GetInstance().ActiveIsCheckTimeSprite(timeVal);
+        }
 		StartFillBossXueTiao();
 	}
 

@@ -3,6 +3,11 @@ using System.Collections;
 
 public class SSGameUICtrl : SSGameMono
 {
+
+    /// <summary>
+    /// 游戏开始时UI界面中心锚点.
+    /// </summary>
+    public Transform m_GameStartUICenter;
     /// <summary>
     /// 游戏UI界面中心锚点.
     /// </summary>
@@ -752,7 +757,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 游戏弹幕控制脚本.
     /// </summary>
-    DanMuTextUI m_DanMuTextUI = null;
+    internal DanMuTextUI m_DanMuTextUI = null;
     /// <summary>
     /// 产生游戏弹幕UI界面.
     /// </summary>
@@ -998,7 +1003,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 游戏测试UI界面.
     /// </summary>
-    internal GameObject m_CeShiUI;
+    internal GameObject m_CeShiUI = null;
     /// <summary>
     /// 产生游戏测试UI界面.
     /// </summary>
@@ -1029,6 +1034,333 @@ public class SSGameUICtrl : SSGameMono
         {
             UnityLog("RemoveCeShiUI...");
             Destroy(m_CeShiUI);
+            m_CeShiUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 游戏总积分界面UI.
+    /// </summary>
+    internal JiFenJieMianCtrl m_TotalJiFenJieMianUI = null;
+    /// <summary>
+    /// 产生游戏测试UI界面.
+    /// </summary>
+    internal void CreatTotalJiFenJieMianUI()
+    {
+        if (m_TotalJiFenJieMianUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/JiFenJieMian/JiFenJieMianGroup";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatTotalJiFenJieMianUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_TotalJiFenJieMianUI = obj.GetComponent<JiFenJieMianCtrl>();
+                m_TotalJiFenJieMianUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatTotalJiFenJieMianUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏总积分界面UI.
+    /// </summary>
+    internal void RemoveTotalJiFenJieMianUI()
+    {
+        if (m_TotalJiFenJieMianUI != null)
+        {
+            UnityLog("RemoveTotalJiFenJieMianUI...");
+            m_TotalJiFenJieMianUI.RemoveSelf();
+            m_TotalJiFenJieMianUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+    
+    /// <summary>
+    /// 悬崖路段提示界面UI.
+    /// </summary>
+    internal GameObject m_XuanYaLuDuanUI = null;
+    /// <summary>
+    /// 产生悬崖路段提示UI界面.
+    /// </summary>
+    internal void CreatXuanYaLuDuanUI()
+    {
+        if (m_XuanYaLuDuanUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/XunYaLuDuan/XuanYaTiShi";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatXuanYaLuDuanUI......................................................");
+                m_XuanYaLuDuanUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            }
+            else
+            {
+                UnityLogWarning("CreatXuanYaLuDuanUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除悬崖路段提示界面UI.
+    /// </summary>
+    internal void RemoveXuanYaLuDuanUI()
+    {
+        if (m_XuanYaLuDuanUI != null)
+        {
+            UnityLog("RemoveXuanYaLuDuanUI...");
+            Destroy(m_XuanYaLuDuanUI);
+            m_XuanYaLuDuanUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 游戏时间界面UI.
+    /// </summary>
+    internal GameTimeCtrl m_GameTimeUI = null;
+    /// <summary>
+    /// 产生游戏时间UI界面.
+    /// </summary>
+    internal void CreatGameTimeUI()
+    {
+        if (m_GameTimeUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/GameTimeUI/GameTimeCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatGameTimeUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_GameTimeUI = obj.GetComponent<GameTimeCtrl>();
+                m_GameTimeUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatGameTimeUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏时间界面UI.
+    /// </summary>
+    internal void RemoveGameTimeUI()
+    {
+        if (m_GameTimeUI != null)
+        {
+            UnityLog("RemoveGameTimeUI...");
+            m_GameTimeUI.RemoveSelf();
+            m_GameTimeUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 游戏总GameOver界面UI.
+    /// </summary>
+    internal GameOverCtrl m_TotalGameOverUI = null;
+    /// <summary>
+    /// 产生游戏总GameOver界面UI.
+    /// </summary>
+    internal void CreatTotalGameOverUI()
+    {
+        if (m_TotalGameOverUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/TotalGameOver/GameOverCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatTotalGameOverUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_TotalGameOverUI = obj.GetComponent<GameOverCtrl>();
+                m_TotalGameOverUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatTotalGameOverUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏总GameOver界面UI.
+    /// </summary>
+    internal void RemoveTotalGameOverUI()
+    {
+        if (m_TotalGameOverUI != null)
+        {
+            UnityLog("RemoveTotalGameOverUI...");
+            m_TotalGameOverUI.RemoveSelf();
+            m_TotalGameOverUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 游戏全部通关界面UI.
+    /// </summary>
+    internal QuanBuTongGuanCtrl m_QuanBuTongGuanUI = null;
+    /// <summary>
+    /// 产生游戏全部通关界面UI.
+    /// </summary>
+    internal void CreatQuanBuTongGuanUI()
+    {
+        if (m_QuanBuTongGuanUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/QuanBuTongGuan/QuanBuTongGuanCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatQuanBuTongGuanUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_QuanBuTongGuanUI = obj.GetComponent<QuanBuTongGuanCtrl>();
+                m_QuanBuTongGuanUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatQuanBuTongGuanUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏全部通关界面UI.
+    /// </summary>
+    internal void RemoveQuanBuTongGuanUI()
+    {
+        if (m_QuanBuTongGuanUI != null)
+        {
+            UnityLog("RemoveQuanBuTongGuanUI...");
+            m_QuanBuTongGuanUI.RemoveSelf();
+            m_QuanBuTongGuanUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+    
+    /// <summary>
+    /// 游戏阶段控制界面UI.
+    /// </summary>
+    internal XKGameStageCtrl m_GameStageUI = null;
+    /// <summary>
+    /// 产生游戏阶段控制界面UI.
+    /// </summary>
+    internal void CreatGameStageUI()
+    {
+        if (m_GameStageUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/GameStageUI/GameStageCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatGameStageUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_GameStageUI = obj.GetComponent<XKGameStageCtrl>();
+                m_GameStageUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatGameStageUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏阶段控制界面UI.
+    /// </summary>
+    internal void RemoveGameStageUI()
+    {
+        if (m_GameStageUI != null)
+        {
+            UnityLog("RemoveGameStageUI...");
+            m_GameStageUI.RemoveSelf();
+            m_GameStageUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+    
+    /// <summary>
+    /// 游戏Boss血条界面UI.
+    /// </summary>
+    internal SSBossXueTiaoManage m_BossXueTiaoUI = null;
+    /// <summary>
+    /// 产生游戏Boss血条界面UI.
+    /// </summary>
+    internal void CreatBossXueTiaoUI()
+    {
+        if (m_BossXueTiaoUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/BossXueTiaoUI/BossXueTiaoCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatBossXueTiaoUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                m_BossXueTiaoUI = obj.GetComponent<SSBossXueTiaoManage>();
+                m_BossXueTiaoUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatBossXueTiaoUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏Boss血条界面UI.
+    /// </summary>
+    internal void RemoveBossXueTiaoUI()
+    {
+        if (m_BossXueTiaoUI != null)
+        {
+            UnityLog("RemoveBossXueTiaoUI...");
+            m_BossXueTiaoUI.RemoveSelf();
+            m_BossXueTiaoUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 游戏Boss血条界面UI.
+    /// </summary>
+    internal GameStartTimeCtrl m_GameStartTimeUI = null;
+    /// <summary>
+    /// 产生游戏Boss血条界面UI.
+    /// </summary>
+    internal void CreatGameStartTimeUI()
+    {
+        if (m_GameStartTimeUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/GameStartTimeUI/GameStartTimeCtrl";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatGameStartTimeUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameStartUICenter);
+                m_GameStartTimeUI = obj.GetComponent<GameStartTimeCtrl>();
+                m_GameStartTimeUI.Init();
+            }
+            else
+            {
+                UnityLogWarning("CreatGameStartTimeUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏Boss血条界面UI.
+    /// </summary>
+    internal void RemoveGameStartTimeUI()
+    {
+        if (m_GameStartTimeUI != null)
+        {
+            UnityLog("RemoveGameStartTimeUI...");
+            m_GameStartTimeUI.RemoveSelf();
+            m_GameStartTimeUI = null;
             Resources.UnloadUnusedAssets();
         }
     }

@@ -208,7 +208,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
 	void ChangeDaoJiShiVal()
 	{
-		if (JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+		if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
 			StopDaoJiShi();
 			return;
 		}

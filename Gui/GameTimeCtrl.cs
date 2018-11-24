@@ -11,7 +11,7 @@ public class GameTimeCtrl : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Awake()
+	internal void Init()
 	{
 		_Instance = this;
 		UIAni = GetComponent<UISpriteAnimation>();
@@ -119,4 +119,15 @@ public class GameTimeCtrl : MonoBehaviour {
 		parObj.SetActive(true);
 		#endif
 	}
+
+    bool IsRemoveSelf = false;
+    internal void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            _Instance = null;
+            Destroy(gameObject);
+        }
+    }
 }

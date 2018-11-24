@@ -313,7 +313,10 @@ public class NetCtrl : MonoBehaviour {
 		}
 		Debug.Log("Unity:"+"NetCtrlMakeOtherPortStopJiFenTime...");
 		IsMakeGameStopJiFenTime = true;
-		JiFenJieMianCtrl.GetInstance().StopJiFenTime();
+        if (JiFenJieMianCtrl.GetInstance() != null)
+        {
+            JiFenJieMianCtrl.GetInstance().StopJiFenTime();
+        }
 	}
 
 	public void MakeServerShowGameOver()
