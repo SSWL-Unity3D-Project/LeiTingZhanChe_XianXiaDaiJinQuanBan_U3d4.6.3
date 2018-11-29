@@ -1,4 +1,4 @@
-﻿#define TEST_AUTO_FIRE
+﻿//#define TEST_AUTO_FIRE
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -243,7 +243,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		ChuanTouDanAmmoParticle = XKPlayerGlobalDt.GetInstance().ChuanTouDanAmmoParticle;
 		DaoDanAmmoParticle = XKPlayerGlobalDt.GetInstance().DaoDanAmmoParticle;
 
-		PuTongAmmo = XKPlayerGlobalDt.GetInstance().PuTongJQAmmo;
+		//PuTongAmmo = XKPlayerGlobalDt.GetInstance().PuTongJQAmmo;
 		DaoDanZPAmmo = XKPlayerGlobalDt.GetInstance().DaoDanZPAmmo;
 		ChuanTouDanAmmo = XKDaoJuGlobalDt.GetInstance().AmmoChuanJiaDanZP;
 		AmmoSanDanZP = XKDaoJuGlobalDt.GetInstance().AmmoSanDanZP;
@@ -384,12 +384,24 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		return false;
 	}
 
+    enum FireType
+    {
+        /// <summary>
+        /// 长按自动打.
+        /// </summary>
+        Auto = 0,
+        /// <summary>
+        /// 手动主动点击.
+        /// </summary>
+        ShouDong = 1,
+    }
+
 	/// <summary>
 	/// Checks the is spawn player ammo.
 	/// paoKou == 0 -> 主角机枪炮口.
 	/// paoKou == 1 -> 主角主炮炮口.
 	/// </summary>
-	bool CheckIsSpawnPlayerAmmo(int paoKou)
+	bool CheckIsSpawnPlayerAmmo(int paoKou, FireType type = FireType.Auto)
 	{
 		bool isSpawnAmmo = true;
 		PlayerAmmoType ammoType = PlayerAmmoType.Null;
@@ -406,7 +418,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			lastFireTime = LastFireTimeZhuPao;
 			break;
 		}
-
+        
 		switch (ammoType) {
 		case PlayerAmmoType.PuTongAmmo:
 			frequencyVal = Frequency[paoKou];
@@ -416,9 +428,22 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			break;
 		}
 
-		if (Time.time < lastFireTime + (1f / frequencyVal)) {
-			isSpawnAmmo = false;
-		}
+        if (type == FireType.Auto)
+        {
+            if (Time.time < lastFireTime + (1f / frequencyVal))
+            {
+                //长按自动发射子弹.
+                isSpawnAmmo = false;
+            }
+        }
+        else
+        {
+            if (Time.time - lastFireTime  < XKPlayerGlobalDt.GetInstance().TimeShouDongDaoDan)
+            {
+                //手动点击发射子弹.
+                isSpawnAmmo = false;
+            }
+        }
 		return isSpawnAmmo;
 	}
 	
@@ -851,8 +876,124 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		}
 		PlayerMoveScript.PushPlayerTanKe(pushDir, pushPower);
 	}
+    
+    void OnClickPlayerZhuPaoFireBt()
+    {
+        if (!ScreenDanHeiCtrl.IsStartGame)
+        {
+            return;
+        }
 
-	void CheckPlayerZhuPaoFireBt()
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //激活主角Ai坦克状态.
+            if (XkGameCtrl.GetInstance().m_AiPathGroup.m_CameraMoveType == AiPathGroupCtrl.MoveState.YuLe)
+            {
+                if (Random.Range(0, 100) % 3 != 0)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (Random.Range(0, 100) % 30 != 0)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if (!IsActiveFireBtZP)
+            {
+                return;
+            }
+
+            if (!CheckIsActivePlayer())
+            {
+                return;
+            }
+        }
+
+        if (Camera.main == null)
+        {
+            return;
+        }
+
+        if (GameOverCtrl.IsShowGameOver
+            || (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()))
+        {
+            if (GameOverCtrl.IsShowGameOver)
+            {
+                IsActiveFireBtZP = false;
+            }
+            return;
+        }
+
+        bool isSpawnAmmo = CheckIsSpawnPlayerAmmo(ZHU_PAO_INDEX, FireType.ShouDong);
+        if (!isSpawnAmmo)
+        {
+            return;
+        }
+        LastFireTimeZhuPao = Time.time;
+        CheckPlayerHouZuoLi(ZhuPaoAmmoSt, ZHU_PAO_INDEX);
+
+        Vector3 ammoSpawnForward = AmmoStartPosZP[0].forward;
+        Vector3 ammoSpawnPos = AmmoStartPosZP[0].position;
+        Quaternion ammoSpawnRot = AmmoStartPosZP[0].rotation;
+        GameObject obj = null;
+        CheckFireAudioPlayerZhuPao();
+        //pcvr.OpenZuoYiQiNang(PlayerIndex);
+        //pcvr.GetInstance().ActiveFangXiangDouDong(PlayerIndex, false);
+
+        obj = SpawnPlayerAmmoByAmmoType(ZHU_PAO_INDEX, ammoSpawnPos, ammoSpawnRot);
+        if (obj == null)
+        {
+            return;
+        }
+        obj.transform.parent = XkGameCtrl.PlayerAmmoArray;
+
+        PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
+        Vector3 mousePosInput = Input.mousePosition;
+        //if (pcvr.bIsHardWare) {
+        //mousePosInput = pcvr.CrossPositionTwo;
+        //}
+
+        Vector3 firePos = Vector3.zero;
+        Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;
+        Vector3 posTmp = Camera.main.ScreenToWorldPoint(mousePos);
+        RaycastHit hit;
+        if (!IsPSAutoFire)
+        {
+            firePos = FirePosValTmp * ammoSpawnForward + ammoSpawnPos;
+            FireRayDirLen = ammoScript.MvSpeed * ammoScript.LiveTime;
+            if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, FireRayDirLen, FireLayer.value))
+            {
+                //Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
+                if (ammoScript.AmmoType != PlayerAmmoType.ChuanTouAmmo)
+                {
+                    firePos = hit.point;
+                }
+            }
+        }
+        else
+        {
+            Vector3 ammoForward = Vector3.Normalize(posTmp - ammoSpawnPos);
+            ammoForward = obj.transform.forward;
+            firePos = FirePosValTmp * ammoForward + ammoSpawnPos;
+            if (Physics.Raycast(ammoSpawnPos, ammoForward, out hit, FireRayDirLen, FireLayer.value))
+            {
+                //Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
+                if (ammoScript.AmmoType != PlayerAmmoType.ChuanTouAmmo)
+                {
+                    firePos = hit.point;
+                }
+            }
+        }
+        ammoScript.StartMoveAmmo(firePos, PlayerIndex, this);
+    }
+
+    void CheckPlayerZhuPaoFireBt()
 	{
 		if (!ScreenDanHeiCtrl.IsStartGame) {
 			return;
@@ -1281,6 +1422,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         if (state == pcvr.ButtonState.DOWN)
         {
             IsActiveFireBtZP = true;
+            OnClickPlayerZhuPaoFireBt();
             //if (pcvr.IsHongDDShouBing)
             //{
             //    ClickFireBtEvent(pcvr.ButtonState.UP);

@@ -81,12 +81,12 @@ public class GameMovieCtrl : SSGameMono
 			if (!XkGameCtrl.IsGameOnQuit)
 			{
 				if (!Screen.fullScreen
-					|| Screen.currentResolution.width != 1360
-					|| Screen.currentResolution.height != 768)
+					|| Screen.currentResolution.width != XkGameCtrl.ScreenData.width
+					|| Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
 				{
 					if (!IsTestLJGame && !IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1366, 768, true);
+						Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
 					}
 				}
 			}

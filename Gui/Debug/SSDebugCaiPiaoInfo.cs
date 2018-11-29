@@ -18,6 +18,9 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
         //JPBoss彩池数据.
         float jpBossJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai;
         info += ", jpBossJiangChi == " + jpBossJiangChi.ToString("f2");
+        //jPBoss代金券商户支付数据.
+        float jPBossDaiJinQuanShangHuZhiFu = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuanShangHuZhiFu;
+        info += ", jPBossDaiJinQuanShangHuZhiFu == " + jPBossDaiJinQuanShangHuZhiFu.ToString("f1");
         //随机道具彩池数据.
         float daoJuJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDeCai;
         info += ", daoJuJiangChi == " + daoJuJiangChi.ToString("f2");

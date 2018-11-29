@@ -83,10 +83,45 @@ public class XueKuangCtrl : MonoBehaviour
 		HandleXueKuangNum();
         m_WeiXinHead.mainTexture = m_TouMingHead;
     }
-	
-	public void HandlePlayerXueTiaoInfo(float playerBlood)
+
+    SSGameObjFlash m_GameObjFlash = null;
+    public void HandlePlayerXueTiaoInfo(float playerBlood)
 	{
-		XueTiaoSprite.fillAmount = (XkGameCtrl.KeyBloodUI * playerBlood) + XkGameCtrl.MinBloodUIAmount;
+        if (XueTiaoSprite == null)
+        {
+            return;
+        }
+
+        float amount = (XkGameCtrl.KeyBloodUI * playerBlood) + XkGameCtrl.MinBloodUIAmount;
+        amount = Mathf.Clamp01(amount);
+        XueTiaoSprite.fillAmount = amount;
+        if (XueTiaoSprite.fillAmount <= 0.4f)
+        {
+            if (XueTiaoSprite.fillAmount <= 0f)
+            {
+                if (m_GameObjFlash != null)
+                {
+                    m_GameObjFlash.RemoveSelf();
+                    m_GameObjFlash = null;
+                }
+            }
+            else
+            {
+                if (m_GameObjFlash == null)
+                {
+                    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
+                    m_GameObjFlash.Init(0.25f, XueTiaoSprite.gameObject);
+                }
+            }
+        }
+        else
+        {
+            if (m_GameObjFlash != null)
+            {
+                m_GameObjFlash.RemoveSelf();
+                m_GameObjFlash = null;
+            }
+        }
 	}
 
 	public void HandleXueKuangNum()

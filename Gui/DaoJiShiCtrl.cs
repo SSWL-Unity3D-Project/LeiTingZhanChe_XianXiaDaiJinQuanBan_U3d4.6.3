@@ -1,4 +1,5 @@
 ﻿//#define NOT_SHOW_DAOJISHI_UI //不显示倒计时UI.
+using System.Collections;
 using UnityEngine;
 
 public class DaoJiShiCtrl : MonoBehaviour {
@@ -97,8 +98,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		if (GameOverCtrl.IsShowGameOver) {
 			return;
 		}
-
-
+        
         if (XkGameCtrl.GetInstance().GetPlayerIsCanContinuePlayGame(PlayerIndex) == true)
         {
             //玩家币值充足,可以继续进行游戏.
@@ -107,11 +107,11 @@ public class DaoJiShiCtrl : MonoBehaviour {
         else
         {
             //玩家币值不足,需要进行充值.
-            if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
-            {
-                //玩家币值不足,通知游戏服务端拉起手机微信复活重置界面.
-                pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerDeath("0");
-            }
+            //if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
+            //{
+            //    //玩家币值不足,通知游戏服务端拉起手机微信复活重置界面.
+            //    pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay().CToS_OnPlayerDeath("0");
+            //}
         }
 
         if (IsPlayDaoJishi)
@@ -135,16 +135,29 @@ public class DaoJiShiCtrl : MonoBehaviour {
         }
         CountDaoJiShi++;
 		DaoJiShiCount = 9;
-		DaoJiShiSprite.spriteName = "daoJiShi9";
+        DaoJiShiSprite.enabled = false;
+        DaoJiShiSprite.spriteName = "daoJiShi9";
+        DaoJiShiObj.SetActive(true);
+        StartCoroutine(DelayShowPlayerDaoJiShi());
         //m_TVYaoKongEnterObj.SetActive(true);
-		DaoJiShiObj.SetActive(true);
-		ContinueGameObj.SetActive(true);
-        ShowDaoJiShiInfo();
+        //DaoJiShiObj.SetActive(true);
+        //ContinueGameObj.SetActive(true);
+        //ShowDaoJiShiInfo();
 		//XKGlobalData.GetInstance().StopAudioRanLiaoJingGao();
 		//pcvr.CloseAllQiNangArray(PlayerIndex, 1);
     }
 
-	public void StopDaoJiShi()
+    IEnumerator DelayShowPlayerDaoJiShi()
+    {
+        float timeVal = XKPlayerGlobalDt.GetInstance().m_DaoJiShiDelayShowPlayerDead;
+        yield return new WaitForSeconds(timeVal);
+        //DaoJiShiObj.SetActive(true);
+        DaoJiShiSprite.enabled = true;
+        ContinueGameObj.SetActive(true);
+        ShowDaoJiShiInfo();
+    }
+
+    public void StopDaoJiShi()
 	{
         if (GameOverObj.activeInHierarchy == true)
         {
@@ -167,6 +180,12 @@ public class DaoJiShiCtrl : MonoBehaviour {
 		ContinueGameObj.SetActive(false);
 		DaoJiShiObj.SetActive(false);
         //m_TVYaoKongEnterObj.SetActive(false);
+
+        bool isActive = XkGameCtrl.GetIsActivePlayer(PlayerIndex);
+        if (isActive == false && pcvr.GetInstance() != null)
+        {
+            pcvr.GetInstance().m_HongDDGamePadInterface.OnPlayerGameDaoJiShiOver(PlayerIndex);
+        }
     }
 
 	void ShowDaoJiShiInfo()
@@ -179,7 +198,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
 		tweenScaleCom = DaoJiShiObj.AddComponent<TweenScale>();
 		tweenScaleCom.enabled = false;
-		tweenScaleCom.duration = 2f;
+		tweenScaleCom.duration = 3f;
 		tweenScaleCom.from = new Vector3(1.2f, 1.2f, 1f);
 		tweenScaleCom.to = new Vector3(1f, 1f, 1f);
 		EventDelegate.Add(tweenScaleCom.onFinished, delegate{

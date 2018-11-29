@@ -25,9 +25,11 @@ public class ErWeiMaUI : MonoBehaviour
     /// 截图终点.
     /// </summary>
     public Transform m_EndTr;
-    private void Awake()
+
+    internal void Init(Camera camera)
     {
         _Instance = this;
+        m_Camera = camera;
     }
 
     // Use this for initialization

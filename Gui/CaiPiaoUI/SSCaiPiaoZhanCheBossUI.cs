@@ -79,13 +79,19 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         Vector3 posUI = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(pos);
         transform.localPosition = posUI;
         ShowCaiPiaoInfo();
-        StartCoroutine(DelayShowCaiPiaoInfo());
 
         if (type == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
         {
             //开启镜头微动.
             XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua = true;
         }
+
+        if (m_Animator != null)
+        {
+            m_Animator.enabled = true;
+        }
+        SetActive(true);
+        StartCoroutine(DelayShowCaiPiaoInfo());
     }
 
     IEnumerator DelayShowCaiPiaoInfo()
@@ -98,9 +104,30 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         {
             m_Animator.enabled = false;
         }
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        //SetActive(false);
     }
-    
+
+    private void Update()
+    {
+        if (Time.frameCount % 3 == 0)
+        {
+            if (m_Animator != null)
+            {
+                if (m_Animator.enabled == false)
+                {
+                    //隐藏彩票转盘.
+                    SetActive(false);
+                }
+            }
+        }
+    }
+
+    internal void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
+
     /// <summary>
     /// 显示战车和boss的飞行彩票.
     /// </summary>

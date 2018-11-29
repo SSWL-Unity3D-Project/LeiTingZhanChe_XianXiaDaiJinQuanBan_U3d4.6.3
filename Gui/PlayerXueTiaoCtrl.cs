@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerXueTiaoCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 头像.
+    /// </summary>
+    public GameObject m_HeadObj;
     public Texture m_PlayerNumImg;
     [HideInInspector]
 	public PlayerEnum PlayerSt = PlayerEnum.Null;
@@ -14,7 +18,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 	Transform CameraTran;
 	Transform NengLianTran;
 	Transform NengLianParentTr;
-	Vector3 OffsetXT;
+	public Vector3 OffsetXT;
 	static PlayerXueTiaoCtrl _InstanceOne;
 	public static PlayerXueTiaoCtrl GetInstanceOne()
 	{
@@ -89,43 +93,47 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		Vector3 forwardVal = Vector3.zero;
 		switch (KeyHitSt) {
 		case 0:
+            //血条在后.
 			forwardVal = CameraTran.forward;
 			forwardVal.y = 0f;
 			NengLianTran.forward = forwardVal;
 			pos = NengLianParentTr.position;
 			pos += forwardVal * OffsetXT.z;
-			pos.x += OffsetXT.x;
-			pos.y += OffsetXT.y;
+			//pos.x += OffsetXT.x;
+			//pos.y += OffsetXT.y;
 			NengLianTran.position = pos;
 			break;
 		case 1:
+            //血条在左.
 			forwardVal = CameraTran.right;
 			forwardVal.y = 0f;
 			NengLianTran.forward = forwardVal;
 			pos = NengLianParentTr.position;
 			pos += forwardVal * (OffsetXT.z + 3f);
-			pos.x += OffsetXT.x;
-			pos.y += OffsetXT.y;
+			//pos.x += OffsetXT.x;
+			//pos.y += OffsetXT.y;
 			NengLianTran.position = pos;
 			break;
 		case 2:
-			forwardVal = -CameraTran.right;
+            //血条在右.
+            forwardVal = -CameraTran.right;
 			forwardVal.y = 0f;
 			NengLianTran.forward = forwardVal;
 			pos = NengLianParentTr.position;
 			pos += forwardVal * (OffsetXT.z + 3f);
-			pos.x += OffsetXT.x;
-			pos.y += OffsetXT.y;
+			//pos.x += OffsetXT.x;
+			//pos.y += OffsetXT.y;
 			NengLianTran.position = pos;
 			break;
 		case 3:
+            //血条在前.
 			forwardVal = CameraTran.forward;
 			forwardVal.y = 0f;
 			NengLianTran.forward = forwardVal;
 			pos = NengLianParentTr.position;
 			pos -= forwardVal * (OffsetXT.z - 3.5f);
-			pos.x += OffsetXT.x;
-			pos.y += OffsetXT.y;
+			//pos.x += OffsetXT.x;
+			//pos.y += OffsetXT.y;
 			NengLianTran.position = pos;
 			break;
 		}
@@ -170,13 +178,43 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
             m_MatNum.mainTexture = m_PlayerNumImg;
         }
 #endif
+        
+        if (fillVal <= 0.4f)
+        {
+            if (fillVal <= 0f)
+            {
+                if (m_GameObjFlash != null)
+                {
+                    m_GameObjFlash.RemoveSelf();
+                    m_GameObjFlash = null;
+                }
+            }
+            else
+            {
+                if (m_GameObjFlash == null)
+                {
+                    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
+                    m_GameObjFlash.Init(0.25f, NengLiangRenderer.gameObject);
+                }
+            }
+        }
+        else
+        {
+            if (m_GameObjFlash != null)
+            {
+                m_GameObjFlash.RemoveSelf();
+                m_GameObjFlash = null;
+            }
+        }
 
         float xueLiangVal = 1f - fillVal;
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);
 		NengLiangRenderer.materials[0].SetTextureOffset("_MainTex", new Vector2(xueLiangVal, 0f));
 		bool isActiveXT = xueLiangVal >= 1f ? false : true;
 		gameObject.SetActive(isActiveXT);
-	}
+        SetActiveHead(isActiveXT);
+    }
+    SSGameObjFlash m_GameObjFlash = null;
 	
 	public void SetPlayerIndex(PlayerEnum playerIndex)
 	{
@@ -206,8 +244,17 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		NengLianParentTr = NengLianTran.parent;
 		NengLianTran.parent = XkGameCtrl.MissionCleanup;
 		gameObject.SetActive(isActiveXT);
+        SetActiveHead(isActiveXT);
     }
-	
+
+    void SetActiveHead(bool isActive)
+    {
+        if (m_HeadObj != null && m_HeadObj.activeInHierarchy != isActive)
+        {
+            m_HeadObj.SetActive(isActive);
+        }
+    }
+
 	/**
 	 * KeyHitSt == 0 -> 血条在后.
 	 * KeyHitSt == 1 -> 血条在左.

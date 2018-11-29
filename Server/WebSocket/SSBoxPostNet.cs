@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -29,7 +28,7 @@ public class SSBoxPostNet : MonoBehaviour
 #if UNITY_STANDALONE_WIN
         try
         {
-            NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+            /*NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in nis)
             {
                 //Debug.Log("Name = " + ni.Name);
@@ -40,6 +39,12 @@ public class SSBoxPostNet : MonoBehaviour
                 //boxNum = UnityEngine.Random.Range(0, 9) + ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
                 boxNum = ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
                 break;
+            }*/
+            
+            boxNum = SystemInfo.deviceUniqueIdentifier + m_GamePadState.ToString();
+            if (boxNum.Length > 28)
+            {
+                boxNum = boxNum.Substring((boxNum.Length - 28), 28);
             }
         }
         catch (Exception ex)
@@ -785,7 +790,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// <summary>
     /// 读取微信小程序二维码.
     /// </summary>
-    void DelayDelayReadWeiXinXiaoChengXuErWeiMa()
+    void DelayReadWeiXinXiaoChengXuErWeiMa()
     {
         if (IsDelayReadWeiXinXiaoChengXuErWeiMa == false)
         {
@@ -835,7 +840,7 @@ public class SSBoxPostNet : MonoBehaviour
             //Debug.Log("Unity: path ============================= " + path);
             if (File.Exists(path) == true)
             {
-                DelayDelayReadWeiXinXiaoChengXuErWeiMa();
+                DelayReadWeiXinXiaoChengXuErWeiMa();
                 return;
             }
         }

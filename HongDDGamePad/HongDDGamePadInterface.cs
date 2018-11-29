@@ -108,6 +108,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.RemoveWeiXinPadPlayerData(userId);
             }
         }
+        
+        /// <summary>
+        /// 当玩家游戏倒计时结束,清理玩家的游戏微信数据.
+        /// 主要目的是想让新来的玩家可以立马进入游戏.
+        /// </summary>
+        internal void OnPlayerGameDaoJiShiOver(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnPlayerGameDaoJiShiOver(indexPlayer);
+            }
+        }
 
         /// <summary>
         /// 清理玩家微信数据信息.
@@ -168,6 +180,28 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return m_HongDDGamePadCom.FindGamePlayerData(indexPlayer);
             }
             return null;
+        }
+        
+        /// <summary>
+        /// 更新免费试玩信息.
+        /// </summary>
+        internal void UpdateMianFeiCountInfo(int args)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.UpdateMianFeiCountInfo(args);
+            }
+        }
+
+        /// <summary>
+        /// 更新游戏一币等于多少人民币的信息.
+        /// </summary>
+        internal void UpdateGameCoinToMoney(int args)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.UpdateGameCoinToMoney(args);
+            }
         }
         #endregion
     }

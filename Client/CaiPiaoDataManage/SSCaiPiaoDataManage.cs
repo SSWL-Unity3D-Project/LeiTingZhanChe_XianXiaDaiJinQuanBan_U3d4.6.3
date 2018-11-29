@@ -236,6 +236,10 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// </summary>
         internal float JPBossDaiJinQuan = 200f;
         /// <summary>
+        /// JPBoss代金券商户支付金额.
+        /// </summary>
+        internal float JPBossDaiJinQuanShangHuZhiFu = 150f;
+        /// <summary>
         /// 更新游戏代金券面额数据信息.
         /// </summary>
         internal void UpdateDaiJinQuanInfo(float suiJi, float zhanChe01, float zhanChe02, float jpBoss)
@@ -247,6 +251,53 @@ public class SSCaiPiaoDataManage : SSGameMono
             SSDebug.Log("UpdateDaiJinQuanInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
                 + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
+
+        /// <summary>
+        /// 根据代金券分类获取出票条件.
+        /// </summary>
+        internal float GetChuPiaoTiaoJian(DaiJinQuanState type)
+        {
+            float chuPiaoTiaoJian = 0f;
+            switch (type)
+            {
+                case DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                    {
+                        chuPiaoTiaoJian = SuiJiDaoJuDaiJinQuan;
+                        break;
+                    }
+                case DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                    {
+                        chuPiaoTiaoJian = ZhanCheDaiJinQuan_01;
+                        break;
+                    }
+                case DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                    {
+                        chuPiaoTiaoJian = ZhanCheDaiJinQuan_02;
+                        break;
+                    }
+                case DaiJinQuanState.JPBossDaiJinQuan:
+                    {
+                        chuPiaoTiaoJian = JPBossDaiJinQuan - JPBossDaiJinQuanShangHuZhiFu;
+                        if (chuPiaoTiaoJian <= 0f)
+                        {
+                            //当商家支付JPBoss的代金券面额大于JPBoss代金券面额时.
+                            chuPiaoTiaoJian = 10f;
+                        }
+                        break;
+                    }
+            }
+            return chuPiaoTiaoJian;
+        }
+
+        /// <summary>
+        /// 更新JPBoss代金券商户支付金额信息.
+        /// </summary>
+        internal void UpdateJPBossDaiJinQuanShangHuZhiFu(float jpBossDaiJinQuanShangHuZhiFu)
+        {
+            JPBossDaiJinQuanShangHuZhiFu = jpBossDaiJinQuanShangHuZhiFu;
+            SSDebug.Log("UpdateDaiJinQuanInfo -> jpBossDaiJinQuanShangHuZhiFu == " + jpBossDaiJinQuanShangHuZhiFu);
+        }
+
         /// <summary>
         /// 随机道具得彩累积数量.
         /// </summary>
@@ -323,6 +374,38 @@ public class SSCaiPiaoDataManage : SSGameMono
             SSDebug.Log("UpdateDaiJinQuanCaiChiInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
                 + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
+        
+        /// <summary>
+        /// 根据代金券分类获取对应的彩池数据.
+        /// </summary>
+        internal float GetCaiChiData(DaiJinQuanState type)
+        {
+            float val = 0f;
+            switch (type)
+            {
+                case DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                    {
+                        val = SuiJiDaoJuDeCai;
+                        break;
+                    }
+                case DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                    {
+                        val = ZhanCheDeCai_01;
+                        break;
+                    }
+                case DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                    {
+                        val = ZhanCheDeCai_02;
+                        break;
+                    }
+                case DaiJinQuanState.JPBossDaiJinQuan:
+                    {
+                        val = JPBossDeCai;
+                        break;
+                    }
+            }
+            return val;
+        }
 
         /// <summary>
         /// 得彩状态.
@@ -379,7 +462,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// </summary>
         public void FenPeiDeCaiVal(bool isPlayerXuBi)
         {
-            float coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            float coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin * XKGlobalData.GetInstance().m_CaiChiFanJiangLv;
             float xuBiChuPiaoLvTmp = isPlayerXuBi == true ? XuBiChuPiaoLv : 1f;
             if (isPlayerXuBi)
             {
@@ -477,16 +560,22 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
                 case DeCaiState.JPBoss:
                     {
+                        int subVal = 0;
                         if (XkGameCtrl.GetInstance().m_CaiPiaoMode == XkGameCtrl.CaiPiaoModeSuanFa.GuDing)
                         {
                             //val = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
                             val = (int)JPBossDaiJinQuan;
+                            subVal = (int)(JPBossDaiJinQuan - JPBossDaiJinQuanShangHuZhiFu); //奖池需要减少的数值.
+                            if (subVal < 0)
+                            {
+                                subVal = 0;
+                            }
                         }
                         else
                         {
                             val = (int)(coinStart * JPBossDaiJinQuan);
                         }
-                        JPBossDeCai -= val;
+                        JPBossDeCai -= subVal;
                         //从预制彩池里取彩票投入JPBoss彩池.
                         XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.SubJPBossCaiPiaoVal();
                         break;
@@ -621,7 +710,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                     case DeCaiState.JPBoss:
                         {
                             //chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
-                            chuCaiVal = (int)JPBossDaiJinQuan;
+                            chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.JPBossDaiJinQuan);
                             break;
                         }
                 }

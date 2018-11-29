@@ -128,11 +128,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 服务器返回当前游戏设备的配置信息(是否可以试玩)
         /// </summary>
-        public void SToC_ReceiveGameConfigInfo(string args)
+        public void SToC_ReceiveGameConfigInfo(int args)
         {
             UnityEngine.Debug.Log("Unity: SToC_ReceiveGameConfigInfo -> args == " + args);
-            int mianFeiCount = 1;
-            m_GameConfigData.MianFeiShiWanCount = mianFeiCount;
+            m_GameConfigData.MianFeiShiWanCount = UnityEngine.Mathf.Clamp(args, 0, 1);
         }
 
         /// <summary>

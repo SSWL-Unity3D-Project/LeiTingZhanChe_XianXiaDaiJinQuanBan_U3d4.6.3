@@ -1,4 +1,4 @@
-//#define USE_CHECK_LOAD_MOVIE_SCENE
+#define USE_CHECK_LOAD_MOVIE_SCENE
 //#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
@@ -8,6 +8,7 @@ using System.IO;
 using Assets.XKGame.Script.GamePay;
 using System.Collections;
 using Assets.XKGame.Script.Server.WebSocket;
+using System.Runtime.InteropServices;
 
 public enum NpcJiFenEnum
 {
@@ -51,7 +52,7 @@ public class XkGameCtrl : SSGameMono
     /// 游戏版本控制数据.
     /// </summary>
     public GameVersion m_GameVersion = GameVersion.FaBuBan;
-
+    
     /// <summary>
     /// 彩票算法模式.
     /// </summary>
@@ -95,6 +96,10 @@ public class XkGameCtrl : SSGameMono
             return _IsDisplayBossDeathYanHua;
         }
     }
+    /// <summary>
+    /// 彩票NPC血量数据.
+    /// </summary>
+    public SSCaiPiaoHealthData m_CaiPiaoHealthDt;
     /// <summary>
     /// 彩票战车和JPBoss在循环动画期间的血量与正常模式下的比例.
     /// </summary>
@@ -359,6 +364,27 @@ public class XkGameCtrl : SSGameMono
  * PlayerQuanShu[3] -> 主角4的圈数.
  */
 	int[] PlayerQuanShu = {1, 1, 1, 1};
+    public class ScreenData
+    {
+        [DllImport("user32")]
+        static extern int GetSystemMetrics(int nIndex);
+        static int SM_CXSCREEN = 0;
+        static int SM_CYSCREEN = 1;
+        public static int width
+        {
+            get
+            {
+                return GetSystemMetrics(SM_CXSCREEN);
+            }
+        }
+        public static int height
+        {
+            get
+            {
+                return GetSystemMetrics(SM_CYSCREEN);
+            }
+        }
+    }
 //	public static int TestGameEndLv = (int)GameLevel.Scene_2;
 	static XkGameCtrl _Instance;
 	public static XkGameCtrl GetInstance()
@@ -376,9 +402,15 @@ public class XkGameCtrl : SSGameMono
             //发布出来游戏后强制修改.
             //IsCaiPiaoHuLuePlayerIndex = false;
 #endif
-
+            SSDebug.Log("GameStart time ============ " + System.DateTime.Now.ToString());
+            SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
             Application.runInBackground = true;
             InitCheckLoadingMovieScene();
+
+            if (m_CaiPiaoHealthDt != null)
+            {
+                m_CaiPiaoHealthDt.Init();
+            }
 
             if (m_PlayerJiChuCaiPiaoData == null)
             {
@@ -516,17 +548,17 @@ public class XkGameCtrl : SSGameMono
 
 			if (IsCartoonShootTest)
 			{
-				Screen.SetResolution(1366, 768, false);
+				Screen.SetResolution(ScreenData.width, ScreenData.height, false);
 			}
 			else if (!IsGameOnQuit)
 			{
 				if (!Screen.fullScreen
-					|| Screen.currentResolution.width != 1360
-					|| Screen.currentResolution.height != 768)
+					|| Screen.currentResolution.width != ScreenData.width
+                    || Screen.currentResolution.height != ScreenData.height)
 				{
 					if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
 					{
-						Screen.SetResolution(1366, 768, true);
+						Screen.SetResolution(ScreenData.width, ScreenData.height, true);
 					}
 				}
 			}
@@ -851,7 +883,7 @@ public class XkGameCtrl : SSGameMono
         }
 
         //if (Time.time - m_TimeLastMovie > 15f * 60f) //test
-        if (Time.time - m_TimeLastMovie > 3600f * 2f)
+        if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
         {
             m_TimeLastMovie = Time.time;
 
@@ -916,8 +948,11 @@ public class XkGameCtrl : SSGameMono
 
             if (Input.GetKeyUp(KeyCode.P))
             {
-                SSServerConfigData serverConfigDt = new SSServerConfigData();
-                serverConfigDt.UpdataAllServerConfigData();
+                SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(0.5f);
+
+                //SSServerConfigData serverConfigDt = new SSServerConfigData();
+                //serverConfigDt.UpdataAllServerConfigData();
+
                 //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateChuPiaoLvInfo(0.1f, 0.2f, 0.3f, 0.4f);
                 //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanInfo(100f, 200f, 300f, 400f);
                 //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(100f, 200f, 300f, 400f);

@@ -244,6 +244,9 @@ public class XKGlobalData
             Instance.InitGameWXPayDataManage();
             Instance.InitDanMuInfo();
             Instance.InitHddBoxNumInfo();
+
+            Instance.InitCaiChiFanJiangLv();
+            Instance.InitCaiChiBaoJiangLv();
         }
 		return Instance;
 	}
@@ -718,6 +721,173 @@ public class XKGlobalData
     /// 游戏商户信息配置.
     /// </summary>
     internal SSGameHddPayData.GameShangHuData m_ShangHuDt;
+    /// <summary>
+    /// 游戏彩池返奖率数据信息.
+    /// </summary>
+    internal float m_CaiChiFanJiangLv;
+    /// <summary>
+    /// 初始化彩池返奖率信息.
+    /// </summary>
+    void InitCaiChiFanJiangLv()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "CaiChiFanJiangLv");
+        if (info == null || info == "")
+        {
+            info = "0.5";
+        }
+
+        float val = MathConverter.StringToFloat(info);
+        if (val < 0f || val > 1f)
+        {
+            val = 0.5f;
+        }
+        m_CaiChiFanJiangLv = val;
+    }
+
+    /// <summary>
+    /// 设置彩池返奖率信息.
+    /// </summary>
+    internal void SetCaiChiFanJiangLv(float args)
+    {
+        m_CaiChiFanJiangLv = args;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "CaiChiFanJiangLv", args.ToString());
+        SSDebug.Log("SetCaiChiFanJiangLv -> m_CaiChiFanJiangLv ============== " + m_CaiChiFanJiangLv);
+    }
+    
+    /// <summary>
+    /// 随机道具爆奖率.
+    /// 1元代金券.
+    /// </summary>
+    internal float SuiJiDaoJuBaoJiangLv = 0f;
+    /// <summary>
+    /// 战车得彩爆奖率.
+    /// 战车代金券01低面额.
+    /// </summary>
+    internal float ZhanCheBaoJiangLv_01 = 0f;
+    /// <summary>
+    /// 战车得彩爆奖率.
+    /// 战车代金券02高面额.
+    /// </summary>
+    internal float ZhanCheBaoJiangLv_02 = 0f;
+    /// <summary>
+    /// JPBoss爆奖率.
+    /// 100元代金券.
+    /// </summary>
+    internal float JPBossBaoJiangLv = 0.3f;
+    /// <summary>
+    /// 初始化彩池爆奖率信息.
+    /// </summary>
+    void InitCaiChiBaoJiangLv()
+    {
+        string info = "";
+        float val = 0f;
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "SuiJiDaoJuBaoJiangLv");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        val = MathConverter.StringToFloat(info);
+        if (val < 0f || val > 1f)
+        {
+            val = 0f;
+        }
+        SuiJiDaoJuBaoJiangLv = val;
+
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_01");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        val = MathConverter.StringToFloat(info);
+        if (val < 0f || val > 1f)
+        {
+            val = 0f;
+        }
+        ZhanCheBaoJiangLv_01 = val;
+
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_02");
+        if (info == null || info == "")
+        {
+            info = "0";
+        }
+
+        val = MathConverter.StringToFloat(info);
+        if (val < 0f || val > 1f)
+        {
+            val = 0f;
+        }
+        ZhanCheBaoJiangLv_02 = val;
+
+        info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "JPBossBaoJiangLv");
+        if (info == null || info == "")
+        {
+            info = "0.3";
+        }
+
+        val = MathConverter.StringToFloat(info);
+        if (val < 0f || val > 1f)
+        {
+            val = 0.3f;
+        }
+        JPBossBaoJiangLv = val;
+    }
+
+    /// <summary>
+    /// 设置彩池爆奖率信息.
+    /// </summary>
+    internal void SetCaiChiBaoJiangLv(float suiJiBaoJiangLv, float zhanCheBaoJiangLv_01, float zhanCheBaoJiangLv_02, float jpBossBaoJiangLv)
+    {
+        SuiJiDaoJuBaoJiangLv = suiJiBaoJiangLv;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "SuiJiDaoJuBaoJiangLv", SuiJiDaoJuBaoJiangLv.ToString());
+
+        ZhanCheBaoJiangLv_01 = zhanCheBaoJiangLv_01;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_01", ZhanCheBaoJiangLv_01.ToString());
+
+        ZhanCheBaoJiangLv_02 = zhanCheBaoJiangLv_02;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_02", ZhanCheBaoJiangLv_02.ToString());
+
+        JPBossBaoJiangLv = jpBossBaoJiangLv;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "JPBossBaoJiangLv", JPBossBaoJiangLv.ToString());
+
+        SSDebug.Log("SetCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
+        SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
+        SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
+        SSDebug.Log("SetCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
+    }
+    
+    /// <summary>
+    /// 根据代金券分类获取对应的爆奖率数据.
+    /// </summary>
+    internal float GetDaiJinQuanBaoJiangLv(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        float val = 0f;
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    val = SuiJiDaoJuBaoJiangLv;
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    val = ZhanCheBaoJiangLv_01;
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    val = ZhanCheBaoJiangLv_02;
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    val = JPBossBaoJiangLv;
+                    break;
+                }
+        }
+        return val;
+    }
 
     /// <summary>
     /// 初始化1币兑换彩票数.

@@ -1536,6 +1536,9 @@ public class XKNpcMoveCtrl : MonoBehaviour
             {
                 m_CaiPiaoNpcUI.HiddenNumUI();
             }
+
+            //删除彩票战车和boss的血条UI.
+            SSUIRoot.GetInstance().m_GameUIManage.RemoveDaiJinQuanNpcXueTiaoUI();
         }
 
 		//XkGameCtrl.ClearNpcSpawnAllAmmo(gameObject);

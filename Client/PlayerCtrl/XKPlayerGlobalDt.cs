@@ -4,6 +4,11 @@ using System.Collections.Generic;
 public class XKPlayerGlobalDt : SSGameMono
 {
     /// <summary>
+    /// 玩家血值耗尽后,游戏倒计时延迟显示.
+    /// </summary>
+    [Range(0f, 10f)]
+    public float m_DaoJiShiDelayShowPlayerDead = 0.5f;
+    /// <summary>
     /// 子弹等级粒子特效数据.
     /// </summary>
     [System.Serializable]
@@ -74,6 +79,10 @@ public class XKPlayerGlobalDt : SSGameMono
 	 * Frequency[1] -> 主炮口.
 	 */
 	[Range(0.01f, 500f)]public float[] Frequency = {8f, 0.75f};
+    /// <summary>
+    /// 手动发射导弹的冷却时间.
+    /// </summary>
+    internal float TimeShouDongDaoDan = 0.15f;
 	/**
 	 * 导弹对npc施加的力.
 	 */

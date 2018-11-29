@@ -145,10 +145,18 @@ public class PlayerAmmoCtrl : MonoBehaviour
                         break;
                     }
 			}
-
-			if (isHitNpc) {
-				healthScript.OnDamageNpc(DamageNpc, PlayerState, AmmoType);
-				SpawnAmmoParticleObj();
+            
+			if (isHitNpc)
+            {
+                int baoJiDamage = 0;
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && healthScript.GetIsDaiJinQuanNpc() == true)
+                {
+                    //获取玩家对代金券npc的暴击伤害.
+                    XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
+                    baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
+                }
+				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType);
+				SpawnAmmoParticleObj(healthScript);
 			}
 		}
 
@@ -353,7 +361,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		//AmmoEndPos = firePos;
 	}
 
-	void SpawnAmmoParticleObj()
+	void SpawnAmmoParticleObj(XKNpcHealthCtrl healthScript = null)
 	{
 		#if USE_SPHERE_HIT
 		GameObject objParticle = null;
@@ -434,6 +442,17 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		Transform tran = obj.transform;
 		tran.parent = XkGameCtrl.PlayerAmmoArray;
 		XkGameCtrl.CheckObjDestroyThisTimed(obj);
+
+        if (healthScript != null && healthScript.GetIsDaiJinQuanNpc() == true)
+        {
+            //代金券npc.
+            SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
+            if (baoJiAmmo != null)
+            {
+                //初始化子弹爆炸粒子上的暴击效果.
+                baoJiAmmo.Init(PlayerState);
+            }
+        }
 		#else
 		GameObject objParticle = null;
 		GameObject obj = null;

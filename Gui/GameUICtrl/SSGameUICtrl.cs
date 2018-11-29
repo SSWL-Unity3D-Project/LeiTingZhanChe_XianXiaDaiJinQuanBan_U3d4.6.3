@@ -17,12 +17,21 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public Transform m_GameUIBottomLeft;
     /// <summary>
+    /// 游戏UI界面右上锚点.
+    /// </summary>
+    public Transform m_GameUITopRight;
+    /// <summary>
+    /// 游戏UI界面正上方锚点.
+    /// </summary>
+    public Transform m_GameUITop;
+    /// <summary>
     /// 玩家UI父级tr.
     /// </summary>
     public Transform[] m_PlayerUIParent = new Transform[3];
 
     void Awake()
     {
+        CreatErWeiMaUI();
         if (SSUIRoot.GetInstance() != null)
         {
             SSUIRoot.GetInstance().m_GameUIManage = this;
@@ -35,6 +44,7 @@ public class SSGameUICtrl : SSGameMono
         //    CreatFixSystemTimeUI();
         //}
 
+        CreatZhanCheBossCaiPiaoZhuanPan();
         if (XkGameCtrl.GetInstance() != null)
         {
             XkGameCtrl.GameVersion gameVersion = XkGameCtrl.GetInstance().m_GameVersion;
@@ -113,32 +123,69 @@ public class SSGameUICtrl : SSGameMono
     }
 
     /// <summary>
-    /// 创建战车boss彩票转盘.
+    /// 战车和JPBoss的彩票转盘控制脚本.
     /// </summary>
-    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
+    SSCaiPiaoZhanCheBossUI m_CaiPiaoZhanCheBossUI;
+    /// <summary>
+    /// 创建战车和JPBoss的彩票转盘.
+    /// </summary>
+    void CreatZhanCheBossCaiPiaoZhuanPan()
     {
-        //StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type, exp));
-        if (m_GameUIBottomLeft == null)
-        {
-            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
-            return;
-        }
-
-        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+        string prefabPath = "Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan";
+        GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
-            //UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan -> init...");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
-            SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
-            if (caiPiaoZhuanPan != null)
+            m_CaiPiaoZhanCheBossUI = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+            if (m_CaiPiaoZhanCheBossUI != null)
             {
-                caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+                m_CaiPiaoZhanCheBossUI.SetActive(false);
             }
         }
         else
         {
-            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+            UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null, prefabPath == " + prefabPath);
         }
+    }
+
+    /// <summary>
+    /// 创建战车boss彩票转盘.
+    /// </summary>
+    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
+    {
+        if (m_CaiPiaoZhanCheBossUI != null)
+        {
+            m_CaiPiaoZhanCheBossUI.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+        }
+        else
+        {
+            SSDebug.LogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_CaiPiaoZhanCheBossUI was null");
+        }
+
+        //StartCoroutine(DelayCreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, caiPiaoVal, pos, type, exp));
+        
+        //if (m_GameUIBottomLeft == null)
+        //{
+        //    UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> m_GameUIBottomLeft was null.........");
+        //    return;
+        //}
+
+        //GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/CaiPiaoZhuanPan");
+        //if (gmDataPrefab != null)
+        //{
+        //    //UnityLog("CreatZhanCheBossCaiPiaoZhuanPan...");
+        //    GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
+        //    SSCaiPiaoZhanCheBossUI caiPiaoZhuanPan = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
+        //    if (caiPiaoZhuanPan != null)
+        //    {
+        //        caiPiaoZhuanPan.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+        //    }
+        //}
+        //else
+        //{
+        //    UnityLogWarning("CreatZhanCheBossCaiPiaoZhuanPan -> gmDataPrefab was null");
+        //}
     }
 
     //IEnumerator DelayCreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
@@ -926,7 +973,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/ScreenIdUI/ScreenId");
         if (gmDataPrefab != null)
         {
-            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITopRight);
             SSGameHddSreenId screenIdCom = obj.GetComponent<SSGameHddSreenId>();
             if (screenIdCom != null)
             {
@@ -1362,6 +1409,88 @@ public class SSGameUICtrl : SSGameMono
             m_GameStartTimeUI.RemoveSelf();
             m_GameStartTimeUI = null;
             Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 产生游戏二维码界面UI.
+    /// </summary>
+    internal void CreatErWeiMaUI()
+    {
+        string prefabPath = "Prefabs/GUI/erWeiMa/erWeiMa";
+        GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+        if (gmDataPrefab != null)
+        {
+            Debug.Log("Unity: CreatErWeiMaUI......................................................");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITopRight);
+            ErWeiMaUI erWeiMaCom = obj.GetComponent<ErWeiMaUI>();
+            if (erWeiMaCom != null)
+            {
+                erWeiMaCom.Init(camera);
+            }
+        }
+        else
+        {
+            UnityLogWarning("CreatErWeiMaUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+        }
+    }
+
+    /// <summary>
+    /// 游戏代金券npc血条界面UI.
+    /// </summary>
+    internal SSDaiJinQuanXuanTiao  m_DaiJinQuanNpcXueTiaoUI = null;
+    /// <summary>
+    /// 产生游戏代金券npc血条界面UI.
+    /// </summary>
+    internal void CreatDaiJinQuanNpcXueTiaoUI(float maxFillAmount)
+    {
+        if (m_DaiJinQuanNpcXueTiaoUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/DaiJinQuanXueTiao/DaiJinQuanXueTiao";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatDaiJinQuanNpcXueTiaoUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITop);
+                m_DaiJinQuanNpcXueTiaoUI = obj.GetComponent<SSDaiJinQuanXuanTiao>();
+                m_DaiJinQuanNpcXueTiaoUI.Init(maxFillAmount);
+
+                if (m_CaiPiaoDaJiang != null)
+                {
+                    //删除大奖UI.
+                    m_CaiPiaoDaJiang.RemoveSelf();
+                    m_CaiPiaoDaJiang = null;
+                }
+            }
+            else
+            {
+                UnityLogWarning("CreatDaiJinQuanNpcXueTiaoUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除游戏代金券npc血条界面UI.
+    /// </summary>
+    internal void RemoveDaiJinQuanNpcXueTiaoUI()
+    {
+        if (m_DaiJinQuanNpcXueTiaoUI != null)
+        {
+            UnityLog("RemoveDaiJinQuanNpcXueTiaoUI...");
+            m_DaiJinQuanNpcXueTiaoUI.RemoveSelf();
+            m_DaiJinQuanNpcXueTiaoUI = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 设置代金券npc的血条amount信息.
+    /// </summary>
+    internal void SetDaiJinQuanNpcXueTiaoAmount(float bloodAmount)
+    {
+        if (m_DaiJinQuanNpcXueTiaoUI != null)
+        {
+            m_DaiJinQuanNpcXueTiaoUI.SetBloodBossAmount(bloodAmount);
         }
     }
 }

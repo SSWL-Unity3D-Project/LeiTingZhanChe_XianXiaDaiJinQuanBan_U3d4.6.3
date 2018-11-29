@@ -15,7 +15,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	 * MaxPuTongAmmo[2] -> 三人模式下.
 	 * MaxPuTongAmmo[3] -> 四人模式下.
 	 */
-	[Range(1, 100000)] public int[] MaxPuTongAmmo = {1, 1, 1, 1};
+	[Range(1, 10000000)] public int[] MaxPuTongAmmo = {1, 1, 1, 1};
 //	[Range(0, 100)] public int MaxAmmoHurtLiZi = 0;
 	public GameObject[] HiddenNpcObjArray; //npc死亡时需要立刻隐藏的对象.
 //	public GameObject HurtLiZiObj; //飞机npc的受伤粒子.
@@ -276,14 +276,38 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             {
                 if (NpcScript.IsCaiPiaoZhanChe == true)
                 {
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                    {
+                        //获取获取JPBoss和战车Npc的血值数据.
+                        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(NpcScript.m_DaiJinQuanState);
+                    }
+
                     if (NpcScript.GetIsBossNpc() == true)
                     {
                         m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss, this);
+                        if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                        {
+                            //跟新JPBoss的血值数据.
+                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                        }
                     }
                     else
                     {
                         m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, this);
+                        if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                        {
+                            //跟新战车Npc的血值数据.
+                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.ZhanCheHealth.MaxPuTongAmmo;
+                        }
                     }
+
+                    //创建代金券npc的血条信息.
+                    float perVal = 0.5f;
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                    {
+                        perVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.UIHealthPer;
+                    }
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(perVal);
                 }
                 NpcScript.m_CaiPiaoNpcUI = m_CaiPiaoNpcUI;
             }
@@ -353,9 +377,25 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		//Debug.Log("Unity:"+"DisCamera "+DisCamera);
 	}
 
+    /// <summary>
+    /// 获取是否为代金券Npc.
+    /// </summary>
+    internal bool GetIsDaiJinQuanNpc()
+    {
+        if (NpcScript != null)
+        {
+            return NpcScript.IsCaiPiaoZhanChe;
+        }
+        return false;
+    }
+
 	string NpcNameInfo = "";
 	XKNpcDamageCtrl NpcDamageCom;
 	int CountActivePlayer;
+    /// <summary>
+    /// 玩家主炮散弹对npc造成伤害的时间记录信息.
+    /// </summary>
+    float TimeSanDanDamage = 0f;
 	public void OnDamageNpc(int damageNpcVal = 1, PlayerEnum playerSt = PlayerEnum.Null,
 	                        PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
 	{
@@ -363,6 +403,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         {
 			return;
 		}
+
+        if (pAmmoType == PlayerAmmoType.SanDanAmmo)
+        {
+            if (Time.time - TimeSanDanDamage < XKPlayerGlobalDt.GetInstance().TimeShouDongDaoDan)
+            {
+                //对于玩家的主炮散弹在同一次发射内只计算一次伤害.
+                //SSDebug.LogWarning("************* pAmmoType ====== " + pAmmoType);
+                return;
+            }
+            TimeSanDanDamage = Time.time;
+        }
 
         //switch (NpcJiFen)
         //{
@@ -422,12 +473,15 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         {
             if (NpcScript.IsZhanCheNpc || NpcScript.IsJPBossNpc)
             {
-                //当没有玩家激活游戏时,彩票战车和JPBoss采用原血量的一定比例来计算.
-                puTongAmmoNum = (int)(XkGameCtrl.GetInstance().m_ZhanCheBossBloodPer * puTongAmmoNum);
+                if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+                {
+                    //当没有玩家激活游戏时,彩票战车和JPBoss采用原血量的一定比例来计算.
+                    puTongAmmoNum = (int)(XkGameCtrl.GetInstance().m_ZhanCheBossBloodPer * puTongAmmoNum);
+                }
             }
         }
 
-        if (NpcJiFen == NpcJiFenEnum.Boss)
+        /*if (NpcJiFen == NpcJiFenEnum.Boss)
         {
 			float bossAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
 			bossAmount = bossAmount < 0f ? 0f : bossAmount;
@@ -435,12 +489,40 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             {
                 XKBossXueTiaoCtrl.GetInstance().SetBloodBossAmount(bossAmount, this);
             }
-		}
+		}*/
         
-		/*Debug.Log("Unity:"+"OnDamageNpc -> "
+        if (NpcScript != null)
+        {
+            if (NpcScript.IsCaiPiaoZhanChe == true)
+            {
+                float bloodAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
+                bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
+
+                bool isCanJiBao = true;
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                {
+                    isCanJiBao = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.IsCanJiBao;
+                }
+
+                if (isCanJiBao == false)
+                {
+                    //不允许被玩家击爆的代金券npc.
+                    if (bloodAmount <= 0f)
+                    {
+                        //强制保留一定的血量.
+                        bloodAmount = 0.05f;
+                        PuTongAmmoCount = puTongAmmoNum - 1;
+                    }
+                }
+                //彩票战车和boss的血条UI信息更新.
+                SSUIRoot.GetInstance().m_GameUIManage.SetDaiJinQuanNpcXueTiaoAmount(bloodAmount);
+            }
+        }
+
+        /*Debug.Log("Unity:"+"OnDamageNpc -> "
 		          +", nameNpc "+NpcNameInfo
 		          +", puTongAmmoNum "+puTongAmmoNum);*/
-		if (PuTongAmmoCount >= puTongAmmoNum)
+        if (PuTongAmmoCount >= puTongAmmoNum)
         {
             if (NpcScript != null)
             {
