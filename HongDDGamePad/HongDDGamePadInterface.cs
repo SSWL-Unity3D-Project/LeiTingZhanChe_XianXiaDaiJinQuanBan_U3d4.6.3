@@ -11,7 +11,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 红点点微信手柄消息处理组件.
         /// </summary>
-        HongDDGamePad m_HongDDGamePadCom;
+        internal HongDDGamePad m_HongDDGamePadCom;
 
         /// <summary>
         /// 创建红点点微信虚拟游戏手柄组件.

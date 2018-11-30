@@ -10,11 +10,11 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     public int YuZhiCaiPiaoBeiLv = 100;
 
-    int _YuZhiCaiPiaoVal = 0;
+    float _YuZhiCaiPiaoVal = 0;
     /// <summary>
     /// 预制彩票数量 == 战车彩票数量 + JPBoss彩票数量.
     /// </summary>
-    public int YuZhiCaiPiaoVal
+    public float YuZhiCaiPiaoVal
     {
         set
         {
@@ -53,9 +53,9 @@ public class SSGameYuZhiCaiPiaoData
     /// <summary>
     /// 获取最原始的预制彩票数量.
     /// </summary>
-    int GetOldYuZhiCaiPiaoVal()
+    float GetOldYuZhiCaiPiaoVal()
     {
-        int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
+        float coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
         return YuZhiCaiPiaoBeiLv * coinToCaiPiao;
     }
 
@@ -68,16 +68,16 @@ public class SSGameYuZhiCaiPiaoData
 
         int zhanCheCaiPiaoAdd = (int)(val * ZhanCheCaiPiaoBiLi);
         int jpBossCaiPiaoAdd = (int)(val * JPBossCaiPiaoBiLi);
-        int oldYuZhiCaiPiao = GetOldYuZhiCaiPiaoVal();
-        int yuZhiCaiPiaoTmp = YuZhiCaiPiaoVal;
+        float oldYuZhiCaiPiao = GetOldYuZhiCaiPiaoVal();
+        float yuZhiCaiPiaoTmp = YuZhiCaiPiaoVal;
         YuZhiCaiPiaoVal += val;
         if (YuZhiCaiPiaoVal > oldYuZhiCaiPiao)
         {
-            int valAdd = oldYuZhiCaiPiao - yuZhiCaiPiaoTmp;
+            float valAdd = oldYuZhiCaiPiao - yuZhiCaiPiaoTmp;
             zhanCheCaiPiaoAdd = (int)(valAdd * ZhanCheCaiPiaoBiLi);
             jpBossCaiPiaoAdd = (int)(valAdd * JPBossCaiPiaoBiLi);
 
-            int superJPBossCaiPiao = YuZhiCaiPiaoVal - oldYuZhiCaiPiao;
+            float superJPBossCaiPiao = YuZhiCaiPiaoVal - oldYuZhiCaiPiao;
             //superJPBoss彩票池.
             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuperJPBossCaiPiaoData.SuperJPCaiPiao = superJPBossCaiPiao;
             YuZhiCaiPiaoVal = oldYuZhiCaiPiao;

@@ -409,7 +409,7 @@ public class SetPanelUiRoot : MonoBehaviour
 
             case SelectSetPanelDate.CoinToCard:
                 {
-                    SetCoinToCardIndo(XKGlobalData.GetInstance().m_CoinToCard + 5);
+                    //SetCoinToCardIndo(XKGlobalData.GetInstance().m_CoinToCard + 5);
                     break;
                 }
             case SelectSetPanelDate.CardMode:

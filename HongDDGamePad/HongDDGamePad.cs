@@ -132,8 +132,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
                 }
             }
+            //UpdateGameCoinToMoney(1); //test
         }
-        
+
         /// <summary>
         /// 产生Websocket预制.
         /// </summary>
@@ -1302,7 +1303,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
         #endregion
-        
+
         #region 微信游戏手柄玩家红点点账户信息管理
 
 #if TEST_HDD_ZHIFU_PLATFORM
@@ -1312,7 +1313,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// 1币 == 2元人民币 == 200分.
         /// 游戏币转换为红点点账户金币（单位为分）.
         /// </summary>
-        int m_GameCoinToMoney = 1;
+        //int m_GameCoinToMoney = 1;
 #else
         /// <summary>
         /// 游戏币和红点点金币的转换率.
@@ -1323,13 +1324,38 @@ namespace Assets.XKGame.Script.HongDDGamePad
 #endif
 
         /// <summary>
+        /// 游戏币和红点点金币的转换率.
+        /// 1币 == 2元人民币 == 200分.
+        /// 游戏币转换为红点点账户金币（单位为分）.
+        /// </summary>
+        internal int m_GameCoinToMoney
+        {
+            get
+            {
+                return XKGlobalData.GetInstance().GameCoinToMoney;
+            }
+            set
+            {
+                int val = value;
+                if (val < 1 || val > 10000)
+                {
+                    //单位是分.
+                    val = 200;
+                }
+                XKGlobalData.GetInstance().SetGameCoinToMoneyVal(val);
+            }
+        }
+
+        /// <summary>
         /// 更新游戏一币等于多少人民币的信息.
+        /// 数据单位是分.
         /// </summary>
         internal void UpdateGameCoinToMoney(int args)
         {
             m_GameCoinToMoney = args;
-            XKGlobalData.GetInstance().m_CoinToCard = args;
+            XKGlobalData.GetInstance().SetCoinToCardVal(args / 100f);
             SSDebug.Log("UpdateGameCoinToMoney -> m_GameCoinToMoney ====================== " + m_GameCoinToMoney);
+            SSDebug.Log("UpdateGameCoinToMoney -> m_CoinToCard ====================== " + XKGlobalData.GetInstance().m_CoinToCard.ToString());
         }
 
         /// <summary>
@@ -1551,7 +1577,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_SSBoxPostNet != null
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
-                int subCoin = 1; //减去1个游戏币(1元1个游戏币).
+                int subCoin = 1; //减去1个游戏币(2元1个游戏币).
                 int money = subCoin * m_GameCoinToMoney; //扣除的红点点账户金币.
                 SendSubWXPlayerHddPayData(userId, money);
             }
@@ -1635,7 +1661,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadWXPay.SToC_ReceiveGameConfigInfo(args);
             }
         }
-        #endregion
+#endregion
 
         //private void Update()
         //{

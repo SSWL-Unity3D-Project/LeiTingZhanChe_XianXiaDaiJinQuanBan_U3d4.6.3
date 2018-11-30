@@ -1,5 +1,5 @@
 #define USE_CHECK_LOAD_MOVIE_SCENE
-//#define TEST_UPDATA_GAME
+#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
@@ -124,7 +124,7 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 击杀彩票战车或boss时,是否忽略玩家索引.
     /// </summary>
-    public bool IsCaiPiaoHuLuePlayerIndex = false;
+    internal bool IsCaiPiaoHuLuePlayerIndex = true;
     /// <summary>
     /// 彩票移动的数据信息.
     /// </summary>
@@ -948,7 +948,13 @@ public class XkGameCtrl : SSGameMono
 
             if (Input.GetKeyUp(KeyCode.P))
             {
-                SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(0.5f);
+                if (pcvr.GetInstance().m_HongDDGamePadInterface != null
+                    && pcvr.GetInstance().m_HongDDGamePadInterface.m_HongDDGamePadCom != null)
+                {
+                    int gameCoinToMoney = pcvr.GetInstance().m_HongDDGamePadInterface.m_HongDDGamePadCom.m_GameCoinToMoney;
+                    SSDebug.Log("gameCoinToMoney ============================ " + gameCoinToMoney);
+                }
+                //SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(0.5f);
 
                 //SSServerConfigData serverConfigDt = new SSServerConfigData();
                 //serverConfigDt.UpdataAllServerConfigData();

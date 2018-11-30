@@ -189,22 +189,22 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// 随机道具出票率.
         /// 1元代金券.
         /// </summary>
-        float SuiJiDaoJuChuPiaoLv = 0.0f;
+        float SuiJiDaoJuChuPiaoLv = 0f;
         /// <summary>
         /// 战车得彩出票率.
         /// 战车代金券01低面额.
         /// </summary>
-        float ZhanCheChuPiaoLv_01 = 0.5f;
+        float ZhanCheChuPiaoLv_01 = 0f;
         /// <summary>
         /// 战车得彩出票率.
         /// 战车代金券02高面额.
         /// </summary>
-        float ZhanCheChuPiaoLv_02 = 0.3f;
+        float ZhanCheChuPiaoLv_02 = 0f;
         /// <summary>
         /// JPBoss出票率.
         /// 100元代金券.
         /// </summary>
-        float JPBossChuPiaoLv = 0.19f;
+        float JPBossChuPiaoLv = 1f;
         /// <summary>
         /// 更新游戏代金券出票率数据信息.
         /// </summary>
@@ -502,7 +502,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             }
 
             int val = 0;
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            //int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             switch (type)
             {
                 case DeCaiState.ZhanChe:
@@ -571,10 +571,10 @@ public class SSCaiPiaoDataManage : SSGameMono
                                 subVal = 0;
                             }
                         }
-                        else
-                        {
-                            val = (int)(coinStart * JPBossDaiJinQuan);
-                        }
+                        //else
+                        //{
+                        //    val = (int)(coinStart * JPBossDaiJinQuan);
+                        //}
                         JPBossDeCai -= subVal;
                         //从预制彩池里取彩票投入JPBoss彩池.
                         XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.SubJPBossCaiPiaoVal();
@@ -598,7 +598,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         public int GetPrintCaiPiaoValueByDeCaiState(DeCaiState type, SuiJiDaoJuState suiJiDaoJuType = SuiJiDaoJuState.BaoXiang, DaiJinQuanState daiJinQuan = DaiJinQuanState.ZhanCheDaiJinQuan_01)
         {
             int value = 0;
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            //int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             switch (type)
             {
                 case DeCaiState.ZhanChe:
@@ -647,10 +647,10 @@ public class SSCaiPiaoDataManage : SSGameMono
                             //value = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
                             value = (int)JPBossDaiJinQuan;
                         }
-                        else
-                        {
-                            value = (int)(coinStart * JPBossDaiJinQuan);
-                        }
+                        //else
+                        //{
+                        //    value = (int)(coinStart * JPBossDaiJinQuan);
+                        //}
                         break;
                     }
             }
@@ -663,7 +663,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         public bool GetIsChuCaiPiaoByDeCaiState(DeCaiState type, DaiJinQuanState daiJinQuan = DaiJinQuanState.ZhanCheDaiJinQuan_01)
         {
             bool isChuPiao = false;
-            int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            //int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
             float chuPiaoTiaoJian = 0f;
             float deCaiVal = -1f;
             switch (type)
@@ -696,7 +696,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
             }
 
-            int chuCaiVal = (int)(coinToCaiPiao * chuPiaoTiaoJian);
+            int chuCaiVal = 0;
             if (XkGameCtrl.GetInstance().m_CaiPiaoMode == XkGameCtrl.CaiPiaoModeSuanFa.GuDing
                 && XkPlayerCtrl.GetInstanceFeiJi() != null)
             {
@@ -711,6 +711,11 @@ public class SSCaiPiaoDataManage : SSGameMono
                         {
                             //chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
                             chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.JPBossDaiJinQuan);
+                            break;
+                        }
+                    case DeCaiState.SuiJiDaoJu:
+                        {
+                            chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
                             break;
                         }
                 }
@@ -729,8 +734,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// </summary>
         public int GetChuPiaoTiaoJianBeiShu(DeCaiState type, DaiJinQuanState daiJinQuan = DaiJinQuanState.ZhanCheDaiJinQuan_01)
         {
-            int chuPiaoBeiShu = 0;
-            int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            float coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
             float chuPiaoTiaoJian = 0f;
             float deCaiVal = -1f;
             switch (type)
@@ -764,9 +768,8 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
             }
 
-            int chuCaiVal = (int)(coinToCaiPiao * chuPiaoTiaoJian);
-            chuPiaoBeiShu = (int)(deCaiVal / chuCaiVal);
-            return chuPiaoBeiShu;
+            float chuCaiVal = coinToCaiPiao * chuPiaoTiaoJian;
+            return (int)(deCaiVal / chuCaiVal);
         }
     }
     /// <summary>
@@ -1039,7 +1042,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             int deCaiVal = 0;
             float xuBiChuPiaoLvTmp = 1f;
             float zhengChangChuPiaoLvTmp = 0f;
-            int coinStart = XKGlobalData.GetInstance().m_CoinToCard * XKGlobalData.GameNeedCoin;
+            float coinStart = XKGlobalData.GetInstance().m_CoinToCard;
             if (isPlayerXuBi)
             {
                 xuBiChuPiaoLvTmp = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.XuBiChuPiaoLv;
@@ -1296,12 +1299,12 @@ public class SSCaiPiaoDataManage : SSGameMono
         /// <summary>
         /// 彩票基数计数.
         /// </summary>
-        int CaiPiaoJiShuCount = 1;
-        int _SuperJPCaiPiao = 0;
+        float CaiPiaoJiShuCount = 1f;
+        float _SuperJPCaiPiao = 0f;
         /// <summary>
         /// 超级JPBoss彩票数.
         /// </summary>
-        public int SuperJPCaiPiao
+        public float SuperJPCaiPiao
         {
             get
             {
@@ -1310,8 +1313,8 @@ public class SSCaiPiaoDataManage : SSGameMono
             set
             {
                 _SuperJPCaiPiao = value;
-                int coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
-                int caiPiaoVal = CaiPiaoJiShuCount * CaiPiaoBeiLvJiShu * coinToCaiPiao;
+                float coinToCaiPiao = XKGlobalData.GetInstance().m_CoinToCard;
+                float caiPiaoVal = CaiPiaoJiShuCount * CaiPiaoBeiLvJiShu * coinToCaiPiao;
                 //Debug.Log("Unity: SuperJPCaiPiao =============== " + SuperJPCaiPiao
                 //    + ", CaiPiaoJiShuCount == " + CaiPiaoJiShuCount
                 //    + ", CaiPiaoBeiLvJiShu == " + CaiPiaoBeiLvJiShu
@@ -1320,7 +1323,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                 if (value >= caiPiaoVal)
                 {
                     //可以产生SuperJPBoss了.
-                    CaiPiaoJiShuCount = (value / (CaiPiaoBeiLvJiShu * coinToCaiPiao)) + 1;
+                    CaiPiaoJiShuCount = (value / (CaiPiaoBeiLvJiShu * coinToCaiPiao)) + 1f;
 #if CREATE_SUPER_JPBOSS
                     if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_ZhanCheJPBossData.IsCreatSuperJPBoss == false)
                     {

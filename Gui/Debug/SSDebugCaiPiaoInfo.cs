@@ -25,8 +25,8 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
         float daoJuJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDeCai;
         info += ", daoJuJiangChi == " + daoJuJiangChi.ToString("f2");
         //预制彩池数据.
-        int yuZhiJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.YuZhiCaiPiaoVal;
-        info += ", yuZhiJiangChi == " + yuZhiJiangChi;
+        float yuZhiJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.YuZhiCaiPiaoVal;
+        info += ", yuZhiJiangChi == " + yuZhiJiangChi.ToString("f2");
         //总投币数据.
         int value = XKGlobalData.GetInstance().m_TotalInsertCoins;
         info += ", TotalInsertCoins == " + value;

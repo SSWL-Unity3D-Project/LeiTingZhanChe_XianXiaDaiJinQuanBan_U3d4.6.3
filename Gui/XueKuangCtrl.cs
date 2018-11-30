@@ -197,7 +197,12 @@ public class XueKuangCtrl : MonoBehaviour
 		bool isActiveInfo = indexVal == 1 ? true : false;
 		XueTiaoSprite.gameObject.SetActive(isActiveInfo);
 		XueTiaoSprite.fillAmount = 1f;
-	}
+        if (m_GameObjFlash != null)
+        {
+            m_GameObjFlash.RemoveSelf();
+            m_GameObjFlash = null;
+        }
+    }
 
 	public static XueKuangCtrl GetXueKuangCtrl(PlayerEnum playerIndex)
 	{

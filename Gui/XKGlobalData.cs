@@ -232,25 +232,31 @@ public class XKGlobalData
 			//}
             val = "0"; //四人版本.
             GameVersionPlayer = Convert.ToInt32(val);
-
-            Instance.InitIsPrintCaiPiao();
-            Instance.InitCoinToCard();
-            Instance.InitTotalOutPrintCards();
-            Instance.InitTotalInsertCoins();
-            Instance.InitZhanCheCaiChi();
-            Instance.InitDaoJuCaiChi();
-            Instance.InitJPBossCaiChi();
-            Instance.InitCaiPiaoPrintState();
-            Instance.InitGameWXPayDataManage();
-            Instance.InitDanMuInfo();
-            Instance.InitHddBoxNumInfo();
-
-            Instance.InitCaiChiFanJiangLv();
-            Instance.InitCaiChiBaoJiangLv();
-            Instance.InitMianFeiShiWanCount();
+            
+            Instance.Init();
         }
 		return Instance;
 	}
+
+    void Init()
+    {
+        InitIsPrintCaiPiao();
+        InitCoinToCard();
+        InitTotalOutPrintCards();
+        InitTotalInsertCoins();
+        InitZhanCheCaiChi();
+        InitDaoJuCaiChi();
+        InitJPBossCaiChi();
+        InitCaiPiaoPrintState();
+        InitGameWXPayDataManage();
+        InitDanMuInfo();
+        InitHddBoxNumInfo();
+
+        InitCaiChiFanJiangLv();
+        InitCaiChiBaoJiangLv();
+        InitMianFeiShiWanCount();
+        InitGameCoinToMoney();
+    }
     
 	void InitInfo()
 	{
@@ -319,7 +325,7 @@ public class XKGlobalData
     /// <summary>
     /// 预支彩池.
     /// </summary>
-    internal int m_YuZhiCaiChi = 0;
+    internal float m_YuZhiCaiChi = 0;
     /// <summary>
     /// 预支彩池倍率.
     /// </summary>
@@ -333,25 +339,25 @@ public class XKGlobalData
     /// </summary>
     public bool InitYuZhiCaiChi(int yuZhiCaiPiaoBeiLv)
     {
-        int val = 0;
+        float val = 0;
         bool isUpdateYuZhiCaiChi = false;
         if (IsResetYuZhiCaiPiaoData)
         {
             isUpdateYuZhiCaiChi = true;
             IsResetYuZhiCaiPiaoData = false;
-            val = yuZhiCaiPiaoBeiLv * m_CoinToCard;
+            val = (int)(yuZhiCaiPiaoBeiLv * m_CoinToCard);
         }
         else
         {
             string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "YuZhiData"); //预制彩池信息
             if (info == null || info == "")
             {
-                val = yuZhiCaiPiaoBeiLv * m_CoinToCard;
+                val = (int)(yuZhiCaiPiaoBeiLv * m_CoinToCard);
                 isUpdateYuZhiCaiChi = true;
             }
             else
             {
-                val = Convert.ToInt32(info);
+                val = MathConverter.StringToFloat(info);
             }
         }
         m_YuZhiCaiPiaoBeiLv = yuZhiCaiPiaoBeiLv;
@@ -365,7 +371,7 @@ public class XKGlobalData
     /// </summary>
     public void ResetYuZhiCaiChi()
     {
-        int val = m_YuZhiCaiPiaoBeiLv * m_CoinToCard;
+        int val = (int)(m_YuZhiCaiPiaoBeiLv * m_CoinToCard);
         IsResetYuZhiCaiPiaoData = true;
         SetYuZhiCaiChi(val);
     }
@@ -373,7 +379,7 @@ public class XKGlobalData
     /// <summary>
     /// 设置预支彩池.
     /// </summary>
-    public void SetYuZhiCaiChi(int val)
+    public void SetYuZhiCaiChi(float val)
     {
         m_YuZhiCaiChi = val;
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "YuZhiData", val.ToString()); //预制彩池信息
@@ -625,7 +631,6 @@ public class XKGlobalData
         HandleJsonObj.WriteToFileXml(FileName, "PrintCard", IsPrintCaiPiao == true ? "0" : "1");
     }
 
-    int _CoinToCard = 1;
     /// <summary>
     /// 弹幕信息.
     /// </summary>
@@ -705,16 +710,19 @@ public class XKGlobalData
         m_HddBoxNumInfo = info;
     }
 
+
+    float _CoinToCard = 1;
     /// <summary>
     /// 一币兑换彩票数.
     /// 1币兑换代金券数(1币等于1张1元代金券).
+    /// 1币等于多少人民币代金券,默认一币等于2元(单位是元)
     /// </summary>
-    internal int m_CoinToCard
+    internal float m_CoinToCard
     {
         get { return _CoinToCard; }
         set
         {
-            //_CoinToCard = value; //代金券版本,不允许修改本数值.
+            _CoinToCard = value;
         }
     }
 
@@ -932,30 +940,73 @@ public class XKGlobalData
 
     /// <summary>
     /// 初始化1币兑换彩票数.
+    /// 1币等于多少面值人民币,单位为元.(默认值为2元)
     /// </summary>
     void InitCoinToCard()
     {
         string info = HandleJsonObj.ReadFromFileXml(FileName, "CoinToCard");
         if (info == null || info == "")
         {
-            info = "20";
+            info = "2";
+            SetCoinToCardVal(2f);
         }
-
-        int val = Convert.ToInt32(info);
-        if (val < 10 || val > 50)
+        else
         {
-            val = 20;
+            float val = MathConverter.StringToFloat(info);
+            if (val < 0.01f || val > 100f)
+            {
+                val = 2;
+            }
+            m_CoinToCard = val;
         }
-        m_CoinToCard = val;
     }
 
     /// <summary>
     /// 设置1币兑换彩票数.
     /// </summary>
-    public void SetCoinToCardVal(int val)
+    public void SetCoinToCardVal(float val)
     {
         m_CoinToCard = val;
         HandleJsonObj.WriteToFileXml(FileName, "CoinToCard", m_CoinToCard.ToString());
+    }
+
+    /// <summary>
+    /// 游戏币和红点点金币的转换率.
+    /// 1币 == 2元人民币 == 200分.
+    /// 游戏币转换为红点点账户金币（单位为分）.
+    /// </summary>
+    internal int GameCoinToMoney = 1;
+    /// <summary>
+    /// 初始化游戏币和红点点金币的转换率.
+    /// 1币 == 2元人民币 == 200分.
+    /// </summary>
+    void InitGameCoinToMoney()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileName, "GameCoinToMoney");
+        if (info == null || info == "")
+        {
+            info = "200";
+            SetGameCoinToMoneyVal(200);
+        }
+        else
+        {
+            int val = Convert.ToInt32(info);
+            if (val < 1 || val > 10000)
+            {
+                val = 200;
+            }
+            GameCoinToMoney = val;
+        }
+        SSDebug.Log("InitGameCoinToMoney -> GameCoinToMoney =========== " + GameCoinToMoney);
+    }
+
+    /// <summary>
+    /// 设置游戏币和红点点金币的转换率..
+    /// </summary>
+    public void SetGameCoinToMoneyVal(int val)
+    {
+        GameCoinToMoney = val;
+        HandleJsonObj.WriteToFileXml(FileName, "GameCoinToMoney", val.ToString());
     }
 
     /// <summary>
