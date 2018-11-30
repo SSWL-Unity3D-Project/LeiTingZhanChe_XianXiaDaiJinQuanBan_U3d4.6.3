@@ -1,5 +1,6 @@
 #define USE_CHECK_LOAD_MOVIE_SCENE
-#define TEST_UPDATA_GAME
+//#define TEST_SCREEN_CONFIG
+//#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
@@ -370,6 +371,10 @@ public class XkGameCtrl : SSGameMono
         static extern int GetSystemMetrics(int nIndex);
         static int SM_CXSCREEN = 0;
         static int SM_CYSCREEN = 1;
+#if TEST_SCREEN_CONFIG
+        public static int width = 400;
+        public static int height = 300;
+#else
         public static int width
         {
             get
@@ -384,6 +389,7 @@ public class XkGameCtrl : SSGameMono
                 return GetSystemMetrics(SM_CYSCREEN);
             }
         }
+#endif
     }
 //	public static int TestGameEndLv = (int)GameLevel.Scene_2;
 	static XkGameCtrl _Instance;
