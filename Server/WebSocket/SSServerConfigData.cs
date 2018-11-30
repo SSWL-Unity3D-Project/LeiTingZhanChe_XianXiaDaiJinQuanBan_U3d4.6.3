@@ -7,6 +7,7 @@
     {
         /// <summary>
         /// 游戏一币等于多少人民币的信息.
+        /// 单位是分.
         /// </summary>
         internal int GameCoinToMoney = 200;
         /// <summary>
@@ -230,6 +231,7 @@
             {
                 //更新游戏免费试玩信息.
                 pcvr.GetInstance().m_HongDDGamePadInterface.UpdateMianFeiCountInfo(MianFeiShiWanCount);
+                XKGlobalData.GetInstance().SetMianFeiShiWanCount(MianFeiShiWanCount);
 
                 //更新游戏一币等于多少人民币的信息.
                 pcvr.GetInstance().m_HongDDGamePadInterface.UpdateGameCoinToMoney(GameCoinToMoney);

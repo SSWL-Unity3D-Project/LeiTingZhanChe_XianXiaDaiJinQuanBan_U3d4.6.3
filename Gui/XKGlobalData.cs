@@ -247,6 +247,7 @@ public class XKGlobalData
 
             Instance.InitCaiChiFanJiangLv();
             Instance.InitCaiChiBaoJiangLv();
+            Instance.InitMianFeiShiWanCount();
         }
 		return Instance;
 	}
@@ -752,6 +753,46 @@ public class XKGlobalData
         m_CaiChiFanJiangLv = args;
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "CaiChiFanJiangLv", args.ToString());
         SSDebug.Log("SetCaiChiFanJiangLv -> m_CaiChiFanJiangLv ============== " + m_CaiChiFanJiangLv);
+    }
+
+
+    /// <summary>
+    /// 游戏免费试玩次数信息.
+    /// </summary>
+    internal int m_MianFeiShiWanCount;
+    /// <summary>
+    /// 初始化免费试玩次数信息.
+    /// </summary>
+    void InitMianFeiShiWanCount()
+    {
+        string info = HandleJsonObj.ReadFromFileXml(FileNameCaiChi, "MianFeiShiWanCount");
+        if (info == null || info == "")
+        {
+            info = "0";
+            SetMianFeiShiWanCount(0);
+        }
+        else
+        {
+            int val = Convert.ToInt32(info);
+            if (val < 0 || val > 1)
+            {
+                val = 0;
+            }
+            m_MianFeiShiWanCount = val;
+        }
+
+        //更新游戏免费试玩信息.
+        pcvr.GetInstance().m_HongDDGamePadInterface.UpdateMianFeiCountInfo(m_MianFeiShiWanCount);
+    }
+
+    /// <summary>
+    /// 设置免费试玩次数信息.
+    /// </summary>
+    internal void SetMianFeiShiWanCount(int args)
+    {
+        m_MianFeiShiWanCount = args;
+        HandleJsonObj.WriteToFileXml(FileNameCaiChi, "MianFeiShiWanCount", args.ToString());
+        SSDebug.Log("SetMianFeiShiWanCount -> m_MianFeiShiWanCount ============== " + m_MianFeiShiWanCount);
     }
     
     /// <summary>
