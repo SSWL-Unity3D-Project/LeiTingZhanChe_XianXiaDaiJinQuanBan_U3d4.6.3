@@ -1,5 +1,4 @@
-﻿#define TEST_HDD_ZHIFU_PLATFORM
-//#define USE_WX_GAME_PAD_ACTIVE_PLAYER
+﻿//#define USE_WX_GAME_PAD_ACTIVE_PLAYER
 using UnityEngine;
 using System.Collections;
 using System;
@@ -1305,24 +1304,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         #endregion
 
         #region 微信游戏手柄玩家红点点账户信息管理
-
-#if TEST_HDD_ZHIFU_PLATFORM
-        //测试红点点支付平台逻辑.
-        /// <summary>
-        /// 游戏币和红点点金币的转换率.
-        /// 1币 == 2元人民币 == 200分.
-        /// 游戏币转换为红点点账户金币（单位为分）.
-        /// </summary>
-        //int m_GameCoinToMoney = 1;
-#else
-        /// <summary>
-        /// 游戏币和红点点金币的转换率.
-        /// 1币 == 2元人民币 == 200分.
-        /// 游戏币转换为红点点账户金币（单位为分）.
-        /// </summary>
-        int m_GameCoinToMoney = 200;
-#endif
-
+        
         /// <summary>
         /// 游戏币和红点点金币的转换率.
         /// 1币 == 2元人民币 == 200分.
