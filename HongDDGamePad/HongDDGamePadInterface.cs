@@ -203,6 +203,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.UpdateGameCoinToMoney(args);
             }
         }
+        
+        /// <summary>
+        /// 关闭WebSocket
+        /// </summary>
+        internal void CloseWebSocket()
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.CloseWebSocket();
+            }
+        }
         #endregion
     }
 }

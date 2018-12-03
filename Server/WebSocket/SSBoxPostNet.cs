@@ -539,6 +539,17 @@ public class SSBoxPostNet : MonoBehaviour
     }
 
     /// <summary>
+    /// 关闭WebSocket
+    /// </summary>
+    public void CloseWebSocket()
+    {
+        if (m_WebSocketSimpet != null)
+        {
+            m_WebSocketSimpet.CloseWebSocket();
+        }
+    }
+
+    /// <summary>
     /// 发送登陆盒子的消息.
     /// </summary>
     public void HttpSendPostLoginBox()

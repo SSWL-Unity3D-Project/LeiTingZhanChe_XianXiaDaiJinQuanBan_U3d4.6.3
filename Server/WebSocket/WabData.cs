@@ -94,8 +94,11 @@ public class WabData
 
     public void CloseSocket()
     {
-        // Close the connection  
-        _webSocket.Close(1000, "Bye!");
+        if (_webSocket != null)
+        {
+            // Close the connection  
+            _webSocket.Close(1000, "Bye!");
+        }
     }
 
     /// <summary>  

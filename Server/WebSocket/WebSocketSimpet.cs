@@ -34,6 +34,13 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
+        if (IsClosedWebSocket == true)
+        {
+            //游戏已经关闭WebScoket
+            //SSDebug.Log("The game have been closed webSocket...");
+            return;
+        }
+
         if (Time.time - m_TimeLastXinTiao >= 10f)
         {
             m_TimeLastXinTiao = Time.time;
@@ -74,6 +81,13 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     public void OpenWebSocket(string url)
     {
+        if (IsClosedWebSocket == true)
+        {
+            //游戏已经关闭WebScoket
+            SSDebug.Log("The game have been closed webSocket...");
+            return;
+        }
+
         if (_wabData != null)
         {
             //设置服务器地址信息.
@@ -90,6 +104,23 @@ public class WebSocketSimpet : MonoBehaviour
                 //_wabData.WebSocket.Close();
                 Debug.Log("Unity:" + "Restart Open WebSocket...");
                 _wabData.RestartOpenWebSocket();
+            }
+        }
+    }
+
+    bool IsClosedWebSocket = false;
+    /// <summary>
+    /// 关闭WebSocket
+    /// </summary>
+    public void CloseWebSocket()
+    {
+        if (_wabData != null)
+        {
+            if (IsClosedWebSocket == false)
+            {
+                SSDebug.Log("CloseWebSocket...");
+                IsClosedWebSocket = true;
+                _wabData.CloseSocket();
             }
         }
     }

@@ -44,7 +44,13 @@ public class SSWangLuoGuZhang : MonoBehaviour
         {
             SSUIRoot.GetInstance().m_GameUIManage.CreateCompanyLogo();
         }
-        
+
+        //if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        //{
+        //    //关闭WebSocket
+        //    pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
+        //}
+
         UITexture uiTexture = gameObject.GetComponent<UITexture>();
         if (uiTexture != null)
         {

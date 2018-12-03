@@ -1643,6 +1643,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadWXPay.SToC_ReceiveGameConfigInfo(args);
             }
         }
+        
+        /// <summary>
+        /// 关闭WebSocket
+        /// </summary>
+        internal void CloseWebSocket()
+        {
+            if (m_SSBoxPostNet != null)
+            {
+                m_SSBoxPostNet.CloseWebSocket();
+            }
+        }
 #endregion
 
         //private void Update()

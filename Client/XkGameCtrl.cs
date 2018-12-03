@@ -906,6 +906,12 @@ public class XkGameCtrl : SSGameMono
             SSUIRoot.GetInstance().m_GameUIManage.CreateCompanyLogo();
         }
 
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            //关闭WebSocket
+            pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
+        }
+
         float audioVol = 1f;
         do
         {
@@ -957,8 +963,9 @@ public class XkGameCtrl : SSGameMono
                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null
                     && pcvr.GetInstance().m_HongDDGamePadInterface.m_HongDDGamePadCom != null)
                 {
-                    int gameCoinToMoney = pcvr.GetInstance().m_HongDDGamePadInterface.m_HongDDGamePadCom.m_GameCoinToMoney;
-                    SSDebug.Log("gameCoinToMoney ============================ " + gameCoinToMoney);
+                    pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
+                    //int gameCoinToMoney = pcvr.GetInstance().m_HongDDGamePadInterface.m_HongDDGamePadCom.m_GameCoinToMoney;
+                    //SSDebug.Log("gameCoinToMoney ============================ " + gameCoinToMoney);
                 }
                 //SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(0.5f);
 
