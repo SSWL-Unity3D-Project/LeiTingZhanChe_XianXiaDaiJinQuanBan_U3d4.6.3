@@ -396,8 +396,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
     /// 玩家主炮散弹对npc造成伤害的时间记录信息.
     /// </summary>
     float TimeSanDanDamage = 0f;
-	public void OnDamageNpc(int damageNpcVal = 1, PlayerEnum playerSt = PlayerEnum.Null,
-	                        PlayerAmmoType pAmmoType = PlayerAmmoType.Null)
+	public void OnDamageNpc(int damageNpcVal = 1,
+                            PlayerEnum playerSt = PlayerEnum.Null,
+	                        PlayerAmmoType pAmmoType = PlayerAmmoType.Null,
+                            bool isAiFireAmmo = false)
 	{
 		if (IsDeathNpc)
         {
@@ -653,8 +655,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
                     if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
                     {
-                        XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType,
-                            SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, NpcScript.m_DaiJinQuanState);
+                        if (isAiFireAmmo == false)
+                        {
+                            //只有被玩家击爆的代金券npc才允许出彩.
+                            XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType,
+                                SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, NpcScript.m_DaiJinQuanState);
+                        }
+                        else
+                        {
+                            //被Ai坦克击爆的代金券npc不允许出彩.
+                            SSDebug.Log("The DaiJinQuan was killed by AiTank");
+                        }
                     }
                 }
                 else

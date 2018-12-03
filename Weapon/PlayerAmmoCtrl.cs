@@ -91,7 +91,17 @@ public class PlayerAmmoCtrl : MonoBehaviour
         }
 	}
 
-	List<XKNpcHealthCtrl> NpcHealthList;
+    /// <summary>
+    /// 是否为Ai坦克发射的子弹.
+    /// </summary>
+    bool IsAiFireAmmo = false;
+    internal void SetIsAiFireAmmo(bool isAiFireAmmo)
+    {
+        IsAiFireAmmo = isAiFireAmmo;
+    }
+
+
+    List<XKNpcHealthCtrl> NpcHealthList;
 	bool CheckAmmoHitObj(GameObject hitObjNpc, PlayerEnum playerIndex)
 	{
 //		BuJiBaoCtrl buJiBaoScript = hitObjNpc.GetComponent<BuJiBaoCtrl>();
@@ -155,7 +165,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                     XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
                     baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
                 }
-				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType);
+				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType, IsAiFireAmmo);
 				SpawnAmmoParticleObj(healthScript);
 			}
 		}
@@ -181,11 +191,11 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		return isStopCheckHit;
 	}
 
-    bool IsXiaoFeiJiAmmo = false;
-    internal void SetIsXiaoFeiJiAmmo(bool isXiaoFeiJiAmmo)
-    {
-        IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
-    }
+    //bool IsXiaoFeiJiAmmo = false;
+    //internal void SetIsXiaoFeiJiAmmo(bool isXiaoFeiJiAmmo)
+    //{
+    //    IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
+    //}
 
 	public void StartMoveAmmo(Vector3 firePos,
         PlayerEnum playerIndex,
@@ -193,6 +203,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
         NpcPathCtrl ammoMovePath = null,
         GameObject hitObjNpc = null)
 	{
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活任何玩家.
+            SetIsAiFireAmmo(true);
+        }
+        else
+        {
+            SetIsAiFireAmmo(false);
+        }
+
         float disTmp = Vector3.Distance(firePos, AmmoTran.position);
 		Vector3 vecA = firePos - AmmoTran.position;
 		if (disTmp < 10f

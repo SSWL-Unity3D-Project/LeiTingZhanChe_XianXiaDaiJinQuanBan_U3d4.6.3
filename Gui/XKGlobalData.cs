@@ -834,6 +834,7 @@ public class XKGlobalData
         if (info == null || info == "")
         {
             info = "0";
+            SetCaiChiBaoJiangLv(info, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
         }
 
         val = MathConverter.StringToFloat(info);
@@ -847,6 +848,7 @@ public class XKGlobalData
         if (info == null || info == "")
         {
             info = "0";
+            SetCaiChiBaoJiangLv(info, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
         }
 
         val = MathConverter.StringToFloat(info);
@@ -860,6 +862,7 @@ public class XKGlobalData
         if (info == null || info == "")
         {
             info = "0";
+            SetCaiChiBaoJiangLv(info, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
         }
 
         val = MathConverter.StringToFloat(info);
@@ -873,6 +876,7 @@ public class XKGlobalData
         if (info == null || info == "")
         {
             info = "0.3";
+            SetCaiChiBaoJiangLv(info, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
         }
 
         val = MathConverter.StringToFloat(info);
@@ -881,6 +885,10 @@ public class XKGlobalData
             val = 0.3f;
         }
         JPBossBaoJiangLv = val;
+        SSDebug.Log("InitCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
+        SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
+        SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
+        SSDebug.Log("InitCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
     }
 
     /// <summary>
@@ -905,7 +913,37 @@ public class XKGlobalData
         SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
         SSDebug.Log("SetCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
     }
-    
+
+    /// <summary>
+    /// 设置彩池爆奖率信息.
+    /// </summary>
+    void SetCaiChiBaoJiangLv(string baoJiangLv, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "SuiJiDaoJuBaoJiangLv", baoJiangLv);
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_01", baoJiangLv);
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "ZhanCheBaoJiangLv_02", baoJiangLv);
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    HandleJsonObj.WriteToFileXml(FileNameCaiChi, "JPBossBaoJiangLv", baoJiangLv);
+                    break;
+                }
+        }
+    }
+
     /// <summary>
     /// 根据代金券分类获取对应的爆奖率数据.
     /// </summary>

@@ -122,10 +122,14 @@ public class XkGameCtrl : SSGameMono
     /// 前后产生的彩票boss最大碰撞方向触发器次数.
     /// </summary>
     public int m_MaxHitQHBossMoveTrigger = 5;
+    bool _IsCaiPiaoHuLuePlayerIndex = true;
     /// <summary>
     /// 击杀彩票战车或boss时,是否忽略玩家索引.
     /// </summary>
-    internal bool IsCaiPiaoHuLuePlayerIndex = true;
+    internal bool IsCaiPiaoHuLuePlayerIndex
+    {
+        get { return _IsCaiPiaoHuLuePlayerIndex; }
+    }
     /// <summary>
     /// 彩票移动的数据信息.
     /// </summary>
