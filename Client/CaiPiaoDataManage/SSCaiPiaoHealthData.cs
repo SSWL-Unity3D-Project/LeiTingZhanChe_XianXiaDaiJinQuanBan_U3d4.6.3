@@ -103,12 +103,34 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         {
             //可以爆奖.
             int indexVal = Random.Range(0, 100) % m_BaoJiangHealthDt.Length;
+            if (m_TestBaoJiangData != null)
+            {
+                if (m_TestBaoJiangData.IsOpenTest == true)
+                {
+                    if (m_TestBaoJiangData.IndexHealth >= 0 && m_TestBaoJiangData.IndexHealth <= 2)
+                    {
+                        //测试数据信息.
+                        indexVal = m_TestBaoJiangData.IndexHealth;
+                    }
+                }
+            }
             m_CurentTotalHealthDt = m_BaoJiangHealthDt[indexVal];
         }
         else
         {
             //不可以爆奖.
             int indexVal = Random.Range(0, 100) % m_NoBaoJiangHealthDt.Length;
+            if (m_TestBaoJiangData != null)
+            {
+                if (m_TestBaoJiangData.IsOpenTest == true)
+                {
+                    if (m_TestBaoJiangData.IndexHealth >= 0 && m_TestBaoJiangData.IndexHealth <= 2)
+                    {
+                        //测试数据信息.
+                        indexVal = m_TestBaoJiangData.IndexHealth;
+                    }
+                }
+            }
             m_CurentTotalHealthDt = m_NoBaoJiangHealthDt[indexVal];
         }
         SSDebug.Log("GetTotalHealData -> m_CurentTotalHealthDt == " + m_CurentTotalHealthDt.ToString());
@@ -233,6 +255,18 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     internal int GetPlayerBaoJiDengJi(PlayerEnum indexPlayer)
     {
         int indexVal = (int)indexPlayer - 1;
+        if (m_TestBaoJiangData != null)
+        {
+            if (m_TestBaoJiangData.IsOpenTest == true)
+            {
+                if (m_TestBaoJiangData.IndexBaoJi >= 0 && m_TestBaoJiangData.IndexBaoJi <= 3)
+                {
+                    //测试暴击数据信息.
+                    indexVal = m_TestBaoJiangData.IndexBaoJi;
+                }
+            }
+        }
+
         if (indexVal >= 0 && indexVal <= 3)
         {
             return m_PlayerBaoJiDt[indexVal].BaoJiDengJi;
@@ -297,5 +331,40 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         }
         return mat;
     }
+    #endregion
+
+    #region 爆奖数据测试.
+    [System.Serializable]
+    public class TestBaoJiangData
+    {
+        /// <summary>
+        /// 是否打开测试.
+        /// </summary>
+        public bool IsOpenTest = false;
+        /// <summary>
+        /// 爆奖或不爆奖时,代金券npc的血条索引.
+        /// IndexHealth = -1 ---> 采用系统随机数据.
+        /// IndexHealth = [0, 2] ---> 采用该处配置的数据.
+        /// </summary>
+        [Range(-1, 2)]
+        public int IndexHealth = -1;
+
+        /// <summary>
+        /// 暴击效果时指定暴击数据的索引.
+        /// IndexBaoJi = -1 ---> 采用系统数据.
+        /// IndexBaoJi = [0, 3] ---> 采用该处配置的数据.
+        /// </summary>
+        [Range(-1, 3)]
+        public int IndexBaoJi = -1;
+        /// <summary>
+        /// 测试将所有玩家的子弹在玩家1的开火点发出.
+        /// </summary>
+        public bool IsTestPlayerAmmo = false;
+    }
+    /// <summary>
+    /// 测试游戏暴击或血值数据.
+    /// 代金券npc是否可以击爆在爆奖率数据进行调控.
+    /// </summary>
+    public TestBaoJiangData m_TestBaoJiangData;
     #endregion
 }

@@ -915,48 +915,120 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangLBtP1(pcvr.ButtonState.DOWN);
                 OnClickFangXiangLBt(0, pcvr.ButtonState.DOWN);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangLBt(1, pcvr.ButtonState.DOWN);
+                    OnClickFangXiangLBt(2, pcvr.ButtonState.DOWN);
+                }
             }
 
             if (Input.GetKeyUp(KeyCode.A))
             {
                 //ClickFangXiangLBtP1(pcvr.ButtonState.UP);
                 OnClickFangXiangLBt(0, pcvr.ButtonState.UP);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangLBt(1, pcvr.ButtonState.UP);
+                    OnClickFangXiangLBt(2, pcvr.ButtonState.UP);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.D))
             {
                 //ClickFangXiangRBtP1(pcvr.ButtonState.DOWN);
                 OnClickFangXiangRBt(0, pcvr.ButtonState.DOWN);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangRBt(1, pcvr.ButtonState.DOWN);
+                    OnClickFangXiangRBt(2, pcvr.ButtonState.DOWN);
+                }
             }
 
             if (Input.GetKeyUp(KeyCode.D))
             {
                 //ClickFangXiangRBtP1(pcvr.ButtonState.UP);
                 OnClickFangXiangRBt(0, pcvr.ButtonState.UP);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangRBt(1, pcvr.ButtonState.UP);
+                    OnClickFangXiangRBt(2, pcvr.ButtonState.UP);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
                 //ClickFangXiangUBtP1(pcvr.ButtonState.DOWN);
                 OnClickFangXiangUBt(0, pcvr.ButtonState.DOWN);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangUBt(1, pcvr.ButtonState.DOWN);
+                    OnClickFangXiangUBt(2, pcvr.ButtonState.DOWN);
+                }
             }
 
             if (Input.GetKeyUp(KeyCode.W))
             {
                 //ClickFangXiangUBtP1(pcvr.ButtonState.UP);
                 OnClickFangXiangUBt(0, pcvr.ButtonState.UP);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangUBt(1, pcvr.ButtonState.UP);
+                    OnClickFangXiangUBt(2, pcvr.ButtonState.UP);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
                 //ClickFangXiangDBtP1(pcvr.ButtonState.DOWN);
                 OnClickFangXiangDBt(0, pcvr.ButtonState.DOWN);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangDBt(1, pcvr.ButtonState.DOWN);
+                    OnClickFangXiangDBt(2, pcvr.ButtonState.DOWN);
+                }
             }
 
             if (Input.GetKeyUp(KeyCode.S))
             {
                 //ClickFangXiangDBtP1(pcvr.ButtonState.UP);
                 OnClickFangXiangDBt(0, pcvr.ButtonState.UP);
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData != null
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsOpenTest == true
+                    && XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TestBaoJiangData.IsTestPlayerAmmo == true)
+                {
+                    //测试玩家子弹,使玩家运动到一起.
+                    OnClickFangXiangDBt(1, pcvr.ButtonState.UP);
+                    OnClickFangXiangDBt(2, pcvr.ButtonState.UP);
+                }
             }
 
             //player_2.
