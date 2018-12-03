@@ -463,14 +463,37 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		tran.parent = XkGameCtrl.PlayerAmmoArray;
 		XkGameCtrl.CheckObjDestroyThisTimed(obj);
 
-        if (healthScript != null && healthScript.GetIsDaiJinQuanNpc() == true)
+        if (healthScript != null)
         {
-            //代金券npc.
+            if (healthScript.GetIsDaiJinQuanNpc() == true)
+            {
+                //代金券npc.
+                SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
+                if (baoJiAmmo != null)
+                {
+                    //初始化子弹爆炸粒子上的暴击效果.
+                    baoJiAmmo.Init(PlayerState);
+                }
+            }
+            else
+            {
+                //非代金券npc.
+                SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
+                if (baoJiAmmo != null)
+                {
+                    //初始化子弹爆炸粒子上的暴击效果.
+                    baoJiAmmo.HiddenBaoJi();
+                }
+            }
+        }
+        else
+        {
+            //没有击中npc.
             SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
             if (baoJiAmmo != null)
             {
                 //初始化子弹爆炸粒子上的暴击效果.
-                baoJiAmmo.Init(PlayerState);
+                baoJiAmmo.HiddenBaoJi();
             }
         }
 		#else
