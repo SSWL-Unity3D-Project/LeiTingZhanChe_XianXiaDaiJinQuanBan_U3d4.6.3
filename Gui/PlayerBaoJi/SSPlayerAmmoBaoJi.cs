@@ -20,6 +20,7 @@ public class SSPlayerAmmoBaoJi : MonoBehaviour
             {
                 baoJiDengJi = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetPlayerBaoJiDengJi(indexPlayer);
             }
+            //SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
 
             if (baoJiDengJi <= 0)
             {
@@ -27,7 +28,7 @@ public class SSPlayerAmmoBaoJi : MonoBehaviour
             }
             else
             {
-                SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
+                //SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
                 Material mat = null;
                 if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
                 {
@@ -44,6 +45,18 @@ public class SSPlayerAmmoBaoJi : MonoBehaviour
                     m_BaoJiParticle.gameObject.SetActive(true);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 隐藏暴击粒子特效.
+    /// </summary>
+    internal void HiddenBaoJi()
+    {
+        if (m_BaoJiParticle != null)
+        {
+            //SSDebug.Log("HiddenBaoJi**********************************************");
+            m_BaoJiParticle.gameObject.SetActive(false);
         }
     }
 }
