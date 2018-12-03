@@ -163,7 +163,13 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 {
                     //获取玩家对代金券npc的暴击伤害.
                     XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
-                    baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
+                    if (AmmoType == PlayerAmmoType.ChuanTouAmmo
+                        || AmmoType == PlayerAmmoType.DaoDanAmmo
+                        || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
+                        || AmmoType == PlayerAmmoType.SanDanAmmo)
+                    {
+                        baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
+                    }
                 }
 				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType, IsAiFireAmmo);
 				SpawnAmmoParticleObj(healthScript);
