@@ -15,14 +15,14 @@ public class SSPlayerAmmoBaoJi : MonoBehaviour
     {
         if (m_BaoJiParticle != null)
         {
-            int baoJiDengJi = 0;
+            int baoJiDengJi = -1;
             if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
             {
                 baoJiDengJi = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetPlayerBaoJiDengJi(indexPlayer);
             }
-            SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
+            //SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
 
-            if (baoJiDengJi <= 0)
+            if (baoJiDengJi <= -1)
             {
                 m_BaoJiParticle.gameObject.SetActive(false);
             }

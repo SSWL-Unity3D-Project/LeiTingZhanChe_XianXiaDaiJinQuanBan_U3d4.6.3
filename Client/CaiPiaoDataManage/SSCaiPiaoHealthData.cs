@@ -326,13 +326,14 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         int indexVal = (int)indexPlayer - 1;
         if (indexVal >= 0 && indexVal <= m_PlayerBaoJiLiZiMaterial.Length)
         {
-            int indexBaoJi = baoJiDengJi - 1;
+            int indexBaoJi = baoJiDengJi;
             if (indexBaoJi > 3)
             {
                 //防止暴击索引越界.
                 indexBaoJi = 3;
             }
 
+            SSDebug.Log("GetPlayerBaoJiMaterial -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
             if (indexBaoJi >= 0)
             {
                 if (m_CurentTotalHealthDt.IsCanJiBao == true)
