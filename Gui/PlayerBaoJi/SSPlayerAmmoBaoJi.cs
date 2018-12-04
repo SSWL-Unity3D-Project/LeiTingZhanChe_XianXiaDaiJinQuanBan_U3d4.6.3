@@ -20,7 +20,7 @@ public class SSPlayerAmmoBaoJi : MonoBehaviour
             {
                 baoJiDengJi = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetPlayerBaoJiDengJi(indexPlayer);
             }
-            //SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
+            SSDebug.Log("Init -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
 
             if (baoJiDengJi <= 0)
             {

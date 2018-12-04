@@ -188,14 +188,16 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
                     m_GameObjFlash.RemoveSelf();
                     m_GameObjFlash = null;
                 }
+                SetActiveXueTiaoFlash(false);
             }
             else
             {
-                if (m_GameObjFlash == null)
-                {
-                    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
-                    m_GameObjFlash.Init(0.25f, NengLiangRenderer.gameObject);
-                }
+                //if (m_GameObjFlash == null)
+                //{
+                //    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
+                //    m_GameObjFlash.Init(0.25f, NengLiangRenderer.gameObject);
+                //}
+                SetActiveXueTiaoFlash(true);
             }
         }
         else
@@ -205,6 +207,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
                 m_GameObjFlash.RemoveSelf();
                 m_GameObjFlash = null;
             }
+            SetActiveXueTiaoFlash(false);
         }
 
         float xueLiangVal = 1f - fillVal;
@@ -215,6 +218,17 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
         SetActiveHead(isActiveXT);
     }
     SSGameObjFlash m_GameObjFlash = null;
+    /// <summary>
+    /// 玩家血条外发光闪烁.
+    /// </summary>
+    public GameObject m_PlayerXueTiaoFlash = null;
+    void SetActiveXueTiaoFlash(bool isActive)
+    {
+        if (m_PlayerXueTiaoFlash != null && m_PlayerXueTiaoFlash.activeInHierarchy != isActive)
+        {
+            m_PlayerXueTiaoFlash.SetActive(isActive);
+        }
+    }
 	
 	public void SetPlayerIndex(PlayerEnum playerIndex)
 	{

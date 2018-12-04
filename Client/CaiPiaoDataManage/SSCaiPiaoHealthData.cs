@@ -215,6 +215,20 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         int indexVal = (int)indexPlayer - 1;
         if (indexVal >= 0 && indexVal <= 3)
         {
+            if (m_TestBaoJiangData != null)
+            {
+                if (m_TestBaoJiangData.IsOpenTest == true)
+                {
+                    if (m_TestBaoJiangData.IndexBaoJi >= 0 && m_TestBaoJiangData.IndexBaoJi <= 3)
+                    {
+                        //测试暴击数据信息.
+                        indexVal = m_TestBaoJiangData.IndexBaoJi;
+                        m_PlayerBaoJiDt[indexVal].BaoJiDengJi = indexVal;
+                        return;
+                    }
+                }
+            }
+
             switch (ammoType)
             {
                 case PlayerAmmoType.DaoDanAmmo:
@@ -222,7 +236,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                 case PlayerAmmoType.ChuanTouAmmo:
                 case PlayerAmmoType.SanDanAmmo:
                     {
-                        if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi > XKPlayerGlobalDt.GetInstance().TimeShouDongDaoDan)
+                        if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi > XKPlayerGlobalDt.GetInstance().TimeShouDongDaoDan * 0.3f)
                         {
                             //玩家导弹暴击间隔时间必须大于导弹发射的冷却时间.
                             if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi <= m_TimeBaoJi)
@@ -231,7 +245,11 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                                 if (npcHealth != null && npcHealth.GetIsDaiJinQuanNpc() == true)
                                 {
                                     //只有代金券Npc才可以被暴击.
-                                    m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
+                                    if (m_PlayerBaoJiDt[indexVal].BaoJiDengJi < 3)
+                                    {
+                                        //最高4档.
+                                        m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
+                                    }
                                     m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
                                     SSDebug.Log("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
                                         + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi);

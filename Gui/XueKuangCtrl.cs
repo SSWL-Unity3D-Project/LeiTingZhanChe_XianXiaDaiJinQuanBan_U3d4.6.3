@@ -107,11 +107,11 @@ public class XueKuangCtrl : MonoBehaviour
             }
             else
             {
-                if (m_GameObjFlash == null)
-                {
-                    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
-                    m_GameObjFlash.Init(0.25f, XueTiaoSprite.gameObject);
-                }
+                //if (m_GameObjFlash == null)
+                //{
+                //    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
+                //    m_GameObjFlash.Init(0.25f, XueTiaoSprite.gameObject);
+                //}
             }
         }
         else
