@@ -161,13 +161,13 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 int baoJiDamage = 0;
                 if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && healthScript.GetIsDaiJinQuanNpc() == true)
                 {
-                    //获取玩家对代金券npc的暴击伤害.
-                    XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
                     if (AmmoType == PlayerAmmoType.ChuanTouAmmo
                         || AmmoType == PlayerAmmoType.DaoDanAmmo
                         || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
                         || AmmoType == PlayerAmmoType.SanDanAmmo)
                     {
+                        //获取玩家对代金券npc的暴击伤害.
+                        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
                         baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
                     }
                 }
