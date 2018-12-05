@@ -396,6 +396,18 @@ public class XKNpcHealthCtrl : MonoBehaviour {
     /// 玩家主炮散弹对npc造成伤害的时间记录信息.
     /// </summary>
     float TimeSanDanDamage = 0f;
+    /// <summary>
+    /// 不允许被击爆的代金券npc血值是否降到10%
+    /// </summary>
+    bool IsBloodTo_10 = false;
+    /// <summary>
+    /// 血值降到10%之后的时间记录.
+    /// </summary>
+    float m_TimeLastBloodTo_10 = 0f;
+    /// <summary>
+    /// npc的血值信息记录.
+    /// </summary>
+    float m_BloodAmoutValue = 0f;
 	public void OnDamageNpc(int damageNpcVal = 1,
                             PlayerEnum playerSt = PlayerEnum.Null,
 	                        PlayerAmmoType pAmmoType = PlayerAmmoType.Null,
@@ -509,11 +521,47 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 if (isCanJiBao == false)
                 {
                     //不允许被玩家击爆的代金券npc.
-                    if (bloodAmount <= 0f)
+                    if (IsBloodTo_10 == false)
                     {
-                        //强制保留一定的血量.
-                        bloodAmount = 0.05f;
-                        PuTongAmmoCount = puTongAmmoNum - 1;
+                        if (bloodAmount <= 0.1f)
+                        {
+                            //强制保留一定的血量.
+                            m_BloodAmoutValue = bloodAmount = 0.1f;
+                            IsBloodTo_10 = true;
+                            m_TimeLastBloodTo_10 = Time.time;
+                            PuTongAmmoCount = puTongAmmoNum - 1;
+                        }
+                    }
+                    else
+                    {
+                        float minBloodAmount = 0.01f; //最小极限血值.
+                        if (m_BloodAmoutValue > minBloodAmount)
+                        {
+                            //血值已经降到10%
+                            float dTimeVal = 0.3f;
+                            if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                            {
+                                dTimeVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TimeNoDead;
+                            }
+
+                            if (Time.time - m_TimeLastBloodTo_10 >= dTimeVal)
+                            {
+                                //每次间隔一定时间减少一定血值.
+                                m_TimeLastBloodTo_10 = Time.time;
+                                float subBloodAmount = 0.01f; //每次减少的血值.
+                                if (m_BloodAmoutValue > minBloodAmount)
+                                {
+                                    m_BloodAmoutValue -= subBloodAmount;
+                                    if (m_BloodAmoutValue < minBloodAmount)
+                                    {
+                                        //强制保护的血值信息.
+                                        m_BloodAmoutValue = minBloodAmount;
+                                    }
+                                }
+                            }
+                        }
+                        bloodAmount = m_BloodAmoutValue;
+                        PuTongAmmoCount = puTongAmmoNum - 1; //强制保留一定的血值.
                     }
                 }
                 //彩票战车和boss的血条UI信息更新.
@@ -753,6 +801,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
     {
         TimeLastVal = Time.time;
         IsHitFanWeiHou = false;
+        IsBloodTo_10 = false;
         CheckNpcRigidbody();
 		XkGameCtrl.GetInstance().AddNpcTranToList(transform);
 		if (BoxColCom != null) {

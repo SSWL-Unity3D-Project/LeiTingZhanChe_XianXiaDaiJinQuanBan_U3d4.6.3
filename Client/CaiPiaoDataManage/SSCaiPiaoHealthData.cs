@@ -163,6 +163,11 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     [Range(0.03f, 10f)]
     public float m_TimeBaoJi = 0.5f;
     /// <summary>
+    /// 不能被打爆的代金券npc,血值小于0.1之后,在超出这个时间后受到玩家子弹伤害时减少一定的血值.
+    /// </summary>
+    [Range(0.03f, 10f)]
+    public float m_TimeNoDead = 0.3f;
+    /// <summary>
     /// 获取暴击伤害.
     /// </summary>
     /// <returns></returns>
