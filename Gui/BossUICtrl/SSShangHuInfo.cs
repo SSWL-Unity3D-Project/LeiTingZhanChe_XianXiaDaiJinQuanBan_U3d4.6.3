@@ -47,6 +47,13 @@ public class SSShangHuInfo : MonoBehaviour
             m_ShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
             SSDebug.Log("UpdateShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
         }
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null
+            && SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI != null)
+        {
+            //更新游戏弹幕的商户名信息.
+            SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI.UpdateShangJiaNameInfo();
+        }
     }
 
     /// <summary>
