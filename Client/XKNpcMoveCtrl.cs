@@ -15,6 +15,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     public PlayerEnum m_IndexPlayerJiBao;
     /// <summary>
     /// 彩票战车npc的代金券变量.
+    /// 主要用来区分是战车01还是战车02类型代金券.
     /// </summary>
     internal SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
     bool _IsZhanCheNpc = false;

@@ -98,6 +98,10 @@ public class XkGameCtrl : SSGameMono
         }
     }
     /// <summary>
+    /// 游戏配置的商户名信息.
+    /// </summary>
+    public SSShangHuInfo m_SSShangHuInfo;
+    /// <summary>
     /// 彩票NPC血量数据.
     /// </summary>
     public SSCaiPiaoHealthData m_CaiPiaoHealthDt;
@@ -416,6 +420,11 @@ public class XkGameCtrl : SSGameMono
             SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
             Application.runInBackground = true;
             InitCheckLoadingMovieScene();
+
+            if (m_SSShangHuInfo != null)
+            {
+                m_SSShangHuInfo.Init();
+            }
 
             if (m_CaiPiaoHealthDt != null)
             {

@@ -1014,7 +1014,8 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 产生Boss来袭UI界面.
     /// </summary>
-    internal void CreatBossLaiXiUI()
+    internal void CreatBossLaiXiUI(SpawnNpcManage.NpcState type = SpawnNpcManage.NpcState.JPBoss,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         if (m_BossLaiXiUI == null)
         {
@@ -1025,7 +1026,7 @@ public class SSGameUICtrl : SSGameMono
                 Debug.Log("Unity: CreatBossLaiXiUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_BossLaiXiUI = obj.GetComponent<XKBossLXCtrl>();
-                m_BossLaiXiUI.StartPlayBossLaiXi();
+                m_BossLaiXiUI.StartPlayBossLaiXi(type, daiJinQuanType);
             }
             else
             {

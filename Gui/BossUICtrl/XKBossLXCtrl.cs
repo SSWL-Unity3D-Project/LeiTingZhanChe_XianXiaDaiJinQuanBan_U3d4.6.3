@@ -6,6 +6,12 @@
 public class XKBossLXCtrl : MonoBehaviour
 {
     /// <summary>
+    /// 商家信息展示UILablel.
+    /// 字数最大为5个字.
+    /// 最多支持4个商户(一条默认商户信息.).
+    /// </summary>
+    public UILabel m_ShangJiaInfoLb;
+    /// <summary>
     /// 游戏数字UI控制组件.
     /// </summary>
     public SSGameNumUI m_GameNumUI;
@@ -40,13 +46,38 @@ public class XKBossLXCtrl : MonoBehaviour
         }
     }
 
-    public void StartPlayBossLaiXi()
+    /// <summary>
+    /// 设置商户名称信息.
+    /// </summary>
+    void SetShangJiaInfo()
+    {
+        if (m_ShangJiaInfoLb != null)
+        {
+            string shangHuInfo = "海底捞";
+            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+            {
+                shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
+            }
+
+            if (shangHuInfo.Length > 5)
+            {
+                //最多支持5个字.
+                shangHuInfo = shangHuInfo.Substring(0, 5);
+            }
+            m_ShangJiaInfoLb.text = shangHuInfo;
+        }
+    }
+
+    public void StartPlayBossLaiXi(SpawnNpcManage.NpcState type = SpawnNpcManage.NpcState.JPBoss,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
 	{
 		//Debug.Log("Unity:"+"StartPlayBossLaiXi...");
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		TimeLastBossLX = Time.time;
 		XKGlobalData.GetInstance().PlayAudioBossLaiXi();
-		gameObject.SetActive(true);
+        SetShangJiaInfo();
+
+        gameObject.SetActive(true);
         if (m_GameNumUI != null)
         {
             if (XkPlayerCtrl.GetInstanceFeiJi() != null
@@ -54,7 +85,27 @@ public class XKBossLXCtrl : MonoBehaviour
                 && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
                 && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
             {
-                int jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
+                int jpBossDaiJinQuan = 200;
+                switch (type)
+                {
+                    case SpawnNpcManage.NpcState.JPBoss:
+                        {
+                            jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
+                            break;
+                        }
+                    case SpawnNpcManage.NpcState.ZhanChe:
+                        {
+                            if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
+                            {
+                                jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
+                            }
+                            else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02)
+                            {
+                                jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
+                            }
+                            break;
+                        }
+                }
                 //SSDebug.Log("StartPlayBossLaiXi -> jpBossDaiJinQuan ======================== " + jpBossDaiJinQuan);
                 m_GameNumUI.ShowNumUI(jpBossDaiJinQuan);
             }

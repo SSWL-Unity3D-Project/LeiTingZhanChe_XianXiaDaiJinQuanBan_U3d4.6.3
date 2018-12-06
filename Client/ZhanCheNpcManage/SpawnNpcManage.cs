@@ -854,6 +854,17 @@ public class SpawnNpcManage : MonoBehaviour
                                 XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Default);
                             }
                             m_ZhanCheJPBossData.ZhanCheData.AddNpcToList(obj);
+
+                            //播放boss来袭UI.
+                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                            {
+                                npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                                if (npcMove != null)
+                                {
+                                    //代金券战车npc.
+                                    SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI(npcType, npcMove.m_DaiJinQuanState);
+                                }
+                            }
                             break;
                         }
                     case NpcState.JPBoss:
@@ -902,7 +913,7 @@ public class SpawnNpcManage : MonoBehaviour
                             //播放boss来袭UI.
                             if (SSUIRoot.GetInstance().m_GameUIManage != null)
                             {
-                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI();
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI(npcType);
                                 AudioBeiJingCtrl.StopGameBeiJingAudio();
                             }
                             break;
@@ -955,7 +966,7 @@ public class SpawnNpcManage : MonoBehaviour
                             //播放boss来袭UI.
                             if (SSUIRoot.GetInstance().m_GameUIManage != null)
                             {
-                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI();
+                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI(npcType);
                                 AudioBeiJingCtrl.StopGameBeiJingAudio();
                             }
                             break;
