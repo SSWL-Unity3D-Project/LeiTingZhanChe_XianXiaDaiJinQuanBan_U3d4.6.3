@@ -16,7 +16,12 @@ public class SSShangHuInfo : MonoBehaviour
         /// 商户名信息.
         /// 最多5个字.
         /// </summary>
-        public string ShangHuMing = "";
+        public string ShangHuMing = "盛世网络";
+        /// <summary>
+        /// 商户弹幕文本信息.
+        /// 最多9个字.
+        /// </summary>
+        public string ShangHuDanMuInfo = "盛世网络50元";
     }
     /// <summary>
     /// 商户配置信息.
@@ -47,12 +52,24 @@ public class SSShangHuInfo : MonoBehaviour
             m_ShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
             SSDebug.Log("UpdateShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
         }
+    }
+
+    /// <summary>
+    /// 更新游戏商户弹幕数据信息.
+    /// </summary>
+    internal void UpdateShangHuDanMuInfo(string[] shangHuDanMuInfoArray)
+    {
+        for (int i = 0; i < m_ShangHuDt.Length; i++)
+        {
+            m_ShangHuDt[i].ShangHuDanMuInfo = shangHuDanMuInfoArray[i];
+            SSDebug.Log("UpdateShangHuDanMuInfo -> ShangHuDanMuInfo[" + i + "] ===== " + shangHuDanMuInfoArray[i]);
+        }
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null
             && SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI != null)
         {
             //更新游戏弹幕的商户名信息.
-            SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI.UpdateShangJiaNameInfo();
+            SSUIRoot.GetInstance().m_GameUIManage.m_DanMuTextUI.UpdateShangJiaDanMuInfo();
         }
     }
 

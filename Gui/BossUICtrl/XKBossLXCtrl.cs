@@ -53,7 +53,7 @@ public class XKBossLXCtrl : MonoBehaviour
     {
         if (m_ShangJiaInfoLb != null)
         {
-            string shangHuInfo = "海底捞";
+            string shangHuInfo = "盛世网络";
             if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
             {
                 shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;

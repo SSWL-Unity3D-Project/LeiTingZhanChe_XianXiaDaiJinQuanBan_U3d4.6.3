@@ -21,7 +21,7 @@ public class DanMuTextUI : MonoBehaviour
                 m_DanMuLable.text = danMuInfo;
             }
         }
-        UpdateShangJiaNameInfo();
+        UpdateShangJiaDanMuInfo();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class DanMuTextUI : MonoBehaviour
     /// <summary>
     /// 更新商家名称文本信息Lable.
     /// </summary>
-    internal void UpdateShangJiaNameInfo()
+    internal void UpdateShangJiaDanMuInfo()
     {
         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
         {
@@ -52,18 +52,18 @@ public class DanMuTextUI : MonoBehaviour
             {
                 if (m_ShangJiNameLable[i] != null)
                 {
-                    string shangHuName = "海底捞";
+                    string shangHuDanMu = "盛世网络50元";
                     if (shangHuInfoArray[i] != null)
                     {
-                        shangHuName = shangHuInfoArray[i].ShangHuMing;
+                        shangHuDanMu = shangHuInfoArray[i].ShangHuDanMuInfo;
                     }
 
-                    if (shangHuName.Length > 5)
+                    if (shangHuDanMu.Length > 9)
                     {
-                        //最多5个字.
-                        shangHuName = shangHuName.Substring(0, 5);
+                        //最多9个字.
+                        shangHuDanMu = shangHuDanMu.Substring(0, 9);
                     }
-                    m_ShangJiNameLable[i].text = shangHuName;
+                    m_ShangJiNameLable[i].text = shangHuDanMu;
                     SSDebug.Log("UpdateShangJiaNameInfo -> shangJiaName[" + i + "] ===================== " + m_ShangJiNameLable[i].text);
                 }
             }
