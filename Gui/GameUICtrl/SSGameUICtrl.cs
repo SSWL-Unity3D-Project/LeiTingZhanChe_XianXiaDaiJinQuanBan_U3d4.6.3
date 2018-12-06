@@ -1034,7 +1034,7 @@ public class SSGameUICtrl : SSGameMono
             }
         }
     }
-
+    
     /// <summary>
     /// 删除Boss来袭UI界面.
     /// </summary>
@@ -1046,6 +1046,32 @@ public class SSGameUICtrl : SSGameMono
             m_BossLaiXiUI.RemoveSelf();
             m_BossLaiXiUI = null;
             Resources.UnloadUnusedAssets();
+        }
+        CreatBaoJiTiShiUI();
+    }
+    
+    /// <summary>
+    /// 爆击提示UI界面.
+    /// </summary>
+    GameObject m_BaoJiTiShiUI = null;
+    /// <summary>
+    /// 产生爆击提示UI界面.
+    /// </summary>
+    internal void CreatBaoJiTiShiUI()
+    {
+        if (m_BaoJiTiShiUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/BaoJiTiShiUI/BaoJiTiShi";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatBaoJiTiShiUI......................................................");
+                m_BaoJiTiShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            }
+            else
+            {
+                UnityLogWarning("CreatBaoJiTiShiUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
         }
     }
     
