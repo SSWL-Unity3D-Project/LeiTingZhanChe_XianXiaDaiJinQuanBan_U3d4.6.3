@@ -391,4 +391,30 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     /// </summary>
     public TestBaoJiangData m_TestBaoJiangData;
     #endregion
+
+    #region 代金券npc的血条UI恢复管理
+    /// <summary>
+    /// 代金券npc的血条脚本.
+    /// </summary>
+    XKNpcHealthCtrl m_DaiJinQuanHealth;
+    /// <summary>
+    /// 保存代金券npc的血条脚本.
+    /// </summary>
+    internal void SaveDaiJinQuanHealth(XKNpcHealthCtrl health)
+    {
+        m_DaiJinQuanHealth = health;
+    }
+
+    /// <summary>
+    /// 恢复代金券npc的血值数据及UI信息.
+    /// </summary>
+    internal void BackDaiJinQuanNpcBlood()
+    {
+        if (m_DaiJinQuanHealth != null && m_DaiJinQuanHealth.IsDeathNpc == false)
+        {
+            //恢复代金券npc的血值数据及UI信息.
+            m_DaiJinQuanHealth.BackDaiJinQuanNpcBlood();
+        }
+    }
+    #endregion
 }

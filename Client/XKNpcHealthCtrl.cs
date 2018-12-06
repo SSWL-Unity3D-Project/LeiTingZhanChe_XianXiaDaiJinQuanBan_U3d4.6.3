@@ -15,7 +15,15 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	 * MaxPuTongAmmo[2] -> 三人模式下.
 	 * MaxPuTongAmmo[3] -> 四人模式下.
 	 */
-	[Range(1, 10000000)] public int[] MaxPuTongAmmo = {1, 1, 1, 1};
+	[Range(1, 10000000)] public int[] MaxPuTongAmmo = { 1, 1, 1, 1 };
+    /// <summary>
+    /// 血值缓存信息.
+    /// </summary>
+    int[] MaxPuTongAmmoCache = { 1, 1, 1, 1 };
+    /// <summary>
+    /// 是否记录了血值信息.
+    /// </summary>
+    bool IsRecordMaxPuTongAmmo = false;
 //	[Range(0, 100)] public int MaxAmmoHurtLiZi = 0;
 	public GameObject[] HiddenNpcObjArray; //npc死亡时需要立刻隐藏的对象.
 //	public GameObject HurtLiZiObj; //飞机npc的受伤粒子.
@@ -257,6 +265,41 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	}
 
     /// <summary>
+    /// 恢复代金券npc的血值数据及UI信息.
+    /// </summary>
+    internal void BackDaiJinQuanNpcBlood()
+    {
+        if (NpcScript.IsZhanCheNpc || NpcScript.IsJPBossNpc)
+        {
+            if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == false)
+            {
+                //当有玩家激活游戏时,恢复彩票战车和JPBoss的血值信息.
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                {
+                    if (NpcScript.GetIsBossNpc() == true)
+                    {
+                        //跟新JPBoss的血值数据.
+                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                    }
+                    else
+                    {
+                        //跟新战车Npc的血值数据.
+                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.ZhanCheHealth.MaxPuTongAmmo;
+                    }
+                }
+
+                //重置代金券npc的血条UI信息.
+                float perVal = 0.5f;
+                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                {
+                    perVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.UIHealthPer;
+                }
+                SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(perVal);
+            }
+        }
+    }
+
+    /// <summary>
     /// npc彩票显示组件.
     /// </summary>
     public SSCaiPiaoNpcUI m_CaiPiaoNpcUI;
@@ -280,25 +323,50 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     {
                         //获取获取JPBoss和战车Npc的血值数据.
                         XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(NpcScript.m_DaiJinQuanState);
+                        //保存代金券npc的血条脚本.
+                        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.SaveDaiJinQuanHealth(this);
+                    }
+
+                    if (IsRecordMaxPuTongAmmo == false)
+                    {
+                        //记录血值信息.
+                        IsRecordMaxPuTongAmmo = true;
+                        MaxPuTongAmmoCache = MaxPuTongAmmo;
+                    }
+                    
+                    if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+                    {
+                        //没有玩家激活游戏,使用游戏记录的血值数据.
+                        MaxPuTongAmmo = MaxPuTongAmmoCache;
+                    }
+                    else
+                    {
+                        //有玩家正在进行游戏,使用游戏配置的血值数据.
+                        if (NpcScript.GetIsBossNpc() == true)
+                        {
+                            if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                            {
+                                //跟新JPBoss的血值数据.
+                                MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                            }
+                        }
+                        else
+                        {
+                            if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                            {
+                                //跟新战车Npc的血值数据.
+                                MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.ZhanCheHealth.MaxPuTongAmmo;
+                            }
+                        }
                     }
 
                     if (NpcScript.GetIsBossNpc() == true)
                     {
                         m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss, this);
-                        if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
-                        {
-                            //跟新JPBoss的血值数据.
-                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
-                        }
                     }
                     else
                     {
                         m_CaiPiaoNpcUI.ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, this);
-                        if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
-                        {
-                            //跟新战车Npc的血值数据.
-                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.ZhanCheHealth.MaxPuTongAmmo;
-                        }
                     }
 
                     //创建代金券npc的血条信息.
@@ -513,9 +581,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
 
                 bool isCanJiBao = true;
-                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
                 {
-                    isCanJiBao = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.IsCanJiBao;
+                    //没有玩家激活游戏时,Ai都认为是可以击爆战车或Boss.
+                }
+                else
+                {
+                    //有玩家激活游戏.
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                    {
+                        isCanJiBao = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.IsCanJiBao;
+                    }
                 }
 
                 if (isCanJiBao == false)

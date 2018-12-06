@@ -339,6 +339,7 @@ public class XkGameCtrl : SSGameMono
         {
             if (value > 0 && _PlayerActiveNum == 0)
             {
+                //有玩家进入游戏.
                 //重置游戏产生战车npc的信息.
                 if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
                 {
@@ -349,6 +350,12 @@ public class XkGameCtrl : SSGameMono
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.JPBoss);
                     //重置SuperJPBoss数据信息.
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
+                }
+
+                if (GetInstance().m_CaiPiaoHealthDt != null)
+                {
+                    //恢复代金券npc的血条.
+                    GetInstance().m_CaiPiaoHealthDt.BackDaiJinQuanNpcBlood();
                 }
             }
             _PlayerActiveNum = value;
