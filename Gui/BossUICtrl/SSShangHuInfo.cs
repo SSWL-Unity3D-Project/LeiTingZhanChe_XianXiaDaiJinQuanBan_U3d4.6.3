@@ -22,6 +22,10 @@ public class SSShangHuInfo : MonoBehaviour
         /// 最多9个字.
         /// </summary>
         public string ShangHuDanMuInfo = "盛世网络50元";
+        public override string ToString()
+        {
+            return "IndexShangHu == " + IndexShangHu + ", ShangHuMing == " + ShangHuMing + ", ShangHuDanMuInfo == " + ShangHuDanMuInfo;
+        }
     }
     /// <summary>
     /// 商户配置信息.
@@ -84,6 +88,7 @@ public class SSShangHuInfo : MonoBehaviour
         {
             m_IndexShangHu = 0;
         }
+        //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
         return m_ShangHuDt[indexVal];
     }
 }
