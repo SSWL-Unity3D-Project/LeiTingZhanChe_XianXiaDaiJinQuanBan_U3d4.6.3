@@ -727,7 +727,10 @@ public class XkGameCtrl : SSGameMono
             }
 
 #if DRAW_DEBUG_CAIPIAO_INFO
-            gameObject.AddComponent<SSDebugCaiPiaoInfo>();
+            if (m_GameVersion == GameVersion.CeShiBan)
+            {
+                gameObject.AddComponent<SSDebugCaiPiaoInfo>();
+            }
 #endif
         }
         catch (System.Exception ex)

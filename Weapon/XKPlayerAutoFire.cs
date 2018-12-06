@@ -509,7 +509,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
     float m_LastAiJiQianTime = 0f;
     float m_AiJiQianTime = 2f;
     bool IsAiPlayerFire = false;
-
+    /// <summary>
+    /// 检测机枪发射子弹.
+    /// </summary>
 	void CheckPlayerJiQiangFireBt()
 	{
 		if (!ScreenDanHeiCtrl.IsStartGame) {
@@ -528,11 +530,6 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
             }
             else
             {
-                //if (Random.Range(0, 100) % 10 != 0)
-                //{
-                //    return;
-                //}
-
                 if (Time.time - m_LastAiJiQianTime >= m_AiJiQianTime)
                 {
                     if (IsAiPlayerFire == false)
@@ -555,15 +552,16 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         }
         else
         {
+            //玩家操控游戏.
             if (!CheckIsActivePlayer())
             {
                 return;
             }
 
-            if (!IsActiveFireBtJQ)
-            {
-                return;
-            }
+            //if (IsActiveFireBtJQ == false)
+            //{
+            //    return;
+            //}
         }
 
         bool isSpawnAmmo = CheckIsSpawnPlayerAmmo(JI_QIANG_INDEX);
@@ -577,7 +575,18 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         {
             if (IsQianHouFire == true)
             {
+                //小飞机自动发射子弹.
                 MakeAllXiaoFeiJiFire();
+            }
+        }
+
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == false)
+        {
+            //有玩家在进行游戏.
+            if (IsActiveFireBtJQ == false)
+            {
+                //玩家没有按下发射按键时返回.
+                return;
             }
         }
 

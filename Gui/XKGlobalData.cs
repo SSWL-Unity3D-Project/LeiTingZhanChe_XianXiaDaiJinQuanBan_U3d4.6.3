@@ -143,7 +143,10 @@ public class XKGlobalData
             return _CoinPlayerFour;
         }
     }
-    public static int GameNeedCoin;
+    /// <summary>
+    /// 游戏启动币值信息.
+    /// </summary>
+    public static int GameNeedCoin = 1;
 	/**
 	 * GameVersionPlayer == 0 -> 四人版本游戏.
 	 * GameVersionPlayer == 1 -> 双人版本游戏.
@@ -197,12 +200,12 @@ public class XKGlobalData
 			}
 			//return Instance;
 
-			string startCoinInfo = HandleJsonObj.ReadFromFileXml(FileName, "START_COIN");
-			if(startCoinInfo == null || startCoinInfo == "") {
-				startCoinInfo = "1";
-				HandleJsonObj.WriteToFileXml(FileName, "START_COIN", startCoinInfo);
-			}
-			GameNeedCoin = Convert.ToInt32( startCoinInfo );
+			//string startCoinInfo = HandleJsonObj.ReadFromFileXml(FileName, "START_COIN");
+			//if(startCoinInfo == null || startCoinInfo == "") {
+			//	startCoinInfo = "1";
+			//	HandleJsonObj.WriteToFileXml(FileName, "START_COIN", startCoinInfo);
+			//}
+			//GameNeedCoin = Convert.ToInt32( startCoinInfo );
 
 			string modeGame = HandleJsonObj.ReadFromFileXml(FileName, "GAME_MODE");
 			if (modeGame == null || modeGame == "") {
