@@ -2,6 +2,7 @@
 //#define TEST_SCREEN_CONFIG
 //#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
+#define DRAW_DEBUG_BAOJI_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
@@ -737,9 +738,17 @@ public class XkGameCtrl : SSGameMono
             }
 
 #if DRAW_DEBUG_CAIPIAO_INFO
+            //测试代金券信息.
             if (m_GameVersion == GameVersion.CeShiBan)
             {
                 gameObject.AddComponent<SSDebugCaiPiaoInfo>();
+            }
+#endif
+#if DRAW_DEBUG_BAOJI_INFO
+            //测试爆击信息.
+            if (m_GameVersion == GameVersion.CeShiBan)
+            {
+                gameObject.AddComponent<SSDebugBaoJi>();
             }
 #endif
         }
