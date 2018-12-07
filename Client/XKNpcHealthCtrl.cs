@@ -294,7 +294,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 {
                     perVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.UIHealthPer;
                 }
-                SSUIRoot.GetInstance().m_GameUIManage.CreatDaiJinQuanNpcXueTiaoUI(perVal);
+                SSUIRoot.GetInstance().m_GameUIManage.BackBloodBossAmount(perVal);
             }
         }
     }

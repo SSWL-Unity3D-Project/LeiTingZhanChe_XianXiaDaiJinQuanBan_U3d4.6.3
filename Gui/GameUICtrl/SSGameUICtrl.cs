@@ -1521,4 +1521,15 @@ public class SSGameUICtrl : SSGameMono
             m_DaiJinQuanNpcXueTiaoUI.SetBloodBossAmount(bloodAmount);
         }
     }
+
+    /// <summary>
+    /// 恢复代金券npc的血条信息.
+    /// </summary>
+    internal void BackBloodBossAmount(float amount)
+    {
+        if (m_DaiJinQuanNpcXueTiaoUI != null)
+        {
+            m_DaiJinQuanNpcXueTiaoUI.BackBloodBossAmount(amount);
+        }
+    }
 }

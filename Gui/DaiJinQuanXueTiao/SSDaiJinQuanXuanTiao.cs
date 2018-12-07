@@ -15,11 +15,6 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
     [Range(0.001f, 10f)]
     public float SpeedSubXueTiao = 0.1f;
     bool IsFillBossXueTiao;
-    //static SSDaiJinQuanXuanTiao _Instance;
-    //public static SSDaiJinQuanXuanTiao GetInstance()
-    //{
-    //    return _Instance;
-    //}
 
     bool IsRemoveSelf = false;
     internal void RemoveSelf()
@@ -27,7 +22,6 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
         if (IsRemoveSelf == false)
         {
             IsRemoveSelf = true;
-            //_Instance = null;
             Destroy(gameObject);
         }
     }
@@ -35,8 +29,6 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
     // Use this for initialization
     internal void Init(float maxFillAmount)
     {
-        //_Instance = this;
-        //HiddenBossXueTiao();
         m_MaxFillAmount = maxFillAmount;
         OpenBossXueTiao();
     }
@@ -54,16 +46,16 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
         }
     }
 
-    //XKNpcHealthCtrl BossHealthScript;
+    /// <summary>
+    /// 恢复代金券npc的血条信息.
+    /// </summary>
+    internal void BackBloodBossAmount(float amount)
+    {
+        BossXueTiaoSprite.fillAmount = BossXueTiaoHongSprite.fillAmount = amount;
+    }
+
     public void SetBloodBossAmount(float bloodAmount)
     {
-        //不去设置boss血条UI.
-        //return;
-        //if (bossHealth != null && bloodAmount == -1f)
-        //{
-        //    BossHealthScript = bossHealth; //存储Boss血量脚本.
-        //}
-
         //bloodAmount [0, 1]
         //realAmount [0, m_MaxFillAmount]
         float key = m_MaxFillAmount;
@@ -83,46 +75,26 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
         }
 
         bloodAmount = Mathf.Clamp(bloodAmount, 0f, 1f);
-        //bloodAmount = bloodAmount > 1f ? 1f : bloodAmount;
-        //bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
         BossXueTiaoSprite.fillAmount = bloodAmount;
         if (bloodAmount <= 0f)
         {
-            //JiFenJieMianCtrl.GetInstance().ShowFinishTaskInfo();
-            //IsWuDiPlayer = true;
             XkGameCtrl.BossRemoveAllNpcAmmo();
-            //AudioBeiJingCtrl.StopGameBeiJingAudio();
-            //if (BossHealthScript != null && bossHealth == null)
-            //{
-            //    BossHealthScript.OnDamageNpc(99999999, PlayerEnum.Null);
-            //}
             HiddenBossXueTiao();
         }
     }
 
     public void HiddenBossXueTiao()
     {
-        //BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(false);
-        //gameObject.SetActive(false);
         //删除代金券npc的血条UI.
         SSUIRoot.GetInstance().m_GameUIManage.RemoveDaiJinQuanNpcXueTiaoUI();
     }
 
     void OpenBossXueTiao()
     {
-        //timeVal = 150;
-        //timeVal = 10; //test.
         IsCanSubXueTiaoAmount = false;
         BossXueTiaoHongSprite.fillAmount = 0f;
         BossXueTiaoSprite.fillAmount = 0f;
-        //BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
-        //XKTriggerStopMovePlayer.IsActiveTrigger = true;
 
-        //if (GameTimeCtrl.GetInstance() != null)
-        //{
-        //    GameTimeCtrl.GetInstance().HiddenGameTime();
-        //}
-        //BossXueTiaoSprite.fillAmount = 1f;
         gameObject.SetActive(true);
         TweenAlpha TwAlpha = gameObject.AddComponent<TweenAlpha>();
         TwAlpha.from = 0f;
@@ -136,10 +108,6 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
 
     void ChangeBossXTAlphaEnd()
     {
-        //if (GameTimeBossCtrl.GetInstance() != null)
-        //{
-        //    GameTimeBossCtrl.GetInstance().ActiveIsCheckTimeSprite(timeVal);
-        //}
         StartFillBossXueTiao();
     }
 
