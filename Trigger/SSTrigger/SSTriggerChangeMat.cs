@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -86,8 +85,11 @@ public class SSTriggerChangeMat : MonoBehaviour
     /// <summary>
     /// 进入触发器的次数信息.
     /// </summary>
-    public int m_EnterCount = 0;
-    public List<PlayerEnum> m_PlayerEnumList = null;
+    //int m_EnterCount = 0;
+    /// <summary>
+    /// 进入触发器的玩家信息.
+    /// </summary>
+    List<PlayerEnum> m_PlayerEnumList = null;
     internal void SubEnterCount(PlayerEnum indexPlayer)
     {
         if (m_PlayerEnumList == null)
@@ -101,13 +103,8 @@ public class SSTriggerChangeMat : MonoBehaviour
         }
         m_PlayerEnumList.Remove(indexPlayer);
 
-        if (m_EnterCount > 0)
-        {
-            m_EnterCount--;
-        }
-
-        if (m_EnterCount <= 0)
-        {
+        if (m_PlayerEnumList.Count <= 0)
+            {
             if (m_PlayerEnumList != null)
             {
                 m_PlayerEnumList.Clear();
@@ -131,24 +128,21 @@ public class SSTriggerChangeMat : MonoBehaviour
         {
             return;
         }
-        SSDebug.Log("SSTriggerChangeMat::OnTriggerEnter -> playerMoveCom.playerIndex ==== " + playerMoveCom.PlayerIndex
-            + ", m_EnterCount ================= " + m_EnterCount);
-
-        if (m_EnterCount == 0 && XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_TriggerManage != null)
-        {
-            //设置信息.
-            XkGameCtrl.GetInstance().m_TriggerManage.SetTriggerChangeMat(this);
-        }
+        //SSDebug.Log("SSTriggerChangeMat::OnTriggerEnter -> playerMoveCom.playerIndex ==== " + playerMoveCom.PlayerIndex);
 
         if (m_PlayerEnumList == null)
         {
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_TriggerManage != null)
+            {
+                //设置信息.
+                XkGameCtrl.GetInstance().m_TriggerManage.SetTriggerChangeMat(this);
+            }
             m_PlayerEnumList = new List<PlayerEnum>();
         }
 
         if (m_PlayerEnumList != null && m_PlayerEnumList.Contains(playerMoveCom.PlayerIndex) == false)
         {
             m_PlayerEnumList.Add(playerMoveCom.PlayerIndex);
-            m_EnterCount++;
             //更换材质球为透明的.
             UpdateMaterialState(MaterialState.TouMing);
         }
@@ -161,8 +155,7 @@ public class SSTriggerChangeMat : MonoBehaviour
         {
             return;
         }
-        SSDebug.Log("SSTriggerChangeMat::OnTriggerExit -> playerMoveCom.playerIndex ==== " + playerMoveCom.PlayerIndex
-            + ", m_EnterCount ================= " + m_EnterCount);
+        //SSDebug.Log("SSTriggerChangeMat::OnTriggerExit -> playerMoveCom.playerIndex ==== " + playerMoveCom.PlayerIndex);
         SubEnterCount(playerMoveCom.PlayerIndex);
     }
 }
