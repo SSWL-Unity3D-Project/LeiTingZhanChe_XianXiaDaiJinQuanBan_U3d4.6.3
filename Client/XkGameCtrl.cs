@@ -406,8 +406,13 @@ public class XkGameCtrl : SSGameMono
         }
 #endif
     }
-//	public static int TestGameEndLv = (int)GameLevel.Scene_2;
-	static XkGameCtrl _Instance;
+
+    /// <summary>
+    /// 游戏触发器管理.
+    /// </summary>
+    internal SSTriggerManage m_TriggerManage;
+    //	public static int TestGameEndLv = (int)GameLevel.Scene_2;
+    static XkGameCtrl _Instance;
 	public static XkGameCtrl GetInstance()
 	{
 		return _Instance;
@@ -441,6 +446,11 @@ public class XkGameCtrl : SSGameMono
             if (m_PlayerJiChuCaiPiaoData == null)
             {
                 m_PlayerJiChuCaiPiaoData = gameObject.AddComponent<SSPlayerJiChuCaiPiaoData>();
+            }
+
+            if (m_TriggerManage == null)
+            {
+                m_TriggerManage = gameObject.AddComponent<SSTriggerManage>();
             }
             
             //pcvr.OpenAllPlayerFangXiangPanPower();
@@ -2070,13 +2080,17 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null) {
 			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerOne, isActive);
-		}
+            if (_Instance.m_TriggerManage != null)
+            {
+                _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerOne);
+            }
+        }
 
-		if (XkGameCtrl.GetInstance() == null ||
-			(XkGameCtrl.GetInstance() != null && !XkGameCtrl.GetInstance().IsCartoonShootTest) ) {
+		if (_Instance == null ||
+			(_Instance != null && !_Instance.IsCartoonShootTest) ) {
 			if (isActive && Application.loadedLevel == (int)GameLevel.Movie) {
 				StopMovie();
-			}
+            }
         }
         pcvr.GetInstance().m_HongDDGamePadInterface.SetIndexPlayerActiveGameState(0, (byte)(isActive == true ? 1 : 0));
     }
@@ -2100,10 +2114,14 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null) {
 			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerTwo, isActive);
-		}
+            if (_Instance.m_TriggerManage != null)
+            {
+                _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerTwo);
+            }
+        }
 		
-		if (XkGameCtrl.GetInstance() == null ||
-		    (XkGameCtrl.GetInstance() != null && !XkGameCtrl.GetInstance().IsCartoonShootTest) ) {
+		if (_Instance == null ||
+		    (_Instance != null && !_Instance.IsCartoonShootTest) ) {
 			if (isActive && Application.loadedLevel == (int)GameLevel.Movie) {
 				StopMovie();
 			}
@@ -2130,10 +2148,14 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null) {
 			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerThree, isActive);
-		}
+            if (_Instance.m_TriggerManage != null)
+            {
+                _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerThree);
+            }
+        }
 		
-		if (XkGameCtrl.GetInstance() == null ||
-		    (XkGameCtrl.GetInstance() != null && !XkGameCtrl.GetInstance().IsCartoonShootTest) ) {
+		if (_Instance == null ||
+		    (_Instance != null && !_Instance.IsCartoonShootTest) ) {
 			if (isActive && Application.loadedLevel == (int)GameLevel.Movie) {
 				StopMovie();
 			}
@@ -2160,10 +2182,14 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null) {
 			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerFour, isActive);
-		}
+            if (_Instance.m_TriggerManage != null)
+            {
+                _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerFour);
+            }
+        }
 		
-		if (XkGameCtrl.GetInstance() == null ||
-		    (XkGameCtrl.GetInstance() != null && !XkGameCtrl.GetInstance().IsCartoonShootTest) ) {
+		if (_Instance == null ||
+		    (_Instance != null && !_Instance.IsCartoonShootTest) ) {
 			if (isActive && Application.loadedLevel == (int)GameLevel.Movie) {
 				StopMovie();
 			}
