@@ -75,15 +75,22 @@ public class PlayerAmmoCtrl : MonoBehaviour
             || AmmoType == PlayerAmmoType.ChuanTouAmmo
             || AmmoType == PlayerAmmoType.SanDanAmmo)
         {
-            if (Time.time - m_TimeLastAmmoHit > 0.05f)
+            if (AmmoType == PlayerAmmoType.ChuanTouAmmo || AmmoType == PlayerAmmoType.SanDanAmmo)
             {
-                m_TimeLastAmmoHit = Time.time;
+                if (Time.time - m_TimeLastAmmoHit > 0.05f)
+                {
+                    m_TimeLastAmmoHit = Time.time;
+                    CheckPlayerAmmoForwardHitNpc();
+                }
+            }
+            else
+            {
                 CheckPlayerAmmoForwardHitNpc();
             }
         }
         else
         {
-            if (Time.time - m_TimeLastAmmoHit > 0.2f)
+            if (Time.time - m_TimeLastAmmoHit > 0.1f)
             {
                 m_TimeLastAmmoHit = Time.time;
                 CheckPlayerAmmoForwardHitNpc();
@@ -149,7 +156,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 			default:
                     {
                         IsHitNpcAmmo = true;
-                        MoveAmmoOnCompelteITween();
+                        //MoveAmmoOnCompelteITween();
                         isStopCheckHit = true;
                         isHitNpc = true;
                         break;
@@ -174,26 +181,34 @@ public class PlayerAmmoCtrl : MonoBehaviour
 				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType, IsAiFireAmmo);
 				SpawnAmmoParticleObj(healthScript);
 			}
+
+            if (isStopCheckHit == true)
+            {
+                //停止子弹的伤害检测.
+                MoveAmmoOnCompelteITween();
+            }
 		}
 
 		if (hitObjNpc != null) {
 			NpcAmmoCtrl npcAmmoScript = hitObjNpc.GetComponent<NpcAmmoCtrl>();
 			if (npcAmmoScript != null) {
 				npcAmmoScript.MoveAmmoOnCompelteITween();
-			}
+            }
 
-			if (AmmoType == PlayerAmmoType.DaoDanAmmo
-			    || AmmoType == PlayerAmmoType.GaoBaoAmmo
-			    || AmmoType == PlayerAmmoType.PuTongAmmo
-			    || AmmoType == PlayerAmmoType.SanDanAmmo) {
-				if (hitObjNpc.layer != LayerMask.NameToLayer("Default"))
+            if (AmmoType == PlayerAmmoType.DaoDanAmmo
+                || AmmoType == PlayerAmmoType.GaoBaoAmmo
+                || AmmoType == PlayerAmmoType.PuTongAmmo
+                || AmmoType == PlayerAmmoType.SanDanAmmo)
+            {
+                if (hitObjNpc.layer != LayerMask.NameToLayer("Default"))
                 {
+                    //SSDebug.Log("hitObjNpc ===================================== " + hitObjNpc.name);
                     IsHitNpcAmmo = true;
                     MoveAmmoOnCompelteITween();
-					isStopCheckHit = true;
-				}
-			}
-		}
+                    isStopCheckHit = true;
+                }
+            }
+        }
 		return isStopCheckHit;
 	}
 
@@ -228,8 +243,9 @@ public class PlayerAmmoCtrl : MonoBehaviour
 			//Debug.Log("Unity:"+"StartMoveAmmo::fix firePos -> "+"disTmp "+disTmp+", disMax "+MaxDisVal);
 		}
 		IsChuanJiaDanHitCamColForward = false;
+        IsCreatAmmoParticle = false;
 
-		ObjAmmo = gameObject;
+        ObjAmmo = gameObject;
 		if (!ObjAmmo.activeSelf) {
 			ObjAmmo.SetActive(true);
 			IsDestroyAmmo = false;
@@ -387,10 +403,39 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		//AmmoEndPos = firePos;
 	}
 
+    /// <summary>
+    /// 是否创建了子弹的爆炸粒子.
+    /// </summary>
+    bool IsCreatAmmoParticle = false;
+    //static int TestCount = 0;
 	void SpawnAmmoParticleObj(XKNpcHealthCtrl healthScript = null)
 	{
-		#if USE_SPHERE_HIT
-		GameObject objParticle = null;
+        if (AmmoType != PlayerAmmoType.ChuanTouAmmo)
+        {
+            //不是穿甲弹.
+            if (IsCreatAmmoParticle == true)
+            {
+                //已经创建过爆炸粒子.
+                return;
+            }
+            IsCreatAmmoParticle = true;
+        }
+
+        //if (AmmoType == PlayerAmmoType.DaoDanAmmo)
+        //{
+        //    TestCount++;
+        //    SSDebug.LogWarning("SpawnAmmoParticleObj -> healthScript ============= " + healthScript
+        //        + ", TestCount == " + TestCount
+        //        + ", time == " + Time.time.ToString("f3"));
+        //}
+
+        //if (TestCount >= 100)
+        //{
+        //    TestCount = 0;
+        //}
+
+#if USE_SPHERE_HIT
+        GameObject objParticle = null;
 		GameObject hitObj = CheckPlayerAmmoOverlapSphereHit(1);
 		if (hitObj == null) {
 			switch (AmmoType) {
@@ -469,40 +514,31 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		tran.parent = XkGameCtrl.PlayerAmmoArray;
 		XkGameCtrl.CheckObjDestroyThisTimed(obj);
 
-        if (healthScript != null)
+        SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
+        if (baoJiAmmo != null)
         {
-            if (healthScript.GetIsDaiJinQuanNpc() == true)
+            bool isDisplayBaoJi = false;
+            if (healthScript != null)
             {
-                //代金券npc.
-                SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
-                if (baoJiAmmo != null)
+                if (healthScript.GetIsDaiJinQuanNpc() == true)
                 {
-                    //初始化子弹爆炸粒子上的暴击效果.
-                    baoJiAmmo.Init(PlayerState);
+                    //代金券npc.
+                    isDisplayBaoJi = true;
                 }
+            }
+
+            if (isDisplayBaoJi == true)
+            {
+                //初始化子弹爆炸粒子上的暴击效果.
+                baoJiAmmo.Init(PlayerState);
             }
             else
             {
-                //非代金券npc.
-                SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
-                if (baoJiAmmo != null)
-                {
-                    //初始化子弹爆炸粒子上的暴击效果.
-                    baoJiAmmo.HiddenBaoJi();
-                }
-            }
-        }
-        else
-        {
-            //没有击中npc.
-            SSPlayerAmmoBaoJi baoJiAmmo = obj.GetComponent<SSPlayerAmmoBaoJi>();
-            if (baoJiAmmo != null)
-            {
-                //初始化子弹爆炸粒子上的暴击效果.
+                //隐藏子弹爆炸粒子上的暴击效果.
                 baoJiAmmo.HiddenBaoJi();
             }
         }
-		#else
+#else
 		GameObject objParticle = null;
 		GameObject obj = null;
 		Transform tran = null;
@@ -639,8 +675,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
 				tieHuaTran.up = hit.normal;
 			}
 		}
-		#endif
-	}
+#endif
+    }
 	
 	void MoveAmmoOnCompelteITween()
 	{
@@ -657,11 +693,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		if (PaiJiPaoTiShi != null) {
 			Destroy(PaiJiPaoTiShi);
 		}
-
-		if (AmmoType != PlayerAmmoType.ChuanTouAmmo) {
-			SpawnAmmoParticleObj();
-		}
-
+        
 		NpcAmmoCtrl.RemoveItweenComponents(gameObject);
 		NpcAmmoCtrl.RemoveItweenComponents(gameObject, 1);
         if (AmmoType == PlayerAmmoType.Null)
@@ -673,18 +705,36 @@ public class PlayerAmmoCtrl : MonoBehaviour
             {
                 CheckPlayerAmmoOverlapSphereHit();
             }
-            else
-            {
-                //Debug.Log("PlayerAmmo have hit npc! ************ AmmoType ===== " + AmmoType);
-            }
+            //else
+            //{
+            //    SSDebug.Log("PlayerAmmo have hit npc! ************ AmmoType ===== " + AmmoType);
+            //}
 		}
-		DaleyHiddenPlayerAmmo();
-	}
 
+        if (AmmoType != PlayerAmmoType.ChuanTouAmmo)
+        {
+            //创建子弹粒子.
+            SpawnAmmoParticleObj();
+        }
+        DaleyHiddenPlayerAmmo();
+    }
+
+    bool _IsHitNpcAmmo = false;
     /// <summary>
     /// 是否击中NPC.
     /// </summary>
-    bool IsHitNpcAmmo = false;
+    bool IsHitNpcAmmo
+    {
+        set
+        {
+            _IsHitNpcAmmo = value;
+            //if (_IsHitNpcAmmo == true)
+            //{
+            //    SSDebug.Log("******************************** IsHitNpcAmmo == " + _IsHitNpcAmmo);
+            //}
+        }
+        get { return _IsHitNpcAmmo; }
+    }
 	void DaleyHiddenPlayerAmmo()
 	{
 		gameObject.SetActive(false);
@@ -698,8 +748,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		}
 		CheckPlayerAmmoOverlapSphereHit();
 	}
-
-	
+    
 	bool IsChuanJiaDanHitCamColForward = false;
 	/**
 	 * key == 0 -> 检测子弹打中的物体.
@@ -710,7 +759,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		GameObject obj = null;
 #if !TEST_CLOSE_SPHER_HIT
         bool isBreak = false;
-        float disDamage = key == 0 ? AmmoDamageDis : 0.2f;
+        float disDamage = key == 0 ? AmmoDamageDis : 0.5f;
 		XKPlayerMvFanWei playerMvFanWei = null;
 		Collider[] hits = Physics.OverlapSphere(AmmoTran.position, disDamage, PlayerAmmoHitLayer);
         Collider col = null;

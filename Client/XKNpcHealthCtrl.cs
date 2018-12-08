@@ -263,7 +263,15 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 	{
 		return NpcScript;
 	}
-
+    
+    /// <summary>
+    /// 是否重置了代金券npc的血值.
+    /// </summary>
+    bool IsBackDaiJinQuanNpcBlood = false;
+    /// <summary>
+    /// 重置血值的时间记录信息.
+    /// </summary>
+    float m_TimeLastBackDaiJinQuanNpcBlood = 0f;
     /// <summary>
     /// 恢复代金券npc的血值数据及UI信息.
     /// </summary>
@@ -288,6 +296,11 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     }
                 }
 
+                //重置代金券npc的伤害数值.
+                PuTongAmmoCount = 0;
+                IsBackDaiJinQuanNpcBlood = true;
+                m_TimeLastBackDaiJinQuanNpcBlood = Time.time;
+
                 //重置代金券npc的血条UI信息.
                 float perVal = 0.5f;
                 if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
@@ -298,7 +311,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             }
         }
     }
-
+    
     /// <summary>
     /// npc彩票显示组件.
     /// </summary>
@@ -495,6 +508,19 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 return;
             }
             TimeSanDanDamage = Time.time;
+        }
+
+        if (IsBackDaiJinQuanNpcBlood == true)
+        {
+            //代金券npc重置血值后,给一定时间的无敌状态.
+            if (Time.time - m_TimeLastBackDaiJinQuanNpcBlood <= 0.5f)
+            {
+                return;
+            }
+            else
+            {
+                IsBackDaiJinQuanNpcBlood = false;
+            }
         }
 
         //switch (NpcJiFen)

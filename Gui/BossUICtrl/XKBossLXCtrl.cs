@@ -49,14 +49,22 @@ public class XKBossLXCtrl : MonoBehaviour
     /// <summary>
     /// 设置商户名称信息.
     /// </summary>
-    void SetShangJiaInfo()
+    void SetShangJiaInfo(SpawnNpcManage.NpcState type = SpawnNpcManage.NpcState.JPBoss)
     {
         if (m_ShangJiaInfoLb != null)
         {
             string shangHuInfo = "盛世网络";
             if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
             {
-                shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
+                if (type == SpawnNpcManage.NpcState.JPBoss
+                    || type == SpawnNpcManage.NpcState.SuperJPBoss)
+                {
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
+                }
+                else
+                {
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaJiangBossShangHuDt.ShangHuMing;
+                }
             }
 
             if (shangHuInfo.Length > 5)

@@ -21,6 +21,10 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     public Transform m_GameUITopRight;
     /// <summary>
+    /// 游戏UI界面左上锚点.
+    /// </summary>
+    public Transform m_GameUITopLeft;
+    /// <summary>
     /// 游戏UI界面正上方锚点.
     /// </summary>
     public Transform m_GameUITop;
@@ -1065,8 +1069,8 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatBaoJiTiShiUI......................................................");
-                m_BaoJiTiShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                SSDebug.Log("Unity: CreatBaoJiTiShiUI......................................................");
+                m_BaoJiTiShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUITopLeft);
             }
             else
             {

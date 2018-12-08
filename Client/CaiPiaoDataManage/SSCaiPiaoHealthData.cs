@@ -278,14 +278,17 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                                         m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
                                     }
                                     m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
-                                    SSDebug.Log("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
-                                        + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi);
+                                    //SSDebug.LogWarning("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
+                                    //    + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi
+                                    //    + ", time == " + Time.time.ToString("f3"));
                                 }
                             }
                             else
                             {
                                 //暴击失效.
                                 m_PlayerBaoJiDt[indexVal].Reset();
+                                //SSDebug.LogWarning("CheckPlayerBaoJiDengJi -> resetBaoJi ------------------------ indexPlayer == " + indexPlayer
+                                //    + ", time == " + Time.time.ToString("f3"));
                             }
                         }
                         break;
@@ -428,6 +431,17 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     }
 
     /// <summary>
+    /// 清理代金券npc的血值脚本.
+    /// </summary>
+    void CleanDaiJinQuanHealth()
+    {
+        if (m_DaiJinQuanHealth != null)
+        {
+            m_DaiJinQuanHealth = null;
+        }
+    }
+
+    /// <summary>
     /// 恢复代金券npc的血值数据及UI信息.
     /// </summary>
     internal void BackDaiJinQuanNpcBlood()
@@ -436,6 +450,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         {
             //恢复代金券npc的血值数据及UI信息.
             m_DaiJinQuanHealth.BackDaiJinQuanNpcBlood();
+            CleanDaiJinQuanHealth();
         }
     }
     #endregion
