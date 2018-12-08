@@ -748,7 +748,7 @@ public class XkGameCtrl : SSGameMono
             //测试爆击信息.
             if (m_GameVersion == GameVersion.CeShiBan)
             {
-                gameObject.AddComponent<SSDebugBaoJi>();
+                m_SSDebugBaoJi = gameObject.AddComponent<SSDebugBaoJi>();
             }
 #endif
         }
@@ -759,6 +759,10 @@ public class XkGameCtrl : SSGameMono
 			Debug.Log("Unity:2" + ex.Message);
 		}
 	}
+
+#if DRAW_DEBUG_BAOJI_INFO
+    internal SSDebugBaoJi m_SSDebugBaoJi = null;
+#endif
 
     private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {

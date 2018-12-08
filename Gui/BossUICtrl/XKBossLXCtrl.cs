@@ -59,11 +59,11 @@ public class XKBossLXCtrl : MonoBehaviour
                 if (type == SpawnNpcManage.NpcState.JPBoss
                     || type == SpawnNpcManage.NpcState.SuperJPBoss)
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaJiangBossShangHuDt.ShangHuMing;
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaJiangBossShangHuDt.ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
                 }
             }
 
@@ -83,7 +83,7 @@ public class XKBossLXCtrl : MonoBehaviour
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		TimeLastBossLX = Time.time;
 		XKGlobalData.GetInstance().PlayAudioBossLaiXi();
-        SetShangJiaInfo();
+        SetShangJiaInfo(type);
 
         gameObject.SetActive(true);
         if (m_GameNumUI != null)

@@ -241,28 +241,6 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                 case PlayerAmmoType.ChuanTouAmmo:
                 case PlayerAmmoType.SanDanAmmo:
                     {
-                        //玩家导弹暴击间隔时间必须大于导弹发射的冷却时间.
-                        //if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi <= m_TimeBaoJi)
-                        //{
-                        //    //暴击间隔时间必须小于设定数值.
-                        //    if (npcHealth != null && npcHealth.GetIsDaiJinQuanNpc() == true)
-                        //    {
-                        //        //只有代金券Npc才可以被暴击.
-                        //        if (m_PlayerBaoJiDt[indexVal].BaoJiDengJi < 3)
-                        //        {
-                        //            //最高4档.
-                        //            m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
-                        //        }
-                        //        m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
-                        //        //SSDebug.Log("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
-                        //        //    + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    //暴击失效.
-                        //    m_PlayerBaoJiDt[indexVal].Reset();
-                        //}
                         if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi > 0.05f)
                         {
                             //玩家导弹暴击间隔时间必须大于导弹发射的冷却时间.
@@ -277,11 +255,11 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                                         //最高4档.
                                         m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
                                     }
-                                    m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
                                     //SSDebug.LogWarning("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
                                     //    + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi
                                     //    + ", time == " + Time.time.ToString("f3"));
                                 }
+                                m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
                             }
                             else
                             {

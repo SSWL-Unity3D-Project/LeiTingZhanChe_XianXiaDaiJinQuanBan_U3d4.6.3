@@ -166,20 +166,33 @@ public class PlayerAmmoCtrl : MonoBehaviour
 			if (isHitNpc)
             {
                 int baoJiDamage = 0;
-                if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && healthScript.GetIsDaiJinQuanNpc() == true)
+                if (AmmoType == PlayerAmmoType.ChuanTouAmmo
+                    || AmmoType == PlayerAmmoType.DaoDanAmmo
+                    || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
+                    || AmmoType == PlayerAmmoType.SanDanAmmo)
                 {
-                    if (AmmoType == PlayerAmmoType.ChuanTouAmmo
-                        || AmmoType == PlayerAmmoType.DaoDanAmmo
-                        || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
-                        || AmmoType == PlayerAmmoType.SanDanAmmo)
+                    //获取玩家对代金券npc的暴击伤害.
+                    XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && healthScript.GetIsDaiJinQuanNpc() == true)
                     {
-                        //获取玩家对代金券npc的暴击伤害.
-                        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
                         baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
                     }
                 }
-				healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType, IsAiFireAmmo);
-				SpawnAmmoParticleObj(healthScript);
+
+                //if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && healthScript.GetIsDaiJinQuanNpc() == true)
+                //{
+                //    if (AmmoType == PlayerAmmoType.ChuanTouAmmo
+                //        || AmmoType == PlayerAmmoType.DaoDanAmmo
+                //        || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
+                //        || AmmoType == PlayerAmmoType.SanDanAmmo)
+                //    {
+                //        //获取玩家对代金券npc的暴击伤害.
+                //        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
+                //        baoJiDamage = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetBaoJiDamage(PlayerState);
+                //    }
+                //}
+                healthScript.OnDamageNpc(DamageNpc + baoJiDamage, PlayerState, AmmoType, IsAiFireAmmo);
+                SpawnAmmoParticleObj(healthScript);
 			}
 
             if (isStopCheckHit == true)
@@ -525,7 +538,21 @@ public class PlayerAmmoCtrl : MonoBehaviour
                     //代金券npc.
                     isDisplayBaoJi = true;
                 }
+                
+                //if (XkGameCtrl.GetInstance().m_SSDebugBaoJi != null)
+                //{
+                //    //测试爆击代金券npc.
+                //    XkGameCtrl.GetInstance().m_SSDebugBaoJi.IsHitDaiJinQuanNpc = healthScript.GetIsDaiJinQuanNpc();
+                //}
             }
+            //else
+            //{
+            //    if (XkGameCtrl.GetInstance().m_SSDebugBaoJi != null)
+            //    {
+            //        //测试爆击代金券npc.
+            //        XkGameCtrl.GetInstance().m_SSDebugBaoJi.IsHitDaiJinQuanNpc = false;
+            //    }
+            //}
 
             if (isDisplayBaoJi == true)
             {
