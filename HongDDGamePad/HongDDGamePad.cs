@@ -486,6 +486,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
         {
             SSDebug.Log("SetIndexPlayerActiveGameState -> index ================= " + index
                 + ", activeState =============== " + activeState);
+
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            ClearPlayerBtInfo(indexPlayer);
             m_IndexPlayerActiveGameState[index] = activeState;
             if (activeState == (int)PlayerActiveState.WeiJiHuo)
             {
@@ -747,6 +750,23 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
 #endif
                 }
+            }
+        }
+
+        /// <summary>
+        /// 清理玩家的按键和移动信息.
+        /// </summary>
+        void ClearPlayerBtInfo(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal >= 0 && indexVal <= 4)
+            {
+                InputEventCtrl.GetInstance().OnClickFangXiangUBt(indexVal, pcvr.ButtonState.UP);
+                InputEventCtrl.GetInstance().OnClickFangXiangDBt(indexVal, pcvr.ButtonState.UP);
+                InputEventCtrl.GetInstance().OnClickFangXiangLBt(indexVal, pcvr.ButtonState.UP);
+                InputEventCtrl.GetInstance().OnClickFangXiangRBt(indexVal, pcvr.ButtonState.UP);
+                InputEventCtrl.GetInstance().OnClickDaoDanBt(indexVal, pcvr.ButtonState.UP);
+                InputEventCtrl.GetInstance().OnClickFireBt(indexVal, pcvr.ButtonState.UP);
             }
         }
 
