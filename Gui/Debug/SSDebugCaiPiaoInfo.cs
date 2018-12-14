@@ -9,7 +9,7 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
 
         string info = "gameCaiPiaoInfo: ";
         //一币兑换彩票数.
-        info += "coinToCard(GamePrice) == " + XKGlobalData.GetInstance().m_CoinToCard + " Yuan";
+        info += "GamePrice == " + XKGlobalData.GetInstance().GameCoinToMoney + " Fen";
         //战车彩池数据.
         float zhanCheJiangChi_20 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01;
         info += ", zhanCheJiangChi_20 == " + zhanCheJiangChi_20.ToString("f2");
