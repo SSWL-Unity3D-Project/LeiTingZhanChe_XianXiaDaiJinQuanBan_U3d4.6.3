@@ -995,6 +995,10 @@ public class SSBoxPostNet : MonoBehaviour
             //+ ", boxNumber: " + m_BoxLoginData.boxNumber);
         if (boxNumRead == m_BoxLoginData.boxNumber && boxNumRead == boxNumConfigRead)
         {
+#if !UNITY_EDITOR
+            //发布版游戏强制重新获取小程序二维码.
+            SSDebug.Log("Reload WX_XiaoChengXu_ErWeiMa....................................");
+#else
             string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
             //Debug.Log("Unity: path ============================= " + path);
             if (File.Exists(path) == true)
@@ -1002,6 +1006,7 @@ public class SSBoxPostNet : MonoBehaviour
                 DelayReadWeiXinXiaoChengXuErWeiMa();
                 return;
             }
+#endif
         }
         else
         {
