@@ -1,4 +1,4 @@
-﻿#define TEST_DAI_JIN_QUAN
+﻿//#define TEST_DAI_JIN_QUAN
 using Assets.XKGame.Script.Server.WebSocket;
 using LitJson;
 using System;
@@ -677,7 +677,7 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
                                 gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
                                 gameConfigDt.GameDanMuInfo = barrage; //弹幕信息
-                                gameConfigDt.MianFeiShiWanCount = mod == "0" ? 0 : 1; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
+                                gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
                                 gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
                                 gameConfigDt.UpdataAllServerConfigData();
                             }
@@ -1036,31 +1036,6 @@ public class SSBoxPostNet : MonoBehaviour
         {
             worth = 4; //4分钱.
         }
-
-        //switch (account)
-        //{
-        //    case 1:
-        //        {
-        //            worth = 1; //1分钱.
-        //            break;
-        //        }
-        //    case 20:
-        //        {
-        //            worth = 2; //2分钱.
-        //            break;
-        //        }
-        //    case 50:
-        //        {
-        //            worth = 3; //3分钱.
-        //            break;
-        //        }
-        //    case 100:
-        //        {
-        //            worth = 4; //4分钱.
-        //            break;
-        //        }
-        //}
-        //worth = 100;
 #endif
         Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
         Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);
