@@ -35,6 +35,7 @@ public class SSGameUICtrl : SSGameMono
 
     void Awake()
     {
+        //CreatFuWuQiWeiHuUI();
         CreatErWeiMaUI();
         if (SSUIRoot.GetInstance() != null)
         {
@@ -911,6 +912,56 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveWangLuoGuZhangUI...");
             Destroy(m_WangLuoGuZhangUI);
             m_WangLuoGuZhangUI = null;
+            Resources.UnloadUnusedAssets();
+
+            CreatFuWuQiWeiHuUI();
+        }
+    }
+    
+    /// <summary>
+    /// 服务器维护中UI界面.
+    /// </summary>
+    internal GameObject m_FuWuQiWeiHuUI;
+    /// <summary>
+    /// 产生服务器维护中UI界面.
+    /// </summary>
+    internal void CreatFuWuQiWeiHuUI()
+    {
+        if (m_FuWuQiWeiHuUI == null)
+        {
+            string prefabPath = "Prefabs/GUI/FuWuQiWeiHu/FuWuQiWeiHu";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatFuWuQiWeiHuUI.................................");
+                m_FuWuQiWeiHuUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+                if (ErWeiMaUI.GetInstance() != null)
+                {
+                    ErWeiMaUI.GetInstance().SetActive(false);
+                }
+            }
+            else
+            {
+                UnityLogWarning("CreatFuWuQiWeiHuUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除服务器维护中UI界面.
+    /// </summary>
+    internal void RemoveFuWuQiWeiHuUI()
+    {
+        if (m_FuWuQiWeiHuUI != null)
+        {
+            UnityLog("RemoveFuWuQiWeiHuUI...");
+            if (ErWeiMaUI.GetInstance() != null)
+            {
+                ErWeiMaUI.GetInstance().SetActive(true);
+            }
+            Destroy(m_FuWuQiWeiHuUI);
+            m_FuWuQiWeiHuUI = null;
+            Resources.UnloadUnusedAssets();
         }
     }
 

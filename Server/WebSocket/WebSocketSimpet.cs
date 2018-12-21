@@ -41,6 +41,14 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
+        if (Time.frameCount % 30 == 0)
+        {
+            if (m_SSBoxPostNet != null)
+            {
+                m_SSBoxPostNet.LoopGetGameConfigInfoFromHddServer();
+            }
+        }
+
         if (Time.time - m_TimeLastXinTiao >= 10f)
         {
             m_TimeLastXinTiao = Time.time;

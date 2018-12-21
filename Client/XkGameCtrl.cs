@@ -424,7 +424,7 @@ public class XkGameCtrl : SSGameMono
 	{
 		try
 		{
-			_Instance = this;
+            _Instance = this;
 #if !UNITY_EDITOR
             //发布出来游戏后强制修改.
             //IsCaiPiaoHuLuePlayerIndex = false;

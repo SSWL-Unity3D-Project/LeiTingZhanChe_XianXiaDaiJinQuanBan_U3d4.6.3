@@ -60,7 +60,7 @@ public class ErWeiMaUI : MonoBehaviour
                     else
                     {
                         //先隐藏二维码.
-                        gameObject.SetActive(false);
+                        SetActive(false);
                     }
                     break;
                 }
@@ -192,6 +192,14 @@ public class ErWeiMaUI : MonoBehaviour
         {
             IsRemoveSelf = true;
             Destroy(gameObject);
+        }
+    }
+
+    internal void SetActive(bool isActive)
+    {
+        if (gameObject.activeInHierarchy != isActive)
+        {
+            gameObject.SetActive(isActive);
         }
     }
 

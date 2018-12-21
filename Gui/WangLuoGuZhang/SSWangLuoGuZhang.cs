@@ -9,6 +9,10 @@ public class SSWangLuoGuZhang : MonoBehaviour
 	void Start()
     {
         m_LastTimeVal = Time.time;
+        if (ErWeiMaUI.GetInstance() != null)
+        {
+            ErWeiMaUI.GetInstance().SetActive(false);
+        }
     }
 	
 	// Update is called once per frame
