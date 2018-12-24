@@ -88,18 +88,22 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
 
         if (m_Animator != null)
         {
+            IsCloseZhuanPanAni = false;
             m_Animator.enabled = true;
+            //m_Animator.enabled = false; //test
         }
         SetActive(true);
         StartCoroutine(DelayShowCaiPiaoInfo());
     }
 
+    bool IsCloseZhuanPanAni = false;
     IEnumerator DelayShowCaiPiaoInfo()
     {
         yield return new WaitForSeconds(m_TimeShowExp);
         ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos);
 
         yield return new WaitForSeconds(m_TimePlay);
+        IsCloseZhuanPanAni = true;
         if (m_Animator != null)
         {
             m_Animator.enabled = false;
@@ -114,7 +118,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         {
             if (m_Animator != null)
             {
-                if (m_Animator.enabled == false)
+                if (IsCloseZhuanPanAni == true)
                 {
                     //隐藏彩票转盘.
                     SetActive(false);

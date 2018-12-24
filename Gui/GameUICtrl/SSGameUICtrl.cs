@@ -913,8 +913,12 @@ public class SSGameUICtrl : SSGameMono
             Destroy(m_WangLuoGuZhangUI);
             m_WangLuoGuZhangUI = null;
             Resources.UnloadUnusedAssets();
+            if (ErWeiMaUI.GetInstance() != null)
+            {
+                ErWeiMaUI.GetInstance().SetActive(true);
+            }
 
-            CreatFuWuQiWeiHuUI();
+            //CreatFuWuQiWeiHuUI();
         }
     }
     

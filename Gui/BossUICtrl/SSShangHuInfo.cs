@@ -23,7 +23,7 @@ public class SSShangHuInfo : MonoBehaviour
     /// <summary>
     /// 大奖Boss商户信息.
     /// </summary>
-    public DaJiangBossShangHuData m_DaJiangBossShangHuDt;
+    public DaJiangBossShangHuData[] m_DaJiangBossShangHuDt = new DaJiangBossShangHuData[4];
 
     /// <summary>
     /// 商户信息.
@@ -73,12 +73,15 @@ public class SSShangHuInfo : MonoBehaviour
     /// <summary>
     /// 更新游戏大奖Boss商户数据信息.
     /// </summary>
-    internal void UpdateDaJiangBossShangHuInfo(string shangHuInfo)
+    internal void UpdateDaJiangBossShangHuInfo(string[] shangHuInfoArray)
     {
         if (m_DaJiangBossShangHuDt != null)
         {
-            m_DaJiangBossShangHuDt.ShangHuMing = shangHuInfo;
-            SSDebug.Log("UpdateDaJiangBossShangHuInfo -> ShangHuMing ===== " + shangHuInfo);
+            for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
+            {
+                m_DaJiangBossShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
+                SSDebug.Log("UpdateDaJiangBossShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
+            }
         }
     }
 
@@ -128,6 +131,22 @@ public class SSShangHuInfo : MonoBehaviour
         return m_ShangHuDt[indexVal];
     }
 
+    int m_IndexJPShangHu = 0;
+    /// <summary>
+    /// 获取JPBoss代金券的商户名信息.
+    /// </summary>
+    internal string GetJPBossShangHuMingInfo()
+    {
+        int indexVal = m_IndexJPShangHu;
+        m_IndexJPShangHu++;
+        if (m_IndexJPShangHu >= m_DaJiangBossShangHuDt.Length)
+        {
+            m_IndexJPShangHu = 0;
+        }
+        //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
+        return m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
+    }
+
     #region 从配置文件读取商户信息
     /// <summary>
     /// 商户配置信息.
@@ -140,15 +159,33 @@ public class SSShangHuInfo : MonoBehaviour
      */
     void InitReadConfig()
     {
+        bool isFix = false;
         //读取jpBoss商户名信息.
-        string daJiangBossShangHuMing = ReadFromFileXml(ShangHuFileName, "DaJiangBoss", "ShangHuMing");
-        if (daJiangBossShangHuMing == null || daJiangBossShangHuMing == "")
+        string[] daJiangBossShangHuMingArray = ReadArrayFromFileXml(ShangHuFileName, "DaJiangBoss", "ShangHuMing");
+        if (daJiangBossShangHuMingArray == null || daJiangBossShangHuMingArray.Length < 4)
         {
-            daJiangBossShangHuMing = "盛世网络";
-            WriteToFileXml(ShangHuFileName, "DaJiangBoss", "ShangHuMing", daJiangBossShangHuMing);
+            isFix = true;
+            //daJiangBossShangHuMingArray = "盛世网络";
+            //WriteToFileXml(ShangHuFileName, "DaJiangBoss", "ShangHuMing", daJiangBossShangHuMingArray);
+        }
+        else if (daJiangBossShangHuMingArray.Length >= 4)
+        {
+            for (int i = 0; i < daJiangBossShangHuMingArray.Length; i++)
+            {
+                if (daJiangBossShangHuMingArray[i] == "")
+                {
+                    isFix = true;
+                }
+            }
         }
 
-        bool isFix = false;
+        if (isFix == true)
+        {
+            //初始化信息.
+            daJiangBossShangHuMingArray = new string[4] { "盛世网络", "陕西纷腾", "西安纷腾", "三角犀" };
+            WriteToFileXml(ShangHuFileName, "DaJiangBoss", "ShangHuMing", daJiangBossShangHuMingArray);
+        }
+
         //商户名信息.
         string[] shangHuMingArray = ReadArrayFromFileXml(ShangHuFileName, "ShangHuData", "ShangHuMing");
         if (shangHuMingArray == null || shangHuMingArray.Length < 4)
@@ -198,7 +235,7 @@ public class SSShangHuInfo : MonoBehaviour
             WriteToFileXml(ShangHuFileName, "ShangHuData", "ShangHuDanMuInfo", shangHuDaiJinQuanArray);
         }
         
-        UpdateDaJiangBossShangHuInfo(daJiangBossShangHuMing);
+        UpdateDaJiangBossShangHuInfo(daJiangBossShangHuMingArray);
         UpdateShangHuInfo(shangHuMingArray);
         UpdateShangHuDanMuInfo(shangHuDaiJinQuanArray);
     }
@@ -210,12 +247,16 @@ public class SSShangHuInfo : MonoBehaviour
     {
         XmlDocument xmlDoc = new XmlDocument();
         XmlElement root = xmlDoc.CreateElement("ConfigShangHuData");
-        //JP大奖商户信息.
-        XmlElement elmNewJPDaJiang = xmlDoc.CreateElement("DaJiangBoss");
-        root.AppendChild(elmNewJPDaJiang);
-        //游戏弹幕中商户信息和游戏里战车代金券信息.
         for (int i = 0; i < 4; i++)
         {
+            //JP大奖商户信息.
+            XmlElement elmNewJPDaJiang = xmlDoc.CreateElement("DaJiangBoss");
+            root.AppendChild(elmNewJPDaJiang);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            //游戏弹幕中商户信息和游戏里战车代金券信息.
             XmlElement elmNew = xmlDoc.CreateElement("ShangHuData");
             root.AppendChild(elmNew);
         }
