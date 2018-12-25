@@ -726,6 +726,17 @@ public class SSCaiPiaoDataManage : SSGameMono
                 isChuPiao = true;
                 //Debug.Log("Unity: GetIsChuCaiPiaoBy -> the type is can shuCaiPiao! type ============ " + type);
             }
+            
+            if (type == DeCaiState.SuiJiDaoJu && isChuPiao == true)
+            {
+                //随机道具判断爆奖率.
+                float randVal = Random.Range(0f, 100f);
+                if (randVal > XKGlobalData.GetInstance().SuiJiDaoJuBaoJiangLv)
+                {
+                    //没有随机到爆奖率区间.
+                    isChuPiao = false;
+                }
+            }
             return isChuPiao;
         }
 

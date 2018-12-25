@@ -92,6 +92,32 @@ public class DaoJiShiCtrl : MonoBehaviour {
         //m_TVYaoKongEnterObj.SetActive(false);
         GameOverObj.SetActive(false);
     }
+    
+    public static bool GetIsHavePlayDaoJiShi()
+    {
+        if (InstanceOne != null)
+        {
+            if (InstanceOne.IsPlayDaoJishi == true)
+            {
+                return true;
+            }
+        }
+        if (InstanceTwo != null)
+        {
+            if (InstanceTwo.IsPlayDaoJishi == true)
+            {
+                return true;
+            }
+        }
+        if (InstanceThree != null)
+        {
+            if (InstanceThree.IsPlayDaoJishi == true)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	public void StartPlayDaoJiShi()
 	{

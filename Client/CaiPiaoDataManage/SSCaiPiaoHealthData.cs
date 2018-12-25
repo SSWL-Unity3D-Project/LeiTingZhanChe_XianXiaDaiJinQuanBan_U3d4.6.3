@@ -424,6 +424,12 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     /// </summary>
     internal void BackDaiJinQuanNpcBlood()
     {
+        if (DaoJiShiCtrl.GetIsHavePlayDaoJiShi() == true)
+        {
+            //有倒计时UI，则不去重置代金券血条信息.
+            return;
+        }
+
         if (m_DaiJinQuanHealth != null && m_DaiJinQuanHealth.IsDeathNpc == false)
         {
             //恢复代金券npc的血值数据及UI信息.

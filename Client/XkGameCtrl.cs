@@ -352,7 +352,7 @@ public class XkGameCtrl : SSGameMono
                     //重置SuperJPBoss数据信息.
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
                 }
-
+                
                 if (GetInstance().m_CaiPiaoHealthDt != null)
                 {
                     //恢复代金券npc的血条.

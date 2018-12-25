@@ -19,6 +19,10 @@ public class SSShangHuInfo : MonoBehaviour
         /// 最多5个字.
         /// </summary>
         public string ShangHuMing = "盛世网络";
+        /// <summary>
+        /// 代金券详情信息.
+        /// </summary>
+        public string XiangQingInfo = "";
     }
     /// <summary>
     /// 大奖Boss商户信息.
@@ -49,12 +53,39 @@ public class SSShangHuInfo : MonoBehaviour
         {
             return "IndexShangHu == " + IndexShangHu + ", ShangHuMing == " + ShangHuMing + ", ShangHuDanMuInfo == " + ShangHuDanMuInfo;
         }
+        /// <summary>
+        /// 代金券详情信息.
+        /// </summary>
+        public string XiangQingInfo = "";
     }
     /// <summary>
     /// 商户配置信息.
     /// 最多4个商户数据信息.
     /// </summary>
     public ShangHuData[] m_ShangHuDt = new ShangHuData[4];
+
+    /// <summary>
+    /// 手机端代金券展示信息.
+    /// </summary>
+    public class DaiJinQuanData
+    {
+        /// <summary>
+        /// 商户名信息.
+        /// 最多5个字.
+        /// </summary>
+        public string ShangHuMing = "盛世网络";
+        /// <summary>
+        /// 代金券详情信息.
+        /// </summary>
+        public string XiangQingInfo = "";
+        public void Reset()
+        {
+            ShangHuMing = "";
+            XiangQingInfo = "";
+        }
+    }
+    internal DaiJinQuanData m_DaiJinQuanDt;
+    
     /// <summary>
     /// 商户名列表信息索引.
     /// </summary>
@@ -62,6 +93,7 @@ public class SSShangHuInfo : MonoBehaviour
 
     internal void Init()
     {
+        m_DaiJinQuanDt = new DaiJinQuanData();
         for (int i = 0; i < m_ShangHuDt.Length; i++)
         {
             m_ShangHuDt[i].IndexShangHu = i;
@@ -69,7 +101,7 @@ public class SSShangHuInfo : MonoBehaviour
         }
         InitReadConfig();
     }
-
+    
     /// <summary>
     /// 更新游戏大奖Boss商户数据信息.
     /// </summary>
@@ -86,6 +118,21 @@ public class SSShangHuInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// 更新游戏大奖Boss代金券使用详情数据信息.
+    /// </summary>
+    internal void UpdateDaJiangBossDaiJinQuanXiangQing(string[] xiangQingInfoArray)
+    {
+        if (m_DaJiangBossShangHuDt != null)
+        {
+            for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
+            {
+                m_DaJiangBossShangHuDt[i].XiangQingInfo = xiangQingInfoArray[i];
+                SSDebug.Log("UpdateDaJiangBossDaiJinQuanXiangQing -> ShangHuMing[" + i + "] ===== " + xiangQingInfoArray[i]);
+            }
+        }
+    }
+
+    /// <summary>
     /// 更新游戏商户数据信息.
     /// </summary>
     internal void UpdateShangHuInfo(string[] shangHuInfoArray)
@@ -94,6 +141,18 @@ public class SSShangHuInfo : MonoBehaviour
         {
             m_ShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
             SSDebug.Log("UpdateShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
+        }
+    }
+
+    /// <summary>
+    /// 更新游戏商户战车代金券使用详情数据信息.
+    /// </summary>
+    internal void UpdateShangHuDaiJinQuanXiangQing(string[] xiangQingInfoArray)
+    {
+        for (int i = 0; i < m_ShangHuDt.Length; i++)
+        {
+            m_ShangHuDt[i].XiangQingInfo = xiangQingInfoArray[i];
+            SSDebug.Log("UpdateShangHuDaiJinQuanXiangQing -> ShangHuMing[" + i + "] ===== " + xiangQingInfoArray[i]);
         }
     }
 
@@ -128,6 +187,23 @@ public class SSShangHuInfo : MonoBehaviour
             m_IndexShangHu = 0;
         }
         //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
+        m_DaiJinQuanDt.ShangHuMing = m_ShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.XiangQingInfo = m_ShangHuDt[indexVal].XiangQingInfo;
+        return m_ShangHuDt[indexVal];
+    }
+
+    int m_IndexSuiJiDaoJu = 0;
+    internal ShangHuData GetSuiJiDaoJuShangHuInfo()
+    {
+        int indexVal = m_IndexSuiJiDaoJu;
+        m_IndexSuiJiDaoJu++;
+        if (m_IndexSuiJiDaoJu >= m_ShangHuDt.Length)
+        {
+            m_IndexSuiJiDaoJu = 0;
+        }
+        //SSDebug.Log("GetSuiJiDaoJuShangHuInfo -> " + m_ShangHuDt[indexVal].ToString());
+        m_DaiJinQuanDt.ShangHuMing = m_ShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.XiangQingInfo = m_ShangHuDt[indexVal].XiangQingInfo;
         return m_ShangHuDt[indexVal];
     }
 
@@ -144,6 +220,8 @@ public class SSShangHuInfo : MonoBehaviour
             m_IndexJPShangHu = 0;
         }
         //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
+        m_DaiJinQuanDt.ShangHuMing = m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.XiangQingInfo = m_DaJiangBossShangHuDt[indexVal].XiangQingInfo;
         return m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
     }
 

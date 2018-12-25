@@ -1,4 +1,5 @@
 ﻿//#define TEST_DAI_JIN_QUAN
+using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.Server.WebSocket;
 using LitJson;
 using System;
@@ -658,7 +659,7 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.JPBossChuPiaoLv = Convert.ToInt32(jpBossReturnRate); //jpBoss返奖率
                                 gameConfigDt.JPBossBaoJiangLv = Convert.ToInt32(jpBossBurstRate); //jpBoss爆奖率
                                 gameConfigDt.IsWuQiongDaJiangChiJPBossDaiJinQuan = jpBossIsLimit == "0" ? false : true; //jpBoss奖池是否无限
-                                gameConfigDt.JPBossDeCai = Convert.ToInt32(jpBossPrizePool); //jpBoss奖池
+                                gameConfigDt.JPBossDeCai = MathConverter.StringToFloat(jpBossPrizePool); //jpBoss奖池
                             }
 
                             if (isFindZhanChe01PrizeInfo == true)
@@ -667,7 +668,7 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.ZhanCheChuPiaoLv_01 = Convert.ToInt32(zhanCheReturnRate_01); //战车01返奖率
                                 gameConfigDt.ZhanCheBaoJiangLv_01 = Convert.ToInt32(zhanCheBurstRate_01); //战车01爆奖率
                                 gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_01 = zhanCheIsLimit_01 == "0" ? false : true; //战车01奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_01 = Convert.ToInt32(zhanChePrizePool_01); //战车01奖池
+                                gameConfigDt.ZhanCheDeCai_01 = MathConverter.StringToFloat(zhanChePrizePool_01); //战车01奖池
                             }
 
                             if (isFindZhanChe02PrizeInfo == true)
@@ -676,7 +677,7 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.ZhanCheChuPiaoLv_02 = Convert.ToInt32(zhanCheReturnRate_02); //战车02返奖率
                                 gameConfigDt.ZhanCheBaoJiangLv_02 = Convert.ToInt32(zhanCheBurstRate_02); //战车02爆奖率
                                 gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_02 = zhanCheIsLimit_02 == "0" ? false : true; //战车02奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_02 = Convert.ToInt32(zhanChePrizePool_02); //战车02奖池
+                                gameConfigDt.ZhanCheDeCai_02 = MathConverter.StringToFloat(zhanChePrizePool_02); //战车02奖池
                             }
 
                             if (isFindSuiJiDaoJuPrizeInfo == true)
@@ -685,15 +686,104 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.SuiJiDaoJuChuPiaoLv = Convert.ToInt32(daoJuReturnRate); //道具返奖率
                                 gameConfigDt.SuiJiDaoJuBaoJiangLv = Convert.ToInt32(daoJuBurstRate); //道具爆奖率
                                 gameConfigDt.IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan = daoJuIsLimit == "0" ? false : true; //道具奖池是否无限
-                                gameConfigDt.SuiJiDaoJuDeCai = Convert.ToInt32(daoJuPrizePool); //道具奖池
+                                gameConfigDt.SuiJiDaoJuDeCai = MathConverter.StringToFloat(daoJuPrizePool); //道具奖池
                             }
 
                             gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
                             gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
-                            gameConfigDt.GameDanMuInfo = barrage; //弹幕信息
+
+                            string danMuInfo = barrage;
+                            string[] danMuInfoArray = danMuInfo.Split('#');
+                            if (danMuInfoArray.Length > 0)
+                            {
+                                gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
+                            }
                             gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
                             gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
                             gameConfigDt.UpdataAllServerConfigData();
+
+                            //商户信息，在字符串中已#分割.
+                            //1 -> 自定义弹幕
+                            //2 -> 商户代金券弹幕1
+                            //3 -> 商户代金券弹幕2
+                            //4 -> 商户代金券弹幕3
+                            //5 -> 商户代金券弹幕4
+                            //6 -> 战车代金券商户名称1
+                            //7 -> 战车代金券商户名称2
+                            //8 -> 战车代金券商户名称3
+                            //9 -> 战车代金券商户名称4
+                            //10 -> JPBoss代金券商户名称1
+                            //11 -> JPBoss代金券商户名称2
+                            //12 -> JPBoss代金券商户名称3
+                            //13 -> JPBoss代金券商户名称4
+                            //14 -> 战车代金券使用详情1
+                            //15 -> 战车代金券使用详情2
+                            //16 -> 战车代金券使用详情3
+                            //17 -> 战车代金券使用详情4
+                            //18 -> JPBoss代金券使用详情1
+                            //19 -> JPBoss代金券使用详情2
+                            //20 -> JPBoss代金券使用详情3
+                            //21 -> JPBoss代金券使用详情4
+                            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+                            {
+                                string shangHuInfo = barrage;
+                                string[] shangHuInfoArray = shangHuInfo.Split('#');
+                                SSShangHuInfo shangHuInfoDt = XkGameCtrl.GetInstance().m_SSShangHuInfo;
+                                if (shangHuInfoArray.Length >= 5)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 1; i < 5; i++)
+                                    {
+                                        infoArray[i - 1] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏商户弹幕数据信息.
+                                    shangHuInfoDt.UpdateShangHuDanMuInfo(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 9)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 5; i < 9; i++)
+                                    {
+                                        infoArray[i - 5] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏商户数据信息.
+                                    shangHuInfoDt.UpdateShangHuInfo(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 13)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 9; i < 13; i++)
+                                    {
+                                        infoArray[i - 9] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏大奖Boss商户数据信息.
+                                    shangHuInfoDt.UpdateDaJiangBossShangHuInfo(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 17)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 13; i < 17; i++)
+                                    {
+                                        infoArray[i - 13] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏商户战车代金券使用详情数据信息.
+                                    shangHuInfoDt.UpdateShangHuDaiJinQuanXiangQing(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 21)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 17; i < 21; i++)
+                                    {
+                                        infoArray[i - 17] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏大奖Boss代金券使用详情数据信息.
+                                    shangHuInfoDt.UpdateDaJiangBossDaiJinQuanXiangQing(infoArray);
+                                }
+                            }
                         }
                         else
                         {
@@ -1012,8 +1102,7 @@ public class SSBoxPostNet : MonoBehaviour
         //account单位是人民币元.
         //worth单位是人民币分.
         int worth = account * 100; //单位从元转换为分.
-#if TEST_DAI_JIN_QUAN
-        //测试代金券.
+
         int suiJiDaoJuDaiJinQuan = 10;
         int zhanCheDaiJinQuan_01 = 5;
         int zhanCheDaiJinQuan_02 = 20;
@@ -1028,7 +1117,8 @@ public class SSBoxPostNet : MonoBehaviour
             zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
             jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
         }
-
+#if TEST_DAI_JIN_QUAN
+        //测试代金券.
         if (account == suiJiDaoJuDaiJinQuan)
         {
             worth = 1; //1分钱.
@@ -1051,7 +1141,27 @@ public class SSBoxPostNet : MonoBehaviour
         //生成现金券的url.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/coupon/generate";
         Debug.Log("Unity: url == " + url);
-        
+
+        string shangHuInfo = "";
+        string xiangQingInfo = "";
+        if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null && XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt != null)
+        {
+            //这里获取游戏当前代金券的商户信息.
+            if (account == suiJiDaoJuDaiJinQuan)
+            {
+                //随机道具代金券.
+                SSShangHuInfo.ShangHuData shangHuData = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo();
+                shangHuInfo = shangHuData.ShangHuMing;
+                xiangQingInfo = shangHuData.XiangQingInfo;
+            }
+            else
+            {
+                shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.ShangHuMing;
+                xiangQingInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.XiangQingInfo;
+            }
+        }
+        SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + shangHuInfo + ", xiangQingInfo == " + xiangQingInfo);
+
         Encoding encoding = Encoding.GetEncoding("utf-8");
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.

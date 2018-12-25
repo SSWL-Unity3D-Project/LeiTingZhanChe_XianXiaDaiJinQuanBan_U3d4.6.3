@@ -16,7 +16,6 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// </summary>
     public void CreatSuiJiDaoJu(PlayerEnum indexPlayer)
     {
-        SpawnAllDaoJu();
         if (!IsCreatSuiJiDaoJu)
         {
             return;

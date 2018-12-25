@@ -222,11 +222,14 @@ public class InputEventCtrl : MonoBehaviour
 	
     public void OnClickFireBt(int index, pcvr.ButtonState val)
     {
-        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
-        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        if (val == pcvr.ButtonState.DOWN)
         {
-            huDunCom.ResetHunDunTimeInfo();
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+            if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+            {
+                huDunCom.ResetHunDunTimeInfo();
+            }
         }
 
         switch (index)
@@ -326,11 +329,14 @@ public class InputEventCtrl : MonoBehaviour
     
     public void OnClickDaoDanBt(int index, pcvr.ButtonState val)
     {
-        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
-        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        if (val == pcvr.ButtonState.DOWN)
         {
-            huDunCom.ResetHunDunTimeInfo();
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+            if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+            {
+                huDunCom.ResetHunDunTimeInfo();
+            }
         }
 
         switch (index)
@@ -423,11 +429,14 @@ public class InputEventCtrl : MonoBehaviour
     /// </summary>
     public void OnClickFangXiangLBt(int index, pcvr.ButtonState val)
     {
-        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
-        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        if (val == pcvr.ButtonState.DOWN)
         {
-            huDunCom.ResetHunDunTimeInfo();
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+            if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+            {
+                huDunCom.ResetHunDunTimeInfo();
+            }
         }
 
         switch (index)
@@ -460,11 +469,14 @@ public class InputEventCtrl : MonoBehaviour
     /// </summary>
     public void OnClickFangXiangRBt(int index, pcvr.ButtonState val)
     {
-        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
-        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        if (val == pcvr.ButtonState.DOWN)
         {
-            huDunCom.ResetHunDunTimeInfo();
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+            if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+            {
+                huDunCom.ResetHunDunTimeInfo();
+            }
         }
 
         switch (index)
@@ -497,11 +509,14 @@ public class InputEventCtrl : MonoBehaviour
     /// </summary>
     public void OnClickFangXiangUBt(int index, pcvr.ButtonState val)
     {
-        PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-        HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
-        if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+        if (val == pcvr.ButtonState.DOWN)
         {
-            huDunCom.ResetHunDunTimeInfo();
+            PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            HuDunCtrl huDunCom = HuDunCtrl.GetInstance(indexPlayer);
+            if (huDunCom != null && huDunCom.IsCanResetHuDunTime == true)
+            {
+                huDunCom.ResetHunDunTimeInfo();
+            }
         }
 
         switch (index)

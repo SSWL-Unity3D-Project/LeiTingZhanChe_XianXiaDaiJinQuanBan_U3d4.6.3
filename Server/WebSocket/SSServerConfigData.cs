@@ -202,6 +202,10 @@
             if (XKGlobalData.GetInstance() != null)
             {
                 //更新游戏弹幕信息.
+                if (GameDanMuInfo.Length > 10)
+                {
+                    GameDanMuInfo = GameDanMuInfo.Substring(0, 10);
+                }
                 XKGlobalData.GetInstance().UpdateDanMuInfo(GameDanMuInfo);
             }
 

@@ -847,8 +847,12 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		if (daoJuScript == null) {
 			return;
 		}
-        //daoJuScript.SpawnAllDaoJu();
         daoJuScript.CreatSuiJiDaoJu(index);
+
+        if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe == false)
+        {
+            //daoJuScript.SpawnAllDaoJu();
+        }
     }
 
 	void CheckYouTongDamageNpc()
