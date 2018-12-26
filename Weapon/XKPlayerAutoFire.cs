@@ -910,6 +910,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
                     return;
                 }
             }
+
+            if (PlayerIndex == PlayerEnum.PlayerThree || PlayerIndex == PlayerEnum.PlayerFour)
+            {
+                return;
+            }
         }
         else
         {

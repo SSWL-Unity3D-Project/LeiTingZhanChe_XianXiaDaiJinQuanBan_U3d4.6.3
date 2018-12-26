@@ -20,6 +20,7 @@ public class SSBoxPostNet : MonoBehaviour
     }
     /// <summary>
     /// 游戏手柄枚举.
+    /// 游戏码.
     /// </summary>
     [HideInInspector]
     public GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
@@ -45,9 +46,9 @@ public class SSBoxPostNet : MonoBehaviour
 
             //boxNum = SystemInfo.deviceUniqueIdentifier + m_GamePadState.ToString();
             boxNum = SystemInfo.deviceUniqueIdentifier;
-            if (boxNum.Length > 28)
+            if (boxNum.Length > 12)
             {
-                boxNum = boxNum.Substring((boxNum.Length - 28), 28);
+                boxNum = boxNum.Substring((boxNum.Length - 12), 12);
             }
         }
         catch (Exception ex)
@@ -378,121 +379,6 @@ public class SSBoxPostNet : MonoBehaviour
             //if (SSUIRoot.GetInstance().m_GameUIManage != null)
             //{
             //    SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
-            
-            /*string testText = "{ \"code\":0,\"message\":\"成功\","
-                        + "\"data\":{ \"commonDetailVo\":{ \"totalReturnRate\":50,\"superRewardMoney\":150,\"mod\":0,\"barrage\":\"代金券送不停\"},"
-                        + "\"prizeDetailVoList\":["
-                        + "{\"id\":7,\"prizeName\":\"奖品1(超级JP大奖)\",\"money\":200,\"returnRate\":20,\"burstRate\":30,\"isLimit\":0,\"prizePool\":\"0\",\"totalIncome\":\"0\"},"
-                        + "{\"id\":8,\"prizeName\":\"奖品2(标准大奖)\",\"money\":20,\"returnRate\":30,\"burstRate\":0,\"isLimit\":0,\"prizePool\":\"0\",\"totalIncome\":\"0\"},"
-                        + "{\"id\":9,\"prizeName\":\"奖品3(基础小奖)\",\"money\":5,\"returnRate\":50,\"burstRate\":0,\"isLimit\":0,\"prizePool\":\"0\",\"totalIncome\":\"0\"},"
-                        + "{\"id\":10,\"prizeName\":\"奖品4(赠送道具奖)\",\"money\":10,\"returnRate\":0,\"burstRate\":0,\"isLimit\":0,\"prizePool\":\"0\",\"totalIncome\":\"0\"}],"
-                        + "\"payItems\":[{\"id\":1,\"money\":1,\"name\":\"雷霆战车测试1\",\"description\":\"\",\"gameCode\":1,\"createTime\":\"2018-12-13 17:37:32\"}]}}";
-            JsonData jd = JsonMapper.ToObject(testText);
-            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-            {
-                string jsonDataInfo = jd["data"].ToJson();
-                JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
-                SSDebug.Log("data ============ " + jsonDataInfo);
-                string totalReturnRate = jd_Data["commonDetailVo"]["totalReturnRate"].ToString(); //总返奖率，单位：%
-                string superRewardMoney = jd_Data["commonDetailVo"]["superRewardMoney"].ToString(); //超级JP大奖支付金额
-                string mod = jd_Data["commonDetailVo"]["mod"].ToString(); //运营模式
-                string barrage = jd_Data["commonDetailVo"]["barrage"].ToString(); //弹幕信息
-                                                                                  //string money = jd_Data["payItems"]["money"].ToString(); //付费金额信息
-                SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
-                SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
-                SSDebug.Log("mod ============ " + mod);
-                SSDebug.Log("barrage ============ " + barrage);
-                //SSDebug.Log("money ============ " + money);
-
-                string jsonData_payItemsInfo = jd["data"]["payItems"].ToJson();
-                JsonData jd_Data_payItems = JsonMapper.ToObject(jsonData_payItemsInfo);
-                string payMoney = jd_Data_payItems[0]["money"].ToString(); //付费金额信息
-                SSDebug.Log("payItems.money ============ " + payMoney);
-
-
-                //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
-                string jsonData_prizeDetailVoListInfo = jd["data"]["prizeDetailVoList"].ToJson();
-                JsonData jd_Data_prizeDetailVoList = JsonMapper.ToObject(jsonData_prizeDetailVoListInfo);
-                int prizeCount = jd_Data_prizeDetailVoList.Count;
-                SSDebug.Log("prizeCount ============================== " + prizeCount);
-
-
-                string jpBossMoney = jd_Data_prizeDetailVoList[0]["money"].ToString(); //代金券金额
-                string jpBossReturnRate = jd_Data_prizeDetailVoList[0]["returnRate"].ToString(); //返奖率，单位：%
-                string jpBossBurstRate = jd_Data_prizeDetailVoList[0]["burstRate"].ToString(); //爆奖率，单位：%
-                string jpBossIsLimit = jd_Data_prizeDetailVoList[0]["isLimit"].ToString(); //是否无限
-                string jpBossPrizePool = jd_Data_prizeDetailVoList[0]["prizePool"].ToString(); //代金券奖池
-                SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
-                SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
-                SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
-                SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
-                SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
-
-                string zhanCheMoney_01 = jd_Data_prizeDetailVoList[1]["money"].ToString(); //代金券金额
-                string zhanCheReturnRate_01 = jd_Data_prizeDetailVoList[1]["returnRate"].ToString(); //返奖率，单位：%
-                string zhanCheBurstRate_01 = jd_Data_prizeDetailVoList[1]["burstRate"].ToString(); //爆奖率，单位：%
-                string zhanCheIsLimit_01 = jd_Data_prizeDetailVoList[1]["isLimit"].ToString(); //是否无限
-                string zhanChePrizePool_01 = jd_Data_prizeDetailVoList[1]["prizePool"].ToString(); //代金券奖池
-                SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
-                SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
-                SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
-                SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
-                SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
-
-                string zhanCheMoney_02 = jd_Data_prizeDetailVoList[2]["money"].ToString(); //代金券金额
-                string zhanCheReturnRate_02 = jd_Data_prizeDetailVoList[2]["returnRate"].ToString(); //返奖率，单位：%
-                string zhanCheBurstRate_02 = jd_Data_prizeDetailVoList[2]["burstRate"].ToString(); //爆奖率，单位：%
-                string zhanCheIsLimit_02 = jd_Data_prizeDetailVoList[2]["isLimit"].ToString(); //是否无限
-                string zhanChePrizePool_02 = jd_Data_prizeDetailVoList[2]["prizePool"].ToString(); //代金券奖池
-                SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
-                SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
-                SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
-                SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
-                SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
-
-                string daoJuMoney = jd_Data_prizeDetailVoList[3]["money"].ToString(); //代金券金额
-                string daoJuReturnRate = jd_Data_prizeDetailVoList[3]["returnRate"].ToString(); //返奖率，单位：%
-                string daoJuBurstRate = jd_Data_prizeDetailVoList[3]["burstRate"].ToString(); //爆奖率，单位：%
-                string daoJuIsLimit = jd_Data_prizeDetailVoList[3]["isLimit"].ToString(); //是否无限
-                string daoJuPrizePool = jd_Data_prizeDetailVoList[3]["prizePool"].ToString(); //代金券奖池
-                SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
-                SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
-                SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
-                SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
-                SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);*/
-
-                //SSServerConfigData gameConfigDt = new SSServerConfigData();
-                //gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
-                //gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
-                //gameConfigDt.GameDanMuInfo = barrage; //弹幕信息
-                //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 0 : 1; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
-                //gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
-
-                //gameConfigDt.JPBossDaiJinQuan = Convert.ToInt32(jpBossMoney); //jpBoss代金券面额
-                //gameConfigDt.ZhanCheDaiJinQuan_01 = Convert.ToInt32(zhanCheMoney_01); //战车01代金券面额
-                //gameConfigDt.ZhanCheDaiJinQuan_02 = Convert.ToInt32(zhanCheMoney_02); //战车02代金券面额
-                //gameConfigDt.SuiJiDaoJuDaiJinQuan = Convert.ToInt32(daoJuMoney); //道具代金券面额
-
-                //gameConfigDt.JPBossChuPiaoLv = Convert.ToInt32(jpBossReturnRate); //jpBoss返奖率
-                //gameConfigDt.ZhanCheChuPiaoLv_01 = Convert.ToInt32(zhanCheReturnRate_01); //战车01返奖率
-                //gameConfigDt.ZhanCheChuPiaoLv_02 = Convert.ToInt32(zhanCheReturnRate_02); //战车02返奖率
-                //gameConfigDt.SuiJiDaoJuChuPiaoLv = Convert.ToInt32(daoJuReturnRate); //道具返奖率
-
-                //gameConfigDt.JPBossBaoJiangLv = Convert.ToInt32(jpBossBurstRate); //jpBoss爆奖率
-                //gameConfigDt.ZhanCheBaoJiangLv_01 = Convert.ToInt32(zhanCheBurstRate_01); //战车01爆奖率
-                //gameConfigDt.ZhanCheBaoJiangLv_02 = Convert.ToInt32(zhanCheBurstRate_02); //战车02爆奖率
-                //gameConfigDt.SuiJiDaoJuBaoJiangLv = Convert.ToInt32(daoJuBurstRate); //道具爆奖率
-
-                //gameConfigDt.IsWuQiongDaJiangChiJPBossDaiJinQuan = jpBossIsLimit == "0" ? false : true; //jpBoss奖池是否无限
-                //gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_01 = zhanCheIsLimit_01 == "0" ? false : true; //战车01奖池是否无限
-                //gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_02 = zhanCheIsLimit_02 == "0" ? false : true; //战车02奖池是否无限
-                //gameConfigDt.IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan = daoJuIsLimit == "0" ? false : true; //道具奖池是否无限
-
-                //gameConfigDt.JPBossDeCai = Convert.ToInt32(jpBossPrizePool); //jpBoss奖池
-                //gameConfigDt.ZhanCheDeCai_01 = Convert.ToInt32(zhanChePrizePool_01); //战车01奖池
-                //gameConfigDt.ZhanCheDeCai_02 = Convert.ToInt32(zhanChePrizePool_02); //战车02奖池
-                //gameConfigDt.SuiJiDaoJuDeCai = Convert.ToInt32(daoJuPrizePool); //道具奖池
-                //gameConfigDt.UpdataAllServerConfigData();
             //}
         }
         else
@@ -542,7 +428,6 @@ public class SSBoxPostNet : MonoBehaviour
                             SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
                             SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
                             SSDebug.Log("mod ============ " + mod);
-                            SSDebug.Log("barrage ============ " + barrage);
                             //SSDebug.Log("money ============ " + money);
                             
                             string jsonData_payItemsInfo = jd["data"]["payItems"].ToJson();
@@ -696,6 +581,7 @@ public class SSBoxPostNet : MonoBehaviour
                             string[] danMuInfoArray = danMuInfo.Split('#');
                             if (danMuInfoArray.Length > 0)
                             {
+                                SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
                                 gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
                             }
                             gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
@@ -1067,7 +953,7 @@ public class SSBoxPostNet : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// 生成代金券的数据信息.
     /// </summary>
     public class PostDataPlayerCouponInfo
     {
@@ -1083,11 +969,38 @@ public class SSBoxPostNet : MonoBehaviour
         /// 用户ID.
         /// </summary>
         public int userId = 0;
+        /// <summary>
+        /// 游戏码
+        /// 四国坦克(tank) | 0
+        /// 雷霆战车/装甲突击(gamepad) | 1
+        /// 坦克争霸战（tank_battle） | 2
+        /// 摇色子(deadly_dice) | 3
+        /// 凯奇大冒险(KQ_adventure) | 4
+        /// 勇者大冒险 | 5
+        /// </summary>
+        public int gameCode = 0;
+        /// <summary>
+        /// 屏幕码.
+        /// </summary>
+        public int screenCode = 0;
+        /// <summary>
+        /// 代金券名称.
+        /// </summary>
+        public string name = "";
         public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal)
         {
             worth = worthVal;
             boxId = boxIdVal;
             userId = userIdVal;
+        }
+        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal, string nameVal)
+        {
+            worth = worthVal;
+            boxId = boxIdVal;
+            userId = userIdVal;
+            gameCode = gameCodeVal;
+            screenCode = screenCodeVal;
+            name = nameVal;
         }
     }
 
@@ -1141,6 +1054,14 @@ public class SSBoxPostNet : MonoBehaviour
         //生成现金券的url.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/coupon/generate";
         Debug.Log("Unity: url == " + url);
+        
+        int gameCode = (int)m_GamePadState; //游戏码.
+        int screenCode = 0;
+        if (m_BoxLoginData != null)
+        {
+            screenCode = Convert.ToInt32(m_BoxLoginData.screenId); //屏幕码.
+        }
+        string name = ""; //代金券名称信息.
 
         string shangHuInfo = "";
         string xiangQingInfo = "";
@@ -1160,10 +1081,11 @@ public class SSBoxPostNet : MonoBehaviour
                 xiangQingInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.XiangQingInfo;
             }
         }
+        name = shangHuInfo + "#" + xiangQingInfo;
         SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + shangHuInfo + ", xiangQingInfo == " + xiangQingInfo);
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
-        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId);
+        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);

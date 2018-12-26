@@ -467,11 +467,11 @@ public class SpawnNpcManage : MonoBehaviour
         /// <summary>
         /// JPBoss产生的最小间隔时间.
         /// </summary>
-        public float TimeMin = 40f;
+        public float TimeMin = 60f;
         /// <summary>
         /// JPBoss产生的最大间隔时间.
         /// </summary>
-        public float TimeMax = 60f;
+        public float TimeMax = 70f;
         bool _IsPlayerXuBi = false;
         /// <summary>
         /// 玩家是否续币.

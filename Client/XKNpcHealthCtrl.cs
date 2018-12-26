@@ -335,7 +335,16 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
                     {
                         //获取获取JPBoss和战车Npc的血值数据.
-                        XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(NpcScript.m_DaiJinQuanState);
+                        if (NpcScript.IsJPBossNpc == true)
+                        {
+                            //JPBoss战车.
+                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
+                        }
+                        else
+                        {
+                            //战车01或02.
+                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(NpcScript.m_DaiJinQuanState);
+                        }
                         //保存代金券npc的血条脚本.
                         XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.SaveDaiJinQuanHealth(this);
                     }
@@ -851,7 +860,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
         if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe == false)
         {
-            //daoJuScript.SpawnAllDaoJu();
+            daoJuScript.SpawnAllDaoJu();
         }
     }
 

@@ -83,10 +83,20 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
-		if (CameraTran == null) {
+		if (CameraTran == null)
+        {
 			CameraTran = Camera.main != null ? Camera.main.transform : null;
 			return;
 		}
+
+        if (Time.frameCount % 3 == 0)
+        {
+            if (XkGameCtrl.GetIsActivePlayer(PlayerSt) == false)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+        }
 		CheckPlayerHitCol();
 
 		Vector3 pos = Vector3.zero;
@@ -214,6 +224,10 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);
 		NengLiangRenderer.materials[0].SetTextureOffset("_MainTex", new Vector2(xueLiangVal, 0f));
 		bool isActiveXT = xueLiangVal >= 1f ? false : true;
+        if (isActiveXT == true)
+        {
+            isActiveXT = XkGameCtrl.GetIsActivePlayer(PlayerSt);
+        }
 		gameObject.SetActive(isActiveXT);
         SetActiveHead(isActiveXT);
     }

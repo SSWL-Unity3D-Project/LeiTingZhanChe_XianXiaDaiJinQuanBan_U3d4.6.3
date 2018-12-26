@@ -94,6 +94,10 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         float caiChiChuPiaoTiaoJian = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJian(type);
         //彩池是否足够.
         bool isCaiChiZuGou = caiChiVal - caiChiChuPiaoTiaoJian >= 0f ? true : false;
+        //if (type == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)
+        //{
+        //    SSDebug.LogWarning("caiChiVal =========== " + caiChiVal + ", caiChiChuPiaoTiaoJian ============= " + caiChiChuPiaoTiaoJian);
+        //}
 
         float baoJiangLv = XKGlobalData.GetInstance().GetDaiJinQuanBaoJiangLv(type);
         float randVal = Random.Range(0f, 100f) / 100f;
@@ -208,9 +212,14 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         /// 暴击时间记录.
         /// </summary>
         internal float TimeBaoJi = 0f;
+        /// <summary>
+        /// 失误次数.
+        /// </summary>
+        internal int ShiWuCount = 0;
         internal void Reset()
         {
             BaoJiDengJi = -1;
+            ShiWuCount = 0;
             TimeBaoJi = Time.time;
         }
     }
@@ -244,29 +253,40 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                         if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi > 0.05f)
                         {
                             //玩家导弹暴击间隔时间必须大于导弹发射的冷却时间.
-                            if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi <= m_TimeBaoJi)
+                            if (npcHealth != null && npcHealth.GetIsDaiJinQuanNpc() == true)
                             {
-                                //暴击间隔时间必须小于设定数值.
-                                if (npcHealth != null && npcHealth.GetIsDaiJinQuanNpc() == true)
+                                //只有代金券Npc才可以被暴击.
+                                if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi <= m_TimeBaoJi)
                                 {
-                                    //只有代金券Npc才可以被暴击.
+                                    //暴击间隔时间必须小于设定数值.
+                                    m_PlayerBaoJiDt[indexVal].ShiWuCount = 0;
                                     if (m_PlayerBaoJiDt[indexVal].BaoJiDengJi < 3)
                                     {
                                         //最高4档.
                                         m_PlayerBaoJiDt[indexVal].BaoJiDengJi++;
                                     }
-                                    //SSDebug.LogWarning("CheckPlayerBaoJiDengJi -> indexPlayer == " + indexPlayer
-                                    //    + ", BaoJiDengJi == " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi
-                                    //    + ", time == " + Time.time.ToString("f3"));
+
+                                    if (m_PlayerBaoJiDt[indexVal].BaoJiDengJi > 3)
+                                    {
+                                        m_PlayerBaoJiDt[indexVal].BaoJiDengJi = 3;
+                                    }
                                 }
+                                else
+                                {
+                                    m_PlayerBaoJiDt[indexVal].ShiWuCount++;
+                                }
+                                //SSDebug.LogWarning("npcHealth ===================== " + npcHealth
+                                //    + ", BaoJiDengJi ==== " + m_PlayerBaoJiDt[indexVal].BaoJiDengJi
+                                //    + ", ShiWuCount ==== " + m_PlayerBaoJiDt[indexVal].ShiWuCount
+                                //    + ", time ==== " + Time.time.ToString("f3"));
+
                                 m_PlayerBaoJiDt[indexVal].TimeBaoJi = Time.time;
-                            }
-                            else
-                            {
-                                //暴击失效.
-                                m_PlayerBaoJiDt[indexVal].Reset();
-                                //SSDebug.LogWarning("CheckPlayerBaoJiDengJi -> resetBaoJi ------------------------ indexPlayer == " + indexPlayer
-                                //    + ", time == " + Time.time.ToString("f3"));
+                                if (m_PlayerBaoJiDt[indexVal].ShiWuCount >= 1)
+                                {
+                                    //失误次数超过n次重置暴击等级信息.
+                                    //暴击失效.
+                                    m_PlayerBaoJiDt[indexVal].Reset();
+                                }
                             }
                         }
                         break;

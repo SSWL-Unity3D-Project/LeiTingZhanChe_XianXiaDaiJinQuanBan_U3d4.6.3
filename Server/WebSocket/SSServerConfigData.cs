@@ -227,7 +227,7 @@
                 }
                 gmCaiPiaoData.UpdateChuPiaoLvInfo(SuiJiDaoJuChuPiaoLv, ZhanCheChuPiaoLv_01, ZhanCheChuPiaoLv_02, JPBossChuPiaoLv);
                 gmCaiPiaoData.UpdateDaiJinQuanInfo(SuiJiDaoJuDaiJinQuan, ZhanCheDaiJinQuan_01, ZhanCheDaiJinQuan_02, JPBossDaiJinQuan);
-                gmCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(SuiJiDaoJuDeCai, ZhanCheDeCai_01, ZhanCheDeCai_01, JPBossDeCai);
+                gmCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(SuiJiDaoJuDeCai, ZhanCheDeCai_01, ZhanCheDeCai_02, JPBossDeCai);
                 gmCaiPiaoData.UpdateJPBossDaiJinQuanShangHuZhiFu(JPBossDaiJinQuanShangHuZhiFu);
             }
             

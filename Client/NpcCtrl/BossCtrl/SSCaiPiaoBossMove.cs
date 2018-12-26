@@ -32,6 +32,7 @@ public class SSCaiPiaoBossMove : MonoBehaviour
     {
         IsMoveNpc = false;
         IsHitCenterTrigger = false;
+        m_CountHitFanWeiTrigger = 0;
     }
 
     /// <summary>

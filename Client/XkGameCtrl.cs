@@ -2,7 +2,7 @@
 //#define TEST_SCREEN_CONFIG
 //#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
-#define DRAW_DEBUG_BAOJI_INFO
+//#define DRAW_DEBUG_BAOJI_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;
 using System.Collections.Generic;
@@ -455,18 +455,18 @@ public class XkGameCtrl : SSGameMono
             }
             
             //pcvr.OpenAllPlayerFangXiangPanPower();
-            switch (XKGlobalData.GameDiff)
-			{
-				case "0":
-					PlayerXueLiangMax = 14000f;
-					break;
-				case "2":
-					PlayerXueLiangMax = 6000f;
-					break;
-				default:
-					PlayerXueLiangMax = 10000f;
-					break;
-			}
+            //switch (XKGlobalData.GameDiff)
+			//{
+			//	case "0":
+			//		PlayerXueLiangMax = 14000f;
+			//		break;
+			//	case "2":
+			//		PlayerXueLiangMax = 6000f;
+			//		break;
+			//	default:
+			//		PlayerXueLiangMax = 10000f;
+			//		break;
+			//}
 			MaxPlayerHealth = PlayerXueLiangMax;
 			KeyBloodUI = (1f - MinBloodUIAmount) / MaxPlayerHealth;
 			XKSpawnNpcPoint.ClearFiJiNpcPointList();

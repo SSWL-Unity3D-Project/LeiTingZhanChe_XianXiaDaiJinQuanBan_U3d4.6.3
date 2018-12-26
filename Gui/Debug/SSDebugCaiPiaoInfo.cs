@@ -12,9 +12,9 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
         info += "GamePrice == " + XKGlobalData.GetInstance().GameCoinToMoney + " Fen";
         //战车彩池数据.
         float zhanCheJiangChi_20 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_01;
-        info += ", zhanCheJiangChi_20 == " + zhanCheJiangChi_20.ToString("f2");
+        info += ", zhanCheJiangChi_01 == " + zhanCheJiangChi_20.ToString("f2");
         float zhanCheJiangChi_50 = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDeCai_02;
-        info += ", zhanCheJiangChi_50 == " + zhanCheJiangChi_50.ToString("f2");
+        info += ", zhanCheJiangChi_02 == " + zhanCheJiangChi_50.ToString("f2");
         //JPBoss彩池数据.
         float jpBossJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDeCai;
         info += ", jpBossJiangChi == " + jpBossJiangChi.ToString("f2");
@@ -24,15 +24,27 @@ public class SSDebugCaiPiaoInfo : MonoBehaviour
         //随机道具彩池数据.
         float daoJuJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDeCai;
         info += ", daoJuJiangChi == " + daoJuJiangChi.ToString("f2");
+        //JPBoss代金券爆奖率.
+        float jpBossBaoJiangLv = XKGlobalData.GetInstance().JPBossBaoJiangLv;
+        info += ", jpBossBaoJiangLv == " + jpBossBaoJiangLv.ToString("f2");
+        //战车01代金券爆奖率.
+        float zhanCheBaoJiangLv_01 = XKGlobalData.GetInstance().ZhanCheBaoJiangLv_01;
+        info += ", zhanCheBaoJiangLv_01 == " + zhanCheBaoJiangLv_01.ToString("f2");
+        //战车02代金券爆奖率.
+        float zhanCheBaoJiangLv_02 = XKGlobalData.GetInstance().ZhanCheBaoJiangLv_02;
+        info += ", zhanCheBaoJiangLv_02 == " + zhanCheBaoJiangLv_02.ToString("f2");
+        //随机道具爆奖率.
+        float daoJuBaoJiangLv = XKGlobalData.GetInstance().SuiJiDaoJuBaoJiangLv;
+        info += ", daoJuBaoJiangLv == " + daoJuBaoJiangLv.ToString("f2");
         //预制彩池数据.
-        float yuZhiJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.YuZhiCaiPiaoVal;
-        info += ", yuZhiJiangChi == " + yuZhiJiangChi.ToString("f2");
+        //float yuZhiJiangChi = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameYuZhiCaiPiaoData.YuZhiCaiPiaoVal;
+        //info += ", yuZhiJiangChi == " + yuZhiJiangChi.ToString("f2");
         //总投币数据.
-        int value = XKGlobalData.GetInstance().m_TotalInsertCoins;
-        info += ", TotalInsertCoins == " + value;
+        //int value = XKGlobalData.GetInstance().m_TotalInsertCoins;
+        //info += ", TotalInsertCoins == " + value;
         //总出票数据.
-        value = XKGlobalData.GetInstance().m_TotalOutPrintCards;
-        info += ", TotalOutPrintCards == " + value;
+        //value = XKGlobalData.GetInstance().m_TotalOutPrintCards;
+        //info += ", TotalOutPrintCards == " + value;
         //info = "bufLen == " + info.Length + ", " + info;
 
         if (width < info.Length * 8f)
