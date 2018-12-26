@@ -2069,6 +2069,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
                 m_CaiPiaoBossMoveCom = gameObject.AddComponent<SSCaiPiaoBossMove>();
                 m_CaiPiaoBossMoveCom.m_NpcMoveCom = this;
             }
+
+            if (m_CaiPiaoBossMoveCom != null)
+            {
+                //重置彩票Boss的运动信息.
+                m_CaiPiaoBossMoveCom.ResetInfo();
+            }
         }
 	}
 	

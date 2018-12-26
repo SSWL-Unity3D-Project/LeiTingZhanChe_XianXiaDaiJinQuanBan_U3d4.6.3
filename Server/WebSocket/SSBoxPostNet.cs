@@ -987,13 +987,17 @@ public class SSBoxPostNet : MonoBehaviour
         /// 代金券名称.
         /// </summary>
         public string name = "";
+        /// <summary>
+        /// 是否是超级JP大奖，0：否；1：是；不发送此字段，默认是0 | false
+        /// </summary>
+        public int superPrize = 0;
         public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal)
         {
             worth = worthVal;
             boxId = boxIdVal;
             userId = userIdVal;
         }
-        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal, string nameVal)
+        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal, string nameVal, int superPrizeVal)
         {
             worth = worthVal;
             boxId = boxIdVal;
@@ -1001,6 +1005,7 @@ public class SSBoxPostNet : MonoBehaviour
             gameCode = gameCodeVal;
             screenCode = screenCodeVal;
             name = nameVal;
+            superPrize = superPrizeVal;
         }
     }
 
@@ -1061,7 +1066,13 @@ public class SSBoxPostNet : MonoBehaviour
         {
             screenCode = Convert.ToInt32(m_BoxLoginData.screenId); //屏幕码.
         }
+
         string name = ""; //代金券名称信息.
+        int superPrize = 0; //是否为JPBoss代金券.
+        if (account == jpBossDaiJinQuan)
+        {
+            superPrize = 1; //JPBoss代金券.
+        }
 
         string shangHuInfo = "";
         string xiangQingInfo = "";
@@ -1085,7 +1096,7 @@ public class SSBoxPostNet : MonoBehaviour
         SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + shangHuInfo + ", xiangQingInfo == " + xiangQingInfo);
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
-        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name);
+        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
@@ -1112,7 +1123,7 @@ public class SSBoxPostNet : MonoBehaviour
             else
             {
                 //红点点支付平台玩家代金券添加失败.
-                Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+                SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
             }
         }
         finally
