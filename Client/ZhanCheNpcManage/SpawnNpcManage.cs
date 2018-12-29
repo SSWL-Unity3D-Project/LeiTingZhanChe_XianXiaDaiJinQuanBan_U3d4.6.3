@@ -902,6 +902,7 @@ public class SpawnNpcManage : MonoBehaviour
                                             break;
                                         }
                                 }
+                                npcMove.SetJPBossHealthInfo();
                             }
 
                             //if (XKBossLXCtrl.GetInstance() != null)

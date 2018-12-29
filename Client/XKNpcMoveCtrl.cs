@@ -2186,6 +2186,18 @@ public class XKNpcMoveCtrl : MonoBehaviour
         yield return new WaitForSeconds(3f);
         IsEnterCameraBox = true;
     }
+
+    internal void SetJPBossHealthInfo()
+    {
+        if (NpcAniScript != null)
+        {
+            XKNpcHealthCtrl healthScriptTmp = NpcAniScript.GetComponent<XKNpcHealthCtrl>();
+            if (healthScriptTmp != null)
+            {
+                healthScriptTmp.SetJPBossHealthInfo(this);
+            }
+        }
+    }
 }
 
 public enum NpcType

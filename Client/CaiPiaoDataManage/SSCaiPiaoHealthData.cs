@@ -37,9 +37,13 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         [Range(0.01f, 1f)]
         public float UIHealthPer = 0.5f;
         /// <summary>
-        /// JPBoss血量信息.
+        /// 纵向移动的JPBoss血量信息.
         /// </summary>
         public HealthData JPBossHealth;
+        /// <summary>
+        /// 横向移动的JPBoss血量信息.
+        /// </summary>
+        public HealthData JPBossHealthHengXiang;
         /// <summary>
         /// 战车Npc血量信息.
         /// </summary>

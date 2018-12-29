@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -31,24 +32,23 @@ public class SSBoxPostNet : MonoBehaviour
 #if UNITY_STANDALONE_WIN
         try
         {
-            /*NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+            NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in nis)
             {
-                //Debug.Log("Name = " + ni.Name);
-                //Debug.Log("Des = " + ni.Description);
-                //Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
-                Debug.Log("Unity: Mac = " + ni.GetPhysicalAddress().ToString());
-                //Debug.Log("------------------------------------------------");
-                //boxNum = UnityEngine.Random.Range(0, 9) + ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
-                boxNum = ni.GetPhysicalAddress().ToString() + m_GamePadState.ToString();
+                if (ni.Description == "en0")
+                {
+                    boxNum = ni.GetPhysicalAddress().ToString();
+                    break;
+                }
+                else
+                {
+                    boxNum = ni.GetPhysicalAddress().ToString();
+                    if (boxNum != "")
+                    {
+                        break;
+                    }
+                }
                 break;
-            }*/
-
-            //boxNum = SystemInfo.deviceUniqueIdentifier + m_GamePadState.ToString();
-            boxNum = SystemInfo.deviceUniqueIdentifier;
-            if (boxNum.Length > 12)
-            {
-                boxNum = boxNum.Substring((boxNum.Length - 12), 12);
             }
         }
         catch (Exception ex)
@@ -70,9 +70,9 @@ public class SSBoxPostNet : MonoBehaviour
             + (DateTime.Now.Ticks % 999999).ToString();
         boxNum = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + key;
 #endif
-        boxNum = boxNum.Length > 28 ? boxNum.Substring(0, 28) : boxNum;
+        boxNum = boxNum.Length > 12 ? boxNum.Substring(0, 12) : boxNum;
         m_BoxLoginData.boxNumber = boxNum;
-        Debug.Log("boxNumber == " + m_BoxLoginData.boxNumber);
+        SSDebug.Log("boxNumber == " + m_BoxLoginData.boxNumber);
 
         if (m_WebSocketSimpet != null)
         {
@@ -219,6 +219,7 @@ public class SSBoxPostNet : MonoBehaviour
             set
             {
                 _boxNumber = value.ToLower();
+                //_boxNumber = value;
                 //設置紅點點遊戲手柄的url.
                 string url = _hDianDianGamePadUrl + _boxNumber + "&gameId=1";
                 hDianDianGamePadUrl = url;

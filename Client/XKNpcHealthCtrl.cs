@@ -287,7 +287,9 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     if (NpcScript.GetIsBossNpc() == true)
                     {
                         //跟新JPBoss的血值数据.
-                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                        //MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                        //SSDebug.Log("*********************************************************44444444444444444444444444444444");
+                        SetJPBossHealthInfo(NpcScript);
                     }
                     else
                     {
@@ -370,6 +372,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                             {
                                 //跟新JPBoss的血值数据.
                                 MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                                //SSDebug.Log("*********************************************************3333333333333333333333333333333");
                             }
                         }
                         else
@@ -1082,6 +1085,30 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
             SSUIRoot.GetInstance().m_GameUIManage.ShowNpcPiaoFenUI(indexPlayer, JiFenVal, m_PiaoFenPoint.position);
+        }
+    }
+
+    internal void SetJPBossHealthInfo(XKNpcMoveCtrl npcMoveCom)
+    {
+        if (npcMoveCom != null)
+        {
+            switch (npcMoveCom.m_TriggerDir)
+            {
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Qian:
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Hou:
+                    {
+                        //SSDebug.Log("*********************************************************1111111111111111111");
+                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                        break;
+                    }
+                case SSTriggerCaiPiaoBossMove.TriggerDir.Zuo:
+                case SSTriggerCaiPiaoBossMove.TriggerDir.You:
+                    {
+                        //SSDebug.Log("*********************************************************22222222222222222222222222");
+                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealthHengXiang.MaxPuTongAmmo;
+                        break;
+                    }
+            }
         }
     }
 }
