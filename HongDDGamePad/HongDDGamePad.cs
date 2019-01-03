@@ -736,7 +736,6 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //test
 #else
                     //玩家币值不够,需要拉起微信游戏手柄的充值界面.
-
                     if (val == PlayerShouBingFireBt.fireADown.ToString()
                         || val == PlayerShouBingFireBt.fireXDown.ToString())
                     {
@@ -1598,6 +1597,51 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 微信支付界面数据.
+        /// </summary>
+        public class WeiXinPayPanelData
+        {
+            internal int userId = 0;
+            internal float timeLast = 0;
+            internal WeiXinPayPanelData(int userIdVal)
+            {
+                userId = userIdVal;
+                timeLast = Time.time;
+            }
+        }
+        List<WeiXinPayPanelData> m_WeiXinPayPanelDtList = new List<WeiXinPayPanelData>();
+
+        /// <summary>
+        /// 检测是否可以发送充值界面消息给服务端.
+        /// </summary>
+        bool CheckSendPlayerShowPayPanel(int userId)
+        {
+            bool isDisplayPayPanel = false;
+            WeiXinPayPanelData userDt = m_WeiXinPayPanelDtList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+
+            if (userDt == null)
+            {
+                m_WeiXinPayPanelDtList.Add(new WeiXinPayPanelData(userId));
+                isDisplayPayPanel = true;
+                if (m_WeiXinPayPanelDtList.Count > 9)
+                {
+                    m_WeiXinPayPanelDtList.RemoveAt(0);
+                }
+            }
+            else
+            {
+                if (Time.time - userDt.timeLast > 3f)
+                {
+                    userDt.timeLast = Time.time;
+                    isDisplayPayPanel = true;
+                }
+            }
+            return isDisplayPayPanel;
+        }
+
+        /// <summary>
         /// 发送打开微信游戏手柄充值界面.
         /// </summary>
         void SendWXPadShowTopUpPanel(int userId)
@@ -1605,7 +1649,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
-                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userId);
+                if (CheckSendPlayerShowPayPanel(userId) == true)
+                {
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userId);
+                }
             }
             StartCoroutine(LoopGetWXPlayerHddPayData(userId));
         }

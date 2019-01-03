@@ -1059,7 +1059,23 @@ public class SSGameUICtrl : SSGameMono
         }
         IsCreatCompanyLogo = true;
 
-        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/Logo/Logo");
+        string prefabPath = "Prefabs/GUI/Logo/Logo";
+        XkGameCtrl.GameLogo gmLogo = XkGameCtrl.GameLogo.Default;
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            gmLogo = XkGameCtrl.GetInstance().m_GameLogo;
+        }
+
+        switch(gmLogo)
+        {
+            case XkGameCtrl.GameLogo.HaiDiLao:
+                {
+                    prefabPath = "Prefabs/GUI/Logo/Logo_HaiDiLao";
+                    break;
+                }
+        }
+
+        GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
             UnityLog("CreateCompanyLogo...");

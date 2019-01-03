@@ -107,6 +107,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         float randVal = Random.Range(0f, 100f) / 100f;
         //是否爆奖.
         bool isDaiJinQuanBaoJiang = randVal < baoJiangLv ? true : false;
+        //SSDebug.LogWarning("isDaiJinQuanBaoJiang == " + isDaiJinQuanBaoJiang + ", randVal == " + randVal + ", baoJiangLv == " + baoJiangLv);
         if (isCaiChiZuGou == true && isDaiJinQuanBaoJiang == true)
         {
             //可以爆奖.

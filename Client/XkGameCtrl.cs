@@ -39,6 +39,19 @@ public enum GameJiTaiType
 
 public class XkGameCtrl : SSGameMono
 {
+    public enum GameLogo
+    {
+        /// <summary>
+        /// 默认Logo
+        /// </summary>
+        Default = 0,
+        /// <summary>
+        /// 海底捞火锅
+        /// </summary>
+        HaiDiLao = 1,
+    }
+    public GameLogo m_GameLogo = GameLogo.Default;
+
     public enum GameVersion
     {
         /// <summary>

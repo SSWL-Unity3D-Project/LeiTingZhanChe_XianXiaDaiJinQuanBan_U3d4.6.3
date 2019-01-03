@@ -976,7 +976,7 @@ public class XKGlobalData
                     break;
                 }
         }
-        return val;
+        return val / 100f;
     }
 
     /// <summary>
