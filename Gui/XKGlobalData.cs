@@ -4,9 +4,42 @@ using System.IO;
 using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.GamePay;
 using Assets.XKGame.Script.Server.GamePayManage;
+using System.Collections.Generic;
 
 public class XKGlobalData
 {
+    public class GameLogoData
+    {
+        internal SSGameLogoData.GameLogo gameLogo = SSGameLogoData.GameLogo.Default;
+        internal string logoImgPath = "";
+        public GameLogoData(SSGameLogoData.GameLogo lg, string path)
+        {
+            gameLogo = lg;
+            logoImgPath = path;
+        }
+    }
+    List<GameLogoData> m_GameLogoDataList = new List<GameLogoData>() {
+        new GameLogoData( SSGameLogoData.GameLogo.Default, "GUI/Logo/ShengShi" ),
+        new GameLogoData( SSGameLogoData.GameLogo.HaiDiLao, "GUI/Logo/HaiDiLao" )
+    };
+    /// <summary>
+    /// 获取游戏logo的图片路径信息.
+    /// </summary>
+    internal string GetLogoImgPath()
+    {
+        string path = "GUI/Logo/ShengShi";
+        GameLogoData data = m_GameLogoDataList.Find((dt) => {
+            return dt.gameLogo.Equals(m_GameLogo);
+        });
+
+        if (data != null)
+        {
+            path = data.logoImgPath;
+        }
+        return path;
+    }
+    internal SSGameLogoData.GameLogo m_GameLogo = SSGameLogoData.GameLogo.HaiDiLao;
+
     static int _CoinPlayerOne = 0;
     public static int CoinPlayerOne
     {

@@ -10,6 +10,7 @@ using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 
 public class SSBoxPostNet : MonoBehaviour
@@ -28,27 +29,46 @@ public class SSBoxPostNet : MonoBehaviour
 
     public void Init()
     {
-        string boxNum = m_GamePadState.ToString();
+        string boxNum = "000000000000";
 #if UNITY_STANDALONE_WIN
+
+        //try
+        //{
+        //    NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+        //    foreach (NetworkInterface ni in nis)
+        //    {
+        //        string macTest = ni.GetPhysicalAddress().ToString();
+        //        SSDebug.Log("macTest == " + macTest);
+        //        string description = ni.Description;
+        //        SSDebug.Log("description == " + description);
+        //        string name = ni.Name;
+        //        SSDebug.Log("name == " + name);
+        //        string id = ni.Id;
+        //        SSDebug.Log("id == " + id);
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+        //    SSDebug.LogWarning("Mac get error! ex == " + ex);
+        //}
+
         try
         {
+            bool isFindLocalAreaConnection = false;
             NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in nis)
             {
-                if (ni.Description == "en0")
+                if (ni.Name == "本地连接" || ni.Name == "Local Area Connection")
                 {
+                    isFindLocalAreaConnection = true;
                     boxNum = ni.GetPhysicalAddress().ToString();
                     break;
                 }
-                else
-                {
-                    boxNum = ni.GetPhysicalAddress().ToString();
-                    if (boxNum != "")
-                    {
-                        break;
-                    }
-                }
-                break;
+            }
+
+            if (isFindLocalAreaConnection == false)
+            {
+                SSDebug.LogWarning("not find local area connection!");
             }
         }
         catch (Exception ex)
@@ -115,6 +135,10 @@ public class SSBoxPostNet : MonoBehaviour
         /// 从红点点服务器获取游戏的配置信息.
         /// </summary>
         GET_GAME_CONFIG_FROM_HDD_SERVER = 5,
+        /// <summary>
+        /// 用户登录信息记录.
+        /// </summary>
+        POST_USER_LOGIN_INFO = 6,
     }
 
     /// <summary>
@@ -1095,10 +1119,153 @@ public class SSBoxPostNet : MonoBehaviour
         }
         name = shangHuInfo + "#" + xiangQingInfo;
         SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + shangHuInfo + ", xiangQingInfo == " + xiangQingInfo);
-
-        Encoding encoding = Encoding.GetEncoding("utf-8");
+        
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
+        string jsonData = JsonMapper.ToJson(postDt);
+        byte[] postData = Encoding.UTF8.GetBytes(jsonData);
+
+        ThreadHttpSendPostHddPlayerCouponInfo threadPostCouponInfo = new ThreadHttpSendPostHddPlayerCouponInfo(url, postData);
+        if (threadPostCouponInfo != null)
+        {
+            Thread threadPost = new Thread(new ThreadStart(threadPostCouponInfo.Run));
+            threadPost.Start();
+        }
+    }
+    
+    /// <summary>
+    /// 通过线程发送玩家的奖券信息到服务器.
+    /// </summary>
+    public class ThreadHttpSendPostHddPlayerCouponInfo
+    {
+        string m_Url = "";
+        byte[] m_PostData = null;
+        public ThreadHttpSendPostHddPlayerCouponInfo(string url, byte[] postData)
+        {
+            m_Url = url;
+            m_PostData = postData;
+        }
+
+        ~ThreadHttpSendPostHddPlayerCouponInfo()
+        {
+            //SSDebug.Log("~ThreadHttpSendPostHddPlayerCouponInfo -> destory this thread*********************************");
+        }
+
+        internal void Run()
+        {
+            Encoding encoding = Encoding.GetEncoding("utf-8");
+            //PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize);
+            //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
+            //string jsonData = JsonMapper.ToJson(postDt);
+            //byte[] postData = m_PostData;
+            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            //打印返回值.
+            Stream stream = null; //获取响应的流.
+
+            try
+            {
+                //以字符流的方式读取HTTP响应.
+                stream = response.GetResponseStream();
+                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+                SSDebug.Log("msg == " + msg);
+                //{"code":0,"message":"成功","data":{"id":4,"couponId":"36ecce4e-0b5c-4808-8284-18c1fad8bc27",
+                //"worth":100,"boxId":"408d5cbc1371leitingzhanche","createTime":"2018-10-27T03:41:43.025+0000",
+                //"userId":93124}}
+
+                JsonData jd = JsonMapper.ToObject(msg);
+                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                {
+                    //红点点支付平台玩家代金券添加成功.
+                }
+                else
+                {
+                    //红点点支付平台玩家代金券添加失败.
+                    SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+                }
+            }
+            finally
+            {
+                //释放资源.
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+
+                if (response != null)
+                {
+                    response.Close();
+                }
+            }
+        }
+    }
+
+
+    public class PostDataPlayerLogin
+    {
+        /// <summary>
+        /// 游戏对照码.
+        /// </summary>
+        public int gameCode = 0;
+        /// <summary>
+        /// 游戏屏幕码.
+        /// </summary>
+        public int screenCode = 0;
+        /// <summary>
+        /// 玩家登陆Id信息.
+        /// </summary>
+        public int memberId = 0;
+        /// <summary>
+        /// 用户昵称.
+        /// </summary>
+        public string memberName = "";
+        /// <summary>
+        /// 登录时是否付费.
+        /// </summary>
+        public string isFree = "";
+        public PostDataPlayerLogin(int gameCode, int screenCode, int memberId)
+        {
+            this.gameCode = gameCode;
+            this.screenCode = screenCode;
+            this.memberId = memberId;
+        }
+        public PostDataPlayerLogin(int gameCode, int screenCode, int memberId, string memberName, bool isFree)
+        {
+            this.gameCode = gameCode;
+            this.screenCode = screenCode;
+            this.memberId = memberId;
+            this.memberName = memberName;
+            this.isFree = isFree == false ? "付费" : "免费";
+        }
+    }
+
+    /// <summary>
+    /// 用户登录记录| 域名/wxbackstage/client/memberLogin | POST |
+    /// gameCode | Integer | 游戏码 | 是
+    /// screenCode | Integer | 屏幕码 | 是
+    /// memberId | Integer | 会员ID | 是
+    /// memberName | String | 用户昵称 | 是
+    /// isFree | String | 登录时是否付费（取值：付费、免费；2选1） | 是
+    /// </summary>
+    internal void HttpSendPostUserLoginInfo(int userId, string userName, bool isFree)
+    {
+        if (m_BoxLoginData == null)
+        {
+            SSDebug.LogWarning("HttpSendPostUserLoginInfo -> m_BoxLoginData was null");
+            return;
+        }
+        //游戏对照码.
+        int gameCode = (int)m_GamePadState;
+        int screenCode = Convert.ToInt32(m_BoxLoginData.screenId);
+        int memberId = userId;
+        //POST方法.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/memberLogin";
+        //http://game.hdiandian.com/wxbackstage/client/memberLogin
+        SSDebug.Log("HttpSendPostUserLoginInfo -> url == " + url);
+
+        Encoding encoding = Encoding.GetEncoding("utf-8");
+        PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, isFree);
+        //"{\"gameCode\":1,\"screenCode\":10155,\"memberId\":94180}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
         HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
@@ -1111,21 +1278,18 @@ public class SSBoxPostNet : MonoBehaviour
             stream = response.GetResponseStream();
             StreamReader sr = new StreamReader(stream); //创建一个stream读取流
             string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-            Debug.Log("unity: msg == " + msg);
-            //{"code":0,"message":"成功","data":{"id":4,"couponId":"36ecce4e-0b5c-4808-8284-18c1fad8bc27",
-            //"worth":100,"boxId":"408d5cbc1371leitingzhanche","createTime":"2018-10-27T03:41:43.025+0000",
-            //"userId":93124}}
+            SSDebug.Log("HttpSendPostUserLoginInfo -> msg == " + msg);
 
-            JsonData jd = JsonMapper.ToObject(msg);
-            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-            {
-                //红点点支付平台玩家代金券添加成功.
-            }
-            else
-            {
-                //红点点支付平台玩家代金券添加失败.
-                SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
-            }
+            //JsonData jd = JsonMapper.ToObject(msg);
+            //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            //{
+            //    //红点点支付平台玩家代金券添加成功.
+            //}
+            //else
+            //{
+            //    //红点点支付平台玩家代金券添加失败.
+            //    SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+            //}
         }
         finally
         {
@@ -1141,7 +1305,7 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
-    
+
     bool IsDelayReadWeiXinXiaoChengXuErWeiMa = false;
     /// <summary>
     /// 读取微信小程序二维码.
@@ -1254,7 +1418,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// <summary>
     /// 获取屏幕码 | 域名/wxbackstage/client/sceneCode/{boxNumber} | GET | boxNumber
     /// </summary>
-    void HttpSendGetGameScreenId()
+    internal void HttpSendGetGameScreenId()
     {
         if (m_BoxLoginData == null)
         {
@@ -1431,6 +1595,7 @@ public class SSBoxPostNet : MonoBehaviour
             erWeiMaUI.mainTexture = texture;
             //保存图片.
             pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg = texture;
+            SSDebug.Log("ReloadWeiXinXiaoChengXuErWeiMa.....................................");
             if (ErWeiMaUI.GetInstance() != null)
             {
                 ErWeiMaUI.GetInstance().SetActive(true);

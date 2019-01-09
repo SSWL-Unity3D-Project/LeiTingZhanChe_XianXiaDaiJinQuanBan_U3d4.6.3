@@ -1,4 +1,5 @@
-﻿//#define USE_WX_GAME_PAD_ACTIVE_PLAYER
+﻿#define TEST_DEBUG_PLAYER_PAD_INFO
+//#define USE_WX_GAME_PAD_ACTIVE_PLAYER
 using UnityEngine;
 using System.Collections;
 using System;
@@ -106,6 +107,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     m_HongDDGamePadWXPay = new HongDDGamePadWXPay();
                     if (m_HongDDGamePadWXPay != null)
                     {
+                        m_HongDDGamePadWXPay.Init();
                         //向服务器请求游戏的后台配置信息.
                         m_HongDDGamePadWXPay.CToS_RequestGameConfigInfo("");
                     }
@@ -512,6 +514,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //强制将玩家状态修改为付费玩家.
                             playerDt.IsMianFeiTiYanPlayer = false;
                         }
+
+                        if (m_HongDDGamePadWXPay != null)
+                        {
+                            m_HongDDGamePadWXPay.SetFreePlayGamePlayerInfoTime(userId);
+                        }
                     }
 
                     isExitWeiXin = playerDt.IsExitWeiXin;
@@ -609,11 +616,34 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 玩家付费之后获取激活玩家机位的索引.
+        /// </summary>
+        int GetActivePlayerIndexAfterPay()
+        {
+            int indexPlayer = -1;
+            for (int i = 0; i < m_IndexPlayerActiveGameState.Length; i++)
+            {
+                //SSDebug.Log("ActiveGame == " + m_IndexPlayerActiveGameState[i]);
+                if (m_IndexPlayerActiveGameState[i] == 0)
+                {
+                    DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance((PlayerEnum)(i + 1));
+                    if (daoJiShiCom != null && daoJiShiCom.IsPlayDaoJishi == false)
+                    {
+                        //未激活的机位索引,并且该机为当前没有播放倒计时.
+                        indexPlayer = i;
+                        break;
+                    }
+                }
+            }
+            return indexPlayer;
+        }
+
+        /// <summary>
         /// 获取游戏当前是否还有空余机位.
         /// </summary>
         bool GetIsHaveEmptyJiWei()
         {
-            int indexPlayer = GetActivePlayerIndex();
+            int indexPlayer = GetActivePlayerIndexAfterPay();
             if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
             {
                 return true;
@@ -690,6 +720,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
                         //InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.DOWN);
+#endif
                     }
 
                     if (val == PlayerShouBingFireBt.fireAUp.ToString()
@@ -697,6 +730,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
                         //InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.UP);
+#endif
                     }
 
                     if (val == PlayerShouBingFireBt.fireBDown.ToString()
@@ -704,6 +740,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
                         InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.DOWN);
+#endif
                     }
 
                     if (val == PlayerShouBingFireBt.fireBUp.ToString()
@@ -711,6 +750,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
                         InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.UP);
+#endif
                     }
                 }
                 else
@@ -787,9 +829,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (dirValStr == PlayerShouBingDir.up.ToString())
                     {
                         //玩家手指离开摇杆(摇杆回中了).
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadDirInfo(playerDt.Index, 0);
+#endif
                     }
                     else
                     {
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadDirInfo(playerDt.Index, Convert.ToInt32(dirValStr));
+#endif
                         int val = Convert.ToInt32(dirValStr);
                         if (val >= -22.5f && val < 22.5f)
                         {
@@ -912,6 +960,77 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
         }
+
+#if TEST_DEBUG_PLAYER_PAD_INFO
+        /// <summary>
+        /// 手柄方向信息.
+        /// </summary>
+        int[] m_PlayerPadDirArray = new int[3];
+        /// <summary>
+        /// 手柄导弹按键信息.
+        /// </summary>
+        pcvr.ButtonState[] m_PlayerPadDaoDanBtArray = new pcvr.ButtonState[3];
+        /// <summary>
+        /// 手柄普通子弹按键信息.
+        /// </summary>
+        pcvr.ButtonState[] m_PlayerPadPuTongBtArray = new pcvr.ButtonState[3];
+        public enum PadBtState
+        {
+            /// <summary>
+            /// 普通子弹.
+            /// </summary>
+            PuTong = 0,
+            /// <summary>
+            /// 导弹.
+            /// </summary>
+            DaoDan = 1,
+        }
+        /// <summary>
+        /// 收到微信手柄方向信息.
+        /// </summary>
+        void OnReceivePlayerPadDirInfo(int indexVal, int dir)
+        {
+            if (indexVal > -1 && indexVal < m_PlayerPadDirArray.Length)
+            {
+                m_PlayerPadDirArray[indexVal] = dir;
+            }
+        }
+        /// <summary>
+        /// 收到手柄按键信息.
+        /// </summary>
+        void OnReceivePlayerPadBtInfo(PadBtState padBt, int indexVal, pcvr.ButtonState btState)
+        {
+            if (indexVal > -1 && indexVal < 3)
+            {
+                switch(padBt)
+                {
+                    case PadBtState.PuTong:
+                        {
+                            m_PlayerPadPuTongBtArray[indexVal] = btState;
+                            break;
+                        }
+                    case PadBtState.DaoDan:
+                        {
+                            m_PlayerPadDaoDanBtArray[indexVal] = btState;
+                            break;
+                        }
+                }
+            }
+        }
+        void OnGUI()
+        {
+            GUI.Box(new Rect(15f, 40f, 280f, 75f), "");
+            string info = "PadP1 -> Dir: " + m_PlayerPadDirArray[0] + ", DaoDanBt: " + (int)m_PlayerPadDaoDanBtArray[0]
+                + ", PuTongBt: " + (int)m_PlayerPadPuTongBtArray[0];
+            GUI.Label(new Rect(15f, 40f, 280f, 25f), info);
+            info = "PadP2 -> Dir: " + m_PlayerPadDirArray[1] + ", DaoDanBt: " + (int)m_PlayerPadDaoDanBtArray[1]
+                + ", PuTongBt: " + (int)m_PlayerPadPuTongBtArray[1];
+            GUI.Label(new Rect(15f, 65f, 280f, 25f), info);
+            info = "PadP3 -> Dir: " + m_PlayerPadDirArray[2] + ", DaoDanBt: " + (int)m_PlayerPadDaoDanBtArray[2]
+                + ", PuTongBt: " + (int)m_PlayerPadPuTongBtArray[2];
+            GUI.Label(new Rect(15f, 90f, 280f, 25f), info);
+        }
+#endif
 
         IEnumerator DelayResetPlayerShouBingDir(int index)
         {
@@ -1158,6 +1277,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             }
                             //免费体验游戏的玩家.
                             playerDt.IsMianFeiTiYanPlayer = true;
+
+                            //记录玩家登陆游戏的信息.
+                            if (m_SSBoxPostNet != null && val != null)
+                            {
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(val.userId, val.userName, true);
+                            }
                         }
                         else
                         {
@@ -1516,6 +1641,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         coin = 10;
                     }
                     AddWeiXinGameCoinToPlayer(userId, coin);
+
+                    //记录玩家登陆游戏的信息.
+                    if (m_SSBoxPostNet != null)
+                    {
+                        m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                    }
                 }
                 else
                 {
@@ -1525,7 +1656,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (isHaveEmptyJiWei == true)
                     {
                         //空余机位索引.
-                        int indexPlayer = GetActivePlayerIndex();
+                        int indexPlayer = GetActivePlayerIndexAfterPay();
                         SSDebug.Log("Active player, indexPlayer == " + indexPlayer + ", userId =============== " + userId);
                         LoopGetWXHddPayData playerWxHddPayDt = FindLoopGetWXHddPayData(userId);
                         if (playerWxHddPayDt != null && playerWxHddPayDt.m_GamePlayerData != null)
@@ -1550,6 +1681,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 coin = 10;
                             }
                             AddWeiXinGameCoinToPlayer(userId, coin);
+
+                            //记录玩家登陆游戏的信息.
+                            if (m_SSBoxPostNet != null)
+                            {
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                            }
                         }
                         else
                         {
@@ -1721,7 +1858,19 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet.CloseWebSocket();
             }
         }
-#endregion
+        
+        /// <summary>
+        /// 获取游戏在红点点平台的屏幕码信息.
+        /// </summary>
+        internal void GetGameHddScreenNum()
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.HttpSendGetGameScreenId();
+            }
+        }
+        #endregion
 
         //private void Update()
         //{

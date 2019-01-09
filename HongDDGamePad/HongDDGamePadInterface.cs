@@ -214,6 +214,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.CloseWebSocket();
             }
         }
+
+        /// <summary>
+        /// 获取游戏在红点点平台的屏幕码信息.
+        /// </summary>
+        internal void GetGameHddScreenNum()
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.GetGameHddScreenNum();
+            }
+        }
         #endregion
     }
 }

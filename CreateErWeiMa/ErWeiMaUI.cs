@@ -56,11 +56,13 @@ public class ErWeiMaUI : MonoBehaviour
                     {
                         //直接加载微信小程序二维码.
                         ReloadGameWXPadXiaoChengXuErWeiMa();
+                        SSDebug.Log("Loading WeiXinErWeiMa....................................111 loadLeval == " + Application.loadedLevel);
                     }
                     else
                     {
                         //先隐藏二维码.
                         SetActive(false);
+                        SSDebug.Log("Loading WeiXinErWeiMa....................................222 loadLeval == " + Application.loadedLevel);
                     }
                     break;
                 }
@@ -134,7 +136,7 @@ public class ErWeiMaUI : MonoBehaviour
                     else
                     {
                         m_ErWeiMaUI.mainTexture = pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg;
-
+                        SetActive(true);
                         //删除网络故障,请检查网络并重启游戏UI.
                         //if (SSUIRoot.GetInstance().m_GameUIManage != null)
                         //{
@@ -193,6 +195,11 @@ public class ErWeiMaUI : MonoBehaviour
             IsRemoveSelf = true;
             Destroy(gameObject);
         }
+    }
+
+    internal bool GetIsActive()
+    {
+        return gameObject.activeInHierarchy;
     }
 
     internal void SetActive(bool isActive)

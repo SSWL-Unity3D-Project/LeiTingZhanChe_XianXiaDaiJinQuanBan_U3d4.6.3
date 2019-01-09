@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using UnityEngine;
 
 namespace Assets.XKGame.Script.HongDDGamePad
 {
@@ -8,6 +11,137 @@ namespace Assets.XKGame.Script.HongDDGamePad
     public class HongDDGamePadWXPay
     {
         #region 试玩游戏的玩家数据管理.
+        internal void Init()
+        {
+            ReadGamePlayerData();
+        }
+
+        string m_FileName = "GamePlayerInfo.db";
+        /// <summary>
+        /// 创建配置文件.
+        /// </summary>
+        void CreatGamePlayerData(string filepath)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlElement root = xmlDoc.CreateElement("ConfigData");
+            for (int i = 0; i < 12; i++)
+            {
+                //玩家信息.
+                XmlElement elmNew = xmlDoc.CreateElement("PlayerData");
+                root.AppendChild(elmNew);
+            }
+            xmlDoc.AppendChild(root);
+            xmlDoc.Save(filepath);
+            File.SetAttributes(filepath, FileAttributes.Normal);
+        }
+
+        /// <summary>
+        /// 从配置文件读取玩家的数据信息.
+        /// </summary>
+        void ReadGamePlayerData()
+        {
+            string filepath = Application.dataPath + "/" + m_FileName;
+#if UNITY_ANDROID
+		    filepath = Application.persistentDataPath + "//" + m_FileName;
+#endif
+            //create file
+            if (!File.Exists(filepath))
+            {
+                CreatGamePlayerData(filepath);
+            }
+
+            if (File.Exists(filepath))
+            {
+                try
+                {
+                    string elementName = "PlayerData";
+                    string attribute1 = "UserId";
+                    string attribute2 = "TimeVal";
+                    string valueStr1 = "";
+                    string valueStr2 = "";
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(filepath);
+                    XmlNodeList nodeList = xmlDoc.SelectSingleNode("ConfigData").ChildNodes;
+                    foreach (XmlElement xe in nodeList)
+                    {
+                        if (xe.Name == elementName)
+                        {
+                            valueStr1 = xe.GetAttribute(attribute1);
+                            valueStr2 = xe.GetAttribute(attribute2);
+                            if (valueStr1 != null && valueStr1 != "" && valueStr2 != null && valueStr2 != "")
+                            {
+                                SSDebug.Log("ReadGamePlayerData -> userId == " + valueStr1 + ", timeVal == " + valueStr2);
+                                AddFreePlayGamePlayerInfo(System.Convert.ToInt32(valueStr1), System.Convert.ToDateTime(valueStr2));
+                            }
+                        }
+                    }
+                    File.SetAttributes(filepath, FileAttributes.Normal);
+                    xmlDoc.Save(filepath);
+                }
+                catch (System.Exception exception)
+                {
+                    File.SetAttributes(filepath, FileAttributes.Normal);
+                    File.Delete(filepath);
+                    SSDebug.LogError("error: xml was wrong! " + exception);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 向配置文件写入玩家的数据信息.
+        /// </summary>
+        void WriteGamePlayerData()
+        {
+            string filepath = Application.dataPath + "/" + m_FileName;
+#if UNITY_ANDROID
+		    filepath = Application.persistentDataPath + "//" + m_FileName;
+#endif
+
+            //create file
+            if (!File.Exists(filepath))
+            {
+                CreatGamePlayerData(filepath);
+            }
+
+            //update value
+            if (File.Exists(filepath))
+            {
+                try
+                {
+                    string elementName = "PlayerData";
+                    string attribute1 = "UserId";
+                    string attribute2 = "TimeVal";
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(filepath);
+                    XmlNodeList nodeList = xmlDoc.SelectSingleNode("ConfigData").ChildNodes;
+                    int countNum = m_FreePlayGamePlayerDataList.Count;
+                    if (countNum > 0)
+                    {
+                        int indexVal = 0;
+                        foreach (XmlElement xe in nodeList)
+                        {
+                            if (xe.Name == elementName && countNum > indexVal)
+                            {
+                                SSDebug.Log("WriteGamePlayerData -> userId == " + m_FreePlayGamePlayerDataList[indexVal].UserId
+                                    + ", timeVal == " + m_FreePlayGamePlayerDataList[indexVal].TimeVal.ToString("G"));
+                                xe.SetAttribute(attribute1, m_FreePlayGamePlayerDataList[indexVal].UserId.ToString());
+                                xe.SetAttribute(attribute2, m_FreePlayGamePlayerDataList[indexVal].TimeVal.ToString("G"));
+                                indexVal++;
+                            }
+                        }
+                    }
+                    File.SetAttributes(filepath, FileAttributes.Normal);
+                    xmlDoc.Save(filepath);
+                }
+                catch(System.Exception exception)
+                {
+                    File.SetAttributes(filepath, FileAttributes.Normal);
+                    File.Delete(filepath);
+                    SSDebug.LogError("error: xml was wrong! " + exception);
+                }
+            }
+        }
+
         /// <summary>
         /// 免费玩过游戏的玩家数据.
         /// </summary>
@@ -17,6 +151,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// 玩家Id.
             /// </summary>
             public int UserId = 0;
+            /// <summary>
+            /// 时间信息记录.
+            /// </summary>
+            public System.DateTime TimeVal = System.DateTime.Now;
+            public FreePlayGamePlayerData()
+            {
+            }
+            public FreePlayGamePlayerData(int userId, System.DateTime timeVal)
+            {
+                UserId = userId;
+                TimeVal = timeVal;
+            }
         }
         /// <summary>
         /// 免费玩过游戏的玩家数据列表信息.
@@ -39,6 +185,32 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 添加数据.
+        /// </summary>
+        void AddFreePlayGamePlayerInfo(int userId, System.DateTime timeVal)
+        {
+            FreePlayGamePlayerData playerDt = m_FreePlayGamePlayerDataList.Find((dt) => { return dt.UserId.Equals(userId); });
+            if (playerDt == null)
+            {
+                m_FreePlayGamePlayerDataList.Add(new FreePlayGamePlayerData(userId, timeVal));
+            }
+        }
+
+        /// <summary>
+        /// 当玩家血值耗尽后更新时间数据.
+        /// </summary>
+        internal void SetFreePlayGamePlayerInfoTime(int userId)
+        {
+            FreePlayGamePlayerData playerDt = m_FreePlayGamePlayerDataList.Find((dt) => { return dt.UserId.Equals(userId); });
+            if (playerDt != null)
+            {
+                playerDt.TimeVal = System.DateTime.Now;
+                //将玩家信息存入配置信息文件中.
+                WriteGamePlayerData();
+            }
+        }
+
+        /// <summary>
         /// 添加免费试玩游戏的玩家信息.
         /// </summary>
         bool AddFreePlayGamePlayerInfo(int userId)
@@ -49,6 +221,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 playerDt = new FreePlayGamePlayerData();
                 playerDt.UserId = userId;
+                playerDt.TimeVal = System.DateTime.Now;
                 m_FreePlayGamePlayerDataList.Add(playerDt);
 
                 //免费试玩游戏玩家信息记录12个,超过12个后之前被挤出的玩家可以再次免费试玩游戏!
@@ -57,9 +230,43 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //删除试玩游戏玩家列表信息的第一个元素.
                     m_FreePlayGamePlayerDataList.RemoveAt(0);
                 }
+                //将玩家信息存入配置信息文件中.
+                WriteGamePlayerData();
                 //可以免费试玩游戏.
                 isCanFreePlayGame = true;
             }
+            else
+            {
+                //数据列表里有玩家的记录信息.
+                System.DateTime timeNow = System.DateTime.Now;
+                System.DateTime timeRecord = playerDt.TimeVal;
+
+                System.TimeSpan ts1 = new System.TimeSpan(timeNow.Ticks);
+                System.TimeSpan ts2 = new System.TimeSpan(timeRecord.Ticks);
+                System.TimeSpan ts = ts2.Subtract(ts1).Duration();
+
+                int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                if (dTime > 20 * 60)
+                {
+                    playerDt.TimeVal = System.DateTime.Now;
+                    //时间差值大于20分钟后,可以被激活.
+                    //可以免费试玩游戏.
+                    isCanFreePlayGame = true;
+
+                    //将玩家信息存入配置信息文件中.
+                    WriteGamePlayerData();
+                }
+                SSDebug.Log("AddFreePlayGamePlayerInfo -> dTime =============== " + dTime + "s");
+            }
+
+            //yyyy - MM - dd hh: mm: ss
+            //System.DateTime t1 = System.DateTime.Now;
+            //System.DateTime t2 = System.Convert.ToDateTime("2019-01-07 13:45:10");
+            //System.TimeSpan ts11 = new System.TimeSpan(t1.Ticks);
+            //System.TimeSpan ts21 = new System.TimeSpan(t2.Ticks);
+            //System.TimeSpan ts00 = ts21.Subtract(ts11).Duration();
+            //int dTime11 = ts00.Hours * 3600 + ts00.Minutes * 60 + ts00.Seconds;
+            //SSDebug.Log("AddFreePlayGamePlayerInfo -> dTime =============== " + dTime11 + "s");
             return isCanFreePlayGame;
         }
         #endregion
@@ -130,7 +337,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         public void SToC_ReceiveGameConfigInfo(int args)
         {
-            UnityEngine.Debug.Log("Unity: SToC_ReceiveGameConfigInfo -> args == " + args);
+            SSDebug.Log("SToC_ReceiveGameConfigInfo -> args == " + args);
             m_GameConfigData.MianFeiShiWanCount = UnityEngine.Mathf.Clamp(args, 0, 1);
         }
 

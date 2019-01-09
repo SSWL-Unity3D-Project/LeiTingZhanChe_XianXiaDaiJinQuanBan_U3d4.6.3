@@ -39,16 +39,28 @@ public class XKNpcSpawnDaoJu : SSGameMono
             return;
         }
 
-        if (Random.Range(0f, 100f) / 100f > 0.4f)
+        bool isUseOldMethod = false;
+        if (isUseOldMethod == true)
         {
-            //没有随机上产生随机道具.
-            return;
-        }
+            if (Random.Range(0f, 100f) / 100f > 0.4f)
+            {
+                //没有随机上产生随机道具.
+                return;
+            }
 
-        if (XkGameCtrl.GetInstance().GetIsCreateSuiJiDaoJu() == false)
+            if (XkGameCtrl.GetInstance().GetIsCreateSuiJiDaoJu() == false)
+            {
+                //产生随机道具的间隔时间未到.
+                return;
+            }
+        }
+        else
         {
-            //产生随机道具的间隔时间未到.
-            return;
+            if (XkGameCtrl.GetInstance().GetIsCreateSuiJiDaoJu(indexPlayer) == false)
+            {
+                //产生随机道具的间隔时间未到.
+                return;
+            }
         }
         //UnityLog("CreatSuiJiDaoJu....................");
 
@@ -83,9 +95,20 @@ public class XKNpcSpawnDaoJu : SSGameMono
         }
     }
 
+    /// <summary>
+    /// 产生道具的时间记录信息.
+    /// </summary>
+    static float m_TimeLastCreatDaoJu = 0f;
 	public void SpawnAllDaoJu()
 	{
-		if (!IsSpawnDJ) {
+        if (Time.time - m_TimeLastCreatDaoJu < 60f)
+        {
+            //间隔时间小于60秒则不产生补给包.
+            return;
+        }
+        m_TimeLastCreatDaoJu = Time.time;
+
+        if (!IsSpawnDJ) {
 			return;
 		}
 		PointList = new List<Transform>();

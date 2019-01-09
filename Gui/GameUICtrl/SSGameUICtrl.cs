@@ -78,6 +78,10 @@ public class SSGameUICtrl : SSGameMono
                     string screenId = loginDt.screenId;
                     CreatGameScreenIdUI(System.Convert.ToInt32(screenId));
                 }
+                else
+                {
+                    pcvr.GetInstance().m_HongDDGamePadInterface.GetGameHddScreenNum();
+                }
             }
         }
     }
@@ -1047,7 +1051,7 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
-    bool IsCreatCompanyLogo = false;
+    internal bool IsCreatCompanyLogo = false;
     /// <summary>
     /// 创建公司Logo.
     /// </summary>
@@ -1060,20 +1064,20 @@ public class SSGameUICtrl : SSGameMono
         IsCreatCompanyLogo = true;
 
         string prefabPath = "Prefabs/GUI/Logo/Logo";
-        XkGameCtrl.GameLogo gmLogo = XkGameCtrl.GameLogo.Default;
-        if (XkGameCtrl.GetInstance() != null)
-        {
-            gmLogo = XkGameCtrl.GetInstance().m_GameLogo;
-        }
+        //XkGameCtrl.GameLogo gmLogo = XkGameCtrl.GameLogo.Default;
+        //if (XkGameCtrl.GetInstance() != null)
+        //{
+        //    gmLogo = XkGameCtrl.GetInstance().m_GameLogo;
+        //}
 
-        switch(gmLogo)
-        {
-            case XkGameCtrl.GameLogo.HaiDiLao:
-                {
-                    prefabPath = "Prefabs/GUI/Logo/Logo_HaiDiLao";
-                    break;
-                }
-        }
+        //switch(gmLogo)
+        //{
+        //    case XkGameCtrl.GameLogo.HaiDiLao:
+        //        {
+        //            prefabPath = "Prefabs/GUI/Logo/Logo_HaiDiLao";
+        //            break;
+        //        }
+        //}
 
         GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)

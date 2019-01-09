@@ -39,19 +39,6 @@ public enum GameJiTaiType
 
 public class XkGameCtrl : SSGameMono
 {
-    public enum GameLogo
-    {
-        /// <summary>
-        /// 默认Logo
-        /// </summary>
-        Default = 0,
-        /// <summary>
-        /// 海底捞火锅
-        /// </summary>
-        HaiDiLao = 1,
-    }
-    public GameLogo m_GameLogo = GameLogo.Default;
-
     public enum GameVersion
     {
         /// <summary>
@@ -210,7 +197,85 @@ public class XkGameCtrl : SSGameMono
 	 */
 	[Range(0.1f, 100f)]public float NpcAmmoSpeed = 1f;
 	[Range(100f, 1000000f)]public float PlayerXueLiangMax = 10000f;
-	public static string NpcLayerInfo = "NpcLayer";
+    [System.Serializable]
+    public class PlayerDamageData
+    {
+        /// <summary>
+        /// Npc子弹对玩家的伤害附加数据.
+        /// </summary>
+        public int DamageVal = 0;
+        /// <summary>
+        /// 附加伤害的时间间隔信息.
+        /// </summary>
+        public float TimeVal = 180f;
+        /// <summary>
+        /// 时间信息记录.
+        /// </summary>
+        internal float TimeLast = 0f;
+        /// <summary>
+        /// 索引标记.
+        /// </summary>
+        internal int IndexVal = 0;
+        public override string ToString()
+        {
+            return "DamageVal == " + DamageVal + ", TimeVal == " + TimeVal.ToString("f2") + ", TimeLast == " + TimeLast.ToString("f2") + ", IndexVal == " + IndexVal;
+        }
+    }
+    /// <summary>
+    /// Npc对玩家造成的附加伤害.
+    /// </summary>
+    public PlayerDamageData[] m_PlayerDamageDt = new PlayerDamageData[3];
+    void InitPlayerDamageDt()
+    {
+        for (int i = 0; i < m_PlayerDamageDt.Length; i++)
+        {
+            m_PlayerDamageDt[i].IndexVal = i;
+        }
+
+        for (int i = 0; i < m_PlayerDamageDtCur.Length; i++)
+        {
+            m_PlayerDamageDtCur[i] = m_PlayerDamageDt[0];
+            m_PlayerDamageDtCur[i].TimeLast = Time.time;
+        }
+    }
+    internal PlayerDamageData[] m_PlayerDamageDtCur = new PlayerDamageData[3];
+    /// <summary>
+    /// 初始化.
+    /// </summary>
+    void InitPlayerDamageDtCur(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal > -1 && indexVal < 3)
+        {
+            m_PlayerDamageDtCur[indexVal] = m_PlayerDamageDt[0];
+            m_PlayerDamageDtCur[indexVal].TimeLast = Time.time;
+        }
+    }
+
+    int GetDamageAddToPlayer(PlayerEnum indexPlayer)
+    {
+        int damageVal = 0;
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal > -1 && indexVal < 3)
+        {
+            if (Time.time - m_PlayerDamageDtCur[indexVal].TimeLast > m_PlayerDamageDtCur[indexVal].TimeVal)
+            {
+                int indexDamage = m_PlayerDamageDtCur[indexVal].IndexVal;
+                if (indexDamage < m_PlayerDamageDt.Length - 1)
+                {
+                    indexDamage++;
+                    //更新npc对玩家的附加伤害数据.
+                    m_PlayerDamageDtCur[indexVal] = m_PlayerDamageDt[indexDamage];
+                    m_PlayerDamageDtCur[indexVal].TimeLast = Time.time;
+                }
+            }
+            damageVal = m_PlayerDamageDtCur[indexVal].DamageVal;
+            //SSDebug.Log("GetDamageAddToPlayer -> indexPlayer == " + indexPlayer + ", " + m_PlayerDamageDtCur[indexVal].ToString());
+        }
+        return damageVal;
+    }
+
+    public static string NpcLayerInfo = "NpcLayer";
 	public GameObject GmCamPrefab;
 	public AiMark GmCamMark;
 	[Range(0.1f, 100f)]public float WuDiTime = 5f;
@@ -438,6 +503,7 @@ public class XkGameCtrl : SSGameMono
 		try
 		{
             _Instance = this;
+            InitPlayerDamageDt();
 #if !UNITY_EDITOR
             //发布出来游戏后强制修改.
             //IsCaiPiaoHuLuePlayerIndex = false;
@@ -993,6 +1059,34 @@ public class XkGameCtrl : SSGameMono
         LoadingRestartGameScene();
     }
 
+    float m_TimeLastErWeiMa = 0f;
+    void CheckGameUIErWeiMaActive()
+    {
+        if (Time.time - m_TimeLastErWeiMa < 10f)
+        {
+            return;
+        }
+        m_TimeLastErWeiMa = Time.time;
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null && SSUIRoot.GetInstance().m_GameUIManage.m_WangLuoGuZhangUI != null)
+        {
+            //网络故障时,不去检测二维码.
+            return;
+        }
+
+        if (SSUIRoot.GetInstance().m_GameUIManage != null && SSUIRoot.GetInstance().m_GameUIManage.IsCreatCompanyLogo == true)
+        {
+            //产生游戏公司Logo时,不去检测二维码.
+            return;
+        }
+
+        if (ErWeiMaUI.GetInstance() != null && ErWeiMaUI.GetInstance().GetIsActive() == false)
+        {
+            SSDebug.Log("CheckGameUIErWeiMaActive...................................");
+            ErWeiMaUI.GetInstance().ReloadGameWXPadXiaoChengXuErWeiMa();
+        }
+    }
+
     void Update()
     {
 #if DRAW_GAME_INFO
@@ -1097,6 +1191,7 @@ public class XkGameCtrl : SSGameMono
 #if USE_CHECK_LOAD_MOVIE_SCENE
         CheckLoadingMovieScene();
 #endif
+        CheckGameUIErWeiMaActive();
     }
 
 	void DelayResetIsLoadingLevel()
@@ -2099,13 +2194,22 @@ public class XkGameCtrl : SSGameMono
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerOne);
             }
-		}
+            if (_Instance != null)
+            {
+                _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerOne);
+            }
+        }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerOne);
-		}
+        }
 
-		if (_Instance != null) {
-			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerOne, isActive);
+		if (_Instance != null)
+        {
+            if (isActive == true)
+            {
+                _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerOne);
+            }
+            _Instance.InitGamePlayerInfo(PlayerEnum.PlayerOne, isActive);
             if (_Instance.m_TriggerManage != null)
             {
                 _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerOne);
@@ -2133,13 +2237,22 @@ public class XkGameCtrl : SSGameMono
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerTwo);
             }
+            if (_Instance != null)
+            {
+                _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerTwo);
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerTwo);
-		}
+        }
 
-		if (_Instance != null) {
-			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerTwo, isActive);
+		if (_Instance != null)
+        {
+            if (isActive == true)
+            {
+                _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerTwo);
+            }
+            _Instance.InitGamePlayerInfo(PlayerEnum.PlayerTwo, isActive);
             if (_Instance.m_TriggerManage != null)
             {
                 _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerTwo);
@@ -2167,13 +2280,22 @@ public class XkGameCtrl : SSGameMono
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerThree);
             }
+            if (_Instance != null)
+            {
+                _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerThree);
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerThree);
-		}
+        }
 
-		if (_Instance != null) {
-			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerThree, isActive);
+		if (_Instance != null)
+        {
+            if (isActive == true)
+            {
+                _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerThree);
+            }
+            _Instance.InitGamePlayerInfo(PlayerEnum.PlayerThree, isActive);
             if (_Instance.m_TriggerManage != null)
             {
                 _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerThree);
@@ -2206,8 +2328,9 @@ public class XkGameCtrl : SSGameMono
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerFour);
 		}
 
-		if (_Instance != null) {
-			_Instance.InitGamePlayerInfo(PlayerEnum.PlayerFour, isActive);
+		if (_Instance != null)
+        {
+            _Instance.InitGamePlayerInfo(PlayerEnum.PlayerFour, isActive);
             if (_Instance.m_TriggerManage != null)
             {
                 _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(PlayerEnum.PlayerFour);
@@ -3078,6 +3201,16 @@ public class XkGameCtrl : SSGameMono
         }
         valSub *= (1f + damagaAddVal);
 
+        if (GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有激活任何玩家.
+        }
+        else
+        {
+            int damageAdd = GetDamageAddToPlayer(indexVal);
+            valSub += damageAdd;
+        }
+
         switch (indexVal) {
 		case PlayerEnum.PlayerOne:
 			if (!IsActivePlayerOne
@@ -3643,6 +3776,59 @@ public class XkGameCtrl : SSGameMono
         }
         m_LastCreateSuiJiDaoJuTime = Time.time;
         return true;
+    }
+
+    //随机道具产生的数据.
+    float[] TimeRandSuiJiDaoJu = new float[3];
+    float[] TimeSuiJiDaoJu = new float[3];
+    int[] SuiJiDaoJuCount = new int[3];
+    int MaxSuiJiDaoJu = 1;
+    float GetTimeRandSuiJiDaoJu()
+    {
+        return Random.Range(15f, 60f);
+    }
+
+    void ResetIsCreateSuiJiDaoJuInfo(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            return;
+        }
+        SuiJiDaoJuCount[indexVal] = 0;
+        TimeSuiJiDaoJu[indexVal] = Time.time;
+        TimeRandSuiJiDaoJu[indexVal] = GetTimeRandSuiJiDaoJu();
+    }
+    /// <summary>
+    /// 获取是否可以创建随机道具.
+    /// </summary>
+    public bool GetIsCreateSuiJiDaoJu(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            return false;
+        }
+
+        if (Time.time - TimeSuiJiDaoJu[indexVal] < TimeRandSuiJiDaoJu[indexVal])
+        {
+            //时间未到.
+            return false;
+        }
+
+        bool isCreate = false;
+        if (SuiJiDaoJuCount[indexVal] >= MaxSuiJiDaoJu)
+        {
+            isCreate = false;
+        }
+        else
+        {
+            isCreate = true;
+            SuiJiDaoJuCount[indexVal]++;
+            TimeSuiJiDaoJu[indexVal] = Time.time;
+            TimeRandSuiJiDaoJu[indexVal] = GetTimeRandSuiJiDaoJu();
+        }
+        return isCreate;
     }
     
     /// <summary>

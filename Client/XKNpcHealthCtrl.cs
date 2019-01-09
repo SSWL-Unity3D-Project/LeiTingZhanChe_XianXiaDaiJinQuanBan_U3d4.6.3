@@ -350,14 +350,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         //保存代金券npc的血条脚本.
                         XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.SaveDaiJinQuanHealth(this);
                     }
-
-                    if (IsRecordMaxPuTongAmmo == false)
-                    {
-                        //记录血值信息.
-                        IsRecordMaxPuTongAmmo = true;
-                        MaxPuTongAmmoCache = MaxPuTongAmmo;
-                    }
                     
+                    SetRecordMaxPuTongAmmo();
                     if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
                     {
                         //没有玩家激活游戏,使用游戏记录的血值数据.
@@ -1088,26 +1082,48 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 记录血值信息.
+    /// </summary>
+    void SetRecordMaxPuTongAmmo()
+    {
+        if (IsRecordMaxPuTongAmmo == false)
+        {
+            //记录血值信息.
+            IsRecordMaxPuTongAmmo = true;
+            MaxPuTongAmmoCache = MaxPuTongAmmo;
+        }
+    }
+
     internal void SetJPBossHealthInfo(XKNpcMoveCtrl npcMoveCom)
     {
         if (npcMoveCom != null)
         {
-            switch (npcMoveCom.m_TriggerDir)
+            SetRecordMaxPuTongAmmo();
+            if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
             {
-                case SSTriggerCaiPiaoBossMove.TriggerDir.Qian:
-                case SSTriggerCaiPiaoBossMove.TriggerDir.Hou:
-                    {
-                        //SSDebug.Log("*********************************************************1111111111111111111");
-                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
-                        break;
-                    }
-                case SSTriggerCaiPiaoBossMove.TriggerDir.Zuo:
-                case SSTriggerCaiPiaoBossMove.TriggerDir.You:
-                    {
-                        //SSDebug.Log("*********************************************************22222222222222222222222222");
-                        MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealthHengXiang.MaxPuTongAmmo;
-                        break;
-                    }
+                //没有玩家激活游戏,使用游戏记录的血值数据.
+                MaxPuTongAmmo = MaxPuTongAmmoCache;
+            }
+            else
+            {
+                switch (npcMoveCom.m_TriggerDir)
+                {
+                    case SSTriggerCaiPiaoBossMove.TriggerDir.Qian:
+                    case SSTriggerCaiPiaoBossMove.TriggerDir.Hou:
+                        {
+                            //SSDebug.Log("*********************************************************1111111111111111111");
+                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealth.MaxPuTongAmmo;
+                            break;
+                        }
+                    case SSTriggerCaiPiaoBossMove.TriggerDir.Zuo:
+                    case SSTriggerCaiPiaoBossMove.TriggerDir.You:
+                        {
+                            //SSDebug.Log("*********************************************************22222222222222222222222222");
+                            MaxPuTongAmmo = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurentTotalHealthDt.JPBossHealthHengXiang.MaxPuTongAmmo;
+                            break;
+                        }
+                }
             }
         }
     }
