@@ -25,6 +25,16 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         internal string[] m_PlayerHeadUrl = new string[4];
         /// <summary>
+        /// 重置微信头像地址信息.
+        /// </summary>
+        internal void ResetPlayerHeadUrl(int indexVal)
+        {
+            if (indexVal > -1 && indexVal < m_PlayerHeadUrl.Length)
+            {
+                m_PlayerHeadUrl[indexVal] = "";
+            }
+        }
+        /// <summary>
         /// 微信小程序虚拟手柄.
         /// </summary>
         internal SSBoxPostNet.WeiXinShouBingEnum m_WXShouBingType
@@ -381,7 +391,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 m_GmWXLoginDt[index].IsLoginWX = true;
                                 m_GmWXLoginDt[index].IsActiveGame = true;
                                 m_GmWXLoginDt[index].m_GamePadType = GamePadType.TV_YaoKongQi;
-                                m_PlayerHeadUrl[index] = "";
+                                ResetPlayerHeadUrl(index);
                                 m_GmTVLoginDt = new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi, 0);
                                 InputEventCtrl.GetInstance().OnClickGameStartBt(index);
                             }
@@ -415,6 +425,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// </summary>
             public WebSocketSimpet.PlayerWeiXinData m_PlayerWeiXinData;
         }
+        /// <summary>
+        /// 微信玩家数据列表.
+        /// </summary>
         public List<GamePlayerData> m_GamePlayerData = new List<GamePlayerData>();
 
         /// <summary>
@@ -438,6 +451,33 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return dt.Index.Equals(indexVal);
             });
             return playerDt;
+        }
+
+        /// <summary>
+        /// 删除玩家微信数据信息.
+        /// </summary>
+        internal void RemoveGamePlayerData(int userId)
+        {
+            GamePlayerData playerDt = FindGamePlayerData(userId);
+            if (playerDt != null)
+            {
+                m_GamePlayerData.Remove(playerDt);
+            }
+        }
+        
+        /// <summary>
+        /// 删除玩家微信数据信息.
+        /// </summary>
+        internal void RemoveGamePlayerData(PlayerEnum indexPlayer)
+        {
+            //重置微信头像url信息.
+            ResetPlayerHeadUrl((int)indexPlayer - 1);
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            if (playerDt != null)
+            {
+                //清理微信数据.
+                m_GamePlayerData.Remove(playerDt);
+            }
         }
 
         /// <summary>
@@ -602,11 +642,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
             for (int i = 0; i < m_IndexPlayerActiveGameState.Length; i++)
             {
                 //Debug.Log("Unity: ActiveGame == " + m_IndexPlayerActiveGameState[i] + ", IsLoginWX == " + m_GmWXLoginDt[i].IsLoginWX);
-                if (m_IndexPlayerActiveGameState[i] == 0)
+                if (m_IndexPlayerActiveGameState[i] == (int)PlayerActiveState.WeiJiHuo)
                 {
-                    if (!m_GmWXLoginDt[i].IsLoginWX)
+                    DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance((PlayerEnum)(i + 1));
+                    if (daoJiShiCom != null && daoJiShiCom.IsPlayDaoJishi == false)
                     {
-                        //未激活且未登陆过微信手柄的玩家索引.
+                        //未激活的机位索引,并且该机为当前没有播放倒计时.
                         indexPlayer = i;
                         break;
                     }
@@ -624,7 +665,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             for (int i = 0; i < m_IndexPlayerActiveGameState.Length; i++)
             {
                 //SSDebug.Log("ActiveGame == " + m_IndexPlayerActiveGameState[i]);
-                if (m_IndexPlayerActiveGameState[i] == 0)
+                if (m_IndexPlayerActiveGameState[i] == (int)PlayerActiveState.WeiJiHuo)
                 {
                     DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance((PlayerEnum)(i + 1));
                     if (daoJiShiCom != null && daoJiShiCom.IsPlayDaoJishi == false)
@@ -706,9 +747,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         private void OnEventActionOperation(string val, int userId)
         {
+            bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+            if (isHaveEmptyJiWei == false)
+            {
+                //当前没有空余机位.
+                SendWXPadGamePlayerFull(userId);
+                return;
+            }
+
             //Debug.Log("Unity:"+"pcvr::OnEventActionOperation -> userId " + userId + ", val " + val);
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
-            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < 4)
+            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
             {
                 //Debug.Log("Unity:"+"OnEventActionOperation -> playerIndex == " + playerDt.Index);
                 playerDt.IsExitWeiXin = false;
@@ -816,9 +865,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         private void OnEventDirectionAngle(string dirValStr, int userId)
         {
+            bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+            if (isHaveEmptyJiWei == false)
+            {
+                //当前没有空余机位.
+                SendWXPadGamePlayerFull(userId);
+                return;
+            }
+
             //Debug.Log("Unity:"+"pcvr::OnEventDirectionAngle -> userId " + userId + ", val " + val);
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
-            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < 4)
+            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
             {
                 //Debug.Log("Unity:"+"OnEventDirectionAngle -> playerIndex == " + playerDt.Index);
                 playerDt.IsExitWeiXin = false;
@@ -1194,7 +1251,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 Debug.Log("Unity:" + "player have active game!");
                 playerDt.IsExitWeiXin = false;
-                if (playerDt.Index > -1 && playerDt.Index < 4)
+                if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
                 {
                     PlayerActiveState playerSt = (PlayerActiveState)m_IndexPlayerActiveGameState[playerDt.Index];
                     switch (playerSt)
@@ -1824,6 +1881,114 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId);
             }
         }
+        
+        [Serializable]
+        public class GamePlayerFullData
+        {
+            public int userId = 0;
+            public float timeLast = 0f;
+            public GamePlayerFullData(int userId)
+            {
+                this.userId = userId;
+                timeLast = Time.time;
+            }
+        }
+        public List<GamePlayerFullData> m_GamePlayerFullDtList = new List<GamePlayerFullData>();
+
+        /// <summary>
+        /// 添加玩家数据.
+        /// </summary>
+        void AddGamePlayerFullDataToList(GamePlayerFullData playerDt)
+        {
+            if (playerDt != null && m_GamePlayerFullDtList != null)
+            {
+                if (m_GamePlayerFullDtList.Contains(playerDt) == false)
+                {
+                    m_GamePlayerFullDtList.Add(playerDt);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除玩家数据.
+        /// </summary>
+        void RemoveGamePlayerFullDataFromList(GamePlayerFullData playerDt)
+        {
+            if (playerDt != null && m_GamePlayerFullDtList != null)
+            {
+                if (m_GamePlayerFullDtList.Contains(playerDt) == true)
+                {
+                    m_GamePlayerFullDtList.Remove(playerDt);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 检测是否发送游戏人数已满的信息.
+        /// </summary>
+        bool CheckIsSendWXPadGamePlayerFull(int userId)
+        {
+            GamePlayerFullData playerDt = m_GamePlayerFullDtList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+
+            bool isSendMsg = false;
+            if (playerDt == null)
+            {
+                //没有找到玩家数据,可以发送消息.
+                isSendMsg = true;
+                GamePlayerFullData playerDtTmp = new GamePlayerFullData(userId);
+                AddGamePlayerFullDataToList(playerDtTmp);
+                //循环检测.
+                StartCoroutine(LoopCheckSendWXPadGamePlayerFull(playerDtTmp));
+            }
+            else
+            {
+                if (Time.time - playerDt.timeLast > 1.5f)
+                {
+                    //找到玩家数据,间隔时间大于一定数值,可以发送消息.
+                    isSendMsg = true;
+                    playerDt.timeLast = Time.time;
+                }
+            }
+            return isSendMsg;
+        }
+
+        /// <summary>
+        /// 循环检测是否发送没有多余机位消息的数据.
+        /// </summary>
+        IEnumerator LoopCheckSendWXPadGamePlayerFull(GamePlayerFullData playerDt)
+        {
+            if (playerDt == null)
+            {
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1f);
+            bool isLoopContinue = true;
+            do
+            {
+                if (playerDt == null)
+                {
+                    isLoopContinue = false;
+                    yield break;
+                }
+                else
+                {
+                    if (Time.time - playerDt.timeLast > 30f)
+                    {
+                        //删除玩家数据.
+                        RemoveGamePlayerFullDataFromList(playerDt);
+                        playerDt = null;
+                        isLoopContinue = false;
+                        SSDebug.Log("LoopCheckSendWXPadGamePlayerFull -> RemoveGamePlayerFullDataFromList...");
+                        yield break;
+                    }
+                }
+                yield return new WaitForSeconds(1f);
+            }
+            while (isLoopContinue == true);
+        }
 
         /// <summary>
         /// 发送游戏当前处于满员状态消息给微信游戏手柄.
@@ -1833,7 +1998,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
-                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadGamePlayerFull(userId);
+                if (CheckIsSendWXPadGamePlayerFull(userId) == true)
+                {
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadGamePlayerFull(userId);
+                }
             }
         }
 

@@ -847,8 +847,23 @@ public class InputEventCtrl : MonoBehaviour
         IsUsePcInputTest = true;
 #endif
 
-        if (Input.GetKeyUp(KeyCode.T)) {
-			int coinVal = XKGlobalData.CoinPlayerOne + 1;
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            if (pcvr.IsHongDDShouBing)
+            {
+                //红点点微信二维码游戏.
+                if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerOne) == false)
+                {
+                    //该机位没有被激活.
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        //清理玩家微信数据.
+                        pcvr.GetInstance().m_HongDDGamePadInterface.RemoveGamePlayerData(PlayerEnum.PlayerOne);
+                    }
+                }
+            }
+
+            int coinVal = XKGlobalData.CoinPlayerOne + 1;
 			XKGlobalData.SetCoinPlayerOne(coinVal);
             if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)
             {
@@ -856,8 +871,23 @@ public class InputEventCtrl : MonoBehaviour
             }
         }
 
-		if (Input.GetKeyUp(KeyCode.Y)) {
-			int coinVal = XKGlobalData.CoinPlayerTwo + 1;
+		if (Input.GetKeyUp(KeyCode.Y))
+        {
+            if (pcvr.IsHongDDShouBing)
+            {
+                //红点点微信二维码游戏.
+                if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerTwo) == false)
+                {
+                    //该机位没有被激活.
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        //清理玩家微信数据.
+                        pcvr.GetInstance().m_HongDDGamePadInterface.RemoveGamePlayerData(PlayerEnum.PlayerTwo);
+                    }
+                }
+            }
+
+            int coinVal = XKGlobalData.CoinPlayerTwo + 1;
 			XKGlobalData.SetCoinPlayerTwo(coinVal);
             if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)
             {
@@ -865,8 +895,23 @@ public class InputEventCtrl : MonoBehaviour
             }
         }
 		
-		if (Input.GetKeyUp(KeyCode.U)) {
-			if (XKGlobalData.GameVersionPlayer == 0) {
+		if (Input.GetKeyUp(KeyCode.U))
+        {
+            if (pcvr.IsHongDDShouBing)
+            {
+                //红点点微信二维码游戏.
+                if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerThree) == false)
+                {
+                    //该机位没有被激活.
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        //清理玩家微信数据.
+                        pcvr.GetInstance().m_HongDDGamePadInterface.RemoveGamePlayerData(PlayerEnum.PlayerThree);
+                    }
+                }
+            }
+
+            if (XKGlobalData.GameVersionPlayer == 0) {
 				int coinVal = XKGlobalData.CoinPlayerThree + 1;
 				XKGlobalData.SetCoinPlayerThree(coinVal);
                 if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)

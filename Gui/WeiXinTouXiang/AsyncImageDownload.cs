@@ -173,10 +173,18 @@ public class AsyncImageDownload : MonoBehaviour
 
         try
         {
-            tex2d = www.texture;
+            if (www.error.Contains("404") == false)
+            {
+                tex2d = www.texture;
+            }
+            else
+            {
+                SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+            }
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
+            SSDebug.LogWarning("DownloadImage -> ex ======= " + ex);
         }
 
         if (tex2d != null && image != null)
@@ -233,10 +241,18 @@ public class AsyncImageDownload : MonoBehaviour
 
         try
         {
-            tex2d = www.texture;
+            if (www.error.Contains("404") == false)
+            {
+                tex2d = www.texture;
+            }
+            else
+            {
+                SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+            }
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
+            SSDebug.LogWarning("DownloadImage -> ex ======= " + ex);
         }
 
         if (tex2d != null && image != null)

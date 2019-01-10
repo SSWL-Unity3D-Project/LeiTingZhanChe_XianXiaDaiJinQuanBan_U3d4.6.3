@@ -225,6 +225,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.GetGameHddScreenNum();
             }
         }
+        
+        /// <summary>
+        /// 删除玩家微信数据信息.
+        /// </summary>
+        internal void RemoveGamePlayerData(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.RemoveGamePlayerData(indexPlayer);
+            }
+        }
         #endregion
     }
 }
