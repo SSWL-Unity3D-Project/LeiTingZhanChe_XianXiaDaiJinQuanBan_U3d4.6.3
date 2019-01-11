@@ -1645,6 +1645,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 else
                 {
                     //获取到玩家的有效充值数据信息了(充值金额大于等于游戏启动金额),或者玩家已经退出微信游戏手柄.
+                    //或者是游戏倒计时结束后清除玩家的微信数据了.
                     yield break;
                 }
             } while (data != null);
@@ -1673,12 +1674,25 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 //玩家红点点游戏平台的金额不足,应该去进行充值.
                 GamePlayerData data = FindGamePlayerData(userId);
-                if (data != null && data.IsGetWXPlayerHddPayData == true)
+                if (data == null)
                 {
-                    //玩家登陆微信游戏手柄后,游戏币值不足,需要进行充值.
-                    data.IsGetWXPlayerHddPayData = false;
-                    //玩家币值不够,需要拉起微信游戏手柄的充值界面.
-                    SendWXPadShowTopUpPanel(userId);
+                    //在微信玩家列表信息中没有找到玩家信息.
+                    //说明玩家在游戏倒计时结束之后仍然没有成功交费.
+                    //删除轮询检测玩家账户的数据.
+                    //RemoveLoopGetWXHddPayData(userId);
+
+                    //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
+                    //SendWXPadPlayerPayTimeOut(userId);
+                }
+                else
+                {
+                    if (data != null && data.IsGetWXPlayerHddPayData == true)
+                    {
+                        //玩家登陆微信游戏手柄后,游戏币值不足,需要进行充值.
+                        data.IsGetWXPlayerHddPayData = false;
+                        //玩家币值不够,需要拉起微信游戏手柄的充值界面.
+                        SendWXPadShowTopUpPanel(userId);
+                    }
                 }
             }
             else
@@ -1992,6 +2006,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
         /// <summary>
         /// 发送游戏当前处于满员状态消息给微信游戏手柄.
+        /// 当前游戏人数已满,请稍后重新扫码.
         /// </summary>
         void SendWXPadGamePlayerFull(int userId)
         {
@@ -2002,6 +2017,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 {
                     m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadGamePlayerFull(userId);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 发送玩家支付超时,请稍后重新扫码的消息给服务器.
+        /// </summary>
+        void SendWXPadPlayerPayTimeOut(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOut(userId);
             }
         }
 
