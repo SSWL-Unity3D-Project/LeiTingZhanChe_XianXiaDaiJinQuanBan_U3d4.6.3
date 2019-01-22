@@ -162,11 +162,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// indexPlayer玩家索引.
         /// money代金券金额(元).
         /// </summary>
-        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money)
+        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
         {
             if (m_HongDDGamePadCom != null)
             {
-                m_HongDDGamePadCom.SendPostHddPlayerCouponInfo(indexPlayer, money);
+                m_HongDDGamePadCom.SendPostHddPlayerCouponInfo(indexPlayer, money, daiJinQuanType);
             }
         }
 

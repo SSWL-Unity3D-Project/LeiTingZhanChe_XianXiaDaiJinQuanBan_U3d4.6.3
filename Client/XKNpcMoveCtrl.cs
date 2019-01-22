@@ -2062,6 +2062,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
             IsZhanCheNpc = false;
             //彩票JPBoss.
             IsJPBossNpc = true;
+            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
 
             if (m_CaiPiaoBossMoveCom == null)
             {

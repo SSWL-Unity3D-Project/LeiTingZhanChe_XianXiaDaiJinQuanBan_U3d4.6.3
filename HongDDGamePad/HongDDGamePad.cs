@@ -1,4 +1,4 @@
-﻿#define TEST_DEBUG_PLAYER_PAD_INFO
+﻿//#define TEST_DEBUG_PLAYER_PAD_INFO
 //#define USE_WX_GAME_PAD_ACTIVE_PLAYER
 using UnityEngine;
 using System.Collections;
@@ -679,6 +679,38 @@ namespace Assets.XKGame.Script.HongDDGamePad
             return indexPlayer;
         }
 
+
+        /// <summary>
+        /// 获取游戏当前是否还有空余机位.
+        /// </summary>
+        bool CheckIsSendGameFullMsg(int userId)
+        {
+            GamePlayerData playerDt = FindGamePlayerData(userId);
+            if (playerDt != null)
+            {
+                if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                int indexPlayer = GetActivePlayerIndexAfterPay();
+                if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
         /// <summary>
         /// 获取游戏当前是否还有空余机位.
         /// </summary>
@@ -747,13 +779,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         private void OnEventActionOperation(string val, int userId)
         {
-            bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
-            if (isHaveEmptyJiWei == false)
-            {
-                //当前没有空余机位.
-                SendWXPadGamePlayerFull(userId);
-                return;
-            }
+            //bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+            //if (isHaveEmptyJiWei == false)
+            //{
+            //    //当前没有空余机位.
+            //    SendWXPadGamePlayerFull(userId);
+            //    return;
+            //}
 
             //Debug.Log("Unity:"+"pcvr::OnEventActionOperation -> userId " + userId + ", val " + val);
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
@@ -865,13 +897,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         private void OnEventDirectionAngle(string dirValStr, int userId)
         {
-            bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
-            if (isHaveEmptyJiWei == false)
-            {
-                //当前没有空余机位.
-                SendWXPadGamePlayerFull(userId);
-                return;
-            }
+            //bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+            //if (isHaveEmptyJiWei == false)
+            //{
+            //    //当前没有空余机位.
+            //    SendWXPadGamePlayerFull(userId);
+            //    return;
+            //}
 
             //Debug.Log("Unity:"+"pcvr::OnEventDirectionAngle -> userId " + userId + ", val " + val);
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
@@ -1129,14 +1161,80 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
 
+
+        public class GameExitPadPlayerData
+        {
+            /// <summary>
+            /// 玩家激活游戏时的索引缓存.
+            /// </summary>
+            public int index = -1;
+            public int userId = 0;
+            public float timeLast = 0f;
+            public GameExitPadPlayerData(int userId, int index, float timeLast)
+            {
+                this.userId = userId;
+                this.index = index;
+                this.timeLast = timeLast;
+            }
+            public override string ToString()
+            {
+                return "userId ==== " + userId + ", timeLast ==== " + timeLast.ToString("f2");
+            }
+        }
+        /// <summary>
+        /// 退出微信手柄的玩家数据信息.
+        /// </summary>
+        List<GameExitPadPlayerData> m_PlayerExitPadList = new List<GameExitPadPlayerData>();
+
+        GameExitPadPlayerData FindExitPadPlayerData(int userId)
+        {
+            return m_PlayerExitPadList.Find((dt) => { return dt.userId.Equals(userId); });
+        }
+
+        void AddExitPadPlayerData(GameExitPadPlayerData playerDt)
+        {
+            if (m_PlayerExitPadList.Contains(playerDt) == false)
+            {
+                m_PlayerExitPadList.Add(playerDt);
+                SSDebug.Log("AddExitPadPlayerData -> playerDt == " + playerDt.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 返回玩家之前激活游戏机位的索引信息.
+        /// </summary>
+        int RemoveExitPadPlayerData(int userId)
+        {
+            int indexVal = -1;
+            GameExitPadPlayerData playerDt = FindExitPadPlayerData(userId);
+            if (playerDt != null)
+            {
+                indexVal = playerDt.index;
+                m_PlayerExitPadList.Remove(playerDt);
+                SSDebug.Log("RemoveExitPadPlayerData -> playerDt == " + playerDt.ToString() + ", indexVal == " + indexVal);
+            }
+            return indexVal;
+        }
+
         private void OnEventPlayerExitBox(int userId)
         {
             Debug.Log("Unity:" + "OnEventPlayerExitBox -> userId " + userId);
+            int indexVal = -1;
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
             if (playerDt != null)
             {
+                indexVal = playerDt.Index;
+            }
+
+            if (FindExitPadPlayerData(userId) == null)
+            {
+                AddExitPadPlayerData(new GameExitPadPlayerData(userId, indexVal, Time.time));
+            }
+
+            if (playerDt != null)
+            {
                 playerDt.IsExitWeiXin = true;
-                if (playerDt.Index > -1 && playerDt.Index < 4)
+                if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
                 {
                     if (m_IndexPlayerActiveGameState[playerDt.Index] == (int)PlayerActiveState.WeiJiHuo)
                     {
@@ -1211,7 +1309,22 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
         private void OnEventPlayerLoginBox(WebSocketSimpet.PlayerWeiXinData val)
         {
-            Debug.Log("Unity:" + "pcvr::OnEventPlayerLoginBox -> userName " + val.userName + ", userId " + val.userId);
+            Debug.Log("Unity:" + "pcvr::OnEventPlayerLoginBox -> userName " + val.userName + ", userId " + val.userId
+                + ", time == " + DateTime.Now.ToString());
+            int indexValTmp = -1;
+            GameExitPadPlayerData playerExitPadDt = FindExitPadPlayerData(val.userId);
+            if (playerExitPadDt != null)
+            {
+                //用于玩家新进入后激活游戏机位的数据.
+                indexValTmp = RemoveExitPadPlayerData(val.userId);
+                float timeLast = playerExitPadDt.timeLast;
+                if (Time.time - playerExitPadDt.timeLast < 1.5f)
+                {
+                    SSDebug.LogWarning("OnEventPlayerLoginBox -> this playerPad have been yaRu shouji houTai......");
+                    return;
+                }
+            }
+
             GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
                 if (dt.m_PlayerWeiXinData != null)
                 {
@@ -1228,7 +1341,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
             bool isActivePlayer = false;
             if (playerDt == null)
             {
-                indexPlayer = GetActivePlayerIndex();
+                if (indexValTmp != -1)
+                {
+                    indexPlayer = indexValTmp;
+                }
+                else
+                {
+                    indexPlayer = GetActivePlayerIndex();
+                }
+
                 if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
                 {
                     Debug.Log("Unity:" + "Active player, indexPlayer == " + indexPlayer);
@@ -1627,11 +1748,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
             float time = Time.time;
             do
             {
+                //SSDebug.Log("LoopGetWXPlayerHddPayData -> time == " + time.ToString("f2") + ", RealTime == " + Time.time);
                 if (Time.time - time >= 120f)
                 {
                     //轮询检测超时,认为玩家已经不再继续游戏了.
                     //删除数据.
                     RemoveLoopGetWXHddPayData(userId);
+
+                    //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
+                    SendWXPadPlayerPayTimeOut(userId);
                     yield break;
                 }
 
@@ -1679,10 +1804,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //在微信玩家列表信息中没有找到玩家信息.
                     //说明玩家在游戏倒计时结束之后仍然没有成功交费.
                     //删除轮询检测玩家账户的数据.
-                    //RemoveLoopGetWXHddPayData(userId);
+                    RemoveLoopGetWXHddPayData(userId);
 
                     //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
-                    //SendWXPadPlayerPayTimeOut(userId);
+                    SendWXPadPlayerPayTimeOut(userId);
                 }
                 else
                 {
@@ -1700,7 +1825,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 GamePlayerData playerDt = FindGamePlayerData(userId);
                 if (playerDt != null)
                 {
-                    SSDebug.Log("Active player, userId =============== " + userId);
+                    SSDebug.Log("Active player, userId =============== " + userId + ", Index === " + playerDt.Index);
                     m_GmWXLoginDt[playerDt.Index].IsActiveGame = true;
                     //在微信玩家列表信息中找到了玩家信息.
                     //说明玩家是在游戏倒计时结束前成功续费的.
@@ -1870,14 +1995,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// indexPlayer玩家索引.
         /// money代金券金额(元).
         /// </summary>
-        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money)
+        internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
         {
             GamePlayerData data = FindGamePlayerData(indexPlayer);
             if (data != null && data.m_PlayerWeiXinData != null)
             {
                 int userId = data.m_PlayerWeiXinData.userId;
                 Debug.Log("SendPostHddPlayerCouponInfo -> userId ==== " + userId + ", money ==== " + money);
-                SendPostHddPlayerCouponInfo(userId, money);
+                SendPostHddPlayerCouponInfo(userId, money, daiJinQuanType);
             }
         }
 
@@ -1886,13 +2011,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// userId玩家id.
         /// account代金券金额(元).
         /// </summary>
-        void SendPostHddPlayerCouponInfo(int userId, int account)
+        void SendPostHddPlayerCouponInfo(int userId, int account, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
         {
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_BoxLoginData != null)
             {
                 //boxId 游戏盒子Id.最终应该为商家id(有的商家可能是连锁店).
                 string boxId = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-                m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId);
+                m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId, daiJinQuanType);
             }
         }
         

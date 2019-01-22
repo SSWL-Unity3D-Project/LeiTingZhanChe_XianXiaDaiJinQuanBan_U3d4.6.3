@@ -588,7 +588,7 @@ public class SSCaiPiaoDataManage : SSGameMono
                 /*Debug.Log("Unity: SubGameDeCaiValByDeCaiState -> index ====== " + index
                     + ", chuPiaoVal ====== " + val
                     + ", type ======= " + type);*/
-                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, val, type);
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddCaiPiaoToPlayer(index, val, type, true, daiJinQuan);
             }
         }
 
@@ -696,32 +696,32 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
             }
 
-            int chuCaiVal = 0;
-            if (XkGameCtrl.GetInstance().m_CaiPiaoMode == XkGameCtrl.CaiPiaoModeSuanFa.GuDing
-                && XkPlayerCtrl.GetInstanceFeiJi() != null)
-            {
-                switch (type)
-                {
-                    case DeCaiState.ZhanChe:
-                        {
-                            chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetZhanCheChuCaiTiaoJian(daiJinQuan);
-                            break;
-                        }
-                    case DeCaiState.JPBoss:
-                        {
-                            //chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
-                            chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.JPBossDaiJinQuan);
-                            break;
-                        }
-                    case DeCaiState.SuiJiDaoJu:
-                        {
-                            chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
-                            break;
-                        }
-                }
-            }
+            //int chuCaiVal = 0;
+            //if (XkGameCtrl.GetInstance().m_CaiPiaoMode == XkGameCtrl.CaiPiaoModeSuanFa.GuDing
+            //    && XkPlayerCtrl.GetInstanceFeiJi() != null)
+            //{
+            //    switch (type)
+            //    {
+            //        case DeCaiState.ZhanChe:
+            //            {
+            //                chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetZhanCheChuCaiTiaoJian(daiJinQuan);
+            //                break;
+            //            }
+            //        case DeCaiState.JPBoss:
+            //            {
+            //                //chuCaiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GuDingBanCaiPiaoData.GetJPBossChuPiaoTiaoJian();
+            //                chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.JPBossDaiJinQuan);
+            //                break;
+            //            }
+            //        case DeCaiState.SuiJiDaoJu:
+            //            {
+            //                chuCaiVal = (int)GetChuPiaoTiaoJian(DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+            //                break;
+            //            }
+            //    }
+            //}
 
-            if (deCaiVal >= chuCaiVal)
+            if (deCaiVal >= chuPiaoTiaoJian)
             {
                 isChuPiao = true;
                 //Debug.Log("Unity: GetIsChuCaiPiaoBy -> the type is can shuCaiPiao! type ============ " + type);
@@ -891,7 +891,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             //}
         }
 
-        m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(index, GameCaiPiaoData.DeCaiState.SuiJiDaoJu, type);
+        m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(index, GameCaiPiaoData.DeCaiState.SuiJiDaoJu, type, GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
         return obj;
     }
 
@@ -1433,7 +1433,7 @@ public class SSCaiPiaoDataManage : SSGameMono
     /// <summary>
     /// 添加彩票给玩家.
     /// </summary>
-    internal void AddCaiPiaoToPlayer(PlayerEnum indexPlayer, int caiPiao, GameCaiPiaoData.DeCaiState type, bool isPlayCaiPiaoNumAni = true)
+    internal void AddCaiPiaoToPlayer(PlayerEnum indexPlayer, int caiPiao, GameCaiPiaoData.DeCaiState type, bool isPlayCaiPiaoNumAni = true, GameCaiPiaoData.DaiJinQuanState daiJinQaunType = GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         int index = (int)indexPlayer - 1;
         if (index < 0 || index > 2)
@@ -1450,6 +1450,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             {
                 SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoDaJiangPanel(indexPlayer, caiPiao);
             }
+            daiJinQaunType = GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
             //if (m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao == false)
             //{
             //    m_PcvrPrintCaiPiaoData[index].IsDaJiangCaiPiao = true;
@@ -1468,6 +1469,10 @@ public class SSCaiPiaoDataManage : SSGameMono
                 SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoXiaoJiangPanel(indexPlayer, caiPiao);
             }
         }
+        else if (type == GameCaiPiaoData.DeCaiState.SuiJiDaoJu)
+        {
+            daiJinQaunType = GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan;
+        }
         
         //if (pcvr.GetInstance().m_HongDDGamePadInterface.GetHongDDGamePadWXPay() != null)
         //{
@@ -1480,7 +1485,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         {
             //将玩家得到的代金券信息发送到服务器.
             string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
-            pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(indexPlayer, caiPiao);
+            pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(indexPlayer, caiPiao, daiJinQaunType);
         }
 
         if (XKGlobalData.GetInstance().m_GameWXPayDataManage != null)

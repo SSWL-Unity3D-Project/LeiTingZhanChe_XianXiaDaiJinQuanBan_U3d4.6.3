@@ -1013,6 +1013,56 @@ public class XKGlobalData
     }
 
     /// <summary>
+    /// 红点点游戏奖品Id信息.
+    /// 游戏一共有4个奖品.
+    /// 分别是JP大奖,战车01,战车02,随机道具奖品.
+    /// </summary>
+    string[] m_HddJiangPinId = new string[4];
+    internal void SetHddJiangPinId(int indexVal, string idStr)
+    {
+        if (indexVal > -1 && indexVal < m_HddJiangPinId.Length)
+        {
+            m_HddJiangPinId[indexVal] = idStr;
+            SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", idStr == " + idStr);
+        }
+    }
+
+    internal string GetHddJiangPinId(int indexVal)
+    {
+        string idStr = "";
+        if (indexVal > -1 && indexVal < m_HddJiangPinId.Length)
+        {
+            idStr = m_HddJiangPinId[indexVal];
+        }
+        return idStr;
+    }
+    
+    /// <summary>
+    /// 红点点游戏奖池是否无限信息.
+    /// 游戏一共有4个奖品.
+    /// 分别是JP大奖,战车01,战车02,随机道具奖品.
+    /// </summary>
+    string[] m_HddJiangChiIsLimit = new string[4] { "0", "0", "0", "0" };
+    internal void SetHddJiangChiIsLimit(int indexVal, string value)
+    {
+        if (indexVal > -1 && indexVal < m_HddJiangChiIsLimit.Length)
+        {
+            m_HddJiangChiIsLimit[indexVal] = value;
+            SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", IsLimit == " + value);
+        }
+    }
+
+    internal string GetHddJiangChiIsLimit(int indexVal)
+    {
+        string idStr = "";
+        if (indexVal > -1 && indexVal < m_HddJiangChiIsLimit.Length)
+        {
+            idStr = m_HddJiangChiIsLimit[indexVal];
+        }
+        return idStr;
+    }
+
+    /// <summary>
     /// 初始化1币兑换彩票数.
     /// 1币等于多少面值人民币,单位为元.(默认值为2元)
     /// </summary>
