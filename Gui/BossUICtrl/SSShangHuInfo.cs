@@ -20,9 +20,13 @@ public class SSShangHuInfo : MonoBehaviour
         /// </summary>
         public string ShangHuMing = "盛世网络";
         /// <summary>
+        /// 代金券名称.
+        /// </summary>
+        public string DaiJinQuanName = "恭喜获得抵扣代金券";
+        /// <summary>
         /// 代金券详情信息.
         /// </summary>
-        public string XiangQingInfo = "";
+        public string XiangQingInfo = "此代金券只能在游戏合作商家内使用。";
     }
     /// <summary>
     /// 大奖Boss商户信息.
@@ -54,9 +58,13 @@ public class SSShangHuInfo : MonoBehaviour
             return "IndexShangHu == " + IndexShangHu + ", ShangHuMing == " + ShangHuMing + ", ShangHuDanMuInfo == " + ShangHuDanMuInfo;
         }
         /// <summary>
+        /// 代金券名称.
+        /// </summary>
+        public string DaiJinQuanName = "恭喜获得抵扣代金券";
+        /// <summary>
         /// 代金券详情信息.
         /// </summary>
-        public string XiangQingInfo = "";
+        public string XiangQingInfo = "此代金券只能在游戏合作商家内使用。";
     }
     /// <summary>
     /// 商户配置信息.
@@ -75,12 +83,17 @@ public class SSShangHuInfo : MonoBehaviour
         /// </summary>
         public string ShangHuMing = "盛世网络";
         /// <summary>
+        /// 代金券名称.
+        /// </summary>
+        public string DaiJinQuanName = "恭喜获得抵扣代金券";
+        /// <summary>
         /// 代金券详情信息.
         /// </summary>
-        public string XiangQingInfo = "";
+        public string XiangQingInfo = "此代金券只能在游戏合作商家内使用。";
         public void Reset()
         {
             ShangHuMing = "";
+            DaiJinQuanName = "";
             XiangQingInfo = "";
         }
     }
@@ -112,7 +125,7 @@ public class SSShangHuInfo : MonoBehaviour
             for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
             {
                 m_DaJiangBossShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
-                SSDebug.Log("UpdateDaJiangBossShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
+                SSDebug.Log("UpdateDaJiangBossShangHuInfo -> JPShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
             }
         }
     }
@@ -127,7 +140,22 @@ public class SSShangHuInfo : MonoBehaviour
             for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
             {
                 m_DaJiangBossShangHuDt[i].XiangQingInfo = xiangQingInfoArray[i];
-                SSDebug.Log("UpdateDaJiangBossDaiJinQuanXiangQing -> ShangHuMing[" + i + "] ===== " + xiangQingInfoArray[i]);
+                SSDebug.Log("UpdateDaJiangBossDaiJinQuanXiangQing -> JPDescription[" + i + "] ===== " + xiangQingInfoArray[i]);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 更新游戏大奖Boss代金券名称数据信息.
+    /// </summary>
+    internal void UpdateDaJiangBossDaiJinQuanName(string[] infoArray)
+    {
+        if (m_DaJiangBossShangHuDt != null)
+        {
+            for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
+            {
+                m_DaJiangBossShangHuDt[i].DaiJinQuanName = infoArray[i];
+                SSDebug.Log("UpdateDaJiangBossDaiJinQuanName -> JPName[" + i + "] ===== " + infoArray[i]);
             }
         }
     }
@@ -140,7 +168,7 @@ public class SSShangHuInfo : MonoBehaviour
         for (int i = 0; i < m_ShangHuDt.Length; i++)
         {
             m_ShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
-            SSDebug.Log("UpdateShangHuInfo -> ShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
+            SSDebug.Log("UpdateShangHuInfo -> ZCShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
         }
     }
 
@@ -152,7 +180,19 @@ public class SSShangHuInfo : MonoBehaviour
         for (int i = 0; i < m_ShangHuDt.Length; i++)
         {
             m_ShangHuDt[i].XiangQingInfo = xiangQingInfoArray[i];
-            SSDebug.Log("UpdateShangHuDaiJinQuanXiangQing -> ShangHuMing[" + i + "] ===== " + xiangQingInfoArray[i]);
+            SSDebug.Log("UpdateShangHuDaiJinQuanXiangQing -> ZCDescription[" + i + "] ===== " + xiangQingInfoArray[i]);
+        }
+    }
+    
+    /// <summary>
+    /// 更新游戏商户战车代金券名称数据信息.
+    /// </summary>
+    internal void UpdateShangHuDaiJinQuanName(string[] infoArray)
+    {
+        for (int i = 0; i < m_ShangHuDt.Length; i++)
+        {
+            m_ShangHuDt[i].DaiJinQuanName = infoArray[i];
+            SSDebug.Log("UpdateShangHuDaiJinQuanXiangQing -> ZCName[" + i + "] ===== " + infoArray[i]);
         }
     }
 
@@ -188,11 +228,23 @@ public class SSShangHuInfo : MonoBehaviour
         }
         //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
         m_DaiJinQuanDt.ShangHuMing = m_ShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.DaiJinQuanName = m_ShangHuDt[indexVal].DaiJinQuanName;
         m_DaiJinQuanDt.XiangQingInfo = m_ShangHuDt[indexVal].XiangQingInfo;
         return m_ShangHuDt[indexVal];
     }
 
+    /// <summary>
+    /// 获取代金券npc的商户名信息.
+    /// </summary>
+    internal ShangHuData GetShangHuMingDt()
+    {
+        return m_ShangHuDt[m_IndexShangHu];
+    }
+
     int m_IndexSuiJiDaoJu = 0;
+    /// <summary>
+    /// 获取随机道具商户信息.
+    /// </summary>
     internal ShangHuData GetSuiJiDaoJuShangHuInfo()
     {
         int indexVal = m_IndexSuiJiDaoJu;
@@ -203,8 +255,17 @@ public class SSShangHuInfo : MonoBehaviour
         }
         //SSDebug.Log("GetSuiJiDaoJuShangHuInfo -> " + m_ShangHuDt[indexVal].ToString());
         m_DaiJinQuanDt.ShangHuMing = m_ShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.DaiJinQuanName = m_ShangHuDt[indexVal].DaiJinQuanName;
         m_DaiJinQuanDt.XiangQingInfo = m_ShangHuDt[indexVal].XiangQingInfo;
         return m_ShangHuDt[indexVal];
+    }
+
+    /// <summary>
+    /// 获取随机道具商户信息.
+    /// </summary>
+    internal ShangHuData GetSuiJiDaoJuShangHuDt()
+    {
+        return m_ShangHuDt[m_IndexSuiJiDaoJu];
     }
 
     int m_IndexJPShangHu = 0;
@@ -221,8 +282,17 @@ public class SSShangHuInfo : MonoBehaviour
         }
         //SSDebug.Log("GetShangHuMingInfo -> " + m_ShangHuDt[indexVal].ToString());
         m_DaiJinQuanDt.ShangHuMing = m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.DaiJinQuanName = m_DaJiangBossShangHuDt[indexVal].DaiJinQuanName;
         m_DaiJinQuanDt.XiangQingInfo = m_DaJiangBossShangHuDt[indexVal].XiangQingInfo;
         return m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
+    }
+
+    /// <summary>
+    /// 获取JPBoss代金券的商户名信息.
+    /// </summary>
+    internal string GetJPBossShangHuMingDt()
+    {
+        return m_DaJiangBossShangHuDt[m_IndexJPShangHu].ShangHuMing;
     }
 
     #region 从配置文件读取商户信息

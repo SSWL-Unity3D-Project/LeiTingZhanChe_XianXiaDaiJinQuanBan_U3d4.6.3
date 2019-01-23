@@ -78,6 +78,7 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
     /// </summary>
     internal void ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, XKNpcHealthCtrl healthCom)
     {
+        SetShangJiaInfo(deCaiType);
         if (m_CaiPiaoInfoParent != null)
         {
             m_CaiPiaoInfoParent.gameObject.SetActive(true);
@@ -126,6 +127,40 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
                 //m_UISpriteArray[i].spriteName = valTmp.ToString();
                 numVal -= valTmp * powVal;
             }
+        }
+    }
+    
+    //*************************************************************************************************************//
+    /// <summary>
+    /// 商户名称信息.
+    /// </summary>
+    public TextMesh m_ShangJiaInfoLb;
+    /// <summary>
+    /// 设置商户名称信息.
+    /// </summary>
+    void SetShangJiaInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    {
+        if (m_ShangJiaInfoLb != null)
+        {
+            string shangHuInfo = "盛世网络";
+            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+            {
+                if (deCaiType == SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss)
+                {
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingDt();
+                }
+                else
+                {
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                }
+            }
+
+            if (shangHuInfo.Length > 5)
+            {
+                //最多支持5个字.
+                shangHuInfo = shangHuInfo.Substring(0, 5);
+            }
+            m_ShangJiaInfoLb.text = shangHuInfo;
         }
     }
 }

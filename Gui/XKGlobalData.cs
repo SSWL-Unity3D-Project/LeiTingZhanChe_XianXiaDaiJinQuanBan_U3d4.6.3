@@ -1063,6 +1063,38 @@ public class XKGlobalData
     }
 
     /// <summary>
+    /// 代金券起始天数信息.
+    /// </summary>
+    int m_DaiJinQuanStartDay = 0;
+    /// <summary>
+    /// 代金券有效期限天数信息.
+    /// </summary>
+    int m_DaiJinQuanQiXian = 7;
+    internal void SetHddDaiJinQuanYouXiaoQiDt(int startDay, int qiXian)
+    {
+        if (startDay >= 0)
+        {
+            m_DaiJinQuanStartDay = startDay;
+        }
+
+        if (qiXian > 0)
+        {
+            m_DaiJinQuanQiXian = qiXian;
+        }
+        SSDebug.Log("SetHddDaiJinQuanYouXiaoQiDt -> startDay ============ " + startDay + ", qiXian ========== " + qiXian);
+    }
+
+    internal int GetHddDaiJinQuanStartDay()
+    {
+        return m_DaiJinQuanStartDay;
+    }
+
+    internal int GetHddDaiJinQuanQiXian()
+    {
+        return m_DaiJinQuanQiXian;
+    }
+
+    /// <summary>
     /// 初始化1币兑换彩票数.
     /// 1币等于多少面值人民币,单位为元.(默认值为2元)
     /// </summary>

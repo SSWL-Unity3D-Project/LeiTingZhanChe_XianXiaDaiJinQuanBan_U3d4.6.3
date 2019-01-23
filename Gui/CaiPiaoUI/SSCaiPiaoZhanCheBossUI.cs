@@ -52,7 +52,14 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// 显示爆炸.
     /// </summary>
     public float m_TimeShowExp = 2f;
+    /// <summary>
+    /// 动画组件接口.
+    /// </summary>
     public Animator m_Animator;
+    /// <summary>
+    /// 代金券商户信息5个字.
+    /// </summary>
+    public UILabel m_DaiJinQuanShangHuInfo;
     PlayerEnum m_IndexPlayer;
     Vector3 m_StartPos;
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
@@ -60,6 +67,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     GameObject m_ExplosionPoint;
     public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
     {
+        ShowDaiJinQuanShangHuInfo(type);
         m_IndexPlayer = indexPlayer;
         m_CaiPiaoNum = caiPiaoNum;
         m_DeCaiState = type;
@@ -94,6 +102,38 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         }
         SetActive(true);
         StartCoroutine(DelayShowCaiPiaoInfo());
+    }
+
+    /// <summary>
+    /// 显示代金券商户信息5个字.
+    /// </summary>
+    void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    {
+        if (m_DaiJinQuanShangHuInfo != null)
+        {
+            string info = "";
+            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+            {
+                switch (type)
+                {
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss:
+                        {
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingDt();
+                            break;
+                        }
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
+                        {
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                            break;
+                        }
+                }
+            }
+
+            if (info != "")
+            {
+                m_DaiJinQuanShangHuInfo.text = info;
+            }
+        }
     }
 
     bool IsCloseZhuanPanAni = false;
@@ -181,7 +221,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         {
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer);
+                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer, deCaiType);
             }
 
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)

@@ -443,7 +443,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 初始化彩票数字动画播放逻辑.
     /// </summary>
-    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer)
+    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
     {
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
@@ -457,7 +457,7 @@ public class SSGameUICtrl : SSGameMono
             SSCaiPiaoInfo caiPiaoInfo = m_CaiPiaoInfoArray[indexVal].GetComponent<SSCaiPiaoInfo>();
             if (caiPiaoInfo != null)
             {
-                caiPiaoInfo.InitCaiPiaoAnimation(timeVal, indexPlayer);
+                caiPiaoInfo.InitCaiPiaoAnimation(timeVal, indexPlayer, deCaiType);
             }
             else
             {
@@ -632,6 +632,7 @@ public class SSGameUICtrl : SSGameMono
                         if (m_CaiPiaoDaJiang != null)
                         {
                             m_CaiPiaoDaJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                            m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
                         }
                     }
                     else
@@ -645,6 +646,7 @@ public class SSGameUICtrl : SSGameMono
                 if (m_CaiPiaoDaJiang != null)
                 {
                     m_CaiPiaoDaJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                    m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
                 }
             }
         }
@@ -712,6 +714,7 @@ public class SSGameUICtrl : SSGameMono
                         if (m_CaiPiaoXiaoJiang != null)
                         {
                             m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                            m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
                         }
                     }
                     else
@@ -725,6 +728,7 @@ public class SSGameUICtrl : SSGameMono
                 if (m_CaiPiaoXiaoJiang != null)
                 {
                     m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
+                    m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
                 }
             }
         }

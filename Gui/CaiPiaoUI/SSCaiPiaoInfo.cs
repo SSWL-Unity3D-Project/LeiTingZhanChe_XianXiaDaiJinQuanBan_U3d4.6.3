@@ -16,6 +16,10 @@ public class SSCaiPiaoInfo : SSGameMono
     /// </summary>
     public SSGameNumUI m_GameNumUI;
     /// <summary>
+    /// 代金券商户信息5个字.
+    /// </summary>
+    public UILabel m_DaiJinQuanShangHuInfo;
+    /// <summary>
     /// 正在出票UI.
     /// </summary>
     public GameObject m_ZhengZaiChuPiaoUI;
@@ -38,7 +42,7 @@ public class SSCaiPiaoInfo : SSGameMono
     float TimeCaiPiaoAni = 1f;
     float TimeLastCaiPiaoAni = 0f;
     PlayerEnum IndexPlayer = PlayerEnum.Null;
-    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer)
+    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
     {
 #if OPEN_CAIPIAO_ANIMATION
         IndexPlayer = indexPlayer;
@@ -55,11 +59,46 @@ public class SSCaiPiaoInfo : SSGameMono
 #else
         IndexPlayer = indexPlayer;
         ShowPlayerCaiPiaoInfo();
+        ShowDaiJinQuanShangHuInfo(deCaiType);
 #endif
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
             SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerDaiJinQuanUI(indexPlayer);
+        }
+    }
+
+    void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    {
+        if (m_DaiJinQuanShangHuInfo != null)
+        {
+            string info = "";
+            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+            {
+                switch (deCaiType)
+                {
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss:
+                        {
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingDt();
+                            break;
+                        }
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
+                        {
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                            break;
+                        }
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
+                        {
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuDt().ShangHuMing;
+                            break;
+                        }
+                }
+
+                if (info != "")
+                {
+                    m_DaiJinQuanShangHuInfo.text = info;
+                }
+            }
         }
     }
 

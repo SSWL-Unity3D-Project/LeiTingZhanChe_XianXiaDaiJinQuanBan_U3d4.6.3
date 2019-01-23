@@ -43,7 +43,7 @@ public class SSCaiPiaoFly : SSGameMono
                             break;
                         }
                 }
-                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer);
+                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer, m_DeCaiState);
             }
         }
         //Destroy(gameObject);

@@ -723,7 +723,7 @@ public class SSBoxPostNet : MonoBehaviour
                         //从红点点服务器获取游戏的配置信息.
                         //{"code":0,"message":"成功",
                         //"data":{"setting":
-                        //{"id":4,"name":"西安盛世10155","screenCode":10155,"gameCode":1,"totalReturnRate":"30","superPrizeBusinessMoney":"3","mod":0,"barrage":"盛世欢迎您！","revenue":"15.0370"},
+                        //{"id":4,"name":"西安盛世10155","screenCode":10155,"gameCode":1,"totalReturnRate":"30","superPrizeBusinessMoney":"3","mod":0,"barrage":"盛世欢迎您！","revenue":"15.0370","startTime":0,"endTime":7},
                         //"prizeList":[
                         //{"id":13,"settingId":4,"prizeName":"奖品1(超级JP大奖)","prizeMoney":"4","returnRate":"100","burstRate":"100","prizeMoneyPool":"73.016000","isLimitless":0,"increment":"0","decrement":"0","level":1},
                         //{"id":14,"settingId":4,"prizeName":"奖品2(标准大奖)","prizeMoney":"3","returnRate":"0","burstRate":"100","prizeMoneyPool":"8.006000","isLimitless":1,"increment":"0","decrement":"0","level":2},
@@ -769,6 +769,16 @@ public class SSBoxPostNet : MonoBehaviour
                             payMoney = jd_Data["payItem"]["money"].ToString();
                             SSDebug.Log("payItems.money ============ " + payMoney);
                             
+                            int startTime = 0;
+                            int endTime = 7;
+                            if (XKGlobalData.GetInstance() != null)
+                            {
+                                startTime = Convert.ToInt32(jd_Data["setting"]["startTime"].ToString());
+                                endTime = Convert.ToInt32(jd_Data["setting"]["endTime"].ToString());
+                                //更新代金券有效期限数据.
+                                XKGlobalData.GetInstance().SetHddDaiJinQuanYouXiaoQiDt(startTime, endTime);
+                            }
+
                             //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
                             string jsonData_prizeDetailVoListInfo = jd["data"]["prizeList"].ToJson();
                             JsonData jd_Data_prizeDetailVoList = JsonMapper.ToObject(jsonData_prizeDetailVoListInfo);
@@ -883,7 +893,17 @@ public class SSBoxPostNet : MonoBehaviour
                                             isFindSuiJiDaoJuPrizeInfo = true;
                                             daoJuMoney = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
                                             daoJuReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            daoJuBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+
+                                            if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                                            {
+                                                //海底捞菜品券版本可以掉落随机道具.
+                                                daoJuBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+                                            }
+                                            else
+                                            {
+                                                //其它版本游戏暂时不允许掉落随机道具.
+                                                daoJuBurstRate = "0";
+                                            }
                                             daoJuIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
                                             daoJuPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
                                             SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
@@ -968,6 +988,14 @@ public class SSBoxPostNet : MonoBehaviour
                             //19 -> JPBoss代金券使用详情2
                             //20 -> JPBoss代金券使用详情3
                             //21 -> JPBoss代金券使用详情4
+                            //22 -> 战车代金券名称1
+                            //23 -> 战车代金券名称2
+                            //24 -> 战车代金券名称3
+                            //25 -> 战车代金券名称4
+                            //26 -> JPBoss代金券名称1
+                            //27 -> JPBoss代金券名称2
+                            //28 -> JPBoss代金券名称3
+                            //29 -> JPBoss代金券名称4
                             if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
                             {
                                 string shangHuInfo = barrage;
@@ -1026,6 +1054,28 @@ public class SSBoxPostNet : MonoBehaviour
                                     }
                                     //更新游戏大奖Boss代金券使用详情数据信息.
                                     shangHuInfoDt.UpdateDaJiangBossDaiJinQuanXiangQing(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 25)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 21; i < 25; i++)
+                                    {
+                                        infoArray[i - 21] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏战车代金券名称数据信息.
+                                    shangHuInfoDt.UpdateShangHuDaiJinQuanName(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 29)
+                                {
+                                    string[] infoArray = new string[4];
+                                    for (int i = 25; i < 29; i++)
+                                    {
+                                        infoArray[i - 25] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏JPBoss代金券名称数据信息.
+                                    shangHuInfoDt.UpdateDaJiangBossDaiJinQuanName(infoArray);
                                 }
                             }
                         }
@@ -1345,7 +1395,11 @@ public class SSBoxPostNet : MonoBehaviour
         /// <summary>
         /// 代金券名称.
         /// </summary>
-        public string name = "";
+        public string name = "恭喜获得抵扣代金券";
+        /// <summary>
+        /// 代金券使用详情.
+        /// </summary>
+        public string description = "此代金券只能在游戏合作商家内使用。";
         /// <summary>
         /// 是否是超级JP大奖，0：否；1：是；不发送此字段，默认是0 | false
         /// </summary>
@@ -1358,6 +1412,14 @@ public class SSBoxPostNet : MonoBehaviour
         /// isLimit | Integer | 是否无限(后台设置)  | true
         /// </summary>
         public int isLimit = 0;
+        /// <summary>
+        /// 代金券开始时间.
+        /// </summary>
+        public int startTime = 0;
+        /// <summary>
+        /// 代金券结束期限时间.
+        /// </summary>
+        public int endTime = 7;
         public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal)
         {
             worth = worthVal;
@@ -1387,15 +1449,35 @@ public class SSBoxPostNet : MonoBehaviour
             isLimit = isLimitVal;
             SSDebug.Log("PostDataPlayerCouponInfo -> " + ToString());
         }
-
+        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal,
+            string nameVal, string descriptionVal, int superPrizeVal, int prizeIdVal, int isLimitVal,
+            int startTimeVal, int endTimeVal)
+        {
+            worth = worthVal;
+            boxId = boxIdVal;
+            userId = userIdVal;
+            gameCode = gameCodeVal;
+            screenCode = screenCodeVal;
+            name = nameVal;
+            description = descriptionVal;
+            superPrize = superPrizeVal;
+            prizeId = prizeIdVal;
+            isLimit = isLimitVal;
+            startTime = startTimeVal;
+            endTime = endTimeVal;
+            SSDebug.Log("PostDataPlayerCouponInfo -> " + ToString());
+        }
         public override string ToString()
         {
             return "worth == " + worth + ", boxId == " + boxId + ", userId == " + userId + ", gameCode == " + gameCode
                 + ", screenCode == " + screenCode
                 + ", name == " + name
+                + ", description == " + description
                 + ", superPrize == " + superPrize
                 + ", prizeId == " + prizeId
-                + ", isLimit == " + isLimit;
+                + ", isLimit == " + isLimit
+                + ", startTime == " + startTime
+                + ", endTime == " + endTime;
         }
     }
 
@@ -1456,10 +1538,17 @@ public class SSBoxPostNet : MonoBehaviour
         {
             screenCode = Convert.ToInt32(m_BoxLoginData.screenId); //屏幕码.
         }
-
-        string name = ""; //代金券名称信息.
+        
         int superPrize = 0; //是否为JPBoss代金券.
         int indexJiangPinId = -1;
+        SSGameLogoData.GameDaiJinQuanMode daiJinQuanMode = SSGameLogoData.m_GameDaiJinQuanMode;
+        if (daiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+        {
+            //海底捞代金券版本游戏.
+            //代金券面值写为0.
+            worth = 0;
+        }
+
         if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)
         {
             superPrize = 1; //JPBoss代金券.
@@ -1489,28 +1578,37 @@ public class SSBoxPostNet : MonoBehaviour
 
         int prizeId = Convert.ToInt32(hddJiangPinId);
         int isLimit = Convert.ToInt32(isLimitStr);
-        string shangHuInfo = "";
-        string xiangQingInfo = "";
+        string daiJinQuanName = ""; //代金券名称.
+        string xiangQingInfo = ""; //代金券使用提示.
         if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null && XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt != null)
         {
             //这里获取游戏当前代金券的商户信息.
-            if (account == suiJiDaoJuDaiJinQuan)
+            if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan)
             {
                 //随机道具代金券.
                 SSShangHuInfo.ShangHuData shangHuData = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo();
-                shangHuInfo = shangHuData.ShangHuMing;
+                daiJinQuanName = shangHuData.DaiJinQuanName;
                 xiangQingInfo = shangHuData.XiangQingInfo;
             }
             else
             {
-                shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.ShangHuMing;
+                daiJinQuanName = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.DaiJinQuanName;
                 xiangQingInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.XiangQingInfo;
             }
         }
-        name = shangHuInfo + "#" + xiangQingInfo;
-        SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + shangHuInfo + ", xiangQingInfo == " + xiangQingInfo);
-        
-        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize, prizeId, isLimit);
+        SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + daiJinQuanName + ", xiangQingInfo == " + xiangQingInfo);
+
+        int startTime = 0;
+        int endTime = 7;
+        if (XKGlobalData.GetInstance() != null)
+        {
+            //更新代金券有效期限数据.
+            startTime = XKGlobalData.GetInstance().GetHddDaiJinQuanStartDay();
+            endTime = XKGlobalData.GetInstance().GetHddDaiJinQuanQiXian();
+        }
+
+        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
+            daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
