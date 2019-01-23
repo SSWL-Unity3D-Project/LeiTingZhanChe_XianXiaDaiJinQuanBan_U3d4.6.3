@@ -632,7 +632,7 @@ public class SSGameUICtrl : SSGameMono
                         if (m_CaiPiaoDaJiang != null)
                         {
                             m_CaiPiaoDaJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
-                            m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
+                            m_CaiPiaoDaJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
                         }
                     }
                     else
@@ -646,7 +646,7 @@ public class SSGameUICtrl : SSGameMono
                 if (m_CaiPiaoDaJiang != null)
                 {
                     m_CaiPiaoDaJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
-                    m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
+                    m_CaiPiaoDaJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss);
                 }
             }
         }
