@@ -14,6 +14,7 @@ public class SSGameLogoData : MonoBehaviour
         /// </summary>
         HDL_CaiPinQuan = 1,
     }
+    public GameDaiJinQuanMode m_DaiJinQuanMode = GameDaiJinQuanMode.HDL_CaiPinQuan;
     /// <summary>
     /// 游戏代金券模式.
     /// </summary>
@@ -34,6 +35,7 @@ public class SSGameLogoData : MonoBehaviour
 
     private void Awake()
     {
+        m_GameDaiJinQuanMode = m_DaiJinQuanMode;
         XKGlobalData.GetInstance().m_GameLogo = m_GameLogo;
     }
 }
