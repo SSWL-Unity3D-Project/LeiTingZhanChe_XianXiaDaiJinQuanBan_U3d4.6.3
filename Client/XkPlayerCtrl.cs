@@ -1274,6 +1274,18 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                 return;
             }
 
+            if (GenZongDanPrefab == null)
+            {
+                return;
+            }
+
+            NpcAmmoCtrl npcAmmoCom = GenZongDanPrefab.GetComponent<NpcAmmoCtrl>();
+            if (npcAmmoCom == null || npcAmmoCom.AmmoType != PlayerAmmoType.GenZongAmmo)
+            {
+                SSDebug.LogWarning("npcAmmoType is not GenZongAmmo!");
+                return;
+            }
+
             int randVal = Random.Range(0, 100) % PlayerComList.Count;
             XKPlayerMoveCtrl playerCom = PlayerComList[randVal];
             if (playerCom == null)
