@@ -3,7 +3,7 @@
 public class XKGameVersionCtrl : MonoBehaviour
 {
     UILabel VersionLB;
-    static string _GameVersion = "Version: 20190122.01";
+    static string _GameVersion = "Version: 20190124.01";
     public static string GameVersion
     {
         get
@@ -40,6 +40,19 @@ public class XKGameVersionCtrl : MonoBehaviour
         }
         IsInit = true;
         m_LastDrawTime = Time.time;
+    }
+
+    static bool IsSetGameVersion = false;
+    /// <summary>
+    /// 设置红点点正式服务器版本信息.
+    /// </summary>
+    public static void SetReleaseGameVersion()
+    {
+        if (IsSetGameVersion == false)
+        {
+            IsSetGameVersion = true;
+            _GameVersion += "_Release"; //红点点正式服务器版本.
+        }
     }
 
     void OnGUI()

@@ -1,4 +1,4 @@
-﻿#define USE_TEST_HDD_SERVER
+﻿#define USE_TEST_HDD_SERVER //使用红点点测试服务器.
 //#define USE_OLD_GET_HDD_GAME_CONFIG
 //#define TEST_DAI_JIN_QUAN
 using Assets.XKGame.Script.Comm;
@@ -31,6 +31,10 @@ public class SSBoxPostNet : MonoBehaviour
 
     public void Init()
     {
+#if !USE_TEST_HDD_SERVER
+        //设置红点点正式服务器版本信息.
+        XKGameVersionCtrl.SetReleaseGameVersion();
+#endif
         string boxNum = "000000000000";
 #if UNITY_STANDALONE_WIN
 
