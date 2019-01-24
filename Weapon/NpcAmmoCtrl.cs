@@ -114,8 +114,17 @@ public class NpcAmmoCtrl : MonoBehaviour {
 		}
 
 		if (isHitObj) {
-			if (playerScript != null && !playerScript.GetIsDeathPlayer()) {
-				XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+			if (playerScript != null && !playerScript.GetIsDeathPlayer())
+            {
+                if (AmmoType == PlayerAmmoType.GenZongAmmo && IsOnlyHitTarget == true
+                    && TargetObject != null && TargetObject != playerScript.GenZongDanAimPoint)
+                {
+                    //只对跟踪目标造成伤害的跟踪弹.
+                }
+                else
+                {
+                    XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+                }
 			}
 			MoveAmmoOnCompelteITween();
 		}
@@ -201,8 +210,17 @@ public class NpcAmmoCtrl : MonoBehaviour {
 				firePos = hitInfo.point;
 				//Debug.Log("Unity:"+"*****npcAmmoHitObj "+hitInfo.collider.name);
 				XKPlayerMoveCtrl playerScript = hitInfo.collider.GetComponent<XKPlayerMoveCtrl>();
-				if (playerScript != null && !playerScript.GetIsWuDiState()) {
-					XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+				if (playerScript != null && !playerScript.GetIsWuDiState())
+                {
+                    if (AmmoType == PlayerAmmoType.GenZongAmmo && IsOnlyHitTarget == true
+                        && TargetObject != null && TargetObject != playerScript.GenZongDanAimPoint)
+                    {
+                        //只对跟踪目标造成伤害的跟踪弹.
+                    }
+                    else
+                    {
+                        XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+                    }
 				}
 			}
 		}
@@ -647,11 +665,39 @@ public class NpcAmmoCtrl : MonoBehaviour {
 //	public GameObject TestTarget;
 	float forceAmount = 10f;
 
+    /// <summary>
+    /// 是否只对跟踪目标造成伤害.
+    /// </summary>
+    bool IsOnlyHitTarget;
+    /// <summary>
+    /// 攻击已经得到战车代金券的玩家的跟踪弹.
+    /// </summary>
+    public void SetGenZongDanAimTarget(XKPlayerMoveCtrl playerCom)
+    {
+        if (AmmoType != PlayerAmmoType.GenZongAmmo)
+        {
+            return;
+        }
+
+        if (TargetObject != null || playerCom == null)
+        {
+            return;
+        }
+        IsOnlyHitTarget = true;
+        TargetObject = playerCom.GenZongDanAimPoint;
+    }
+
 	void SetGenZongDanInfo()
 	{
-		if (AmmoType != PlayerAmmoType.GenZongAmmo) {
+		if (AmmoType != PlayerAmmoType.GenZongAmmo)
+        {
 			return;
 		}
+
+        if (TargetObject != null)
+        {
+            return;
+        }
 
 		CosJiaoDuGZ = Mathf.Cos(ShanXingJiaoDu);
 		GameObject playerObj = null;
@@ -712,7 +758,15 @@ public class NpcAmmoCtrl : MonoBehaviour {
 			
 			XKPlayerMoveCtrl playerScript = c.GetComponent<XKPlayerMoveCtrl>();
 			if (playerScript != null && !playerScript.GetIsWuDiState()) {
-				XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+                if (AmmoType == PlayerAmmoType.GenZongAmmo && IsOnlyHitTarget == true
+                    && TargetObject != null && TargetObject != playerScript.GenZongDanAimPoint)
+                {
+                    //只对跟踪目标造成伤害的跟踪弹.
+                }
+                else
+                {
+                    XkGameCtrl.GetInstance().SubGamePlayerHealth(playerScript.PlayerIndex, PlayerDamage);
+                }
 			}
 			// Get the rigidbody if any
 			if (c.rigidbody) {

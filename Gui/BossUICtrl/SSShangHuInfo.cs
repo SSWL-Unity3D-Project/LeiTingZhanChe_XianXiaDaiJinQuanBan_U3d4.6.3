@@ -248,16 +248,17 @@ public class SSShangHuInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// 战车
     /// 获取代金券npc的商户名信息.
     /// </summary>
     internal ShangHuData GetShangHuMingInfo()
     {
-        int indexVal = m_IndexShangHu;
         m_IndexShangHu++;
         if (m_IndexShangHu >= m_ShangHuDt.Length)
         {
             m_IndexShangHu = 0;
         }
+        int indexVal = m_IndexShangHu;
         SSDebug.LogWarning("GetShangHuMingInfo -> ====================== " + m_ShangHuDt[indexVal].ToString());
         m_DaiJinQuanDt.ShangHuMing = m_ShangHuDt[indexVal].ShangHuMing;
         m_DaiJinQuanDt.DaiJinQuanName = m_ShangHuDt[indexVal].DaiJinQuanName;
@@ -266,14 +267,15 @@ public class SSShangHuInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// 战车
     /// 获取代金券npc的商户名信息.
     /// </summary>
     internal ShangHuData GetShangHuMingDt()
     {
-        int indexVal = m_IndexShangHu - 1;
-        if (indexVal < 0)
+        int indexVal = m_IndexShangHu;
+        if (indexVal >= m_ShangHuDt.Length)
         {
-            indexVal = m_ShangHuDt.Length - 1;
+            indexVal = 0;
         }
         SSDebug.LogWarning("GetShangHuMingDt -> ============================== " + m_ShangHuDt[indexVal].ToString());
         return m_ShangHuDt[indexVal];

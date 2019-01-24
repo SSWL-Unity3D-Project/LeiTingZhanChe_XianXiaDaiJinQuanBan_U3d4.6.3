@@ -1200,4 +1200,22 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
         forwardVal.y = 0f;
         transform.position = m_CameraWeiDongPos + forwardVal * m_CameraMoveAni.transform.localPosition.z;
     }
+
+    //********************************************************************************************************//
+    /// <summary>
+    /// 攻击已经得到战车优惠券的跟踪弹配置信息.
+    /// </summary>
+    [System.Serializable]
+    public class GenZongDanData
+    {
+        /// <summary>
+        /// 子弹产生点.
+        /// </summary>
+        public Transform[] SpawnPointArray;
+        /// <summary>
+        /// 跟踪弹预制.
+        /// </summary>
+        public GameObject GenZongDanPrefab;
+        
+    }
 }
