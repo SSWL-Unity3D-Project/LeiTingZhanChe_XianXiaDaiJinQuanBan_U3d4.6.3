@@ -59,11 +59,11 @@ public class XKBossLXCtrl : MonoBehaviour
                 if (type == SpawnNpcManage.NpcState.JPBoss
                     || type == SpawnNpcManage.NpcState.SuperJPBoss)
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingInfo();
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingDt();
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
                 }
                 //shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo().ShangHuMing;
             }

@@ -1598,4 +1598,26 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             m_NewCircleTeXiao.SetActive(isActive);
         }
     }
+
+    //***********************************************************************//
+    /// <summary>
+    /// 玩家获得炸车代金券数量.
+    /// </summary>
+    int m_ZhanCheDaiJinQuanCount = 0;
+    internal void AddZhanCheDaiJinQuanCount()
+    {
+        m_ZhanCheDaiJinQuanCount++;
+        SSDebug.Log(PlayerIndex + "::AddZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
+    }
+    
+    internal int GetZhanCheDaiJinQuanCount()
+    {
+        return m_ZhanCheDaiJinQuanCount;
+    }
+
+    internal void ResetZhanCheDaiJinQuanCount()
+    {
+        m_ZhanCheDaiJinQuanCount = 0;
+        SSDebug.Log(PlayerIndex + "::ResetZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
+    }
 }

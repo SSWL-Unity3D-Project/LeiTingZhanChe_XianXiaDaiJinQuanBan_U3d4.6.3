@@ -530,6 +530,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 + ", activeState =============== " + activeState);
 
             PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
+            XKPlayerMoveCtrl playerCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexPlayer);
+            if (playerCom != null)
+            {
+                if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+                {
+                    XkPlayerCtrl.GetInstanceFeiJi().RemoveGetZhanCheDaiJinQuanPlayer(playerCom);
+                }
+            }
+
             ClearPlayerBtInfo(indexPlayer);
             m_IndexPlayerActiveGameState[index] = activeState;
             if (activeState == (int)PlayerActiveState.WeiJiHuo)

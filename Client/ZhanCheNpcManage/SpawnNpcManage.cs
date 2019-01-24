@@ -840,6 +840,26 @@ public class SpawnNpcManage : MonoBehaviour
         NpcSpawnData data = GetNpcSpawnData(npcType, pointState);
         if (data != null)
         {
+            switch (npcType)
+            {
+                case NpcState.ZhanChe:
+                    {
+                        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+                        {
+                            XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo();
+                        }
+                    }
+                    break;
+                case NpcState.JPBoss:
+                    {
+                        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+                        {
+                            XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingInfo();
+                        }
+                    }
+                    break;
+            }
+
             GameObject obj = data.CreatPointNpc();
             if (obj != null)
             {

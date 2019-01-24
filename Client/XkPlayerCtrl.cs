@@ -229,6 +229,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 //		else {
 //			UpdatePlayerTransform();
 //		}
+        UpdateCheckIsCreatGenZongDan();
         UpdateCameraWeiDongPos();
         SmothMovePlayerCamera();
 		CheckIsDelayMovePlayer();
@@ -1209,13 +1210,163 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
     public class GenZongDanData
     {
         /// <summary>
+        /// 间隔时间.
+        /// </summary>
+        public float TimeVal = 5f;
+        float TimeLast = 0f;
+        /// <summary>
         /// 子弹产生点.
         /// </summary>
-        public Transform[] SpawnPointArray;
+        public Transform[] SpawnPointArray01;
+        /// <summary>
+        /// 子弹产生点.
+        /// </summary>
+        public Transform[] SpawnPointArray02;
         /// <summary>
         /// 跟踪弹预制.
         /// </summary>
         public GameObject GenZongDanPrefab;
+        /// <summary>
+        /// 获得战车代金券的玩家列表信息.
+        /// </summary>
+        List<XKPlayerMoveCtrl> PlayerComList = new List<XKPlayerMoveCtrl>();
+        public void AddPlayerCom(XKPlayerMoveCtrl playerCom)
+        {
+            if (playerCom == null)
+            {
+                return;
+            }
+
+            if (PlayerComList.Contains(playerCom) == false)
+            {
+                PlayerComList.Add(playerCom);
+            }
+            playerCom.AddZhanCheDaiJinQuanCount();
+        }
         
+        public void RemovePlayerCom(XKPlayerMoveCtrl playerCom)
+        {
+            if (playerCom == null)
+            {
+                return;
+            }
+
+            if (PlayerComList.Contains(playerCom) == true)
+            {
+                PlayerComList.Remove(playerCom);
+            }
+            playerCom.ResetZhanCheDaiJinQuanCount();
+        }
+
+        /// <summary>
+        /// 创建跟踪弹.
+        /// </summary>
+        internal void CheckIsCreatGenZongDan()
+        {
+            if (Time.time - TimeLast < TimeVal)
+            {
+                return;
+            }
+            TimeLast = Time.time;
+
+            if (PlayerComList.Count <= 0)
+            {
+                return;
+            }
+
+            int randVal = Random.Range(0, 100) % PlayerComList.Count;
+            XKPlayerMoveCtrl playerCom = PlayerComList[randVal];
+            if (playerCom == null)
+            {
+                return;
+            }
+
+            int max = 0;
+            int zhanCheDaiJinQuanCount = playerCom.GetZhanCheDaiJinQuanCount();
+            if (zhanCheDaiJinQuanCount > 1)
+            {
+                max = 2;
+            }
+            else if(zhanCheDaiJinQuanCount == 1)
+            {
+                max = 1;
+            }
+
+            Transform point = null;
+            for (int i = 0; i < max; i++)
+            {
+                if (i == 0)
+                {
+                    if (SpawnPointArray01.Length == 0)
+                    {
+                        continue;
+                    }
+                    randVal = Random.Range(0, 100) % SpawnPointArray01.Length;
+                    point = SpawnPointArray01[randVal];
+                }
+                else
+                {
+                    if (SpawnPointArray02.Length == 0)
+                    {
+                        continue;
+                    }
+                    randVal = Random.Range(0, 100) % SpawnPointArray02.Length;
+                    point = SpawnPointArray02[randVal];
+                }
+                CreatGenZongDanAmmo(point, playerCom);
+            }
+        }
+
+        /// <summary>
+        /// 创建跟踪弹.
+        /// </summary>
+        void CreatGenZongDanAmmo(Transform spawnPoint, XKPlayerMoveCtrl playerCom)
+        {
+            if (GenZongDanPrefab == null || spawnPoint == null || playerCom == null)
+            {
+                return;
+            }
+
+            GameObject obj = (GameObject)Instantiate(GenZongDanPrefab, spawnPoint.position, spawnPoint.rotation);
+            NpcAmmoCtrl ammoScript = obj.GetComponent<NpcAmmoCtrl>();
+            if (ammoScript != null)
+            {
+                ammoScript.SetIsAimFeiJiPlayer(false);
+                ammoScript.SetGenZongDanAimTarget(playerCom);
+            }
+        }
+    }
+    /// <summary>
+    /// 攻击获得战车代金券的跟踪弹数据.
+    /// </summary>
+    public GenZongDanData m_GenZongDanData;
+    void UpdateCheckIsCreatGenZongDan()
+    {
+        if (m_GenZongDanData != null)
+        {
+            m_GenZongDanData.CheckIsCreatGenZongDan();
+        }
+    }
+    
+    /// <summary>
+    /// 添加获得战车代金券的玩家信息.
+    /// </summary>
+    public void AddGetZhanCheDaiJinQuanPlayer(XKPlayerMoveCtrl playerCom)
+    {
+        if (m_GenZongDanData != null)
+        {
+            m_GenZongDanData.AddPlayerCom(playerCom);
+        }
+    }
+
+    /// <summary>
+    /// 删除获得战车代金券的玩家信息.
+    /// </summary>
+    public void RemoveGetZhanCheDaiJinQuanPlayer(XKPlayerMoveCtrl playerCom)
+    {
+        if (m_GenZongDanData != null)
+        {
+            m_GenZongDanData.RemovePlayerCom(playerCom);
+        }
     }
 }

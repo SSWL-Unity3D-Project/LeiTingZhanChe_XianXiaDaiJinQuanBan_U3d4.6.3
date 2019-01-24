@@ -808,6 +808,13 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     {
                         deCaiType = SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.JPBoss;
                     }
+                    else
+                    {
+                        if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+                        {
+                            XkPlayerCtrl.GetInstanceFeiJi().AddGetZhanCheDaiJinQuanPlayer(XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(playerSt));
+                        }
+                    }
 
                     if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
                     {
