@@ -173,13 +173,27 @@ public class AsyncImageDownload : MonoBehaviour
 
         try
         {
-            if (www.error.Contains("404") == false)
+            if (www != null)
             {
-                tex2d = www.texture;
+                if (www.error == null)
+                {
+                    tex2d = www.texture;
+                }
+                else
+                {
+                    if (www.error.Contains("404") == false)
+                    {
+                        tex2d = www.texture;
+                    }
+                    else
+                    {
+                        SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+                    }
+                }
             }
             else
             {
-                SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+                SSDebug.LogWarning("DownloadImage -> www was null");
             }
         }
         catch (System.Exception ex)
@@ -241,13 +255,27 @@ public class AsyncImageDownload : MonoBehaviour
 
         try
         {
-            if (www.error.Contains("404") == false)
+            if (www != null)
             {
-                tex2d = www.texture;
+                if (www.error == null)
+                {
+                    tex2d = www.texture;
+                }
+                else
+                {
+                    if (www.error.Contains("404") == false)
+                    {
+                        tex2d = www.texture;
+                    }
+                    else
+                    {
+                        SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+                    }
+                }
             }
             else
             {
-                SSDebug.LogWarning("DownloadImage -> www.error ===== " + www.error);
+                SSDebug.LogWarning("DownloadImage -> www was null");
             }
         }
         catch (System.Exception ex)
