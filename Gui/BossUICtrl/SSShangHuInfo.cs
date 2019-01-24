@@ -244,7 +244,7 @@ public class SSShangHuInfo : MonoBehaviour
         {
             indexVal = m_DaJiangBossShangHuDt.Length - 1;
         }
-        return m_DaJiangBossShangHuDt[m_IndexJPShangHu].ShangHuMing;
+        return m_DaJiangBossShangHuDt[indexVal].ShangHuMing;
     }
 
     /// <summary>
@@ -276,7 +276,7 @@ public class SSShangHuInfo : MonoBehaviour
             indexVal = m_ShangHuDt.Length - 1;
         }
         SSDebug.LogWarning("GetShangHuMingDt -> ============================== " + m_ShangHuDt[indexVal].ToString());
-        return m_ShangHuDt[m_IndexShangHu];
+        return m_ShangHuDt[indexVal];
     }
 
     int m_IndexSuiJiDaoJu = 0;
@@ -323,7 +323,7 @@ public class SSShangHuInfo : MonoBehaviour
             {
                 indexVal = m_ShangHuDt.Length - 1;
             }
-            return m_ShangHuDt[m_IndexSuiJiDaoJu];
+            return m_ShangHuDt[indexVal];
         }
     }
 
