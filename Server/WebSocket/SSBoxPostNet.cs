@@ -1623,6 +1623,12 @@ public class SSBoxPostNet : MonoBehaviour
             Thread threadPost = new Thread(new ThreadStart(threadPostCouponInfo.Run));
             threadPost.Start();
         }
+
+        if (m_WebSocketSimpet != null)
+        {
+            //玩家获得优惠券时发送该消息给服务器.
+            m_WebSocketSimpet.NetSendWeiXinPadPlayerGetCoupon(userId);
+        }
     }
     
     /// <summary>

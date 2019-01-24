@@ -275,6 +275,28 @@ public class WebSocketSimpet : MonoBehaviour
         }
         NetSendWXPadPlayerCloseConnect(userId);
     }
+    
+    /// <summary>
+    /// 当玩家获得优惠券时发送该消息给服务器.
+    /// </summary>
+    public void NetSendWeiXinPadPlayerGetCoupon(int userId)
+    {
+        if (m_SSBoxPostNet == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"coupon"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"coupon\"},\"_msg_name\":\"gamepad\"}";
+
+            Debug.Log("NetSendWeiXinPadPlayerGetCoupon:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
 
     /// <summary>
     /// 当游戏中玩家续费倒计时结束之后,玩家仍然没有成功续费时,客户端需要发送"充值超时,请稍后重新扫码"的消息给服务器.
