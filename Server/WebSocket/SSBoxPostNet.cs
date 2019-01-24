@@ -2181,9 +2181,9 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     void GetGameConfigInfoFromHddServer()
     {
-#if !USE_TEST_HDD_SERVER
-        return; //test.
-#endif
+//#if !USE_TEST_HDD_SERVER
+//        return; //test.
+//#endif
         if (m_BoxLoginData == null)
         {
             SSDebug.LogWarning("GetGameConfigInfoFromHddServer -> m_BoxLoginData was null");

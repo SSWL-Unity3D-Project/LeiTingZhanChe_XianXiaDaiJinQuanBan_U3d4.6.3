@@ -238,6 +238,11 @@ public class SSShangHuInfo : MonoBehaviour
     /// </summary>
     internal ShangHuData GetShangHuMingDt()
     {
+        int indexVal = m_IndexShangHu - 1;
+        if (indexVal < 0)
+        {
+            indexVal = m_ShangHuDt.Length - 1;
+        }
         return m_ShangHuDt[m_IndexShangHu];
     }
 
@@ -265,6 +270,11 @@ public class SSShangHuInfo : MonoBehaviour
     /// </summary>
     internal ShangHuData GetSuiJiDaoJuShangHuDt()
     {
+        int indexVal = m_IndexSuiJiDaoJu - 1;
+        if (indexVal < 0)
+        {
+            indexVal = m_ShangHuDt.Length - 1;
+        }
         return m_ShangHuDt[m_IndexSuiJiDaoJu];
     }
 
@@ -292,6 +302,11 @@ public class SSShangHuInfo : MonoBehaviour
     /// </summary>
     internal string GetJPBossShangHuMingDt()
     {
+        int indexVal = m_IndexJPShangHu - 1;
+        if (indexVal < 0)
+        {
+            indexVal = m_DaJiangBossShangHuDt.Length - 1;
+        }
         return m_DaJiangBossShangHuDt[m_IndexJPShangHu].ShangHuMing;
     }
 
