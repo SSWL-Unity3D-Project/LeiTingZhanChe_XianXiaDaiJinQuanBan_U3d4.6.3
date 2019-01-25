@@ -690,7 +690,14 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
                 case DeCaiState.JPBoss:
                     {
-                        chuPiaoTiaoJian = JPBossDaiJinQuan;
+                        if (JPBossDaiJinQuan >= JPBossDaiJinQuanShangHuZhiFu)
+                        {
+                            chuPiaoTiaoJian = JPBossDaiJinQuan - JPBossDaiJinQuanShangHuZhiFu;
+                        }
+                        else
+                        {
+                            chuPiaoTiaoJian = JPBossDaiJinQuan;
+                        }
                         deCaiVal = JPBossDeCai;
                         break;
                     }
