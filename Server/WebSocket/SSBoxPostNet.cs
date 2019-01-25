@@ -1,6 +1,6 @@
 ﻿#define USE_TEST_HDD_SERVER //使用红点点测试服务器.
-//#define USE_OLD_GET_HDD_GAME_CONFIG
-//#define TEST_DAI_JIN_QUAN
+//#define USE_OLD_GET_HDD_GAME_CONFIG //使用旧版本后台数据管理接口.
+//#define TEST_DAI_JIN_QUAN //测试代金券.
 using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.Server.WebSocket;
 using LitJson;
