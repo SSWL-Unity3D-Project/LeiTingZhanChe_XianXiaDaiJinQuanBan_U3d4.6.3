@@ -229,6 +229,14 @@
                 gmCaiPiaoData.UpdateDaiJinQuanInfo(SuiJiDaoJuDaiJinQuan, ZhanCheDaiJinQuan_01, ZhanCheDaiJinQuan_02, JPBossDaiJinQuan);
                 gmCaiPiaoData.UpdateDaiJinQuanCaiChiInfo(SuiJiDaoJuDeCai, ZhanCheDeCai_01, ZhanCheDeCai_02, JPBossDeCai);
                 gmCaiPiaoData.UpdateJPBossDaiJinQuanShangHuZhiFu(JPBossDaiJinQuanShangHuZhiFu);
+
+                if (XKGlobalData.GetInstance() != null)
+                {
+                    XKGlobalData.GetInstance().SetIsWuXianJiangChi(IsWuQiongDaJiangChiJPBossDaiJinQuan, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
+                    XKGlobalData.GetInstance().SetIsWuXianJiangChi(IsWuQiongDaJiangChiZhanCheDaiJinQuan_01, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+                    XKGlobalData.GetInstance().SetIsWuXianJiangChi(IsWuQiongDaJiangChiZhanCheDaiJinQuan_02, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                    XKGlobalData.GetInstance().SetIsWuXianJiangChi(IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                }
             }
             
             if (pcvr.GetInstance().m_HongDDGamePadInterface != null)

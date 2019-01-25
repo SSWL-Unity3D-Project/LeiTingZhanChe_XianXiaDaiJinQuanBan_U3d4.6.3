@@ -1550,7 +1550,17 @@ public class SSBoxPostNet : MonoBehaviour
         {
             //海底捞代金券版本游戏.
             //代金券面值写为0.
-            worth = 0;
+            bool isWuXianJiangChi = false;
+            if (XKGlobalData.GetInstance() != null)
+            {
+                isWuXianJiangChi = XKGlobalData.GetInstance().GetIsWuXianJiangChi(daiJinQuanType);
+            }
+
+            if (isWuXianJiangChi == true)
+            {
+                //海底捞版本奖池为无限大时，发送奖券面值信息为0.
+                worth = 0;
+            }
         }
 
         if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)

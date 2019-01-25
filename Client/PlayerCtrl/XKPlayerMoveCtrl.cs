@@ -1620,4 +1620,13 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         m_ZhanCheDaiJinQuanCount = 0;
         SSDebug.Log(PlayerIndex + "::ResetZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
     }
+
+    public static void ResetZhanCheDaiJinQuanCount(PlayerEnum indexPlayer)
+    {
+        XKPlayerMoveCtrl playerCom = GetXKPlayerMoveCtrl(indexPlayer);
+        if (playerCom != null)
+        {
+            playerCom.ResetZhanCheDaiJinQuanCount();
+        }
+    }
 }

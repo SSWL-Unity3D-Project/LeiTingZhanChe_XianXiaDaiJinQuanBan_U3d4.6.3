@@ -1304,6 +1304,11 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                 max = 1;
             }
 
+            if (max == 0)
+            {
+                return;
+            }
+
             Transform point = null;
             for (int i = 0; i < max; i++)
             {

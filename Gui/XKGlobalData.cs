@@ -1013,6 +1013,88 @@ public class XKGlobalData
     }
 
     /// <summary>
+    /// 是否奖池无限.
+    /// IsWuXianJiangChiArray[0] 1等奖 JP
+    /// IsWuXianJiangChiArray[1] 2等奖 战车1
+    /// IsWuXianJiangChiArray[2] 3等奖 战车2
+    /// IsWuXianJiangChiArray[3] 4等奖 随机道具
+    /// </summary>
+    bool[] IsWuXianJiangChiArray = new bool[4];
+    /// <summary>
+    /// 设置奖池是否无限.
+    /// </summary>
+    internal void SetIsWuXianJiangChi(bool isWuXian, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        int indexVal = -1;
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    indexVal = 0;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    indexVal = 1;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    indexVal = 2;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    indexVal = 3;
+                }
+                break;
+        }
+
+        if (indexVal != -1)
+        {
+            IsWuXianJiangChiArray[indexVal] = isWuXian;
+        }
+    }
+    
+    /// <summary>
+    /// 获取奖池是否无限.
+    /// </summary>
+    internal bool GetIsWuXianJiangChi(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        bool isWuXian = false;
+        int indexVal = 0;
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    indexVal = 0;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    indexVal = 1;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    indexVal = 2;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    indexVal = 3;
+                }
+                break;
+        }
+
+        if (indexVal >= 0 && indexVal < IsWuXianJiangChiArray.Length)
+        {
+            isWuXian = IsWuXianJiangChiArray[indexVal];
+        }
+        return isWuXian;
+    }
+
+    /// <summary>
     /// 红点点游戏奖品Id信息.
     /// 游戏一共有4个奖品.
     /// 分别是JP大奖,战车01,战车02,随机道具奖品.

@@ -2187,6 +2187,7 @@ public class XkGameCtrl : SSGameMono
 		IsActivePlayerOne = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
 		CheckPlayerActiveNum();
+        XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerOne);
 		if (isActive) {
 			IsPlayGamePOne = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerOne);
@@ -2230,7 +2231,8 @@ public class XkGameCtrl : SSGameMono
 		IsActivePlayerTwo = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerTwo);
 		CheckPlayerActiveNum();
-		if (isActive) {
+        XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerTwo);
+        if (isActive) {
 			IsPlayGamePTwo = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerTwo);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -2273,7 +2275,8 @@ public class XkGameCtrl : SSGameMono
 		IsActivePlayerThree = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerThree);
 		CheckPlayerActiveNum();
-		if (isActive) {
+        XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerThree);
+        if (isActive) {
 			IsPlayGamePThree = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerThree);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -2316,7 +2319,8 @@ public class XkGameCtrl : SSGameMono
 		IsActivePlayerFour = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerFour);
 		CheckPlayerActiveNum();
-		if (isActive) {
+        XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerFour);
+        if (isActive) {
 			IsPlayGamePFour = true;
 			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerFour);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
