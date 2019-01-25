@@ -68,7 +68,7 @@ public class SSCaiPiaoInfo : SSGameMono
         }
     }
 
-    void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    internal void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
     {
         if (m_DaiJinQuanShangHuInfo != null)
         {

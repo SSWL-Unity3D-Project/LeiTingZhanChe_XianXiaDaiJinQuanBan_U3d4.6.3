@@ -1516,9 +1516,18 @@ public class SSCaiPiaoDataManage : SSGameMono
             }
             return;
         }
-
+        
+        int caiPiaoNumTmp = m_PcvrPrintCaiPiaoData[index].CaiPiaoVal;
         m_PcvrPrintCaiPiaoData[index].IsPrintCaiPiao = true;
         m_PcvrPrintCaiPiaoData[index].CaiPiaoVal += caiPiao;
+        if (caiPiaoNumTmp <= 0)
+        {
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                //显示玩家彩票菜品券信息.
+                SSUIRoot.GetInstance().m_GameUIManage.ShowHaiDiLaoCaiPinInfo(indexPlayer, type);
+            }
+        }
 
         //if (isPlayCaiPiaoNumAni == true)
         //{

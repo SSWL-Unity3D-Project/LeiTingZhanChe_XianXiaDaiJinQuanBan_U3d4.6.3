@@ -566,6 +566,29 @@ public class SSGameUICtrl : SSGameMono
     }
 
     /// <summary>
+    /// 显示海底捞版本游戏的玩家获得彩票的菜品券信息.
+    /// </summary>
+    public void ShowHaiDiLaoCaiPinInfo(PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    {
+        if (SSGameLogoData.m_GameDaiJinQuanMode != SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+        {
+            //不是海底捞菜品券版本游戏则退出.
+            return;
+        }
+
+        int indexVal = (int)indexPlayer - 1;
+        SSGameNumUI gameNumCom = m_CaiPiaoInfoArray[indexVal];
+        if (gameNumCom != null)
+        {
+            SSCaiPiaoInfo caiPiaoInfoCom = gameNumCom.GetComponent<SSCaiPiaoInfo>();
+            if (caiPiaoInfoCom != null)
+            {
+                caiPiaoInfoCom.ShowDaiJinQuanShangHuInfo(type);
+            }
+        }
+    }
+
+    /// <summary>
     /// 延迟删除彩票数据信息.
     /// </summary>
     IEnumerator DelayRemoveCaiPiaoInfoPanle(PlayerEnum indexPlayer)
