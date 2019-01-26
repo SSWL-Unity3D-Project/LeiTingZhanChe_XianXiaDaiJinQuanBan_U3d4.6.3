@@ -1231,7 +1231,13 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
         /// </summary>
         List<XKPlayerMoveCtrl> PlayerComList = new List<XKPlayerMoveCtrl>();
         public void AddPlayerCom(XKPlayerMoveCtrl playerCom)
-        {
+		{
+			if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+			{
+				//没有玩家激活游戏时,不给列表里添加信息.
+				return;
+			}
+
             if (playerCom == null)
             {
                 return;
