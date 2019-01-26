@@ -68,11 +68,18 @@ public class SSTriggerChangeMat : MonoBehaviour
         TouMing = 1,
     }
 
-    /// <summary>
+	float m_TimeLast = 0f;
+	/// <summary>
     /// 更新材质球.
     /// </summary>
     void UpdateMaterialState(MaterialState type)
     {
+		if (Time.time - m_TimeLast < 0.8f)
+		{
+			return;
+		}
+		m_TimeLast = Time.time;
+
         for (int i = 0; i < m_MaterrialDt.Length; i++)
         {
             if (m_MaterrialDt[i] != null)
