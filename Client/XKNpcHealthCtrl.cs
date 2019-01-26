@@ -516,6 +516,23 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             TimeSanDanDamage = Time.time;
         }
 
+		if (pAmmoType == PlayerAmmoType.ChuanTouAmmo)
+		{
+			if (XKPlayerMvFanWei.GetInstanceQian() != null && XKPlayerCamera.GetInstanceFeiJi() != null)
+			{
+				Vector3 forwardVecCam = XKPlayerCamera.GetInstanceFeiJi().transform.forward;
+				Vector3 posA = transform.position;
+				Vector3 posB = XKPlayerMvFanWei.GetInstanceQian().transform.position;
+				forwardVecCam.y = posA.y = posB.y = 0f;
+				Vector3 vecBA = posA - posB;
+				if (Vector3.Dot(forwardVecCam, vecBA) >= 0f)
+				{
+					//npc在镜头前方范围之外,不受玩家子弹伤害.
+					return;
+				}
+			}
+		}
+
         if (IsBackDaiJinQuanNpcBlood == true)
         {
             //代金券npc重置血值后,给一定时间的无敌状态.
