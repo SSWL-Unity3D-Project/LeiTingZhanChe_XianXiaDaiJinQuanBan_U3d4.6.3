@@ -1758,7 +1758,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             do
             {
                 //SSDebug.Log("LoopGetWXPlayerHddPayData -> time == " + time.ToString("f2") + ", RealTime == " + Time.time);
-                if (Time.time - time >= 120f)
+                if (Time.time - time >= 36f)
                 {
                     //轮询检测超时,认为玩家已经不再继续游戏了.
                     //删除数据.
