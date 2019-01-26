@@ -648,10 +648,10 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     //不允许被玩家击爆的代金券npc.
                     if (IsBloodTo_10 == false)
                     {
-                        if (bloodAmount <= 0.1f)
+                        if (bloodAmount <= 0.15f)
                         {
                             //强制保留一定的血量.
-                            m_BloodAmoutValue = bloodAmount = 0.1f;
+                            m_BloodAmoutValue = bloodAmount = 0.15f;
                             IsBloodTo_10 = true;
                             m_TimeLastBloodTo_10 = Time.time;
                             PuTongAmmoCount = puTongAmmoNum - 1;
@@ -659,11 +659,11 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     }
                     else
                     {
-                        float minBloodAmount = 0.01f; //最小极限血值.
+                        float minBloodAmount = 0.05f; //最小极限血值.
                         if (m_BloodAmoutValue > minBloodAmount)
                         {
-                            //血值已经降到10%
-                            float dTimeVal = 0.3f;
+                            //血值已经降到15%
+                            float dTimeVal = 0.5f;
                             if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
                             {
                                 dTimeVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TimeNoDead;
