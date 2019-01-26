@@ -1627,6 +1627,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         if (playerCom != null)
         {
             playerCom.ResetZhanCheDaiJinQuanCount();
+			if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+			{
+				XkPlayerCtrl.GetInstanceFeiJi().RemoveGetZhanCheDaiJinQuanPlayer(playerCom);
+			}
         }
     }
 }
