@@ -4,6 +4,9 @@ using System.Collections.Generic;
 /// <summary>
 /// 改变游戏材质球触发器.
 /// </summary>
+using System.Collections;
+
+
 public class SSTriggerChangeMat : MonoBehaviour
 {
     [System.Serializable]
@@ -69,25 +72,47 @@ public class SSTriggerChangeMat : MonoBehaviour
     }
 
 	float m_TimeLast = 0f;
+	MaterialState m_MatChangeState = MaterialState.Normal;
 	/// <summary>
     /// 更新材质球.
     /// </summary>
     void UpdateMaterialState(MaterialState type)
-    {
-		if (Time.time - m_TimeLast < 0.8f)
+	{
+		if (m_MatChangeState == type)
 		{
 			return;
 		}
+		m_MatChangeState = type;
+		
+		if (Time.time - m_TimeLast < 0.8f)
+		{
+			StartCoroutine(DelayChangeMaterialState(type));
+			return;
+		}
 		m_TimeLast = Time.time;
-
-        for (int i = 0; i < m_MaterrialDt.Length; i++)
-        {
-            if (m_MaterrialDt[i] != null)
-            {
-                m_MaterrialDt[i].UpdateMaterial(type);
-            }
-        }
+		ChangeMaterialState(type);
     }
+
+	void ChangeMaterialState(MaterialState type)
+	{
+		//SSDebug.Log("ChangeMaterialState -> type ================ " + type);
+		for (int i = 0; i < m_MaterrialDt.Length; i++)
+		{
+			if (m_MaterrialDt[i] != null)
+			{
+				m_MaterrialDt[i].UpdateMaterial(type);
+			}
+		}
+	}
+	
+	IEnumerator DelayChangeMaterialState(MaterialState type)
+	{
+		yield return new WaitForSeconds(0.8f);
+		if (m_MatChangeState == type)
+		{
+			ChangeMaterialState(type);
+		}
+	}
 
     /// <summary>
     /// 进入触发器的次数信息.
