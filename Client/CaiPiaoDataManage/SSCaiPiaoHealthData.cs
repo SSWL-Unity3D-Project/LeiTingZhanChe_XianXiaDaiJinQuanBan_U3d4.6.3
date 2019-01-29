@@ -107,6 +107,14 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         float randVal = Random.Range(0f, 100f) / 100f;
         //是否爆奖.
         bool isDaiJinQuanBaoJiang = randVal < baoJiangLv ? true : false;
+        if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+        {
+            //海底捞菜品券游戏.
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(type);
+            }
+        }
         //SSDebug.LogWarning("isDaiJinQuanBaoJiang == " + isDaiJinQuanBaoJiang + ", randVal == " + randVal + ", baoJiangLv == " + baoJiangLv);
         if (isCaiChiZuGou == true && isDaiJinQuanBaoJiang == true)
         {

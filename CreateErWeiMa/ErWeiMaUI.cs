@@ -206,6 +206,7 @@ public class ErWeiMaUI : MonoBehaviour
     {
         if (gameObject.activeInHierarchy != isActive)
         {
+            SSDebug.Log("SetActive -> isActive =========================== " + isActive);
             gameObject.SetActive(isActive);
         }
     }

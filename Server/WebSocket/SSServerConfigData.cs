@@ -219,7 +219,7 @@
                 float chuCaiLv = SuiJiDaoJuChuPiaoLv + ZhanCheChuPiaoLv_01 + ZhanCheChuPiaoLv_02 + JPBossChuPiaoLv;
                 if (chuCaiLv > 1f)
                 {
-                    //出票率之和必须为1f.
+                    //出票率(返奖率)之和必须为1f.
                     JPBossChuPiaoLv = 1f;
                     ZhanCheChuPiaoLv_01 = 0f;
                     ZhanCheChuPiaoLv_01 = 0f;
@@ -252,8 +252,14 @@
             //设置游戏彩池返奖率信息.
             XKGlobalData.GetInstance().SetCaiChiFanJiangLv(CaiChiFanJiangLv);
 
-            //设置游戏彩池返奖率信息.
+            //设置游戏彩池爆奖率信息.
             XKGlobalData.GetInstance().SetCaiChiBaoJiangLv(SuiJiDaoJuBaoJiangLv, ZhanCheBaoJiangLv_01, ZhanCheBaoJiangLv_02, JPBossBaoJiangLv);
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan, (int)JPBossBaoJiangLv);
+                SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01, (int)ZhanCheBaoJiangLv_01);
+                SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02, (int)ZhanCheBaoJiangLv_02);
+            }
         }
     }
 }

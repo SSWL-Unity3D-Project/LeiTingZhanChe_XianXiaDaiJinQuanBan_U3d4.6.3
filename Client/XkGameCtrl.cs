@@ -1013,20 +1013,43 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        //if (Time.time - m_TimeLastMovie > 15f * 60f) //test
-        if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
+        if (Time.time - m_TimeLastMovie > 2f * 60f) //test
+        //if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
         {
             m_TimeLastMovie = Time.time;
 
 #if !UNITY_EDITOR
             StartCoroutine(DelayLoadingRestartGameScene());
+#else
+			StartCoroutine(DelayLoadingRestartGameScene()); //test
 #endif
         }
     }
 
     IEnumerator DelayLoadingRestartGameScene()
     {
-        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+		//隐藏红点点游戏小程序二维码.
+		if (ErWeiMaUI.GetInstance() != null)
+		{
+			ErWeiMaUI.GetInstance().SetActive(false);
+			IsCheckGameUIErWeiMa = false;
+		}
+		yield return new WaitForSeconds(30f);
+		
+		if (m_GamePlayerAiData != null && m_GamePlayerAiData.IsActiveAiPlayer == false)
+		{
+			//有激活游戏的玩家.
+			//Debug.LogWarning("player have play game...");
+			//显示红点点游戏小程序二维码.
+			if (ErWeiMaUI.GetInstance() != null)
+			{
+				ErWeiMaUI.GetInstance().SetActive(true);
+			}
+			IsCheckGameUIErWeiMa = true;
+			yield break;
+		}
+		
+		if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
             SSUIRoot.GetInstance().m_GameUIManage.CreateCompanyLogo();
         }
@@ -1059,7 +1082,8 @@ public class XkGameCtrl : SSGameMono
         LoadingRestartGameScene();
     }
 
-    float m_TimeLastErWeiMa = 0f;
+	float m_TimeLastErWeiMa = 0f;
+	bool IsCheckGameUIErWeiMa = true;
     void CheckGameUIErWeiMaActive()
     {
         if (Time.time - m_TimeLastErWeiMa < 10f)
@@ -1067,6 +1091,11 @@ public class XkGameCtrl : SSGameMono
             return;
         }
         m_TimeLastErWeiMa = Time.time;
+
+		if (IsCheckGameUIErWeiMa == false)
+		{
+			return;
+		}
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null && SSUIRoot.GetInstance().m_GameUIManage.m_WangLuoGuZhangUI != null)
         {
@@ -2199,6 +2228,11 @@ public class XkGameCtrl : SSGameMono
             {
                 _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerOne);
             }
+
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerOne);
@@ -2242,6 +2276,11 @@ public class XkGameCtrl : SSGameMono
             if (_Instance != null)
             {
                 _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerTwo);
+            }
+
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
             }
         }
 		else {
@@ -2287,6 +2326,11 @@ public class XkGameCtrl : SSGameMono
             {
                 _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerThree);
             }
+
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerThree);
@@ -2326,6 +2370,15 @@ public class XkGameCtrl : SSGameMono
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerFour);
+            }
+            if (_Instance != null)
+            {
+                _Instance.ResetIsCreateSuiJiDaoJuInfo(PlayerEnum.PlayerFour);
+            }
+
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
             }
         }
 		else {
@@ -2813,7 +2866,7 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 游戏处于循环动画时,AiPlayer的数据.
     /// </summary>
-    public GamePlayerAiData m_GamePlayerAiData = new GamePlayerAiData();
+    internal GamePlayerAiData m_GamePlayerAiData = new GamePlayerAiData();
 
     /// <summary>
     /// 打开所有主角Ai坦克.
