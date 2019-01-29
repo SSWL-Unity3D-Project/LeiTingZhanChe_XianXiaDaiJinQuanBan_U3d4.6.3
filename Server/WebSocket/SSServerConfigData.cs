@@ -259,6 +259,7 @@
                 SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan, (int)JPBossBaoJiangLv);
                 SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01, (int)ZhanCheBaoJiangLv_01);
                 SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02, (int)ZhanCheBaoJiangLv_02);
+                SSHaiDiLaoBaoJiang.GetInstance().UpdateBaoJiangDt(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan, (int)SuiJiDaoJuBaoJiangLv);
             }
         }
     }

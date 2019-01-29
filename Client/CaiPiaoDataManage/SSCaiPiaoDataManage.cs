@@ -1493,15 +1493,12 @@ public class SSCaiPiaoDataManage : SSGameMono
             //将玩家得到的代金券信息发送到服务器.
             string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
             pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(indexPlayer, caiPiao, daiJinQaunType);
-            if (daiJinQaunType != GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan)
+            if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
             {
-                if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                if (SSHaiDiLaoBaoJiang.GetInstance() != null)
                 {
-                    if (SSHaiDiLaoBaoJiang.GetInstance() != null)
-                    {
-                        //设置已经击爆npc的数据信息.
-                        SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, daiJinQaunType);
-                    }
+                    //设置已经击爆npc的数据信息.
+                    SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, daiJinQaunType);
                 }
             }
         }

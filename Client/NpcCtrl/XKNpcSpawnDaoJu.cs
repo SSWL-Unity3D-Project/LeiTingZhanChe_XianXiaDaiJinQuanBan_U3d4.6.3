@@ -39,6 +39,19 @@ public class XKNpcSpawnDaoJu : SSGameMono
             return;
         }
 
+        if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+        {
+            //海底捞菜品券版本游戏.
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                if (SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan) == false)
+                {
+                    //不允许发出随机道具.
+                    return;
+                }
+            }
+        }
+
         bool isUseOldMethod = false;
         if (isUseOldMethod == true)
         {
