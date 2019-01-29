@@ -1534,7 +1534,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 //查找到游戏玩家信息.
                 int index = playerData.Index;
-                if (index > -1 && index < 4)
+                if (index > -1 && index < m_IndexPlayerActiveGameState.Length)
                 {
                     PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
                     CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance(indexPlayer);
@@ -1834,23 +1834,54 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 GamePlayerData playerDt = FindGamePlayerData(userId);
                 if (playerDt != null)
                 {
-                    SSDebug.Log("Active player, userId =============== " + userId + ", Index === " + playerDt.Index);
-                    m_GmWXLoginDt[playerDt.Index].IsActiveGame = true;
-                    //在微信玩家列表信息中找到了玩家信息.
-                    //说明玩家是在游戏倒计时结束前成功续费的.
-                    //当前玩家的红点点游戏金额兑换为游戏币.
-                    int coin = money / m_GameCoinToMoney;
-                    if (coin > 10)
+                    bool isActivePlayer = true; //是否激活玩家.
+                    if (m_GmWXLoginDt[playerDt.Index].IsActiveGame == true)
                     {
-                        //最多给玩家显示9次复活信息.
-                        coin = 10;
+                        //多人同时付费时,有人先激活了该机位,所以后面的玩家需要重新查找是否有空余机位.
+                        bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+                        if (isHaveEmptyJiWei == true)
+                        {
+                            //有空余机位.
+                            int indexPlayer = GetActivePlayerIndexAfterPay();
+                            if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
+                            {
+                                playerDt.Index = indexPlayer;
+                            }
+                            else
+                            {
+                                isActivePlayer = false;
+                                playerDt.Index = -1; //禁用玩家的手柄.
+                            }
+                        }
+                        else
+                        {
+                            //没有空余机位时,需要提示玩家"当前游戏人数已满".
+                            SendWXPadGamePlayerFull(userId);
+                            isActivePlayer = false;
+                            playerDt.Index = -1; //禁用玩家的手柄.
+                        }
                     }
-                    AddWeiXinGameCoinToPlayer(userId, coin);
 
-                    //记录玩家登陆游戏的信息.
-                    if (m_SSBoxPostNet != null)
+                    if (isActivePlayer == true)
                     {
-                        m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                        SSDebug.Log("Active player, userId =============== " + userId + ", Index === " + playerDt.Index);
+                        m_GmWXLoginDt[playerDt.Index].IsActiveGame = true;
+                        //在微信玩家列表信息中找到了玩家信息.
+                        //说明玩家是在游戏倒计时结束前成功续费的.
+                        //当前玩家的红点点游戏金额兑换为游戏币.
+                        int coin = money / m_GameCoinToMoney;
+                        if (coin > 10)
+                        {
+                            //最多给玩家显示9次复活信息.
+                            coin = 10;
+                        }
+                        AddWeiXinGameCoinToPlayer(userId, coin);
+
+                        //记录玩家登陆游戏的信息.
+                        if (m_SSBoxPostNet != null)
+                        {
+                            m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                        }
                     }
                 }
                 else
