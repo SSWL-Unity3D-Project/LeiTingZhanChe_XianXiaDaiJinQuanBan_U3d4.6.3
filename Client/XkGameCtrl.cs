@@ -1013,8 +1013,8 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        if (Time.time - m_TimeLastMovie > 2f * 60f) //test
-        //if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
+        //if (Time.time - m_TimeLastMovie > 2f * 60f) //test
+        if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
         {
             m_TimeLastMovie = Time.time;
 
