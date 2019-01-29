@@ -1017,11 +1017,10 @@ public class XkGameCtrl : SSGameMono
         if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
         {
             m_TimeLastMovie = Time.time;
-
 #if !UNITY_EDITOR
             StartCoroutine(DelayLoadingRestartGameScene());
 #else
-			StartCoroutine(DelayLoadingRestartGameScene()); //test
+			//StartCoroutine(DelayLoadingRestartGameScene()); //test
 #endif
         }
     }
