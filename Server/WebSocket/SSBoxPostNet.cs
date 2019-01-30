@@ -777,8 +777,14 @@ public class SSBoxPostNet : MonoBehaviour
                             int endTime = 7;
                             if (XKGlobalData.GetInstance() != null)
                             {
-                                startTime = Convert.ToInt32(jd_Data["setting"]["startTime"].ToString());
-                                endTime = Convert.ToInt32(jd_Data["setting"]["endTime"].ToString());
+                                if (jd_Data["setting"].Keys.Contains("startTime") == true)
+                                {
+                                    startTime = Convert.ToInt32(jd_Data["setting"]["startTime"].ToString());
+                                }
+                                if (jd_Data["setting"].Keys.Contains("endTime") == true)
+                                {
+                                    endTime = Convert.ToInt32(jd_Data["setting"]["endTime"].ToString());
+                                }
                                 //更新代金券有效期限数据.
                                 XKGlobalData.GetInstance().SetHddDaiJinQuanYouXiaoQiDt(startTime, endTime);
                             }
