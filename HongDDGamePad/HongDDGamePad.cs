@@ -871,13 +871,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (val == PlayerShouBingFireBt.fireADown.ToString()
                         || val == PlayerShouBingFireBt.fireXDown.ToString())
                     {
-                        SendWXPadShowTopUpPanel(userId);
+                        //SendWXPadShowTopUpPanel(userId);
+                        SendWXPadPlayerPayTimeOut(userId);
                     }
 
                     if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
                     {
-                        SendWXPadShowTopUpPanel(userId);
+                        //SendWXPadShowTopUpPanel(userId);
+                        SendWXPadPlayerPayTimeOut(userId);
                     }
 #endif
                 }
@@ -2184,6 +2186,56 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
         }
+        
+        /// <summary>
+        /// 玩家付费超时或主动退出付费界面的数据.
+        /// </summary>
+        public class PayTimeOutData
+        {
+            public int userId = 0;
+            public PayTimeOutData(int userId)
+            {
+                this.userId = userId;
+            }
+        }
+        List<PayTimeOutData> m_PayTimeOutDtList = new List<PayTimeOutData>();
+        PayTimeOutData FindPayTimeOutData(int userId)
+        {
+            PayTimeOutData payTimeOutDt = null;
+            if (m_PayTimeOutDtList != null)
+            {
+                payTimeOutDt = m_PayTimeOutDtList.Find((dt) => {
+                    return dt.userId.Equals(userId);
+                });
+            }
+            return payTimeOutDt;
+        }
+
+        void AddPayTimeOutData(int userId)
+        {
+            if (FindPayTimeOutData(userId) == null)
+            {
+                if (m_PayTimeOutDtList != null)
+                {
+                    m_PayTimeOutDtList.Add(new PayTimeOutData(userId));
+                }
+            }
+        }
+
+        void RemovePayTimeOutData(int userId)
+        {
+            PayTimeOutData dt = FindPayTimeOutData(userId);
+            if (dt != null)
+            {
+                m_PayTimeOutDtList.Remove(dt);
+            }
+        }
+
+        IEnumerator DelayRemovePayTimeOutData(int userId)
+        {
+            yield return new WaitForSeconds(2f);
+            RemovePayTimeOutData(userId);
+        }
 
         /// <summary>
         /// 发送玩家支付超时,请稍后重新扫码的消息给服务器.
@@ -2193,7 +2245,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
-                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOut(userId);
+                if (FindPayTimeOutData(userId) == null)
+                {
+                    //在付费超时或主动退出付费界面的玩家数据中找不到该玩家信息时,允许发送付费超时信息.
+                    //并且将玩家信息踢出.
+                    AddPayTimeOutData(userId);
+                    StartCoroutine(DelayRemovePayTimeOutData(userId));
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOut(userId);
+                }
             }
         }
 

@@ -145,6 +145,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 			return;
 		}
 		IsPlayDaoJishi = true;
+        //SSDebug.Log("StartPlayDaoJiShi******************************************************IsPlayDaoJishi " + IsPlayDaoJishi + ", Time ======= " + Time.time.ToString("f2"));
 
 #if NOT_SHOW_DAOJISHI_UI
         if (pcvr.IsHongDDShouBing == true)
@@ -185,6 +186,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
     public void StopDaoJiShi()
 	{
+        //SSDebug.Log("StopDaoJiShi******************************************************IsPlayDaoJishi " + IsPlayDaoJishi + ", Time ======= " + Time.time.ToString("f2"));
         if (GameOverObj.activeInHierarchy == true)
         {
             if (IsInvoking("HiddenGameOverObj"))
