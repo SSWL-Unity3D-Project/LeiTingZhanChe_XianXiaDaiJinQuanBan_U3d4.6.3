@@ -1379,7 +1379,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             else
             {
-                Debug.Log("Unity:" + "player have active game!");
+                SSDebug.Log("player have active game!");
                 playerDt.IsExitWeiXin = false;
                 if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
                 {
