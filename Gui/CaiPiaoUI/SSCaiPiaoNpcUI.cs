@@ -78,7 +78,11 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
     /// </summary>
     internal void ShowNumUI(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, XKNpcHealthCtrl healthCom)
     {
-        SetShangJiaInfo(deCaiType);
+        if (healthCom != null)
+        {
+            SetShangJiaInfo(deCaiType, healthCom.NpcScript.m_DaiJinQuanState);
+        }
+
         if (m_CaiPiaoInfoParent != null)
         {
             m_CaiPiaoInfoParent.gameObject.SetActive(true);
@@ -138,7 +142,7 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
     /// <summary>
     /// 设置商户名称信息.
     /// </summary>
-    void SetShangJiaInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    void SetShangJiaInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         if (m_ShangJiaInfoLb != null)
         {
@@ -151,7 +155,7 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
                 }
             }
 

@@ -992,7 +992,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 if (DeathExplodePoint != null)
                 {
                     //Vector3 pos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(objExplode.transform.position);
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, DeathExplodePoint.position, deCaiType, DeathExplode);
+                    SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = NpcScript.m_DaiJinQuanState;
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatZhanCheBossCaiPiaoZhuanPan(indexPlayer, value, DeathExplodePoint.position, deCaiType, DeathExplode, daiJinQuanType);
                     //SSCaiPiaoLiZiManage caiPiaoLiZi = objExplode.GetComponent<SSCaiPiaoLiZiManage>();
                     //if (caiPiaoLiZi != null)
                     //{

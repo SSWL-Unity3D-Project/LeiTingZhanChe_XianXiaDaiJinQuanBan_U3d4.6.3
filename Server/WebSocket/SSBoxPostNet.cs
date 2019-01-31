@@ -435,294 +435,6 @@ public class SSBoxPostNet : MonoBehaviour
                 case PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER:
                     {
 #if USE_OLD_GET_HDD_GAME_CONFIG
-
-                        //从红点点服务器获取游戏的配置信息.
-                        //{ "code":0,"message":"成功",
-                        //"data":{ "totalIncome":"0","commonDetailVo":{ "totalReturnRate":50,"superRewardMoney":150,"mod":0,"barrage":"代金券送不停"},
-                        //"prizeDetailVoList":[
-                        //{"id":7,"prizeName":"奖品1(超级JP大奖)","money":200,"returnRate":20,"burstRate":30,"isLimit":0,"level":1,"prizePool":"0"},
-                        //{"id":8,"prizeName":"奖品2(标准大奖)","money":20,"returnRate":30,"burstRate":0,"isLimit":0,"level":2,"prizePool":"0"},
-                        //{"id":9,"prizeName":"奖品3(基础小奖)","money":5,"returnRate":50,"burstRate":0,"isLimit":0,"level":3,"prizePool":"0"},
-                        //{"id":10,"prizeName":"奖品4(赠送道具奖)","money":10,"returnRate":0,"burstRate":0,"isLimit":0,"level":4,"prizePool":"0"}],
-                        //"payItems":[{"id":1,"money":1,"name":"雷霆战车测试1","description":"","gameCode":1,"createTime":"2018-12-13 17:37:32","updateTime":"2018-12-18 09:58:27"}]}}
-                        
-                        //code | int | 状态码
-                        //message | string | 状态信息
-                        //id | int | 绑定列表id
-                        //totalReturnRate | int | 总返奖率，单位：%
-                        //superRewardMoney | int | 超级JP大奖支付金额
-                        //mod | string | 运营模式
-                        //prizeName | string | 奖品名称
-                        //money | string | 代金券金额
-                        //returnRate | int | 返奖率，单位：%
-                        //burstRate | int | 爆奖率，单位：%
-                        //isLimit | string | 是否无限
-                        //level | 奖品等级 | 1:一等奖，2:二等奖，依次类推
-                        //prizePool | string | 奖池信息（如果没有绑定盒子，或者绑定的盒子没有收入，则没有奖池信息）
-                        //totalIncome | string | 同一盒子，该款游戏的总收入，如果没有绑定盒子，则没有该信息
-                        //barrage 弹幕信息.
-
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            string jsonDataInfo = jd["data"].ToJson();
-                            JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
-                            SSDebug.Log("data ============ " + jsonDataInfo);
-                            string totalReturnRate = jd_Data["commonDetailVo"]["totalReturnRate"].ToString(); //总返奖率，单位：%
-                            string superRewardMoney = jd_Data["commonDetailVo"]["superRewardMoney"].ToString(); //超级JP大奖商户支付金额
-                            string mod = jd_Data["commonDetailVo"]["mod"].ToString(); //运营模式
-                            string barrage = jd_Data["commonDetailVo"]["barrage"].ToString(); //弹幕信息
-                            //string money = jd_Data["payItems"]["money"].ToString(); //付费金额信息
-                            SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
-                            SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
-                            SSDebug.Log("mod ============ " + mod);
-                            //SSDebug.Log("money ============ " + money);
-
-                            string jsonData_payItemsInfo = jd["data"]["payItems"].ToJson();
-                            JsonData jd_Data_payItems = JsonMapper.ToObject(jsonData_payItemsInfo);
-                            string payMoney = jd_Data_payItems[0]["money"].ToString(); //付费金额信息
-                            SSDebug.Log("payItems.money ============ " + payMoney);
-
-                            //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
-                            string jsonData_prizeDetailVoListInfo = jd["data"]["prizeDetailVoList"].ToJson();
-                            JsonData jd_Data_prizeDetailVoList = JsonMapper.ToObject(jsonData_prizeDetailVoListInfo);
-                            SSServerConfigData gameConfigDt = new SSServerConfigData();
-                            int prizeCount = jd_Data_prizeDetailVoList.Count;
-                            //SSDebug.Log("prizeCount ============================== " + prizeCount);
-                            string jpBossMoney = "";
-                            string jpBossReturnRate = "";
-                            string jpBossBurstRate = "";
-                            string jpBossIsLimit = "";
-                            string jpBossPrizePool = "";
-
-                            string zhanCheMoney_01 = "";
-                            string zhanCheReturnRate_01 = "";
-                            string zhanCheBurstRate_01 = "";
-                            string zhanCheIsLimit_01 = "";
-                            string zhanChePrizePool_01 = "";
-
-                            string zhanCheMoney_02 = "";
-                            string zhanCheReturnRate_02 = "";
-                            string zhanCheBurstRate_02 = "";
-                            string zhanCheIsLimit_02 = "";
-                            string zhanChePrizePool_02 = "";
-
-                            string daoJuMoney = "";
-                            string daoJuReturnRate = "";
-                            string daoJuBurstRate = "";
-                            string daoJuIsLimit = "";
-                            string daoJuPrizePool = "";
-
-                            string prizeLevel = ""; //奖品等级.
-                            bool isFindJPBossPrizeInfo = false;
-                            bool isFindZhanChe01PrizeInfo = false;
-                            bool isFindZhanChe02PrizeInfo = false;
-                            bool isFindSuiJiDaoJuPrizeInfo = false;
-                            for (int i = 0; i < prizeCount; i++)
-                            {
-                                prizeLevel = jd_Data_prizeDetailVoList[i]["level"].ToString(); //奖品等级 1:一等奖，2:二等奖，依次类推
-                                switch (prizeLevel)
-                                {
-                                    case "1":
-                                        {
-                                            isFindJPBossPrizeInfo = true;
-                                            jpBossMoney = jd_Data_prizeDetailVoList[i]["money"].ToString(); //代金券金额
-                                            jpBossReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            jpBossBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            jpBossIsLimit = jd_Data_prizeDetailVoList[i]["isLimit"].ToString(); //是否无限
-                                            jpBossPrizePool = jd_Data_prizeDetailVoList[i]["prizePool"].ToString(); //代金券奖池
-                                            SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
-                                            SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
-                                            SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
-                                            SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
-                                            SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
-                                            break;
-                                        }
-                                    case "2":
-                                        {
-                                            isFindZhanChe01PrizeInfo = true;
-                                            zhanCheMoney_01 = jd_Data_prizeDetailVoList[i]["money"].ToString(); //代金券金额
-                                            zhanCheReturnRate_01 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            zhanCheBurstRate_01 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            zhanCheIsLimit_01 = jd_Data_prizeDetailVoList[i]["isLimit"].ToString(); //是否无限
-                                            zhanChePrizePool_01 = jd_Data_prizeDetailVoList[i]["prizePool"].ToString(); //代金券奖池
-                                            SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
-                                            SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
-                                            SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
-                                            SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
-                                            SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
-                                            break;
-                                        }
-                                    case "3":
-                                        {
-                                            isFindZhanChe02PrizeInfo = true;
-                                            zhanCheMoney_02 = jd_Data_prizeDetailVoList[i]["money"].ToString(); //代金券金额
-                                            zhanCheReturnRate_02 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            zhanCheBurstRate_02 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            zhanCheIsLimit_02 = jd_Data_prizeDetailVoList[i]["isLimit"].ToString(); //是否无限
-                                            zhanChePrizePool_02 = jd_Data_prizeDetailVoList[i]["prizePool"].ToString(); //代金券奖池
-                                            SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
-                                            SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
-                                            SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
-                                            SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
-                                            SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
-                                            break;
-                                        }
-                                    case "4":
-                                        {
-                                            isFindSuiJiDaoJuPrizeInfo = true;
-                                            daoJuMoney = jd_Data_prizeDetailVoList[i]["money"].ToString(); //代金券金额
-                                            daoJuReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            daoJuBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            daoJuIsLimit = jd_Data_prizeDetailVoList[i]["isLimit"].ToString(); //是否无限
-                                            daoJuPrizePool = jd_Data_prizeDetailVoList[i]["prizePool"].ToString(); //代金券奖池
-                                            SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
-                                            SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
-                                            SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
-                                            SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
-                                            SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);
-                                            break;
-                                        }
-                                }
-                            }
-
-                            if (isFindJPBossPrizeInfo == true)
-                            {
-                                gameConfigDt.JPBossDaiJinQuan = Convert.ToInt32(jpBossMoney); //jpBoss代金券面额
-                                gameConfigDt.JPBossChuPiaoLv = Convert.ToInt32(jpBossReturnRate); //jpBoss返奖率
-                                gameConfigDt.JPBossBaoJiangLv = Convert.ToInt32(jpBossBurstRate); //jpBoss爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiJPBossDaiJinQuan = jpBossIsLimit == "0" ? false : true; //jpBoss奖池是否无限
-                                gameConfigDt.JPBossDeCai = MathConverter.StringToFloat(jpBossPrizePool); //jpBoss奖池
-                            }
-
-                            if (isFindZhanChe01PrizeInfo == true)
-                            {
-                                gameConfigDt.ZhanCheDaiJinQuan_01 = Convert.ToInt32(zhanCheMoney_01); //战车01代金券面额
-                                gameConfigDt.ZhanCheChuPiaoLv_01 = Convert.ToInt32(zhanCheReturnRate_01); //战车01返奖率
-                                gameConfigDt.ZhanCheBaoJiangLv_01 = Convert.ToInt32(zhanCheBurstRate_01); //战车01爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_01 = zhanCheIsLimit_01 == "0" ? false : true; //战车01奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_01 = MathConverter.StringToFloat(zhanChePrizePool_01); //战车01奖池
-                            }
-
-                            if (isFindZhanChe02PrizeInfo == true)
-                            {
-                                gameConfigDt.ZhanCheDaiJinQuan_02 = Convert.ToInt32(zhanCheMoney_02); //战车02代金券面额
-                                gameConfigDt.ZhanCheChuPiaoLv_02 = Convert.ToInt32(zhanCheReturnRate_02); //战车02返奖率
-                                gameConfigDt.ZhanCheBaoJiangLv_02 = Convert.ToInt32(zhanCheBurstRate_02); //战车02爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_02 = zhanCheIsLimit_02 == "0" ? false : true; //战车02奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_02 = MathConverter.StringToFloat(zhanChePrizePool_02); //战车02奖池
-                            }
-
-                            if (isFindSuiJiDaoJuPrizeInfo == true)
-                            {
-                                gameConfigDt.SuiJiDaoJuDaiJinQuan = Convert.ToInt32(daoJuMoney); //道具代金券面额
-                                gameConfigDt.SuiJiDaoJuChuPiaoLv = Convert.ToInt32(daoJuReturnRate); //道具返奖率
-                                gameConfigDt.SuiJiDaoJuBaoJiangLv = Convert.ToInt32(daoJuBurstRate); //道具爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan = daoJuIsLimit == "0" ? false : true; //道具奖池是否无限
-                                gameConfigDt.SuiJiDaoJuDeCai = MathConverter.StringToFloat(daoJuPrizePool); //道具奖池
-                            }
-
-                            gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
-                            gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
-
-                            string danMuInfo = barrage;
-                            string[] danMuInfoArray = danMuInfo.Split('#');
-                            if (danMuInfoArray.Length > 0)
-                            {
-                                SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
-                                gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
-                            }
-                            gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
-                            gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
-                            gameConfigDt.UpdataAllServerConfigData();
-
-                            //商户信息，在字符串中已#分割.
-                            //1 -> 自定义弹幕
-                            //2 -> 商户代金券弹幕1
-                            //3 -> 商户代金券弹幕2
-                            //4 -> 商户代金券弹幕3
-                            //5 -> 商户代金券弹幕4
-                            //6 -> 战车代金券商户名称1
-                            //7 -> 战车代金券商户名称2
-                            //8 -> 战车代金券商户名称3
-                            //9 -> 战车代金券商户名称4
-                            //10 -> JPBoss代金券商户名称1
-                            //11 -> JPBoss代金券商户名称2
-                            //12 -> JPBoss代金券商户名称3
-                            //13 -> JPBoss代金券商户名称4
-                            //14 -> 战车代金券使用详情1
-                            //15 -> 战车代金券使用详情2
-                            //16 -> 战车代金券使用详情3
-                            //17 -> 战车代金券使用详情4
-                            //18 -> JPBoss代金券使用详情1
-                            //19 -> JPBoss代金券使用详情2
-                            //20 -> JPBoss代金券使用详情3
-                            //21 -> JPBoss代金券使用详情4
-                            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
-                            {
-                                string shangHuInfo = barrage;
-                                string[] shangHuInfoArray = shangHuInfo.Split('#');
-                                SSShangHuInfo shangHuInfoDt = XkGameCtrl.GetInstance().m_SSShangHuInfo;
-                                if (shangHuInfoArray.Length >= 5)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 1; i < 5; i++)
-                                    {
-                                        infoArray[i - 1] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户弹幕数据信息.
-                                    shangHuInfoDt.UpdateShangHuDanMuInfo(infoArray);
-                                }
-
-                                if (shangHuInfoArray.Length >= 9)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 5; i < 9; i++)
-                                    {
-                                        infoArray[i - 5] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户数据信息.
-                                    shangHuInfoDt.UpdateShangHuInfo(infoArray);
-                                }
-
-                                if (shangHuInfoArray.Length >= 13)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 9; i < 13; i++)
-                                    {
-                                        infoArray[i - 9] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏大奖Boss商户数据信息.
-                                    shangHuInfoDt.UpdateDaJiangBossShangHuInfo(infoArray);
-                                }
-
-                                if (shangHuInfoArray.Length >= 17)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 13; i < 17; i++)
-                                    {
-                                        infoArray[i - 13] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户战车代金券使用详情数据信息.
-                                    shangHuInfoDt.UpdateShangHuDaiJinQuanXiangQing(infoArray);
-                                }
-
-                                if (shangHuInfoArray.Length >= 21)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 17; i < 21; i++)
-                                    {
-                                        infoArray[i - 17] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏大奖Boss代金券使用详情数据信息.
-                                    shangHuInfoDt.UpdateDaJiangBossDaiJinQuanXiangQing(infoArray);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            SSDebug.LogWarning("GET_GAME_CONFIG_FROM_HDD_SERVER -> get gameConfig info was failed!");
-                        }
 #else
                         //从红点点服务器获取游戏的配置信息.
                         //{"code":0,"message":"成功",
@@ -1006,6 +718,9 @@ public class SSBoxPostNet : MonoBehaviour
                             //27 -> JPBoss代金券名称2
                             //28 -> JPBoss代金券名称3
                             //29 -> JPBoss代金券名称4
+                            //30 -> 随机道具奖品4商户名称
+                            //31 -> 随机道具奖品4代金券名称
+                            //32 -> 随机道具奖品4代金券使用详情
                             if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
                             {
                                 string shangHuInfo = barrage;
@@ -1086,6 +801,17 @@ public class SSBoxPostNet : MonoBehaviour
                                     }
                                     //更新游戏JPBoss代金券名称数据信息.
                                     shangHuInfoDt.UpdateDaJiangBossDaiJinQuanName(infoArray);
+                                }
+
+                                if (shangHuInfoArray.Length >= 32)
+                                {
+                                    string[] infoArray = new string[3];
+                                    for (int i = 29; i < 32; i++)
+                                    {
+                                        infoArray[i - 29] = shangHuInfoArray[i];
+                                    }
+                                    //更新游戏随机道具奖品4代金券数据信息.
+                                    shangHuInfoDt.UpdateSuiJiDaoJuShangHuInfo(infoArray);
                                 }
                             }
                         }

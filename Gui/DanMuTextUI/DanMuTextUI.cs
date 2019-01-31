@@ -47,7 +47,7 @@ public class DanMuTextUI : MonoBehaviour
     {
         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
         {
-            SSShangHuInfo.ShangHuData[] shangHuInfoArray = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_ShangHuDt;
+            SSShangHuInfo.ShangHuData[] shangHuInfoArray = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_ShangHuDanMuDt;
             for (int i = 0; i < m_ShangJiNameLable.Length; i++)
             {
                 if (m_ShangJiNameLable[i] != null)

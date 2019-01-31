@@ -65,9 +65,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
     GameObject m_ExplosionPrefab;
     GameObject m_ExplosionPoint;
-    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
+    public void Init(PlayerEnum indexPlayer, int caiPiaoNum, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type,
+        GameObject exp, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
-        ShowDaiJinQuanShangHuInfo(type);
+        ShowDaiJinQuanShangHuInfo(type, daiJinQuanType);
         m_IndexPlayer = indexPlayer;
         m_CaiPiaoNum = caiPiaoNum;
         m_DeCaiState = type;
@@ -101,13 +102,13 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
             //m_Animator.enabled = false; //test
         }
         SetActive(true);
-        StartCoroutine(DelayShowCaiPiaoInfo());
+        StartCoroutine(DelayShowCaiPiaoInfo(daiJinQuanType));
     }
 
     /// <summary>
     /// 显示代金券商户信息5个字.
     /// </summary>
-    void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         if (m_DaiJinQuanShangHuInfo != null)
         {
@@ -123,7 +124,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
                             break;
                         }
                 }
@@ -137,10 +138,10 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     }
 
     bool IsCloseZhuanPanAni = false;
-    IEnumerator DelayShowCaiPiaoInfo()
+    IEnumerator DelayShowCaiPiaoInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         yield return new WaitForSeconds(m_TimeShowExp);
-        ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos);
+        ShowCaiPiaoZhanCheBossFlyCaiPiao(m_DeCaiState, m_IndexPlayer, m_StartPos, daiJinQuanType);
 
         yield return new WaitForSeconds(m_TimePlay);
         IsCloseZhuanPanAni = true;
@@ -175,7 +176,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
     /// <summary>
     /// 显示战车和boss的飞行彩票.
     /// </summary>
-    void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos)
+    void ShowCaiPiaoZhanCheBossFlyCaiPiao(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, PlayerEnum indexPlayer, Vector3 startPos, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         //Debug.LogWarning("Unity: ShowCaiPiaoZhanCheBossFlyCaiPiao -> deCaiType ========= " + deCaiType);
         if (m_ExplosionPrefab != null)
@@ -210,7 +211,7 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)
             {
                 //初始化飞出的彩票逻辑.
-				XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(startPos, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+				XkGameCtrl.GetInstance().m_CaiPiaoFlyData.InitCaiPiaoFly(startPos, indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, daiJinQuanType);
             }
             else
             {
@@ -221,7 +222,8 @@ public class SSCaiPiaoZhanCheBossUI : SSGameMono
         {
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer, deCaiType);
+                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(XkGameCtrl.GetInstance().m_CaiPiaoFlyData.m_JPBossCaiPiaoFlyDt.TimeLeiJiaVal, indexPlayer,
+                    deCaiType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
             }
 
             if (XkGameCtrl.GetInstance().m_CaiPiaoFlyData != null)

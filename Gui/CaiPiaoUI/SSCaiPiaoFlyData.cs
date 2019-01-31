@@ -141,7 +141,8 @@ public class SSCaiPiaoFlyData : MonoBehaviour
     /// <summary>
     /// 初始化彩票飞出数据信息.
     /// </summary>
-    public void InitCaiPiaoFly(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    public void InitCaiPiaoFly(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         if (m_CaiPiaoFlyManageDtList != null)
         {
@@ -153,7 +154,7 @@ public class SSCaiPiaoFlyData : MonoBehaviour
                 SSCaiPiaoFlyManage caiPiaoFlyManage = obj.GetComponent<SSCaiPiaoFlyManage>();
                 if (caiPiaoFlyManage != null)
                 {
-                    caiPiaoFlyManage.Init(startPos, indexPlayer, type);
+                    caiPiaoFlyManage.Init(startPos, indexPlayer, type, daiJinQuanType);
                 }
             }
         }

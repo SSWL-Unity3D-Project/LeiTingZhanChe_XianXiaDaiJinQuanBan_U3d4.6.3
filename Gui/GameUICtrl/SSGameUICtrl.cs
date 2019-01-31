@@ -161,11 +161,12 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 创建战车boss彩票转盘.
     /// </summary>
-    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp)
+    public void CreatZhanCheBossCaiPiaoZhuanPan(PlayerEnum indexPlayer, int caiPiaoVal, Vector3 pos,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, GameObject exp, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         if (m_CaiPiaoZhanCheBossUI != null)
         {
-            m_CaiPiaoZhanCheBossUI.Init(indexPlayer, caiPiaoVal, pos, type, exp);
+            m_CaiPiaoZhanCheBossUI.Init(indexPlayer, caiPiaoVal, pos, type, exp, daiJinQuanType);
         }
         else
         {
@@ -443,7 +444,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 初始化彩票数字动画播放逻辑.
     /// </summary>
-    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQaunType)
     {
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
@@ -457,7 +458,7 @@ public class SSGameUICtrl : SSGameMono
             SSCaiPiaoInfo caiPiaoInfo = m_CaiPiaoInfoArray[indexVal].GetComponent<SSCaiPiaoInfo>();
             if (caiPiaoInfo != null)
             {
-                caiPiaoInfo.InitCaiPiaoAnimation(timeVal, indexPlayer, deCaiType);
+                caiPiaoInfo.InitCaiPiaoAnimation(timeVal, indexPlayer, deCaiType, daiJinQaunType);
             }
             else
             {
@@ -568,7 +569,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 显示海底捞版本游戏的玩家获得彩票的菜品券信息.
     /// </summary>
-    public void ShowHaiDiLaoCaiPinInfo(PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    public void ShowHaiDiLaoCaiPinInfo(PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQaunType)
     {
         if (SSGameLogoData.m_GameDaiJinQuanMode != SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
         {
@@ -583,7 +584,7 @@ public class SSGameUICtrl : SSGameMono
             SSCaiPiaoInfo caiPiaoInfoCom = gameNumCom.GetComponent<SSCaiPiaoInfo>();
             if (caiPiaoInfoCom != null)
             {
-                caiPiaoInfoCom.ShowDaiJinQuanShangHuInfo(type);
+                caiPiaoInfoCom.ShowDaiJinQuanShangHuInfo(type, daiJinQaunType);
             }
         }
     }
@@ -700,7 +701,7 @@ public class SSGameUICtrl : SSGameMono
     /// 玩家获得小奖时创建该界面.
     /// 创建彩票小奖UI界面.
     /// </summary>
-    public void CreatCaiPiaoXiaoJiangPanel(PlayerEnum indexPlayer, int num)
+    public void CreatCaiPiaoXiaoJiangPanel(PlayerEnum indexPlayer, int num, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
@@ -737,7 +738,7 @@ public class SSGameUICtrl : SSGameMono
                         if (m_CaiPiaoXiaoJiang != null)
                         {
                             m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
-                            m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+                            m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, daiJinQuanType);
                         }
                     }
                     else
@@ -751,7 +752,7 @@ public class SSGameUICtrl : SSGameMono
                 if (m_CaiPiaoXiaoJiang != null)
                 {
                     m_CaiPiaoXiaoJiang.ShowDaJiangCaiPiaoNum(indexPlayer, num);
-                    m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe);
+                    m_CaiPiaoXiaoJiang.ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe, daiJinQuanType);
                 }
             }
         }

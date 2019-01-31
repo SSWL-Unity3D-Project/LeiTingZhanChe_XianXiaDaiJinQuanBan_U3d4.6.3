@@ -42,7 +42,7 @@ public class SSCaiPiaoInfo : SSGameMono
     float TimeCaiPiaoAni = 1f;
     float TimeLastCaiPiaoAni = 0f;
     PlayerEnum IndexPlayer = PlayerEnum.Null;
-    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    public void InitCaiPiaoAnimation(float timeVal, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQaunType)
     {
 #if OPEN_CAIPIAO_ANIMATION
         IndexPlayer = indexPlayer;
@@ -59,7 +59,7 @@ public class SSCaiPiaoInfo : SSGameMono
 #else
         IndexPlayer = indexPlayer;
         ShowPlayerCaiPiaoInfo();
-        ShowDaiJinQuanShangHuInfo(deCaiType);
+        ShowDaiJinQuanShangHuInfo(deCaiType, daiJinQaunType);
 #endif
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -68,7 +68,7 @@ public class SSCaiPiaoInfo : SSGameMono
         }
     }
 
-    internal void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType)
+    internal void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState deCaiType, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQaunType)
     {
         if (m_DaiJinQuanShangHuInfo != null)
         {
@@ -84,12 +84,12 @@ public class SSCaiPiaoInfo : SSGameMono
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQaunType).ShangHuMing;
                             break;
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuDt().ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo().ShangHuMing;
                             break;
                         }
                 }

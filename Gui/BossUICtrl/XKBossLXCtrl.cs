@@ -49,7 +49,8 @@ public class XKBossLXCtrl : MonoBehaviour
     /// <summary>
     /// 设置商户名称信息.
     /// </summary>
-    void SetShangJiaInfo(SpawnNpcManage.NpcState type = SpawnNpcManage.NpcState.JPBoss)
+    void SetShangJiaInfo(SpawnNpcManage.NpcState type = SpawnNpcManage.NpcState.JPBoss,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         if (m_ShangJiaInfoLb != null)
         {
@@ -63,7 +64,7 @@ public class XKBossLXCtrl : MonoBehaviour
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
                 }
             }
 
@@ -83,7 +84,7 @@ public class XKBossLXCtrl : MonoBehaviour
 		//BossZuDangCtrl.GetInstance().SetIsActiveBossZuDang(true);
 		TimeLastBossLX = Time.time;
 		XKGlobalData.GetInstance().PlayAudioBossLaiXi();
-        SetShangJiaInfo(type);
+        SetShangJiaInfo(type, daiJinQuanType);
 
         gameObject.SetActive(true);
         if (m_GameNumUI != null)

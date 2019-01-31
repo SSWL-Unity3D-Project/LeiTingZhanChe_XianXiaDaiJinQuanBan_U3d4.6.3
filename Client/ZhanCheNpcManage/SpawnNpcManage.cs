@@ -858,7 +858,7 @@ public class SpawnNpcManage : MonoBehaviour
 
                         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
                         {
-                            XkGameCtrl.GetInstance().m_SSShangHuInfo.AddShangHuMingInfo(daiJinQuanType);
+                            XkGameCtrl.GetInstance().m_SSShangHuInfo.AddZhanCheShangHuMingInfo(daiJinQuanType);
                         }
                     }
                     break;

@@ -5,11 +5,14 @@ public class SSCaiPiaoFly : SSGameMono
     int IndexCaiPiao;
     PlayerEnum IndexPlayer = PlayerEnum.Null;
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
-    public void Init(int indexCaiPiao, float timeFly, Vector3[] path, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQaunType;
+    public void Init(int indexCaiPiao, float timeFly, Vector3[] path, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         IndexCaiPiao = indexCaiPiao;
         IndexPlayer = indexPlayer;
         m_DeCaiState = type;
+        m_DaiJinQaunType = daiJinQuanType;
 
         iTween.MoveTo(gameObject, iTween.Hash("path", path,
                                            "time", timeFly,
@@ -43,7 +46,7 @@ public class SSCaiPiaoFly : SSGameMono
                             break;
                         }
                 }
-                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer, m_DeCaiState);
+                SSUIRoot.GetInstance().m_GameUIManage.InitCaiPiaoAnimation(time, IndexPlayer, m_DeCaiState, m_DaiJinQaunType);
             }
         }
         //Destroy(gameObject);

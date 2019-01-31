@@ -33,7 +33,8 @@ public class SSCaiPiaoDaJiang : SSGameMono
     /// <summary>
     /// 显示代金券商户信息5个字.
     /// </summary>
-    internal void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    internal void ShowDaiJinQuanShangHuInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type,
+        SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
     {
         if (m_DaiJinQuanShangHuInfo != null)
         {
@@ -49,7 +50,7 @@ public class SSCaiPiaoDaJiang : SSGameMono
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt().ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
                             break;
                         }
                 }

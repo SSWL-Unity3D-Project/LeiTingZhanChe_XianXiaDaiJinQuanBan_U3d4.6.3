@@ -91,7 +91,7 @@ public class SSCaiPiaoFlyManage : SSGameMono
             Vector3[] path = new Vector3[2];
             path[0] = m_CaiPiaoStartPos;
             path[1] = m_CaiPiaoEndTr.position;
-            caiPiaoFly.Init(m_CaiPiaoCount, m_TimeFly, path, IndexPlayer, m_DeCaiState);
+            caiPiaoFly.Init(m_CaiPiaoCount, m_TimeFly, path, IndexPlayer, m_DeCaiState, m_DaiJinQuanType);
         }
 
         if (m_CaiPiaoCount >= m_MaxCaiPiao)
@@ -120,7 +120,8 @@ public class SSCaiPiaoFlyManage : SSGameMono
     /// 得彩类型.
     /// </summary>
     SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState m_DeCaiState;
-    public void Init(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type)
+    SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_DaiJinQuanType;
+    public void Init(Vector3 startPos, PlayerEnum indexPlayer, SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState type, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
     {
         //UnityLog("SSCaiPiaoFlyManage::Init -> indexPlayer == " + IndexPlayer + ", type ==== " + type);
         m_CaiPiaoStartPos = startPos;

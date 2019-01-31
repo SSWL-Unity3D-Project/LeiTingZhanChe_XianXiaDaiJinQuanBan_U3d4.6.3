@@ -1473,7 +1473,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             //产生彩票小奖UI界面.
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoXiaoJiangPanel(indexPlayer, caiPiao);
+                SSUIRoot.GetInstance().m_GameUIManage.CreatCaiPiaoXiaoJiangPanel(indexPlayer, caiPiao, daiJinQaunType);
             }
         }
         else if (type == GameCaiPiaoData.DeCaiState.SuiJiDaoJu)
@@ -1540,7 +1540,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 //显示玩家彩票菜品券信息.
-                SSUIRoot.GetInstance().m_GameUIManage.ShowHaiDiLaoCaiPinInfo(indexPlayer, type);
+                SSUIRoot.GetInstance().m_GameUIManage.ShowHaiDiLaoCaiPinInfo(indexPlayer, type, daiJinQaunType);
             }
         }
 
