@@ -808,8 +808,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (val == PlayerShouBingFireBt.fireADown.ToString()
                         || val == PlayerShouBingFireBt.fireXDown.ToString())
                     {
-                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
-                        //InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
 #if TEST_DEBUG_PLAYER_PAD_INFO
                         OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.DOWN);
 #endif
@@ -818,8 +818,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     if (val == PlayerShouBingFireBt.fireAUp.ToString()
                         || val == PlayerShouBingFireBt.fireXUp.ToString())
                     {
-                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
-                        //InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
 #if TEST_DEBUG_PLAYER_PAD_INFO
                         OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.UP);
 #endif
@@ -867,19 +867,50 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
                     //test
 #else
+                    bool isSendMsg = false;
                     //玩家币值不够,需要拉起微信游戏手柄的充值界面.
                     if (val == PlayerShouBingFireBt.fireADown.ToString()
                         || val == PlayerShouBingFireBt.fireXDown.ToString())
                     {
                         //SendWXPadShowTopUpPanel(userId);
-                        SendWXPadPlayerPayTimeOut(userId);
+                        isSendMsg = true;
                     }
 
                     if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
                     {
                         //SendWXPadShowTopUpPanel(userId);
-                        SendWXPadPlayerPayTimeOut(userId);
+                        isSendMsg = true;
+                    }
+
+                    if (isSendMsg == true)
+                    {
+                        PlayerEnum indexPlayer = (PlayerEnum)(playerDt.Index + 1);
+                        DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(indexPlayer);
+                        if (daoJiShiCom != null)
+                        {
+                            if (daoJiShiCom.GetIsPlayDaoJishi() == true && daoJiShiCom.DaoJiShiCount > 8)
+                            {
+                                //倒计时刚开始显示,还没有到8时,不进行消息发送.
+                                isSendMsg = false;
+                            }
+
+                            if (isSendMsg == true)
+                            {
+                                //玩家主动放弃支付.
+                                if (daoJiShiCom.GetIsPlayDaoJishi() == true)
+                                {
+                                    //游戏结束倒计时播放中
+                                    daoJiShiCom.WXPlayerStopGameDaoJiShi();
+                                }
+                                else
+                                {
+                                    //游戏结束倒计时没有播放时.
+                                    OnPlayerGameDaoJiShiOver(indexPlayer);
+                                }
+                                SendWXPadPlayerPayTimeOut(userId);
+                            }
+                        }
                     }
 #endif
                 }
@@ -1157,13 +1188,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
 
+            //清理微信数据.
+            m_GmWXLoginDt[indexVal].Reset();
+
             GamePlayerData playerData = FindGamePlayerData(indexPlayer);
             if (playerData != null)
             {
                 SSDebug.Log("OnPlayerGameDaoJiShiOver -> indexPlayer ==== " + indexPlayer
                     + ", userId ============ " + playerData.m_PlayerWeiXinData.userId);
-                //清理微信数据.
-                m_GmWXLoginDt[playerData.Index].Reset();
                 //删除微信手柄玩家的数据信息.
                 RemoveWeiXinPadPlayerData(playerData.m_PlayerWeiXinData.userId);
 

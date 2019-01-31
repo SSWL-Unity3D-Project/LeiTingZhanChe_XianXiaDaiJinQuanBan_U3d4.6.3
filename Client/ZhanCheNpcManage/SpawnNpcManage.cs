@@ -124,7 +124,7 @@ public class SpawnNpcManage : MonoBehaviour
         /// <summary>
         /// 产生npc.
         /// </summary>
-        public GameObject CreatPointNpc()
+        public GameObject CreatPointNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
         {
             if (SpawnPoint != null)
             {
@@ -132,7 +132,7 @@ public class SpawnNpcManage : MonoBehaviour
                 SpawnPoint.NpcPath = NpcPath.transform;
                 //不进行循环产生npc.
                 SpawnPoint.SpawnMaxNpc = 1;
-                return SpawnPoint.CreatPointNpc();
+                return SpawnPoint.CreatPointNpc(type);
             }
             else
             {
@@ -840,18 +840,31 @@ public class SpawnNpcManage : MonoBehaviour
         NpcSpawnData data = GetNpcSpawnData(npcType, pointState);
         if (data != null)
         {
+            SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
+
             switch (npcType)
             {
                 case NpcState.ZhanChe:
                     {
+                        int rv = Random.Range(0, 100) % 2;
+                        if (rv == 0)
+                        {
+                            daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
+                        }
+                        else
+                        {
+                            daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02;
+                        }
+
                         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
                         {
-                            XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingInfo();
+                            XkGameCtrl.GetInstance().m_SSShangHuInfo.AddShangHuMingInfo(daiJinQuanType);
                         }
                     }
                     break;
                 case NpcState.JPBoss:
                     {
+                        daiJinQuanType = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
                         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
                         {
                             XkGameCtrl.GetInstance().m_SSShangHuInfo.GetJPBossShangHuMingInfo();
@@ -860,7 +873,7 @@ public class SpawnNpcManage : MonoBehaviour
                     break;
             }
 
-            GameObject obj = data.CreatPointNpc();
+            GameObject obj = data.CreatPointNpc(daiJinQuanType);
             if (obj != null)
             {
                 XKNpcMoveCtrl npcMove = null;

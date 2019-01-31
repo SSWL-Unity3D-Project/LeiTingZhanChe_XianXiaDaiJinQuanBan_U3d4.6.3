@@ -789,20 +789,21 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// 是否为彩票boss或战车Npc.
     /// </summary>
     internal bool IsCaiPiaoZhanChe = false;
-    internal void SetIsCaiPiaoZhanChe()
+    internal void SetIsCaiPiaoZhanChe(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
         IsEnterCameraBox = false;
         IsCaiPiaoZhanChe = true;
 
-        int rv = Random.Range(0, 100) % 2;
-        if (rv == 0)
-        {
-            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
-        }
-        else
-        {
-            m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02;
-        }
+        //int rv = Random.Range(0, 100) % 2;
+        //if (rv == 0)
+        //{
+        //    m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01;
+        //}
+        //else
+        //{
+        //    m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02;
+        //}
+        m_DaiJinQuanState = type;
 
         //彩票战车npc.
         IsZhanCheNpc = true;

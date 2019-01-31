@@ -294,7 +294,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
     /// <summary>
     /// 创建战车、JPBoss和SuperJPBoss.
     /// </summary>
-    public GameObject CreatPointNpc()
+    public GameObject CreatPointNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
         if (NpcObj == null)
         {
@@ -309,7 +309,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
         GameObject obj = null;
         IsRemoveSpawnPointNpc = false;
         InitSpawnPointInfo();
-        StartSpawnNpc();
+        StartSpawnZhanCheNpc(type);
         obj = NpcLoopObj;
         return obj;
     }
@@ -365,7 +365,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		return NpcLoopObj;
 	}
 
-	void StartSpawnNpc()
+	void StartSpawnZhanCheNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
 	{
 		if (!enabled || !gameObject.activeSelf) {
 			return;
@@ -538,7 +538,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
         {
             if (IsCaiPiaoZhanChePoint)
             {
-                NpcScript[SpawnNpcCount].SetIsCaiPiaoZhanChe();
+                NpcScript[SpawnNpcCount].SetIsCaiPiaoZhanChe(type);
             }
 			NpcScript[SpawnNpcCount].SetSpawnNpcInfo(this);
 
@@ -557,10 +557,231 @@ public class XKSpawnNpcPoint : MonoBehaviour
 		if (SpawnNpcCount >= SpawnMaxNpc || SpawnMaxNpc <= 1) {
 			return;
 		}
-		Invoke("StartSpawnNpc", LoopSpawnTime);
+		//Invoke("StartSpawnNpc", LoopSpawnTime);
 	}
+    
+    void StartSpawnNpc()
+    {
+        if (!enabled || !gameObject.activeSelf)
+        {
+            return;
+        }
 
-	public void SetIsHuoCheNpc()
+        if (ScreenDanHeiCtrl.IsStartGame)
+        {
+            //			if ((XkGameCtrl.GameModeVal == GameMode.DanJiFeiJi && PointType == SpawnPointType.DiMian)
+            //			    || (XkGameCtrl.GameModeVal == GameMode.DanJiTanKe && PointType == SpawnPointType.KongZhong)) {
+            //				return;
+            //			}
+
+            //			if (IsDoublePlayer && (!XkGameCtrl.IsActivePlayerOne || !XkGameCtrl.IsActivePlayerTwo)) {
+            //				return;
+            //			}
+
+            switch (PlayerNumSt)
+            {
+                case NpcSpawnType.PlayerNum_2:
+                    if (XkGameCtrl.PlayerActiveNum < 2)
+                    {
+                        return;
+                    }
+                    break;
+
+                case NpcSpawnType.PlayerNum_3:
+                    if (XkGameCtrl.PlayerActiveNum < 3)
+                    {
+                        return;
+                    }
+                    break;
+
+                case NpcSpawnType.PlayerNum_4:
+                    if (XkGameCtrl.PlayerActiveNum < 4)
+                    {
+                        return;
+                    }
+                    break;
+            }
+        }
+
+        GameObject obj = null;
+        //XKHuoCheCtrl hcScript = NpcObj.GetComponent<XKHuoCheCtrl>();
+        //if (hcScript != null) {
+        //	obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+        //	if (obj == null) {
+        //		//Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn HuoCheNpc!");
+        //		return;
+        //	}
+
+        //	obj.transform.parent = XkGameCtrl.NpcObjArray;
+        //	HuoCheScript = obj.GetComponent<XKHuoCheCtrl>();
+        //	HuoCheScript.SetHuoCheInfo(this);
+        //	//HuoCheScript.StartMoveHuoChe(NpcPath);
+        //	NpcLoopObj = obj;
+        //	return;
+        //}
+
+        DaPaoScript = NpcObj.GetComponent<XKDaPaoCtrl>();
+        if (DaPaoScript != null)
+        {
+            //			Debug.Log("Unity:"+"Spawn Cannon... ");
+            obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+            if (obj == null)
+            {
+                //Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn DaPaoNpc!");
+                return;
+            }
+
+            if (!IsHuoCheNpc)
+            {
+                obj.transform.parent = XkGameCtrl.NpcObjArray;
+            }
+            else
+            {
+                obj.transform.parent = transform.parent;
+            }
+
+            //XkGameCtrl.GetInstance().AddNpcTranToList(obj.transform);
+            DaPaoScript = obj.GetComponent<XKDaPaoCtrl>();
+            DaPaoScript.SetSpawnPointScript(this);
+            NpcLoopObj = obj;
+            return;
+        }
+
+        if (IsRemoveSpawnPointNpc)
+        {
+            return;
+        }
+
+        //Debug.Log("Unity:"+"SpawnPointAllNpc...NpcObj is "+NpcObj.name+", SpawnNpcCount "+SpawnNpcCount);
+        if (ChildSpawnPoint.Length > 0)
+        {
+            //spawn fangZhenNpc
+            GameObject fangZhenObj = SpawnPointNpc(NpcFangZhen, transform.position, transform.rotation);
+            if (fangZhenObj == null)
+            {
+                //Debug.LogError("Unity:"+"StartSpawnNpc -> Cannot spawn FangZhenNpc! NpcFangZhen "+NpcFangZhen.name);
+                //fangZhenObj.name = "null";
+                return;
+            }
+            NpcFangZhenScript = fangZhenObj.GetComponent<XKNpcFangZhenCtrl>();
+            //NpcFangZhenScript.ActiveFangZhenNpc();
+
+            XKNpcMoveCtrl npcScript = null;
+            Transform fangZhenTran = fangZhenObj.transform;
+            fangZhenTran.parent = XkGameCtrl.NpcObjArray;
+            obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+            if (obj == null)
+            {
+                //Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn FangZhenChildNpc --- 1");
+                return;
+            }
+
+            npcScript = obj.GetComponent<XKNpcMoveCtrl>();
+            if (npcScript != null)
+            {
+                npcScript.ActiveIsFangZhenNpc();
+                npcScript.SetNpcSpawnScriptInfo(this);
+            }
+            obj.transform.parent = fangZhenTran;
+
+            for (int i = 0; i < ChildSpawnPoint.Length; i++)
+            {
+                obj = SpawnPointNpc(NpcObj, ChildSpawnPoint[i].position, ChildSpawnPoint[i].rotation);
+                if (obj == null)
+                {
+                    //Debug.LogWarning("Unity:"+"StartSpawnNpc -> Cannot spawn FangZhenChildNpc --- index "+i);
+                    break;
+                }
+
+                npcScript = obj.GetComponent<XKNpcMoveCtrl>();
+                if (npcScript != null)
+                {
+                    npcScript.ActiveIsFangZhenNpc();
+                    npcScript.SetNpcSpawnScriptInfo(this);
+                }
+                obj.transform.parent = fangZhenTran;
+            }
+
+            NpcFangZhenScript.SetSpawnNpcInfo(this);
+            NpcLoopObj = fangZhenObj;
+            return;
+        }
+
+        //		if (NpcLoopObj != null && SpawnMaxNpc > 1) {
+        //			if (IsRemoveSpawnPointNpc) {
+        //				return;
+        //			}
+        //
+        //			XKNpcMoveCtrl npcScript = NpcLoopObj.GetComponent<XKNpcMoveCtrl>();
+        //			if (npcScript != null && !npcScript.GetIsDeathNPC()) {
+        //				Invoke("StartSpawnNpc", LoopSpawnTime);
+        //				return;
+        //			}
+        //		}
+
+        if (SpawnNpcCount > 0)
+        {
+            int maxVal = NpcSpawnLoop.Length;
+            int randVal = Random.Range(0, (maxVal + 1));
+            if (randVal == 0)
+            {
+                obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+            }
+            else
+            {
+                randVal = randVal > maxVal ? maxVal : randVal;
+                obj = SpawnPointNpc(NpcSpawnLoop[randVal - 1], transform.position, transform.rotation);
+            }
+        }
+        else
+        {
+            obj = SpawnPointNpc(NpcObj, transform.position, transform.rotation);
+        }
+
+        if (obj == null)
+        {
+            //Debug.Log("Unity:"+"StartSpawnNpc -> Cannot spawn PuTongNpc!");
+            return;
+        }
+
+        if (!IsHuoCheNpc)
+        {
+            obj.transform.parent = XkGameCtrl.NpcObjArray;
+        }
+        else
+        {
+            obj.transform.parent = transform.parent;
+        }
+
+        NpcScript[SpawnNpcCount] = obj.GetComponent<XKNpcMoveCtrl>();
+        if (NpcScript[SpawnNpcCount] != null)
+        {
+            //if (IsCaiPiaoZhanChePoint)
+            //{
+            //    NpcScript[SpawnNpcCount].SetIsCaiPiaoZhanChe(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
+            //}
+            NpcScript[SpawnNpcCount].SetSpawnNpcInfo(this);
+
+            if (IsCaiPiaoZhanChePoint)
+            {
+                Vector3 forwardVal = Vector3.zero;
+                forwardVal = transform.forward;
+                forwardVal.y = 0f;
+                //强制修改彩票战车和boss的方向.
+                obj.transform.forward = forwardVal.normalized;
+            }
+        }
+        NpcLoopObj = obj;
+
+        SpawnNpcCount++;
+        if (SpawnNpcCount >= SpawnMaxNpc || SpawnMaxNpc <= 1)
+        {
+            return;
+        }
+        Invoke("StartSpawnNpc", LoopSpawnTime);
+    }
+
+    public void SetIsHuoCheNpc()
 	{
 		IsHuoCheNpc = true;
 	}

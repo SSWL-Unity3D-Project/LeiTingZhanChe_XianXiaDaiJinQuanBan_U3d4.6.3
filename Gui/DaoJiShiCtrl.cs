@@ -13,7 +13,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
 	GameObject DaoJiShiObj;
 	UISprite DaoJiShiSprite;
 	internal bool IsPlayDaoJishi;
-	int DaoJiShiCount = 9;
+	internal int DaoJiShiCount = 9;
 //	public static bool IsActivePlayerOne;
 //	public static bool IsActivePlayerTwo;
 	public static int CountDaoJiShi;
@@ -204,7 +204,7 @@ public class DaoJiShiCtrl : MonoBehaviour {
             return;
 		}
 		IsPlayDaoJishi = false;
-		CountDaoJiShi--;
+        CountDaoJiShi--;
 		ContinueGameObj.SetActive(false);
 		DaoJiShiObj.SetActive(false);
         //m_TVYaoKongEnterObj.SetActive(false);

@@ -258,7 +258,7 @@ public class SSShangHuInfo : MonoBehaviour
     /// 战车
     /// 获取代金券npc的商户名信息.
     /// </summary>
-    internal ShangHuData GetShangHuMingInfo()
+    internal ShangHuData AddShangHuMingInfo(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
         m_IndexShangHu++;
         if (m_IndexShangHu >= m_ShangHuDt.Length)
