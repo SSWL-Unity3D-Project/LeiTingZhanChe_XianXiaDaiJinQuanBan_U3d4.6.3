@@ -626,6 +626,18 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         {
             if (NpcScript.IsCaiPiaoZhanChe == true)
             {
+                if (XkGameCtrl.GetInstance() != null && XKPlayerFenShuCtrl.GetInstance() != null)
+                {
+                    if(pAmmoType == PlayerAmmoType.DaoDanAmmo
+                        || pAmmoType == PlayerAmmoType.PaiJiPaoAmmo
+                        || pAmmoType == PlayerAmmoType.ChuanTouAmmo
+                        || pAmmoType == PlayerAmmoType.SanDanAmmo)
+                    {
+                        int jiFenVal = XkGameCtrl.GetInstance().m_DaoDanHitBossJiFen;
+                        XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, jiFenVal);
+                    }
+                }
+
                 float bloodAmount = (float)(puTongAmmoNum - PuTongAmmoCount) / puTongAmmoNum;
                 bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
 

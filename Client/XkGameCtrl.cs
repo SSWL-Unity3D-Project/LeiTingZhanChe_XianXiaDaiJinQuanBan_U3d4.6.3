@@ -197,6 +197,11 @@ public class XkGameCtrl : SSGameMono
 	 */
 	[Range(0.1f, 100f)]public float NpcAmmoSpeed = 1f;
 	[Range(100f, 1000000f)]public float PlayerXueLiangMax = 10000f;
+    /// <summary>
+    /// 导弹有效击中Boss之后给玩家的加分.
+    /// </summary>
+    [Range(1, 1000)]
+    public int m_DaoDanHitBossJiFen = 100;
     [System.Serializable]
     public class PlayerDamageData
     {

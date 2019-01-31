@@ -14,6 +14,17 @@ public class XKPlayerFenShuMove : MonoBehaviour
 //		SetPlayerFenShuVal(FenShuTest);
 //	}
 
+    public void Init(UIAtlas atlas)
+    {
+        for (int i = 0; i < FenShuSprite.Length; i++)
+        {
+            if (FenShuSprite[i] != null && atlas != null)
+            {
+                FenShuSprite[i].atlas = atlas;
+            }
+        }
+    }
+
 	public void SetPlayerFenShuVal(int fenShuVal, Vector3 startPos, int indexPlayer)
 	{
 		if (fenShuVal <= 0) {
@@ -53,7 +64,25 @@ public class XKPlayerFenShuMove : MonoBehaviour
 			numVal -= valTmp * powVal;
 		}
 
-		transform.localPosition = startPos;
+        UISprite uiSprite = gameObject.GetComponent<UISprite>();
+        if (uiSprite != null)
+        {
+            uiSprite.alpha = 1f;
+        }
+        
+        TweenPosition twPosTmp = gameObject.GetComponent<TweenPosition>();
+        if (twPosTmp != null)
+        {
+            DestroyObject(twPosTmp);
+        }
+
+        TweenAlpha twAlpTmp = gameObject.GetComponent<TweenAlpha>();
+        if (twAlpTmp != null)
+        {
+            DestroyObject(twAlpTmp);
+        }
+
+        transform.localPosition = startPos;
 		transform.localEulerAngles = Vector3.zero;
 		transform.localScale = new Vector3(1f, 1f, 1f);
 		gameObject.SetActive(true);
@@ -62,24 +91,38 @@ public class XKPlayerFenShuMove : MonoBehaviour
 		twPos.to = startPos + new Vector3(0f, 50f, 0f);
 		twPos.duration = PiaoFenTime;
 		twPos.PlayForward();
+        EventDelegate.Add(twPos.onFinished, delegate
+        {
+            OpenTweenAlpha();
+        });
+    }
 
-		TweenAlpha twAlp = gameObject.AddComponent<TweenAlpha>();
-		twAlp.from = 1f;
-		twAlp.to = 0f;
-		twAlp.duration = PiaoFenTime;
-		twAlp.PlayForward();
+    void OpenTweenAlpha()
+    {
+        TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
+        if (twPos != null)
+        {
+            DestroyObject(twPos);
+        }
 
-		EventDelegate.Add(twAlp.onFinished, delegate{
-			HiddenPlayerFenShu();
-		});
-	}
+        TweenAlpha twAlp = gameObject.AddComponent<TweenAlpha>();
+        twAlp.from = 1f;
+        twAlp.to = 0f;
+        twAlp.duration = PiaoFenTime;
+        twAlp.PlayForward();
+
+        EventDelegate.Add(twAlp.onFinished, delegate {
+            HiddenPlayerFenShu();
+        });
+    }
 
 	void HiddenPlayerFenShu()
 	{
-		TweenPosition twPos = gameObject.GetComponent<TweenPosition>();
-		DestroyObject(twPos);
 		TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
-		DestroyObject(twAlp);
+        if (twAlp != null)
+        {
+            DestroyObject(twAlp);
+        }
 		gameObject.SetActive(false);
 	}
 }

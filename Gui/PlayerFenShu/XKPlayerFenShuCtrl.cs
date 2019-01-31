@@ -4,8 +4,13 @@ using System.Collections.Generic;
 public class XKPlayerFenShuCtrl : MonoBehaviour
 {
 	public GameObject PlayerFenShuPre;
-	List<XKPlayerFenShuMove> FenShuList;
-	int MaxPlayerFS = 24;
+    public UIAtlas m_FenShuAtlasP1;
+    public UIAtlas m_FenShuAtlasP2;
+    public UIAtlas m_FenShuAtlasP3;
+    List<XKPlayerFenShuMove> FenShuListP1;
+	List<XKPlayerFenShuMove> FenShuListP2;
+	List<XKPlayerFenShuMove> FenShuListP3;
+    int MaxPlayerFS = 8;
 	static XKPlayerFenShuCtrl _Instance;
 	public static XKPlayerFenShuCtrl GetInstance()
 	{
@@ -15,17 +20,56 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
 	void Start()
 	{
 		_Instance = this;
-		FenShuList = new List<XKPlayerFenShuMove>();
-		GameObject obj = null;
-		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = (GameObject)Instantiate(PlayerFenShuPre);
-			obj.transform.parent = transform;
-			obj.transform.localScale = new Vector3(1f, 1f, 1f);
-			obj.transform.localPosition = Vector3.zero;
-			FenShuList.Add(obj.GetComponent<XKPlayerFenShuMove>());
-			obj.SetActive(false);
-		}
-	}
+		FenShuListP1 = new List<XKPlayerFenShuMove>();
+		FenShuListP2 = new List<XKPlayerFenShuMove>();
+		FenShuListP3 = new List<XKPlayerFenShuMove>();
+        GameObject obj = null;
+        XKPlayerFenShuMove fenShuMoveCom = null;
+        for (int i = 0; i < MaxPlayerFS; i++)
+        {
+            obj = (GameObject)Instantiate(PlayerFenShuPre);
+            obj.transform.parent = transform;
+            obj.transform.localScale = new Vector3(1f, 1f, 1f);
+            obj.transform.localPosition = Vector3.zero;
+            fenShuMoveCom = obj.GetComponent<XKPlayerFenShuMove>();
+            if (fenShuMoveCom != null)
+            {
+                fenShuMoveCom.Init(m_FenShuAtlasP1);
+            }
+            FenShuListP1.Add(fenShuMoveCom);
+            obj.SetActive(false);
+        }
+
+        for (int i = 0; i < MaxPlayerFS; i++)
+        {
+            obj = (GameObject)Instantiate(PlayerFenShuPre);
+            obj.transform.parent = transform;
+            obj.transform.localScale = new Vector3(1f, 1f, 1f);
+            obj.transform.localPosition = Vector3.zero;
+            fenShuMoveCom = obj.GetComponent<XKPlayerFenShuMove>();
+            if (fenShuMoveCom != null)
+            {
+                fenShuMoveCom.Init(m_FenShuAtlasP2);
+            }
+            FenShuListP2.Add(fenShuMoveCom);
+            obj.SetActive(false);
+        }
+
+        for (int i = 0; i < MaxPlayerFS; i++)
+        {
+            obj = (GameObject)Instantiate(PlayerFenShuPre);
+            obj.transform.parent = transform;
+            obj.transform.localScale = new Vector3(1f, 1f, 1f);
+            obj.transform.localPosition = Vector3.zero;
+            fenShuMoveCom = obj.GetComponent<XKPlayerFenShuMove>();
+            if (fenShuMoveCom != null)
+            {
+                fenShuMoveCom.Init(m_FenShuAtlasP3);
+            }
+            FenShuListP3.Add(fenShuMoveCom);
+            obj.SetActive(false);
+        }
+    }
 	
 //	public Transform TestPlayerTr;
 //	public Transform TestFenShuTr;
@@ -68,19 +112,45 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
 //		}
 //	}
 
-	XKPlayerFenShuMove GetXKPlayerFenShuMove()
+	XKPlayerFenShuMove GetXKPlayerFenShuMove(PlayerEnum indexPlayer)
 	{
-		GameObject obj = null;
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal > 2)
+        {
+            return null;
+        }
+
+        List<XKPlayerFenShuMove> fenShuList = null;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    fenShuList = FenShuListP1;
+                }
+                break;
+            case PlayerEnum.PlayerTwo:
+                {
+                    fenShuList = FenShuListP2;
+                }
+                break;
+            case PlayerEnum.PlayerThree:
+                {
+                    fenShuList = FenShuListP3;
+                }
+                break;
+        }
+
+        GameObject obj = null;
 		int valTmp = 0;
 		for (int i = 0; i < MaxPlayerFS; i++) {
-			obj = FenShuList[i].gameObject;
+			obj = fenShuList[i].gameObject;
 			if (obj.activeSelf) {
 				continue;
 			}
 			valTmp = i;
 			break;
 		}
-		return FenShuList[valTmp];
+		return fenShuList[valTmp];
 	}
 
 	public void ShowPlayerFenShu(PlayerEnum indexVal, int fenShuVal)
@@ -95,7 +165,7 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
 		XkGameCtrl.PlayerJiFenArray[indexPlayer] += fenShuValTmp;
 		XKPlayerScoreCtrl.ChangePlayerScore(indexVal);
 
-		XKPlayerFenShuMove fenShuMoveCom = GetXKPlayerFenShuMove();
+		XKPlayerFenShuMove fenShuMoveCom = GetXKPlayerFenShuMove(indexVal);
 		if (fenShuMoveCom == null) {
 			return;
 		}

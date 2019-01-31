@@ -260,6 +260,13 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		int indexVal = (int)PlayerIndex - 1;
 		int max = PlayerJF.Length;
 		int numVal = XkGameCtrl.PlayerJiFenArray[indexVal];
+        int maxVal = (int)Mathf.Pow(10, max) - 1;
+        if (numVal > maxVal)
+        {
+            //分数大于UI可以展示的最大数值时.
+            numVal = maxVal;
+        }
+
 		int valTmp = 0;
 		int powVal = 0;
 		for (int i = 0; i < max; i++) {
