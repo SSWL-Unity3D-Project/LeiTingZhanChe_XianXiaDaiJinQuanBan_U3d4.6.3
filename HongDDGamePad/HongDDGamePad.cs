@@ -106,6 +106,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet = websocketObj.GetComponent<SSBoxPostNet>();
                 m_SSBoxPostNet.Init();
                 m_SSBoxPostNet.OnReceivedWXPlayerHddPayData += OnReceivedWXPlayerHddPayData;
+                m_SSBoxPostNet.OnReceivedSendPostHddSubPlayerMoneyEvent += OnReceivedSendPostHddSubPlayerMoneyEvent;
+                
                 m_BarcodeCam = gameObject.AddComponent<BarcodeCam>();
             }
             
@@ -1800,6 +1802,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
                     //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
                     SendWXPadPlayerPayTimeOut(userId);
+                    //清除玩家的扣费数据.
+                    RemovePlayerPayData(userId);
                     yield break;
                 }
 
@@ -1837,6 +1841,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         void OnReceivedWXPlayerHddPayData(int userId, int money)
         {
+            PlayerPayData payData = FindPlayerPayData(userId);
+            if (payData != null && payData.IsDeductionSuccess == false)
+            {
+                SSDebug.Log("OnReceivedWXPlayerHddPayData -> player have not been deduction success! userId ===== " + userId);
+                return;
+            }
+
             Debug.Log("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money);
             if (money < m_GameCoinToMoney)
             {
@@ -1985,8 +1996,117 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// 玩家Id.
             /// </summary>
             internal int userId = 0;
-
+            /// <summary>
+            /// 是否扣费成功.
+            /// </summary>
             internal bool IsDeductionSuccess = false;
+            /// <summary>
+            /// 扣费次数.
+            /// </summary>
+            int DeductionCount = 1;
+            internal int GetDeductionCount()
+            {
+                return DeductionCount;
+            }
+            internal void AddDeductionCount()
+            {
+                DeductionCount++;
+            }
+            public PlayerPayData(int userId)
+            {
+                this.userId = userId;
+            }
+        }
+        /// <summary>
+        ///  玩家账户扣费数据列表.
+        /// </summary>
+        List<PlayerPayData> m_PlayerPayDataList = new List<PlayerPayData>();
+        /// <summary>
+        /// 查找玩家账户扣费数据.
+        /// </summary>
+        PlayerPayData FindPlayerPayData(int userId)
+        {
+            if (m_PlayerPayDataList == null)
+            {
+                return null;
+            }
+
+            PlayerPayData payData = m_PlayerPayDataList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+            return payData;
+        }
+
+        /// <summary>
+        /// 添加玩家账户扣费数据.
+        /// </summary>
+        void AddPlayerPayData(int userId)
+        {
+            PlayerPayData payData = FindPlayerPayData(userId);
+            if (payData == null && m_PlayerPayDataList != null)
+            {
+                m_PlayerPayDataList.Add(new PlayerPayData(userId));
+            }
+        }
+
+        /// <summary>
+        /// 删除玩家账户扣费数据.
+        /// </summary>
+        void RemovePlayerPayData(int userId)
+        {
+            PlayerPayData payData = FindPlayerPayData(userId);
+            if (payData != null && m_PlayerPayDataList != null)
+            {
+                m_PlayerPayDataList.Remove(payData);
+            }
+        }
+
+        /// <summary>
+        /// 收到扣费回传消息.
+        /// </summary>
+        void OnReceivedSendPostHddSubPlayerMoneyEvent(int userId, SSBoxPostNet.BoxLoginRt type)
+        {
+            SSDebug.Log("OnReceivedSendPostHddSubPlayerMoneyEvent -> userId ======= " + userId + ", type ===== " + type);
+            switch (type)
+            {
+                case SSBoxPostNet.BoxLoginRt.Success:
+                    {
+                        //玩家扣费成功.
+                        PlayerPayData payData = FindPlayerPayData(userId);
+                        if (payData != null)
+                        {
+                            payData.IsDeductionSuccess = true;
+                            RemovePlayerPayData(userId);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        //玩家扣费失败.
+                        //重新扣费.
+                        PlayerPayData payData = FindPlayerPayData(userId);
+                        if (payData != null)
+                        {
+                            if (payData.GetDeductionCount() < 5)
+                            {
+                                payData.AddDeductionCount();
+                                StartCoroutine(DelaySubWXPlayerHddPayData(userId));
+                            }
+                            else
+                            {
+                                //扣费失败次数超过一定数量,不再进行扣费.
+                                SSDebug.LogWarning("OnReceivedSendPostHddSubPlayerMoneyEvent -> Deduction count over! userId == " + userId);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        IEnumerator DelaySubWXPlayerHddPayData(int userId)
+        {
+            yield return new WaitForSeconds(1f);
+            SubWXPlayerHddPayData(userId);
         }
 
         /// <summary>
@@ -2000,6 +2120,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 int subCoin = 1; //减去1个游戏币(2元1个游戏币).
                 int money = subCoin * m_GameCoinToMoney; //扣除的红点点账户金币.
+                AddPlayerPayData(userId);
                 SendSubWXPlayerHddPayData(userId, money);
             }
         }

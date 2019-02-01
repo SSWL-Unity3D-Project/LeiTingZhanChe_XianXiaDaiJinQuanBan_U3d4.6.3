@@ -151,7 +151,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// <summary>
     /// 盒子登陆返回枚举值.
     /// </summary>
-    enum BoxLoginRt
+    public enum BoxLoginRt
     {
         Null = -1,
         Success = 0,          //登录成功.
@@ -1040,6 +1040,22 @@ public class SSBoxPostNet : MonoBehaviour
     }
 
     /// <summary>
+    /// 扣费响应事件.
+    /// </summary>
+    public delegate void EventHandel(int userId, BoxLoginRt type);
+    public event EventHandel OnReceivedSendPostHddSubPlayerMoneyEvent;
+    /// <summary>
+    /// 收到扣费回传消息.
+    /// </summary>
+    public void OnReceivedSendPostHddSubPlayerMoney(int userId, BoxLoginRt type)
+    {
+        if (OnReceivedSendPostHddSubPlayerMoneyEvent != null)
+        {
+            OnReceivedSendPostHddSubPlayerMoneyEvent(userId, type);
+        }
+    }
+
+    /// <summary>
     /// 消费用户余额 | 域名/wxbackstage/memberAccount/spend | POST
     /// memberId | Integer | 用户ID，等同于 UserID
     /// account | Integer | 消费金额，单位分，1块钱=100分
@@ -1075,11 +1091,13 @@ public class SSBoxPostNet : MonoBehaviour
             if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
             {
                 //红点点支付平台扣费成功.
+                OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Success);
             }
             else
             {
                 //红点点支付平台扣费失败.
                 Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+                OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
             }
         }
         finally
