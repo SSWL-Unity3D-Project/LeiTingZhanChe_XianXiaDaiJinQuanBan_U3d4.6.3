@@ -798,8 +798,11 @@ public class XKGlobalData
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "CaiChiFanJiangLv", args.ToString());
         SSDebug.Log("SetCaiChiFanJiangLv -> m_CaiChiFanJiangLv ============== " + m_CaiChiFanJiangLv);
     }
-
-
+    
+    /// <summary>
+    /// 对于每个用户下次免费游戏的间隔时间.
+    /// </summary>
+    internal int m_TimeMianFeiNum = 20;
     /// <summary>
     /// 游戏免费试玩次数信息.
     /// </summary>

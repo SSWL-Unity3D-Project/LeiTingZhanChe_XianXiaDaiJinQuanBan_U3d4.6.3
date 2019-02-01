@@ -1640,4 +1640,60 @@ public class SSGameUICtrl : SSGameMono
             m_DaiJinQuanNpcXueTiaoUI.BackBloodBossAmount(amount);
         }
     }
+
+    //****************************************************************************************************************//
+    /// <summary>
+    /// 玩家游戏评级界面UI.
+    /// </summary>
+    internal SSPingJiUI[] m_PingJiUIArray = new SSPingJiUI[3];
+    /// <summary>
+    /// 产生玩家游戏评级界面UI.
+    /// </summary>
+    internal void CreatPlayerPingJiUI(PlayerEnum indexPlayer, int fenShuNum)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= m_PingJiUIArray.Length)
+        {
+            SSDebug.LogWarning("CreatPlayerPingJiUI -> indexPlayer was wrong! indexPlayer == " + indexPlayer);
+            return;
+        }
+
+        if (m_PingJiUIArray[indexVal] == null)
+        {
+            string prefabPath = "Prefabs/GUI/PingJiChouJiang/PingJiUI";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatPlayerPingJiUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
+                m_PingJiUIArray[indexVal] = obj.GetComponent<SSPingJiUI>();
+                m_PingJiUIArray[indexVal].Init(indexPlayer, fenShuNum);
+            }
+            else
+            {
+                UnityLogWarning("CreatPlayerPingJiUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除玩家游戏评级界面UI.
+    /// </summary>
+    internal void RemovePlayerPingJiUI(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= m_PingJiUIArray.Length)
+        {
+            SSDebug.LogWarning("RemovePlayerPingJiUI -> indexPlayer was wrong! indexPlayer == " + indexPlayer);
+            return;
+        }
+
+        if (m_PingJiUIArray[indexVal] != null)
+        {
+            UnityLog("RemovePlayerPingJiUI -> indexPlayer ============ " + indexPlayer);
+            m_PingJiUIArray[indexVal].RemoveSelf();
+            m_PingJiUIArray[indexVal] = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
 }

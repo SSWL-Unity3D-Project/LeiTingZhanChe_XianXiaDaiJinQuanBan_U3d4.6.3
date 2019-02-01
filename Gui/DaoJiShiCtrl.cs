@@ -7,6 +7,14 @@ public class DaoJiShiCtrl : MonoBehaviour {
 	public GameObject ContinueGameObj;
 	public GameObject GameOverObj;
     /// <summary>
+    /// 免费时间数字UI控制组件.
+    /// </summary>
+    public SSGameNumUI m_TimeMianFeiNum;
+    /// <summary>
+    /// 下一次免费间隔时间提示.
+    /// </summary>
+    public GameObject m_MianFeiTimeUI;
+    /// <summary>
     /// 电视遥控器确认按键图片.
     /// </summary>
     //public GameObject m_TVYaoKongEnterObj;
@@ -155,6 +163,28 @@ public class DaoJiShiCtrl : MonoBehaviour {
             return;
         }
 #endif
+
+        if (XKGlobalData.GetInstance().m_MianFeiShiWanCount <= 0)
+        {
+            //首次付费模式.
+            if (m_MianFeiTimeUI != null)
+            {
+                m_MianFeiTimeUI.SetActive(false);
+            }
+        }
+        else
+        {
+            //首次免费模式.
+            if (m_MianFeiTimeUI != null)
+            {
+                m_MianFeiTimeUI.SetActive(true);
+                if (m_TimeMianFeiNum != null)
+                {
+                    //显示下次免费游戏的间隔时间数字.
+                    m_TimeMianFeiNum.ShowNumUI(XKGlobalData.GetInstance().m_TimeMianFeiNum);
+                }
+            }
+        }
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {

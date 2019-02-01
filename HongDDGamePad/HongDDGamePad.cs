@@ -1977,6 +1977,19 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 玩家账户扣费数据.
+        /// </summary>
+        public class PlayerPayData
+        {
+            /// <summary>
+            /// 玩家Id.
+            /// </summary>
+            internal int userId = 0;
+
+            internal bool IsDeductionSuccess = false;
+        }
+
+        /// <summary>
         /// 扣除微信游戏手柄玩家的代币.
         /// </summary>
         void SubWXPlayerHddPayData(int userId)

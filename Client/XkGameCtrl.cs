@@ -1,4 +1,5 @@
 #define USE_CHECK_LOAD_MOVIE_SCENE
+#define DEBUG_SHOW_RESTART_GAME_TIME //测试游戏重启倒计时信息.
 //#define TEST_SCREEN_CONFIG
 //#define TEST_UPDATA_GAME
 #define DRAW_DEBUG_CAIPIAO_INFO
@@ -411,6 +412,10 @@ public class XkGameCtrl : SSGameMono
 	int YouLiangJingGaoVal = 10;
 	public static bool IsAddPlayerYouLiang;
 	public static bool IsGameOnQuit;
+    /// <summary>
+    /// 游戏玩家评级数据.
+    /// </summary>
+    internal SSPingJiData m_PingJiData;
 	/// <summary>
 	/// 是否绘制主角路径.
 	/// </summary>
@@ -989,6 +994,16 @@ public class XkGameCtrl : SSGameMono
 
     void CheckLoadingMovieScene()
     {
+        float timeRestartVal = 3600f * 0.5f;
+        //timeRestartVal = 2f * 60f; //test
+#if DEBUG_SHOW_RESTART_GAME_TIME
+        float timeTestVal = timeRestartVal - (Time.time - m_TimeLastMovie);
+        if (timeTestVal < 0f)
+        {
+            timeTestVal = 0f;
+        }
+        m_TestTimeRestart = timeTestVal;
+#endif
         if (Time.time - m_TimeLastMovieUnit < 15f)
         {
             return;
@@ -1018,17 +1033,26 @@ public class XkGameCtrl : SSGameMono
             return;
         }
 
-        //if (Time.time - m_TimeLastMovie > 2f * 60f) //test
-        if (Time.time - m_TimeLastMovie > 3600f * 0.5f)
+        if (Time.time - m_TimeLastMovie > timeRestartVal)
         {
             m_TimeLastMovie = Time.time;
 #if !UNITY_EDITOR
             StartCoroutine(DelayLoadingRestartGameScene());
 #else
-			//StartCoroutine(DelayLoadingRestartGameScene()); //test
+			StartCoroutine(DelayLoadingRestartGameScene()); //test
 #endif
         }
     }
+
+#if DEBUG_SHOW_RESTART_GAME_TIME
+    float m_TestTimeRestart = 0f;
+    private void OnGUI()
+    {
+        string info = "TimeRestart: " + m_TestTimeRestart.ToString("f2") + "s";
+        GUI.Box(new Rect(15f, 45f, 150f, 25f), "");
+        GUI.Label(new Rect(15f, 45f, 150f, 25f), info);
+    }
+#endif
 
     IEnumerator DelayLoadingRestartGameScene()
     {
@@ -1038,7 +1062,7 @@ public class XkGameCtrl : SSGameMono
 			ErWeiMaUI.GetInstance().SetActive(false);
 			IsCheckGameUIErWeiMa = false;
 		}
-		yield return new WaitForSeconds(30f);
+		yield return new WaitForSeconds(40f);
 		
 		if (m_GamePlayerAiData != null && m_GamePlayerAiData.IsActiveAiPlayer == false)
 		{
