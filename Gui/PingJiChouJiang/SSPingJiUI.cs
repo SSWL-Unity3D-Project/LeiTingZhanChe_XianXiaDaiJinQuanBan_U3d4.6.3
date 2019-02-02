@@ -90,6 +90,10 @@ public class SSPingJiUI : MonoBehaviour
             else
             {
                 //玩家评级达到抽奖水平,显示抽奖界面.
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer);
+                }
             }
 
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
