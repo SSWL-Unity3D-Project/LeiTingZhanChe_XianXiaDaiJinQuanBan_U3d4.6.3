@@ -346,7 +346,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
             rigidbody.isKinematic = true;
         }
         transform.position = new Vector3(-10000f, -10000f, -10000f);
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(60f * 10f);
 
         transform.position = m_DaoJuPosOld;
         if (rigidbody != null)
