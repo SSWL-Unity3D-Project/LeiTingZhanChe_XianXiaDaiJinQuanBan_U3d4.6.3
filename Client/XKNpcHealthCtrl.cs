@@ -863,22 +863,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 else
                 {
                     //普通npc被击杀.
-                    if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
-                    {
-                        //随机送出正常得彩.
-                        XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
-                    }
+                    //if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                    //{
+                    //    //随机送出正常得彩.
+                    //    XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                    //}
                 }
             }
 			else if (CannonScript != null)
             {
 				CannonScript.OnRemoveCannon(playerSt, 1);
                 //炮台类npc被击杀.
-                if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
-                {
-                    //随机送出正常得彩.
-                    XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
-                }
+                //if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null && DeathExplodePoint != null)
+                //{
+                //    //随机送出正常得彩.
+                //    XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData.CheckPlayerSongPiaoInfo(playerSt, DeathExplodePoint.position);
+                //}
             }
 		}
 	}
@@ -889,7 +889,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 		if (daoJuScript == null) {
 			return;
 		}
-        daoJuScript.CreatSuiJiDaoJu(index);
+        //daoJuScript.CreatSuiJiDaoJu(index);
 
         if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe == false)
         {
