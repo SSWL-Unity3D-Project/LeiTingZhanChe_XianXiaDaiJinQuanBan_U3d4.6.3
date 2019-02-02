@@ -155,7 +155,7 @@ public class SSCaiPiaoNpcUI : MonoBehaviour
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuJiangPinName;
                 }
             }
 

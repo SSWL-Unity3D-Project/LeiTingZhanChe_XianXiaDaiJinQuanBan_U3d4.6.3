@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class DaoJiShiCtrl : MonoBehaviour {
+public class DaoJiShiCtrl : MonoBehaviour
+{
 	public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	public GameObject ContinueGameObj;
 	public GameObject GameOverObj;
@@ -20,7 +21,26 @@ public class DaoJiShiCtrl : MonoBehaviour {
     //public GameObject m_TVYaoKongEnterObj;
 	GameObject DaoJiShiObj;
 	UISprite DaoJiShiSprite;
-	internal bool IsPlayDaoJishi;
+    bool _IsPlayDaoJiShi = false;
+	internal bool IsPlayDaoJishi
+    {
+        set { _IsPlayDaoJiShi = value; }
+        get
+        {
+            if (_IsPlayDaoJiShi == false)
+            {
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    if (SSUIRoot.GetInstance().m_GameUIManage.GetPlayerPingJiUI(PlayerIndex) != null)
+                    {
+                        //当玩家的评级UI界面被创建时,认为此时该玩家已经播放游戏倒计时了.
+                        return true;
+                    }
+                }
+            }
+            return _IsPlayDaoJiShi;
+        }
+    }
 	internal int DaoJiShiCount = 9;
 //	public static bool IsActivePlayerOne;
 //	public static bool IsActivePlayerTwo;
@@ -206,8 +226,9 @@ public class DaoJiShiCtrl : MonoBehaviour {
 
     IEnumerator DelayShowPlayerDaoJiShi()
     {
-        float timeVal = XKPlayerGlobalDt.GetInstance().m_DaoJiShiDelayShowPlayerDead;
-        yield return new WaitForSeconds(timeVal);
+        //float timeVal = XKPlayerGlobalDt.GetInstance().m_DaoJiShiDelayShowPlayerDead;
+        //yield return new WaitForSeconds(timeVal);
+        yield return new WaitForSeconds(0f);
         //DaoJiShiObj.SetActive(true);
         DaoJiShiSprite.enabled = true;
         ContinueGameObj.SetActive(true);

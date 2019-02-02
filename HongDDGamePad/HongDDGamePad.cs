@@ -1491,7 +1491,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //给玩家添加一个微信游戏币.
                             AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
                             //直接打开微信小程序游戏手柄.
-                            m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+                            //m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
 
                             CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance((PlayerEnum)(indexPlayer + 1));
                             if (playerCoinCom != null)
@@ -1536,6 +1536,47 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
                 m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
                 InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
+            }
+        }
+
+        /// <summary>
+        /// 玩家获得免费再玩一局游戏奖品之后,使玩家免费再玩一局游戏.
+        /// </summary>
+        internal void MakePlayerMianFeiZaiWanYiJu(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_IndexPlayerActiveGameState.Length)
+            {
+                return;
+            }
+
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            if (m_HongDDGamePadWXPay != null && playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(playerDt.m_PlayerWeiXinData.userId) == true)
+                {
+                    //该玩家可以免费试玩游戏.
+                    //给玩家添加一个微信游戏币.
+                    AddWeiXinGameCoinToPlayer(indexPlayer, m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
+
+                    //CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance(indexPlayer);
+                    //if (playerCoinCom != null)
+                    //{
+                    //    playerCoinCom.SetActiveMianFeiTiYanUI(true);
+                    //}
+                    //免费体验游戏的玩家.
+                    playerDt.IsMianFeiTiYanPlayer = true;
+
+                    //记录玩家登陆游戏的信息.
+                    if (m_SSBoxPostNet != null)
+                    {
+                        m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, true);
+                    }
+                }
+
+                m_GmWXLoginDt[indexVal].IsActiveGame = true;
+                m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
+                InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
             }
         }
 

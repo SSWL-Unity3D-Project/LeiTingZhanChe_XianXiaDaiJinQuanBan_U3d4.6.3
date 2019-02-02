@@ -84,12 +84,12 @@ public class SSCaiPiaoInfo : SSGameMono
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQaunType).ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQaunType).ShangHuJiangPinName;
                             break;
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.SuiJiDaoJu:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo().ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo().ShangHuJiangPinName;
                             break;
                         }
                 }

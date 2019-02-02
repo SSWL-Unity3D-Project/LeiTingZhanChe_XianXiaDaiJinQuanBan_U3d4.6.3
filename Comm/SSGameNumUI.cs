@@ -80,4 +80,9 @@ public class SSGameNumUI : SSGameMono
             }
         }
     }
+
+    internal void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
 }

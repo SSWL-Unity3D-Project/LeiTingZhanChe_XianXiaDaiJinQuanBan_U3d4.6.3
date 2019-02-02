@@ -40,6 +40,10 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 		{
 			IsHaveJiBaoNpc = isJiBaoNpc;
         }
+        internal bool GetIsHaveJiBaoNpc()
+        {
+            return IsHaveJiBaoNpc;
+        }
 
         /// <summary>
         /// 没有人可以爆奖.
@@ -273,6 +277,47 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 获取是否已经击爆了莫衷类型的奖品npc.
+    /// </summary>
+    internal bool GetIsHaveJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        BaoJiangData baoJiangDt = null;
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    baoJiangDt = m_BaoJiangDtJPBoss;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    baoJiangDt = m_BaoJiangDtZhanChe01;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    baoJiangDt = m_BaoJiangDtZhanChe02;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    baoJiangDt = m_BaoJiangDtSuiJiDaoJu;
+                }
+                break;
+        }
+
+        bool isHaveJiBao = true;
+        if (baoJiangDt != null)
+        {
+            isHaveJiBao = baoJiangDt.GetIsHaveJiBaoNpc();
+        }
+        return isHaveJiBao;
+    }
+
+    /// <summary>
+    /// 获取是否可以击爆奖品Npc.
+    /// </summary>
     internal bool GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
         BaoJiangData baoJiangDt = null;

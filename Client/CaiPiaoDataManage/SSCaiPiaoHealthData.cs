@@ -88,12 +88,17 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     /// <summary>
     /// 当前采用的彩票npc血量控制数据.
     /// </summary>
-    internal TotalHealthData m_CurentTotalHealthDt;
+    internal TotalHealthData m_CurrentTotalHealthDt;
+    /// <summary>
+    /// 当前游戏中存在的是战车还是JPBoss类型.
+    /// </summary>
+    internal SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState m_CurrentDaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
     /// <summary>
     /// 获取JPBoss和战车Npc的血值数据.
     /// </summary>
     internal void GetTotalHealData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
+        m_CurrentDaiJinQuanState = type;
         float caiChiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetCaiChiData(type);
         float caiChiChuPiaoTiaoJian = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJian(type);
         //彩池是否足够.
@@ -131,7 +136,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                     }
                 }
             }
-            m_CurentTotalHealthDt = m_BaoJiangHealthDt[indexVal];
+            m_CurrentTotalHealthDt = m_BaoJiangHealthDt[indexVal];
         }
         else
         {
@@ -148,9 +153,9 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                     }
                 }
             }
-            m_CurentTotalHealthDt = m_NoBaoJiangHealthDt[indexVal];
+            m_CurrentTotalHealthDt = m_NoBaoJiangHealthDt[indexVal];
         }
-        SSDebug.Log("GetTotalHealData -> m_CurentTotalHealthDt == " + m_CurentTotalHealthDt.ToString());
+        SSDebug.Log("GetTotalHealData -> m_CurentTotalHealthDt == " + m_CurrentTotalHealthDt.ToString());
     }
     #endregion
 
@@ -199,7 +204,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
         }
 
         int baoJiDamageVal = 0;
-        if (m_CurentTotalHealthDt.IsCanJiBao == true)
+        if (m_CurrentTotalHealthDt.IsCanJiBao == true)
         {
             //可以被击爆.
             baoJiDamageVal = m_BaoJiDamage_01.BaoJiDamage[indexVal];
@@ -377,7 +382,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
             //SSDebug.Log("GetPlayerBaoJiMaterial -> indexPlayer == " + indexPlayer + ", baoJiDengJi ============ " + baoJiDengJi);
             if (indexBaoJi >= 0)
             {
-                if (m_CurentTotalHealthDt.IsCanJiBao == true)
+                if (m_CurrentTotalHealthDt.IsCanJiBao == true)
                 {
                     //可以被击爆.
                     mat = m_PlayerBaoJiLiZiMaterial[indexVal].BaoJiMaterial_01.BaoJiMaterial[indexBaoJi];

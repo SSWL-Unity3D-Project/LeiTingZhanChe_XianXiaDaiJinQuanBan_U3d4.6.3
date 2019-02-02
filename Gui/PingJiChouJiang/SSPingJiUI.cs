@@ -25,6 +25,7 @@ public class SSPingJiUI : MonoBehaviour
     SSPingJiData.PingJiLevel m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.A;
     internal void Init(PlayerEnum indexPlayer, int fenShu)
     {
+        SetActive(false);
         m_IndexPlayer = indexPlayer;
         m_TimeStart = Time.time;
         if (m_PingJiUI == null)
@@ -54,6 +55,15 @@ public class SSPingJiUI : MonoBehaviour
         }
     }
 
+    internal void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+        if (isActive == true)
+        {
+            m_TimeStart = Time.time;
+        }
+    }
+
     bool IsRemoveSelf = false;
     internal void RemoveSelf()
     {
@@ -71,6 +81,11 @@ public class SSPingJiUI : MonoBehaviour
             if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.S)
             {
                 //玩家评级过低,显示倒计时界面.
+                DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
+                if (daoJiShiCom != null)
+                {
+                    daoJiShiCom.StartPlayDaoJiShi();
+                }
             }
             else
             {

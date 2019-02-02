@@ -64,7 +64,7 @@ public class XKBossLXCtrl : MonoBehaviour
                 }
                 else
                 {
-                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
+                    shangHuInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuJiangPinName;
                 }
             }
 

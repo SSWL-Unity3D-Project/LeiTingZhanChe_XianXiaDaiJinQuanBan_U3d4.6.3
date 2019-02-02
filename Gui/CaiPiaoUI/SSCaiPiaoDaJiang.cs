@@ -50,7 +50,7 @@ public class SSCaiPiaoDaJiang : SSGameMono
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DeCaiState.ZhanChe:
                         {
-                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuMing;
+                            info = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetShangHuMingDt(daiJinQuanType).ShangHuJiangPinName;
                             break;
                         }
                 }

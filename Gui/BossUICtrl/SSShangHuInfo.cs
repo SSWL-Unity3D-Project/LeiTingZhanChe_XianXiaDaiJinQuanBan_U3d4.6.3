@@ -51,7 +51,7 @@ public class SSShangHuInfo : MonoBehaviour
         /// 商户名信息/游戏中展示的奖品名称.
         /// 最多5个字.
         /// </summary>
-        public string ShangHuMing = "盛世网络";
+        public string ShangHuJiangPinName = "盛世网络";
         /// <summary>
         /// 商户弹幕文本信息.
         /// 最多9个字.
@@ -59,7 +59,7 @@ public class SSShangHuInfo : MonoBehaviour
         public string ShangHuDanMuInfo = "盛世网络50元";
         public override string ToString()
         {
-            return "IndexShangHu == " + IndexShangHu + ", ShangHuMing == " + ShangHuMing + ", ShangHuDanMuInfo == " + ShangHuDanMuInfo;
+            return "IndexShangHu == " + IndexShangHu + ", ShangHuMing == " + ShangHuJiangPinName + ", ShangHuDanMuInfo == " + ShangHuDanMuInfo;
         }
         /// <summary>
         /// 代金券名称.
@@ -135,7 +135,7 @@ public class SSShangHuInfo : MonoBehaviour
         for (int i = 0; i < m_ShangHuDtZhanChe01.Length; i++)
         {
             m_ShangHuDtZhanChe01[i].IndexShangHu = i;
-            SSDebug.Log("Init -> ShangHuMing[" + i + "] ===== " + m_ShangHuDtZhanChe01[i].ShangHuMing);
+            SSDebug.Log("Init -> ShangHuMing[" + i + "] ===== " + m_ShangHuDtZhanChe01[i].ShangHuJiangPinName);
         }
         InitReadConfig();
     }
@@ -192,12 +192,12 @@ public class SSShangHuInfo : MonoBehaviour
     {
         for (int i = 0; i < m_ShangHuDtZhanChe01.Length; i++)
         {
-            m_ShangHuDtZhanChe01[i].ShangHuMing = shangHuInfoArray[i];
+            m_ShangHuDtZhanChe01[i].ShangHuJiangPinName = shangHuInfoArray[i];
         }
 
         for (int i = 0; i < m_ShangHuDtZhanChe02.Length; i++)
         {
-            m_ShangHuDtZhanChe02[i].ShangHuMing = shangHuInfoArray[i + 2];
+            m_ShangHuDtZhanChe02[i].ShangHuJiangPinName = shangHuInfoArray[i + 2];
         }
     }
 
@@ -326,7 +326,7 @@ public class SSShangHuInfo : MonoBehaviour
         }
         
         //SSDebug.LogWarning("GetShangHuMingInfo -> ====================== " + dataArray[indexVal].ToString());
-        m_DaiJinQuanDt.ShangHuMing = dataArray[indexVal].ShangHuMing;
+        m_DaiJinQuanDt.ShangHuMing = dataArray[indexVal].ShangHuJiangPinName;
         m_DaiJinQuanDt.DaiJinQuanName = dataArray[indexVal].DaiJinQuanName;
         m_DaiJinQuanDt.XiangQingInfo = dataArray[indexVal].XiangQingInfo;
         return dataArray[indexVal];
@@ -380,7 +380,7 @@ public class SSShangHuInfo : MonoBehaviour
     {
         if (infoArray.Length >= 3)
         {
-            m_ShangHuDtSuiJiDaoJu.ShangHuMing = infoArray[0];
+            m_ShangHuDtSuiJiDaoJu.ShangHuJiangPinName = infoArray[0];
             m_ShangHuDtSuiJiDaoJu.DaiJinQuanName = infoArray[1];
             m_ShangHuDtSuiJiDaoJu.XiangQingInfo = infoArray[2];
         }

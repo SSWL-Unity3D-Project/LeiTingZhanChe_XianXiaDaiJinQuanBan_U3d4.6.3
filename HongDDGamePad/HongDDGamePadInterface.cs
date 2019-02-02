@@ -131,6 +131,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.ClearGameWeiXinData();
             }
         }
+        
+        /// <summary>
+        /// 玩家获得免费再玩一局游戏奖品之后,使玩家免费再玩一局游戏.
+        /// </summary>
+        internal void MakePlayerMianFeiZaiWanYiJu(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.MakePlayerMianFeiZaiWanYiJu(indexPlayer);
+            }
+        }
 
         /// <summary>
         /// 添加微信玩家游戏币.

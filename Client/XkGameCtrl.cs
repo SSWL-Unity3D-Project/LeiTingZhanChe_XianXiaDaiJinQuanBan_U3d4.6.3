@@ -3197,9 +3197,14 @@ public class XkGameCtrl : SSGameMono
 		else {
 			PlayerHealthArray[indexPlayer] = 0f;
 			if (!IsLoadingLevel) {
-				if (djsCtrl != null) {
-					djsCtrl.StartPlayDaoJiShi();
-				}
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    //显示玩家评级UI界面.
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, 0);
+                }
+				//if (djsCtrl != null) {
+				//	djsCtrl.StartPlayDaoJiShi();
+				//}
 				
 				if (dyCtrl != null) {
 					dyCtrl.HiddenPlayerDanYaoInfo();
@@ -3215,6 +3220,58 @@ public class XkGameCtrl : SSGameMono
 			xkCtrl.HandleXueKuangNum();
 		}
 	}
+
+    /// <summary>
+    /// 获得再玩一局游戏奖品玩家数据信息.
+    /// </summary>
+    public class ZaiWanYiJuPlayerData
+    {
+        /// <summary>
+        /// 是否有获得过再玩一局.
+        /// </summary>
+        internal bool IsHaveZaiWanYiJu = false;
+    }
+    /// <summary>
+    /// 再玩一局游戏玩家数据列表.
+    /// </summary>
+    ZaiWanYiJuPlayerData[] m_ZaiWanYiJuPlayerDtArray = new ZaiWanYiJuPlayerData[3];
+    /// <summary>
+    /// 设置某机位是否获得过再玩一局游戏奖品.
+    /// </summary>
+    internal void SetZaiWanYiJuPlayerInfo(PlayerEnum indexPlayer, bool isHaveZaiWanYiJu)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= 0 && indexVal < m_ZaiWanYiJuPlayerDtArray.Length)
+        {
+            m_ZaiWanYiJuPlayerDtArray[indexVal].IsHaveZaiWanYiJu = isHaveZaiWanYiJu;
+        }
+    }
+
+    /// <summary>
+    /// 获取某机位是否获得过再玩一局游戏奖品.
+    /// </summary>
+    internal bool GetZaiWanYiJuPlayerInfo(PlayerEnum indexPlayer)
+    {
+        bool isHaveZaiWanYiJu = false;
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= 0 && indexVal < m_ZaiWanYiJuPlayerDtArray.Length)
+        {
+            isHaveZaiWanYiJu = m_ZaiWanYiJuPlayerDtArray[indexVal].IsHaveZaiWanYiJu;
+        }
+        return isHaveZaiWanYiJu;
+    }
+
+    /// <summary>
+    /// 玩家获得免费再玩一局游戏奖品之后,使玩家免费再玩一局游戏.
+    /// </summary>
+    public void MakePlayerMianFeiZaiWanYiJu(PlayerEnum indexPlayer)
+    {
+        if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            pcvr.GetInstance().m_HongDDGamePadInterface.MakePlayerMianFeiZaiWanYiJu(indexPlayer);
+        }
+        SetZaiWanYiJuPlayerInfo(indexPlayer, true);
+    }
 
 	public static float KeyBloodUI = 0f;
 	/**

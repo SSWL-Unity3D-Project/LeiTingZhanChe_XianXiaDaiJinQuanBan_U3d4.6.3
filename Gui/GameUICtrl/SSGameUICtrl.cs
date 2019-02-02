@@ -1645,7 +1645,19 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 玩家游戏评级界面UI.
     /// </summary>
-    internal SSPingJiUI[] m_PingJiUIArray = new SSPingJiUI[3];
+    SSPingJiUI[] m_PingJiUIArray = new SSPingJiUI[3];
+    internal SSPingJiUI GetPlayerPingJiUI(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal >= m_PingJiUIArray.Length)
+        {
+            return m_PingJiUIArray[indexVal];
+        }
+        else
+        {
+            return null;
+        }
+    }
     /// <summary>
     /// 产生玩家游戏评级界面UI.
     /// </summary>
@@ -1668,10 +1680,28 @@ public class SSGameUICtrl : SSGameMono
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_PingJiUIArray[indexVal] = obj.GetComponent<SSPingJiUI>();
                 m_PingJiUIArray[indexVal].Init(indexPlayer, fenShuNum);
+                StartCoroutine(DelayShowPlayerPingJiUI(indexPlayer));
             }
             else
             {
                 UnityLogWarning("CreatPlayerPingJiUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 推迟显示玩家评级UI界面.
+    /// </summary>
+    IEnumerator DelayShowPlayerPingJiUI(PlayerEnum indexPlayer)
+    {
+        float timeVal = XKPlayerGlobalDt.GetInstance().m_DaoJiShiDelayShowPlayerDead;
+        yield return new WaitForSeconds(timeVal);
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= 0 && indexVal < m_PingJiUIArray.Length)
+        {
+            if (m_PingJiUIArray[indexVal] != null)
+            {
+                m_PingJiUIArray[indexVal].SetActive(true);
             }
         }
     }
@@ -1693,6 +1723,78 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemovePlayerPingJiUI -> indexPlayer ============ " + indexPlayer);
             m_PingJiUIArray[indexVal].RemoveSelf();
             m_PingJiUIArray[indexVal] = null;
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    /// <summary>
+    /// 玩家抽奖UI界面.
+    /// </summary>
+    SSChouJiangUI[] m_ChouJiangUIArray = new SSChouJiangUI[3];
+    /// <summary>
+    /// 产生玩家游戏抽奖界面UI.
+    /// </summary>
+    internal void CreatPlayerChouJiangUI(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= m_ChouJiangUIArray.Length)
+        {
+            SSDebug.LogWarning("CreatPlayerChouJiangUI -> indexPlayer was wrong! indexPlayer == " + indexPlayer);
+            return;
+        }
+
+        if (m_ChouJiangUIArray[indexVal] == null)
+        {
+            string prefabPath = "Prefabs/GUI/PingJiChouJiang/ChouJiangUI";
+            GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+            if (gmDataPrefab != null)
+            {
+                Debug.Log("Unity: CreatPlayerChouJiangUI......................................................");
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
+                m_ChouJiangUIArray[indexVal] = obj.GetComponent<SSChouJiangUI>();
+                m_ChouJiangUIArray[indexVal].Init(indexPlayer);
+            }
+            else
+            {
+                UnityLogWarning("CreatPlayerChouJiangUI -> gmDataPrefab was null! prefabPath == " + prefabPath);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 删除玩家游戏抽奖界面UI.
+    /// </summary>
+    internal void RemovePlayerChouJiangUI(PlayerEnum indexPlayer, float time)
+    {
+        StartCoroutine(DelayRemovePlayerChouJiangUI(indexPlayer, time));
+    }
+
+    /// <summary>
+    /// 延迟删除玩家抽奖界面UI.
+    /// </summary>
+    IEnumerator DelayRemovePlayerChouJiangUI(PlayerEnum indexPlayer, float time)
+    {
+        yield return new WaitForSeconds(time);
+        RemovePlayerChouJiangUI(indexPlayer);
+    }
+
+    /// <summary>
+    /// 删除玩家游戏抽奖界面UI.
+    /// </summary>
+    void RemovePlayerChouJiangUI(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal >= m_ChouJiangUIArray.Length)
+        {
+            SSDebug.LogWarning("RemovePlayerChouJiangUI -> indexPlayer was wrong! indexPlayer == " + indexPlayer);
+            return;
+        }
+
+        if (m_ChouJiangUIArray[indexVal] != null)
+        {
+            UnityLog("RemovePlayerChouJiangUI -> indexPlayer ============ " + indexPlayer);
+            m_ChouJiangUIArray[indexVal].RemoveSelf();
+            m_ChouJiangUIArray[indexVal] = null;
             Resources.UnloadUnusedAssets();
         }
     }
