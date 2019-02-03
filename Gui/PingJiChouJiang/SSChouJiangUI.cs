@@ -802,6 +802,8 @@ public class SSChouJiangUI : MonoBehaviour
                     case JiangPinState.JiangPin3:
                     case JiangPinState.JiangPin4:
                         {
+                            //设置玩家状态信息.
+                            XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
                             //展示游戏倒计时界面.
                             DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
                             if (daoJiShiCom != null)

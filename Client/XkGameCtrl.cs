@@ -2238,7 +2238,80 @@ public class XkGameCtrl : SSGameMono
         }
     }
 
-	public static void SetActivePlayerOne(bool isActive)
+    /// <summary>
+    /// 玩家是否已经耗尽血值.
+    /// </summary>
+    static bool[] IsDeathPlayerArray = new bool[4] { true, true, true, true };
+
+    static void SetIsDeathPlayer(PlayerEnum indexPlayer, bool isDeathPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal > -1 && indexVal < IsDeathPlayerArray.Length)
+        {
+            IsDeathPlayerArray[indexVal] = isDeathPlayer;
+        }
+    }
+
+    public static bool GetIsDeathPlayer(PlayerEnum indexPlayer)
+    {
+        bool isDeathPlayer = false;
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal > -1 && indexVal < IsDeathPlayerArray.Length)
+        {
+            isDeathPlayer = IsDeathPlayerArray[indexVal];
+        }
+        return isDeathPlayer;
+    }
+
+    /// <summary>
+    /// 玩家1血值耗尽.
+    /// </summary>
+    public static void OnHealthOverPlayer(PlayerEnum indexPlayer)
+    {
+        SSDebug.Log("OnHealthOverPlayer.................... indexPlayer ==== " + indexPlayer);
+        //CheckPlayerActiveNum();
+        SetIsDeathPlayer(indexPlayer, true);
+        XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(indexPlayer);
+        XKPlayerScoreCtrl.HiddenPlayerScore(indexPlayer);
+
+        if (_Instance != null)
+        {
+            _Instance.InitGamePlayerInfo(indexPlayer, false);
+            if (_Instance.m_TriggerManage != null)
+            {
+                _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(indexPlayer);
+            }
+        }
+    }
+
+    public static void SetActivePlayer(PlayerEnum indexPlayer, bool isActive)
+    {
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    SetActivePlayerOne(isActive);
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    SetActivePlayerTwo(isActive);
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    SetActivePlayerThree(isActive);
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    //SetActivePlayerFour(isActive);
+                    break;
+                }
+        }
+    }
+
+    public static void SetActivePlayerOne(bool isActive)
 	{
         Debug.Log("Unity: SetActivePlayerOne -> isActive ======== " + isActive);
 		IsActivePlayerOne = isActive;
@@ -2247,7 +2320,8 @@ public class XkGameCtrl : SSGameMono
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerOne);
 		if (isActive) {
 			IsPlayGamePOne = true;
-			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerOne);
+            SetIsDeathPlayer(PlayerEnum.PlayerOne, false);
+            XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerOne);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerOne);
@@ -2296,7 +2370,8 @@ public class XkGameCtrl : SSGameMono
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerTwo);
         if (isActive) {
 			IsPlayGamePTwo = true;
-			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerTwo);
+            SetIsDeathPlayer(PlayerEnum.PlayerTwo, false);
+            XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerTwo);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerTwo);
@@ -2345,7 +2420,8 @@ public class XkGameCtrl : SSGameMono
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerThree);
         if (isActive) {
 			IsPlayGamePThree = true;
-			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerThree);
+            SetIsDeathPlayer(PlayerEnum.PlayerThree, false);
+            XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerThree);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerThree);
@@ -2394,7 +2470,8 @@ public class XkGameCtrl : SSGameMono
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerFour);
         if (isActive) {
 			IsPlayGamePFour = true;
-			XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerFour);
+            SetIsDeathPlayer(PlayerEnum.PlayerFour, false);
+            XKPlayerScoreCtrl.ShowPlayerScore(PlayerEnum.PlayerFour);
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
                 SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerCaiPiaoChengJiu(PlayerEnum.PlayerFour);
@@ -3217,7 +3294,7 @@ public class XkGameCtrl : SSGameMono
 		}
 
 		if (xkCtrl != null) {
-			xkCtrl.HandleXueKuangNum();
+			xkCtrl.HandleXueKuangNum(isActive);
 		}
 	}
 
@@ -3375,8 +3452,9 @@ public class XkGameCtrl : SSGameMono
 				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerOne is death!");
 				PlayerHealthArray[0] = 0f;
 				PlayerQuanShu[0] = 1;
-				SetActivePlayerOne(false);
-				XKPlayerMoveCtrl.GetInstancePOne().HiddenGamePlayer();
+				//SetActivePlayerOne(false);
+                OnHealthOverPlayer(PlayerEnum.PlayerOne);
+                XKPlayerMoveCtrl.GetInstancePOne().HiddenGamePlayer();
 			}
 			break;
 			
@@ -3401,8 +3479,9 @@ public class XkGameCtrl : SSGameMono
 				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerTwo is death!");
 				PlayerHealthArray[1] = 0f;
 				PlayerQuanShu[1] = 1;
-				SetActivePlayerTwo(false);
-				XKPlayerMoveCtrl.GetInstancePTwo().HiddenGamePlayer();
+				//SetActivePlayerTwo(false);
+                OnHealthOverPlayer(PlayerEnum.PlayerTwo);
+                XKPlayerMoveCtrl.GetInstancePTwo().HiddenGamePlayer();
 			}
 			break;
 			
@@ -3429,8 +3508,9 @@ public class XkGameCtrl : SSGameMono
 //				#endif
 				PlayerHealthArray[2] = 0f;
 				PlayerQuanShu[2] = 1;
-				SetActivePlayerThree(false);
-				XKPlayerMoveCtrl.GetInstancePThree().HiddenGamePlayer();
+				//SetActivePlayerThree(false);
+                OnHealthOverPlayer(PlayerEnum.PlayerThree);
+                XKPlayerMoveCtrl.GetInstancePThree().HiddenGamePlayer();
 			}
 			break;
 			

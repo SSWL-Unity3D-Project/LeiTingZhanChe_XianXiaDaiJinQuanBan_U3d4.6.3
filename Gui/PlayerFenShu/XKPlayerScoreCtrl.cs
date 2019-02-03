@@ -107,7 +107,7 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		}
 
 		if (isActive != gameObject.activeSelf) {
-			CheckPlayerZuiGaoFen();
+			CheckPlayerZuiGaoFen(true);
 		}
 		OnEndMakeScoreToSmall();
 		gameObject.SetActive(isActive);
@@ -127,7 +127,7 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 	float TimeLast;
 	public GameObject ZuiGaoFenObj;
 	static float TimeLastMaxScore;
-	static void CheckPlayerZuiGaoFen()
+	static void CheckPlayerZuiGaoFen(bool isHuLueTime = false)
 	{
 		//XkGameCtrl.CheckPlayerActiveNum();
 		if (XkGameCtrl.PlayerActiveNum <= 0) {
@@ -140,37 +140,58 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		TimeLastMaxScore = Time.time;
 
 		int maxScore = 0;
-		int indexVal = 0;
+		int indexVal = -1;
+        PlayerEnum indexPlayer = PlayerEnum.Null;
 		for (int i = 0; i < 4; i++) {
-			switch (i) {
-			case 0:
-				if (!XkGameCtrl.IsActivePlayerOne) {
-					continue;
-				}
-				break;
-			case 1:
-				if (!XkGameCtrl.IsActivePlayerTwo) {
-					continue;
-				}
-				break;
-			case 2:
-				if (!XkGameCtrl.IsActivePlayerThree) {
-					continue;
-				}
-				break;
-			case 3:
-				if (!XkGameCtrl.IsActivePlayerFour) {
-					continue;
-				}
-				break;
-			}
+            indexPlayer = (PlayerEnum)(i + 1);
+            if (XkGameCtrl.GetIsActivePlayer(indexPlayer) == false)
+            {
+                continue;
+            }
 
-			if (XkGameCtrl.PlayerJiFenArray[i] > maxScore) {
+            if (XkGameCtrl.GetIsDeathPlayer(indexPlayer) == true)
+            {
+                XKPlayerScoreCtrl playerScoreCom = GetInstance(indexPlayer);
+                if (playerScoreCom != null)
+                {
+                    playerScoreCom.SetActiveZuiGaoFen(false);
+                }
+                continue;
+            }
+            //switch (i) {
+            //case 0:
+            //	if (!XkGameCtrl.IsActivePlayerOne) {
+            //		continue;
+            //	}
+            //	break;
+            //case 1:
+            //	if (!XkGameCtrl.IsActivePlayerTwo) {
+            //		continue;
+            //	}
+            //	break;
+            //case 2:
+            //	if (!XkGameCtrl.IsActivePlayerThree) {
+            //		continue;
+            //	}
+            //	break;
+            //case 3:
+            //	if (!XkGameCtrl.IsActivePlayerFour) {
+            //		continue;
+            //	}
+            //	break;
+            //}
+
+            if (XkGameCtrl.PlayerJiFenArray[i] > maxScore) {
 				maxScore = XkGameCtrl.PlayerJiFenArray[i];
 				indexVal = i;
 			}
 		}
 		//Debug.Log("Unity:"+"CheckPlayerZuiGaoFen -> maxScore "+maxScore+", index "+indexVal);
+
+        if (indexVal == -1)
+        {
+            return;
+        }
 
 		XKPlayerScoreCtrl playerScore = null;
 		switch (indexVal) {

@@ -80,6 +80,8 @@ public class SSPingJiUI : MonoBehaviour
         {
             if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.S)
             {
+                //设置玩家状态信息.
+                XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
                 //玩家评级过低,显示倒计时界面.
                 DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
                 if (daoJiShiCom != null)

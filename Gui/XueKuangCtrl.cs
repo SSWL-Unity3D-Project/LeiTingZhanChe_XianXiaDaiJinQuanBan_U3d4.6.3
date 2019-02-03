@@ -80,7 +80,9 @@ public class XueKuangCtrl : MonoBehaviour
 			_InstanceFour = this;
 			break;
 		}
-		HandleXueKuangNum();
+
+        bool isActive = XkGameCtrl.GetIsActivePlayer(PlayerSt);
+		HandleXueKuangNum(isActive);
         m_WeiXinHead.mainTexture = m_TouMingHead;
     }
 
@@ -124,27 +126,28 @@ public class XueKuangCtrl : MonoBehaviour
         }
 	}
 
-	public void HandleXueKuangNum()
+	public void HandleXueKuangNum(bool isActive)
 	{
-		int indexVal = 0;
-		switch (PlayerSt) {
-		case PlayerEnum.PlayerOne:
-			indexVal = XkGameCtrl.IsActivePlayerOne == true ? 1 : 0;
-			break;
-			
-		case PlayerEnum.PlayerTwo:
-			indexVal = XkGameCtrl.IsActivePlayerTwo == true ? 1 : 0;
-			break;
-			
-		case PlayerEnum.PlayerThree:
-			indexVal = XkGameCtrl.IsActivePlayerThree == true ? 1 : 0;
-			break;
-			
-		case PlayerEnum.PlayerFour:
-			indexVal = XkGameCtrl.IsActivePlayerFour == true ? 1 : 0;
-			break;
-		}
-		CoinDiKuang.mainTexture = CoinDKTexture[indexVal];
+		//int indexVal = 0;
+        //switch (PlayerSt) {
+        //case PlayerEnum.PlayerOne:
+        //	indexVal = XkGameCtrl.IsActivePlayerOne == true ? 1 : 0;
+        //	break;
+
+        //case PlayerEnum.PlayerTwo:
+        //	indexVal = XkGameCtrl.IsActivePlayerTwo == true ? 1 : 0;
+        //	break;
+
+        //case PlayerEnum.PlayerThree:
+        //	indexVal = XkGameCtrl.IsActivePlayerThree == true ? 1 : 0;
+        //	break;
+
+        //case PlayerEnum.PlayerFour:
+        //	indexVal = XkGameCtrl.IsActivePlayerFour == true ? 1 : 0;
+        //	break;
+        //}
+        int indexVal = isActive == true ? 1 : 0;
+        CoinDiKuang.mainTexture = CoinDKTexture[indexVal];
 
         if (pcvr.IsHongDDShouBing)
         {
@@ -194,9 +197,10 @@ public class XueKuangCtrl : MonoBehaviour
             }
         }
         
-		bool isActiveInfo = indexVal == 1 ? true : false;
-		XueTiaoSprite.gameObject.SetActive(isActiveInfo);
-		XueTiaoSprite.fillAmount = 1f;
+		//bool isActiveInfo = indexVal == 1 ? true : false;
+		//XueTiaoSprite.gameObject.SetActive(isActiveInfo);
+		XueTiaoSprite.gameObject.SetActive(isActive);
+        XueTiaoSprite.fillAmount = 1f;
         if (m_GameObjFlash != null)
         {
             m_GameObjFlash.RemoveSelf();
