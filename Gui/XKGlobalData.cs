@@ -40,6 +40,38 @@ public class XKGlobalData
     }
     internal SSGameLogoData.GameLogo m_GameLogo = SSGameLogoData.GameLogo.HaiDiLao;
 
+    /// <summary>
+    /// 获取玩家当前币值是否足够.
+    /// </summary>
+    public static bool GetPlayerCoinIsEnough(PlayerEnum indexPlayer)
+    {
+        int coinCur = -1;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    coinCur = CoinPlayerOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    coinCur = CoinPlayerTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    coinCur = CoinPlayerThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    coinCur = CoinPlayerFour;
+                    break;
+                }
+        }
+        return coinCur >= GameNeedCoin ? true : false;
+    }
+
     static int _CoinPlayerOne = 0;
     public static int CoinPlayerOne
     {

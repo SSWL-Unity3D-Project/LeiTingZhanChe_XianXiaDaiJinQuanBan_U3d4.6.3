@@ -2316,7 +2316,7 @@ public class XkGameCtrl : SSGameMono
         Debug.Log("Unity: SetActivePlayerOne -> isActive ======== " + isActive);
 		IsActivePlayerOne = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
-		CheckPlayerActiveNum();
+		CheckPlayerActiveNum(PlayerEnum.PlayerOne);
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerOne);
 		if (isActive) {
 			IsPlayGamePOne = true;
@@ -2366,7 +2366,7 @@ public class XkGameCtrl : SSGameMono
 	{
 		IsActivePlayerTwo = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerTwo);
-		CheckPlayerActiveNum();
+		CheckPlayerActiveNum(PlayerEnum.PlayerTwo);
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerTwo);
         if (isActive) {
 			IsPlayGamePTwo = true;
@@ -2416,7 +2416,7 @@ public class XkGameCtrl : SSGameMono
 	{
 		IsActivePlayerThree = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerThree);
-		CheckPlayerActiveNum();
+		CheckPlayerActiveNum(PlayerEnum.PlayerThree);
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerThree);
         if (isActive) {
 			IsPlayGamePThree = true;
@@ -2466,7 +2466,7 @@ public class XkGameCtrl : SSGameMono
 	{
 		IsActivePlayerFour = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerFour);
-		CheckPlayerActiveNum();
+		CheckPlayerActiveNum(PlayerEnum.PlayerFour);
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(PlayerEnum.PlayerFour);
         if (isActive) {
 			IsPlayGamePFour = true;
@@ -2920,12 +2920,12 @@ public class XkGameCtrl : SSGameMono
 		return yldScript;
 	}
 
-	public static void CheckPlayerActiveNum()
+	public static void CheckPlayerActiveNum(PlayerEnum indexPlayer)
 	{
         if (IsActivePlayerOne == true
             || IsActivePlayerTwo == true
-            || IsActivePlayerThree == true
-            || IsActivePlayerFour == true)
+            || IsActivePlayerThree == true)
+            //|| IsActivePlayerFour == true)
         {
             //激活任意一个玩家后,关闭所有Ai坦克.
             GetInstance().CloseAllAiPlayer();
@@ -2934,27 +2934,39 @@ public class XkGameCtrl : SSGameMono
         int countPlayer = 0;
 		if (IsActivePlayerOne) {
 			countPlayer++;
-			ActivePlayerToGame(PlayerEnum.PlayerOne);
+            if (indexPlayer == PlayerEnum.PlayerOne)
+            {
+                ActivePlayerToGame(PlayerEnum.PlayerOne);
+            }
 //			PlayerJiFenArray[0] = PlayerJiFenArray[0] == 0 ? 10 : PlayerJiFenArray[0];
 		}
 		
 		if (IsActivePlayerTwo) {
 			countPlayer++;
-			ActivePlayerToGame(PlayerEnum.PlayerTwo);
+            if (indexPlayer == PlayerEnum.PlayerTwo)
+            {
+                ActivePlayerToGame(PlayerEnum.PlayerTwo);
+            }
 //			PlayerJiFenArray[1] = PlayerJiFenArray[1] == 0 ? 10 : PlayerJiFenArray[1];
 		}
 		
 		if (IsActivePlayerThree) {
 			countPlayer++;
-			ActivePlayerToGame(PlayerEnum.PlayerThree);
+            if (indexPlayer == PlayerEnum.PlayerThree)
+            {
+                ActivePlayerToGame(PlayerEnum.PlayerThree);
+            }
 //			PlayerJiFenArray[2] = PlayerJiFenArray[2] == 0 ? 10 : PlayerJiFenArray[2];
 		}
 		
-		if (IsActivePlayerFour) {
-			countPlayer++;
-			ActivePlayerToGame(PlayerEnum.PlayerFour);
-//			PlayerJiFenArray[3] = PlayerJiFenArray[3] == 0 ? 10 : PlayerJiFenArray[3];
-		}
+//		if (IsActivePlayerFour) {
+//			countPlayer++;
+//            if (indexPlayer == PlayerEnum.PlayerFour)
+//            {
+//                ActivePlayerToGame(PlayerEnum.PlayerFour);
+//            }
+////			PlayerJiFenArray[3] = PlayerJiFenArray[3] == 0 ? 10 : PlayerJiFenArray[3];
+//		}
 		PlayerActiveNum = countPlayer;
 	}
 
@@ -3024,6 +3036,7 @@ public class XkGameCtrl : SSGameMono
         XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexPlayer);
         if (playerMoveCom != null)
         {
+            //SSDebug.LogWarning("ActivePlayerAiTankToGame -> indexPlayer ============================= " + indexPlayer);
             Transform tranPoint = XKPlayerCamera.GetInstanceFeiJi().PlayerSpawnPoint[indexVal];
             Vector3 pos = _Instance.GetActivePlayerPos(tranPoint, indexPlayer);
             playerMoveCom.ActivePlayerToPos(pos, tranPoint.up, true);
@@ -3083,7 +3096,8 @@ public class XkGameCtrl : SSGameMono
 			return;
 		}
 
-		Vector3 pos = Vector3.zero;
+        //SSDebug.LogWarning("ActivePlayerToGame -> indexPlayer ============================= " + indexVal);
+        Vector3 pos = Vector3.zero;
 		Transform tranPoint = null;
 		switch (indexVal) {
 		case PlayerEnum.PlayerOne:
@@ -3124,6 +3138,7 @@ public class XkGameCtrl : SSGameMono
 
 	Vector3 GetActivePlayerPos(Transform tran, PlayerEnum indexPlayer = PlayerEnum.Null)
 	{
+        //SSDebug.LogWarning("GetActivePlayerPos -> indexPlayer ============================= " + indexPlayer);
 		Vector3 startPos = tran.position;
 		Vector3 posTmp = startPos;
 		Vector3 forwardVal = tran.forward;
@@ -3273,15 +3288,26 @@ public class XkGameCtrl : SSGameMono
 		}
 		else {
 			PlayerHealthArray[indexPlayer] = 0f;
-			if (!IsLoadingLevel) {
-                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+			if (!IsLoadingLevel)
+            {
+                if (XKGlobalData.GetPlayerCoinIsEnough(indexVal) == true)
                 {
-                    //显示玩家评级UI界面.
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, 0);
+                    if (GetIsActivePlayer(indexVal) == true)
+                    {
+                        //玩家币值充足,不用展示评级界面,直接激活对应机位的玩家.
+                        //玩家首次GG之后,没有设置信息.
+                        //设置玩家状态信息.
+                        SetActivePlayer(indexVal, false);
+                    }
                 }
-				//if (djsCtrl != null) {
-				//	djsCtrl.StartPlayDaoJiShi();
-				//}
+                else
+                {
+                    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                    {
+                        //显示玩家评级UI界面.
+                        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, 0);
+                    }
+                }
 				
 				if (dyCtrl != null) {
 					dyCtrl.HiddenPlayerDanYaoInfo();
