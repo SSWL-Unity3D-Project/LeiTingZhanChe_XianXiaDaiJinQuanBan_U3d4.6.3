@@ -208,6 +208,11 @@ public class ErWeiMaUI : MonoBehaviour
         {
             //SSDebug.Log("SetActive -> isActive =========================== " + isActive);
             gameObject.SetActive(isActive);
+            if (SSUIRoot.GetInstance().m_GameUIManage != null
+                && SSUIRoot.GetInstance().m_GameUIManage.m_ScreenIdCom != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.m_ScreenIdCom.OnSetActiveHddErWeiMa(isActive);
+            }
         }
     }
 

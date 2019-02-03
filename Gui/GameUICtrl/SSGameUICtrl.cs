@@ -1051,6 +1051,7 @@ public class SSGameUICtrl : SSGameMono
     }
 
     internal bool IsCreatGameScreenIdUI = false;
+    internal SSGameHddSreenId m_ScreenIdCom;
     /// <summary>
     /// 产生游戏红点点屏幕码UI.
     /// </summary>
@@ -1067,10 +1068,10 @@ public class SSGameUICtrl : SSGameMono
         if (gmDataPrefab != null)
         {
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITopRight);
-            SSGameHddSreenId screenIdCom = obj.GetComponent<SSGameHddSreenId>();
-            if (screenIdCom != null)
+            m_ScreenIdCom = obj.GetComponent<SSGameHddSreenId>();
+            if (m_ScreenIdCom != null)
             {
-                screenIdCom.Init(screenId);
+                m_ScreenIdCom.Init(screenId);
             }
         }
         else
