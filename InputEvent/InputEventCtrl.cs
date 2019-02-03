@@ -1259,17 +1259,25 @@ public class InputEventCtrl : MonoBehaviour
 
 		//Fire button
 		if (Input.GetKeyUp(KeyCode.Mouse0)) {
-            OnClickFireBt(0, pcvr.ButtonState.UP);
-            OnClickFireBt(1, pcvr.ButtonState.UP);
-            OnClickFireBt(2, pcvr.ButtonState.UP);
-            OnClickFireBt(3, pcvr.ButtonState.UP);
+            //OnClickFireBt(0, pcvr.ButtonState.UP);
+            //OnClickFireBt(1, pcvr.ButtonState.UP);
+            //OnClickFireBt(2, pcvr.ButtonState.UP);
+            //OnClickFireBt(3, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(0, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(1, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(2, pcvr.ButtonState.UP);
+            OnClickDaoDanBt(3, pcvr.ButtonState.UP);
         }
 		
 		if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            OnClickFireBt(0, pcvr.ButtonState.DOWN);
-            OnClickFireBt(1, pcvr.ButtonState.DOWN);
-            OnClickFireBt(2, pcvr.ButtonState.DOWN);
-            OnClickFireBt(3, pcvr.ButtonState.DOWN);
+            //OnClickFireBt(0, pcvr.ButtonState.DOWN);
+            //OnClickFireBt(1, pcvr.ButtonState.DOWN);
+            //OnClickFireBt(2, pcvr.ButtonState.DOWN);
+            //OnClickFireBt(3, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(0, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(1, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(2, pcvr.ButtonState.DOWN);
+            OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
         }
 
 		if (Input.GetKeyUp(KeyCode.Mouse1)) {

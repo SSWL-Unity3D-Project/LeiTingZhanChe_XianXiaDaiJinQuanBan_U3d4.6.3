@@ -125,6 +125,7 @@ public class SSCaiPiaoFlyManage : SSGameMono
     {
         //UnityLog("SSCaiPiaoFlyManage::Init -> indexPlayer == " + IndexPlayer + ", type ==== " + type);
         m_CaiPiaoStartPos = startPos;
+        m_DaiJinQuanType = daiJinQuanType;
         switch (indexPlayer)
         {
             case PlayerEnum.PlayerOne:
