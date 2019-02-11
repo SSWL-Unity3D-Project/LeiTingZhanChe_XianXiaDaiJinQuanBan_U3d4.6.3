@@ -8,6 +8,10 @@ public class SSChouJiangUI : MonoBehaviour
     /// 15秒倒计时.
     /// </summary>
     public SSGameNumUI m_DaoJiShiNumUI;
+    /// <summary>
+    /// 抽奖动画提示UI对象.
+    /// </summary>
+    public GameObject m_TiShiObj;
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
     int m_DaoJiShiVal = 15;
     internal void Init(PlayerEnum indexPlayer)
@@ -25,12 +29,12 @@ public class SSChouJiangUI : MonoBehaviour
                 break;
             case PlayerEnum.PlayerTwo:
                 {
-                    InputEventCtrl.GetInstance().ClickDaoDanBtOneEvent += ClickDaoDanBtTwoEvent;
+                    InputEventCtrl.GetInstance().ClickDaoDanBtTwoEvent += ClickDaoDanBtTwoEvent;
                 }
                 break;
             case PlayerEnum.PlayerThree:
                 {
-                    InputEventCtrl.GetInstance().ClickDaoDanBtOneEvent += ClickDaoDanBtThreeEvent;
+                    InputEventCtrl.GetInstance().ClickDaoDanBtThreeEvent += ClickDaoDanBtThreeEvent;
                 }
                 break;
         }
@@ -62,7 +66,19 @@ public class SSChouJiangUI : MonoBehaviour
                 //初始化播放抽奖动画.
                 InitPlayChouJiangAnimation();
                 RemoveClickDaoDanBtEvent();
+                HiddenTiShiObj();
             }
+        }
+    }
+
+    /// <summary>
+    /// 隐藏抽奖提示UI.
+    /// </summary>
+    void HiddenTiShiObj()
+    {
+        if (m_TiShiObj != null)
+        {
+            m_TiShiObj.SetActive(false);
         }
     }
 
@@ -134,6 +150,7 @@ public class SSChouJiangUI : MonoBehaviour
             //初始化播放抽奖动画.
             InitPlayChouJiangAnimation();
             RemoveClickDaoDanBtEvent();
+            HiddenTiShiObj();
         }
     }
 
