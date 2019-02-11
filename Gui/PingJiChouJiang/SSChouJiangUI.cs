@@ -837,6 +837,12 @@ public class SSChouJiangUI : MonoBehaviour
     /// 抽奖结果UI对象.
     /// </summary>
     public GameObject m_ChouJiangResulteUIObj;
+    public string m_XieXieCanYu = "谢谢参与";
+    public string m_ZaiWanYiJu = "再玩一局";
+    /// <summary>
+    /// 抽奖结果.
+    /// </summary>
+    public UILabel m_ResulteLabel;
     /// <summary>
     /// 设置抽奖结果是否隐藏.
     /// </summary>
@@ -845,6 +851,38 @@ public class SSChouJiangUI : MonoBehaviour
         if (m_ChouJiangResulteUIObj != null)
         {
             m_ChouJiangResulteUIObj.SetActive(isActive);
+        }
+
+        if (m_PlayerJiangPin != null && isActive == true && m_ResulteLabel != null)
+        {
+            //展示中奖信息.
+            string info = "";
+            switch (m_PlayerJiangPin.jiangPinType)
+            {
+                case JiangPinState.XieXieCanYu:
+                    {
+                        //谢谢参与奖品.
+                        info = m_XieXieCanYu;
+                        break;
+                    }
+                case JiangPinState.JiangPin2:
+                case JiangPinState.JiangPin3:
+                case JiangPinState.JiangPin4:
+                    {
+                        if (m_PlayerJiangPin.jiangPinNameUI != null)
+                        {
+                            info = m_PlayerJiangPin.jiangPinNameUI.text;
+                        }
+                        break;
+                    }
+                case JiangPinState.ZaiWanYiJu:
+                    {
+                        //免费再玩一局奖品.
+                        info = m_ZaiWanYiJu;
+                        break;
+                    }
+            }
+            m_ResulteLabel.text = info;
         }
     }
     #endregion
