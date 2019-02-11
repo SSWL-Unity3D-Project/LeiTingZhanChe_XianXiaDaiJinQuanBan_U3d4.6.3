@@ -10,7 +10,7 @@ public class DaoJiShiCtrl : MonoBehaviour
     /// <summary>
     /// 免费时间数字UI控制组件.
     /// </summary>
-    public SSGameNumUI m_TimeMianFeiNum;
+    public UILabel m_TimeMianFeiNum;
     /// <summary>
     /// 下一次免费间隔时间提示.
     /// </summary>
@@ -201,7 +201,8 @@ public class DaoJiShiCtrl : MonoBehaviour
                 if (m_TimeMianFeiNum != null)
                 {
                     //显示下次免费游戏的间隔时间数字.
-                    m_TimeMianFeiNum.ShowNumUI(XKGlobalData.GetInstance().m_TimeMianFeiNum);
+                    //m_TimeMianFeiNum.ShowNumUI(XKGlobalData.GetInstance().m_TimeMianFeiNum);
+                    m_TimeMianFeiNum.text = XKGlobalData.GetInstance().m_TimeMianFeiNum.ToString();
                 }
             }
         }
