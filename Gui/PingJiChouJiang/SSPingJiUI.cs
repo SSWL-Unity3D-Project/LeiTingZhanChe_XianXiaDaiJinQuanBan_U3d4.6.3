@@ -78,7 +78,7 @@ public class SSPingJiUI : MonoBehaviour
     {
         if (Time.time - m_TimeStart >= m_TimeHidden && IsRemoveSelf == false)
         {
-            if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.S)
+            if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.A)
             {
                 //设置玩家状态信息.
                 XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
