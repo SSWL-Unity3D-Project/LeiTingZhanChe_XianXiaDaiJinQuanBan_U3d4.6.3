@@ -39,6 +39,11 @@ public class SpawnNpcManage : MonoBehaviour
         Down = 3,
     }
     /// <summary>
+    /// 战车npc在需调UI上面展示的时间.
+    /// </summary>
+    [Range(1, 600)]
+    public int m_TimeXueTiaoZhanCheNpc = 20;
+    /// <summary>
     /// 战车npc从产生点运动到最后一个路径点所需要的时间.
     /// </summary>
     [Range(1, 600)]
@@ -175,7 +180,7 @@ public class SpawnNpcManage : MonoBehaviour
                             float speed = pathDistance / time;
                             speed = 3f * speed; //ITween速度有偏移量.
                             SpawnPoint.MvSpeed = speed;
-                            daoJiShi = m_SpawnNpcManage.m_TimeMoveZhanCheNpc;
+                            daoJiShi = m_SpawnNpcManage.m_TimeXueTiaoZhanCheNpc;
                             //SSDebug.LogWarning("CreatPointNpc -> MvSpeed ====================================== " + SpawnPoint.MvSpeed
                             //    + ", time ==== " + Time.time);
                             break;
