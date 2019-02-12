@@ -1403,9 +1403,28 @@ public class XKNpcMoveCtrl : MonoBehaviour
             }
 		}
 		else {
-			Transform markTran = NpcPathTran.GetChild(MarkCount - 1);
-			markScript = markTran.GetComponent<NpcMark>();
+            if (MarkCount > NpcPathTran.childCount)
+            {
+                MarkCount = NpcPathTran.childCount;
+            }
+
+            if (MarkCount < 1)
+            {
+                MarkCount = 1;
+            }
+
+            if (NpcPathTran != null && NpcPathTran.childCount >= MarkCount)
+            {
+                Transform markTran = NpcPathTran.GetChild(MarkCount - 1);
+                markScript = markTran.GetComponent<NpcMark>();
+            }
 		}
+
+        if (markScript == null)
+        {
+            SSDebug.LogWarning("MoveNpcOnCompelteITween -> markScript was null");
+            return;
+        }
 
         //Debug.Log("Unity:"+"MoveNpcOnCompelteITween...npc is "+NpcObj.name);
         if (IsCaiPiaoZhanChe == false)
