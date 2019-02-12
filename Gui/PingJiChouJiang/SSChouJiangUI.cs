@@ -9,6 +9,22 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     public SSGameNumUI m_DaoJiShiNumUI;
     /// <summary>
+    /// 谢谢参与音效.
+    /// </summary>
+    public AudioClip m_XieXieCanYuAudio;
+    /// <summary>
+    /// 得奖音效.
+    /// </summary>
+    public AudioClip m_DeJiangAudio;
+    /// <summary>
+    /// 转动时的音源.
+    /// </summary>
+    public AudioSource m_ZhuanDongAdioSource;
+    /// <summary>
+    /// 结果展示的音源.
+    /// </summary>
+    public AudioSource m_ResultAdioSource;
+    /// <summary>
     /// 抽奖动画提示UI对象.
     /// </summary>
     public GameObject m_TiShiObj;
@@ -645,6 +661,17 @@ public class SSChouJiangUI : MonoBehaviour
     }
 
     /// <summary>
+    /// 播放转动音效.
+    /// </summary>
+    void PlayZhuanDongAudio()
+    {
+        if (m_ZhuanDongAdioSource != null && m_ZhuanDongAdioSource.clip != null)
+        {
+            m_ZhuanDongAdioSource.Play();
+        }
+    }
+
+    /// <summary>
     /// 播放抽奖动画.
     /// </summary>
     IEnumerator PlayChouJiangAnimation()
@@ -661,6 +688,8 @@ public class SSChouJiangUI : MonoBehaviour
             int indexJiangPin = stepVal % jiangPinGeZi;
             SetActiveJiangPinFlash(indexJiangPinPre, false);
             SetActiveJiangPinFlash(indexJiangPin, true);
+            //音效播放.
+            PlayZhuanDongAudio();
             if (stepVal == maxStep && chouJiangAniStage == ChouJiangAniStage.Stage03)
             {
                 //抽奖动画已经播放结束.
@@ -725,6 +754,38 @@ public class SSChouJiangUI : MonoBehaviour
         {
             //删除玩家游戏抽奖界面UI.
             SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, m_TimeHiddenChouJiangResult);
+        }
+    }
+
+    /// <summary>
+    /// 播放抽奖结果音效.
+    /// </summary>
+    void PlayChouJiangResultAudio()
+    {
+        if (m_ResultAdioSource == null || m_PlayerJiangPin == null)
+        {
+            return;
+        }
+
+        AudioClip audioClip = null;
+        switch (m_PlayerJiangPin.jiangPinType)
+        {
+            case JiangPinState.XieXieCanYu:
+                {
+                    audioClip = m_XieXieCanYuAudio;
+                    break;
+                }
+            default:
+                {
+                    audioClip = m_DeJiangAudio;
+                    break;
+                }
+        }
+
+        if (audioClip != null)
+        {
+            m_ResultAdioSource.clip = audioClip;
+            m_ResultAdioSource.Play();
         }
     }
 
