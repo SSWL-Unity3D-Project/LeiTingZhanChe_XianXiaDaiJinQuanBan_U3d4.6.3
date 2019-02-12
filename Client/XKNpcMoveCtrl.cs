@@ -204,11 +204,24 @@ public class XKNpcMoveCtrl : MonoBehaviour
 				IsChangeNpcForward = false;
 			}
 		}
-
+        
         if (IsCheLiangMoveType && RealNpcTran != null)
         {
-            //RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
-            RealNpcTran.forward = Vector3.MoveTowards(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+            bool isFixRot = true;
+            if (m_CaiPiaoBossMoveCom != null)
+            {
+                if (m_CaiPiaoBossMoveCom.IsMoveNpc == true)
+                {
+                    //彩票JPBoss正在进行特殊移动.
+                    isFixRot = false;
+                }
+            }
+
+            if (isFixRot == true)
+            {
+                //RealNpcTran.forward = Vector3.Slerp(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+                RealNpcTran.forward = Vector3.MoveTowards(RealNpcTran.forward, MarkTranAimForward, CheLiangRotSpeed);
+            }
         }
 
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
