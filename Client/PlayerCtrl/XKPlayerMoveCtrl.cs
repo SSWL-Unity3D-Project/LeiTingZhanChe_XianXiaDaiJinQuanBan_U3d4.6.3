@@ -67,7 +67,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		return _InstancePFour;
 	}
 
-	public static XKPlayerMoveCtrl GetXKPlayerMoveCtrl(PlayerEnum playerSt)
+	public static XKPlayerMoveCtrl GetXKPlayerMoveCom(PlayerEnum playerSt)
 	{
 		XKPlayerMoveCtrl playerScript = null;
 		switch (playerSt)
@@ -607,7 +607,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public static void SetPlayerJiSuState(PlayerEnum playerSt)
 	{
-		XKPlayerMoveCtrl playerScript = GetXKPlayerMoveCtrl(playerSt);
+		XKPlayerMoveCtrl playerScript = GetXKPlayerMoveCom(playerSt);
 		if (playerScript == null) {
 			return;
 		}
@@ -649,7 +649,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	{
 		XKPlayerMoveCtrl moveScript = null;
 		TKMoveState tkMvState = TKMoveState.U_FangXiangPan;
-		moveScript = GetXKPlayerMoveCtrl(playerSt);
+		moveScript = GetXKPlayerMoveCom(playerSt);
 		if (moveScript == null) {
 			return;
 		}
@@ -686,7 +686,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		TKMoveState tkMvState = TKMoveState.U_FangXiangPan;
 		for (int i = 1; i <= 4; i++) {
 			indexPlayer = (PlayerEnum)i;
-			playerScript = GetXKPlayerMoveCtrl(indexPlayer);
+			playerScript = GetXKPlayerMoveCom(indexPlayer);
 			if (playerScript == null) {
 				continue;
 			}
@@ -711,7 +711,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			PlayerEnum indexPlayer = PlayerEnum.Null;
 			for (int i = 1; i <= 4; i++) {
 				indexPlayer = (PlayerEnum)i;
-				playerScript = GetXKPlayerMoveCtrl(indexPlayer);
+				playerScript = GetXKPlayerMoveCom(indexPlayer);
 				if (playerScript == null) {
 					continue;
 				}
@@ -719,7 +719,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			}
 		}
 		else {
-			playerScript = GetXKPlayerMoveCtrl(playerSt);
+			playerScript = GetXKPlayerMoveCom(playerSt);
 			if (playerScript == null) {
 				return;
 			}
@@ -1203,6 +1203,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		}
 	}
 
+    internal bool GetIsActive()
+    {
+        return gameObject.activeInHierarchy;
+    }
+
 	public GameObject[] ShanShuoObj;
 	bool IsShanShuoState;
 	float TimeShanShuo;
@@ -1623,7 +1628,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
     public static void ResetZhanCheDaiJinQuanCount(PlayerEnum indexPlayer)
     {
-        XKPlayerMoveCtrl playerCom = GetXKPlayerMoveCtrl(indexPlayer);
+        XKPlayerMoveCtrl playerCom = GetXKPlayerMoveCom(indexPlayer);
         if (playerCom != null)
         {
             playerCom.ResetZhanCheDaiJinQuanCount();

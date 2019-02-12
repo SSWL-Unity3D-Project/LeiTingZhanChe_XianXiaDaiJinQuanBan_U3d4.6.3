@@ -38,6 +38,16 @@ public class SpawnNpcManage : MonoBehaviour
         Up = 2,
         Down = 3,
     }
+    /// <summary>
+    /// 战车npc从产生点运动到最后一个路径点所需要的时间.
+    /// </summary>
+    [Range(1, 600)]
+    public int m_TimeMoveZhanCheNpc = 20;
+    /// <summary>
+    /// JPBoss从产生点运动到最后一个路径点所需要的时间.
+    /// </summary>
+    [Range(1, 600)]
+    public int m_TimeMoveJPBoss = 20;
     [System.Serializable]
     public class NpcData
     {
@@ -120,6 +130,11 @@ public class SpawnNpcManage : MonoBehaviour
         /// npc产生点组件.
         /// </summary>
         public XKSpawnNpcPoint SpawnPoint;
+        internal SpawnNpcManage m_SpawnNpcManage;
+        public NpcSpawnData(SpawnNpcManage spawnNpcManage)
+        {
+            m_SpawnNpcManage = spawnNpcManage;
+        }
 
         /// <summary>
         /// 产生npc.
@@ -132,7 +147,52 @@ public class SpawnNpcManage : MonoBehaviour
                 SpawnPoint.NpcPath = NpcPath.transform;
                 //不进行循环产生npc.
                 SpawnPoint.SpawnMaxNpc = 1;
-                return SpawnPoint.CreatPointNpc(type);
+
+                int daoJiShi = 0;
+                switch (type)
+                {
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                        {
+                            //战车代金券npc
+                            float pathDistance = SpawnPoint.GetNpcMoveDistance();
+                            float time = 0f;
+                            if (m_SpawnNpcManage != null)
+                            {
+                                time = m_SpawnNpcManage.m_TimeMoveZhanCheNpc;
+                            }
+
+                            if (time <= 0f)
+                            {
+                                time = 1f;
+                            }
+
+                            if (pathDistance < 0f)
+                            {
+                                pathDistance = 0f;
+                            }
+                            //重新计算运动速度.
+                            float speed = pathDistance / time;
+                            speed = 3f * speed; //ITween速度有偏移量.
+                            SpawnPoint.MvSpeed = speed;
+                            daoJiShi = m_SpawnNpcManage.m_TimeMoveZhanCheNpc;
+                            //SSDebug.LogWarning("CreatPointNpc -> MvSpeed ====================================== " + SpawnPoint.MvSpeed
+                            //    + ", time ==== " + Time.time);
+                            break;
+                        }
+                    case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                        {
+                            daoJiShi = m_SpawnNpcManage.m_TimeMoveJPBoss;
+                            break;
+                        }
+                }
+
+                GameObject obj = SpawnPoint.CreatPointNpc(type);
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.SetDaiJinQuanXuTiaoDaoJiShi(daoJiShi);
+                }
+                return obj;
             }
             else
             {
@@ -1018,7 +1078,7 @@ public class SpawnNpcManage : MonoBehaviour
             return null;
         }
 
-        NpcSpawnData data = new NpcSpawnData();
+        NpcSpawnData data = new NpcSpawnData(this);
         //获取ncp预制.
         data.NpcPrefab = GetNpcPrefab(npcType, pointState);
         SSCreatNpcData creatNpcDt = GetCreatNpcData(npcType, pointState);

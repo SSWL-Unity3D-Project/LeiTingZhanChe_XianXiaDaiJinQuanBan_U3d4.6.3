@@ -2,6 +2,10 @@
 
 public class SSDaiJinQuanXuanTiao : MonoBehaviour
 {
+    /// <summary>
+    /// 血条倒计时UI控制组件.
+    /// </summary>
+    public SSGameNumUI m_TimeNumUI;
     public UISprite BossXueTiaoSprite;
     public UISprite BossXueTiaoHongSprite;
     /**
@@ -43,6 +47,7 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
         if (IsCanSubXueTiaoAmount)
         {
             SubBossXueTiaoHongSprite();
+            UpdateDaoJiShiValue();
         }
     }
 
@@ -162,5 +167,60 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
             fillAmount = BossXueTiaoSprite.fillAmount;
         }
         BossXueTiaoHongSprite.fillAmount = fillAmount;
+    }
+
+    //*****************************************************************************************************//
+    /// <summary>
+    /// 倒计时数值.
+    /// </summary>
+    int m_DaoJiShiVal = 0;
+    float m_TimeLastDaoJiShi = 0f;
+    internal void InitTimeInfo(int timeVal)
+    {
+        SSDebug.Log("InitTimeInfo -> timeVal ============================== " + timeVal);
+        m_DaoJiShiVal = timeVal;
+        m_TimeLastDaoJiShi = Time.time;
+        ShowTimeNum(m_DaoJiShiVal);
+    }
+
+    /// <summary>
+    /// 更新倒计时数字UI.
+    /// </summary>
+    void UpdateDaoJiShiValue()
+    {
+        if (m_DaoJiShiVal <= 0)
+        {
+            return;
+        }
+
+        if (Time.time - m_TimeLastDaoJiShi >= 1f)
+        {
+            m_TimeLastDaoJiShi = Time.time;
+            m_DaoJiShiVal--;
+            ShowTimeNum(m_DaoJiShiVal);
+            SSDebug.Log("UpdateDaoJiShiValue -> m_DaoJiShiVal ============================== " + m_DaoJiShiVal);
+        }
+    }
+
+    /// <summary>
+    /// 显示血条倒计时UI数字.
+    /// </summary>
+    void ShowTimeNum(int val)
+    {
+        if (m_TimeNumUI != null && val > -1)
+        {
+            m_TimeNumUI.ShowNumUI(val);
+        }
+    }
+
+    /// <summary>
+    /// 隐藏倒计时UI.
+    /// </summary>
+    void HiddenTimeNum()
+    {
+        if (m_TimeNumUI != null)
+        {
+            m_TimeNumUI.SetActive(false);
+        }
     }
 }

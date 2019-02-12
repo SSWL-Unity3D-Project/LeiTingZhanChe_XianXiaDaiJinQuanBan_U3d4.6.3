@@ -461,6 +461,18 @@ public class XkGameCtrl : SSGameMono
 	public static float MinBloodUIAmount = 0f;
     static float[] PlayerHealthArray = {0f, 0f, 0f, 0f};
 	public static int[] PlayerJiFenArray = {0, 0, 0, 0};
+    /// <summary>
+    /// 获取玩家积分信息.
+    /// </summary>
+    static int GetPlayerJiFenValue(PlayerEnum indexPlayer)
+    {
+        int indexVal = (int)indexPlayer - 1;
+        if (indexVal < 0 || indexVal >= PlayerJiFenArray.Length)
+        {
+            return 0;
+        }
+        return PlayerJiFenArray[indexVal];
+    }
 /**
  * 主角进行游戏的圈数.
  * PlayerQuanShu[0] -> 主角1的圈数.
@@ -2198,7 +2210,7 @@ public class XkGameCtrl : SSGameMono
 		if (playerSt == PlayerEnum.Null) {
 			return;
 		}
-		XKPlayerMoveCtrl playerScript = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(playerSt);
+		XKPlayerMoveCtrl playerScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(playerSt);
 		playerScript.ActivePlayerWuDiState();
 	}
 
@@ -3033,7 +3045,7 @@ public class XkGameCtrl : SSGameMono
             return;
         }
         
-        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexPlayer);
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
         if (playerMoveCom != null)
         {
             //SSDebug.LogWarning("ActivePlayerAiTankToGame -> indexPlayer ============================= " + indexPlayer);
@@ -3075,7 +3087,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     public static void ClosePlayerAiTank(PlayerEnum indexVal)
     {
-        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexVal);
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal);
         if (playerMoveCom != null)
         {
             playerMoveCom.HiddenGamePlayer(1);
@@ -3305,7 +3317,8 @@ public class XkGameCtrl : SSGameMono
                     if (SSUIRoot.GetInstance().m_GameUIManage != null)
                     {
                         //显示玩家评级UI界面.
-                        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, 0);
+                        int playerScore = GetPlayerJiFenValue(indexVal);
+                        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, playerScore);
                     }
                 }
 				
@@ -3405,7 +3418,7 @@ public class XkGameCtrl : SSGameMono
 			}
 		}*/
 
-		XKPlayerMoveCtrl playerMoveCtrl = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexVal);
+		XKPlayerMoveCtrl playerMoveCtrl = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal);
 		if (playerMoveCtrl != null) {
 			if (playerMoveCtrl.GetIsMoveToTiaoYueDian()) {
 				return;

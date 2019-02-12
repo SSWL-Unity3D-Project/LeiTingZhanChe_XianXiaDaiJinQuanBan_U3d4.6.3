@@ -841,7 +841,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     {
                         if (XkPlayerCtrl.GetInstanceFeiJi() != null)
                         {
-                            XkPlayerCtrl.GetInstanceFeiJi().AddGetZhanCheDaiJinQuanPlayer(XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(playerSt));
+                            XkPlayerCtrl.GetInstanceFeiJi().AddGetZhanCheDaiJinQuanPlayer(XKPlayerMoveCtrl.GetXKPlayerMoveCom(playerSt));
                         }
                     }
 

@@ -1642,6 +1642,17 @@ public class SSGameUICtrl : SSGameMono
         }
     }
 
+    /// <summary>
+    /// 设置代金券npc血条倒计时数据.
+    /// </summary>
+    internal void SetDaiJinQuanXuTiaoDaoJiShi(int timeVal)
+    {
+        if (m_DaiJinQuanNpcXueTiaoUI != null)
+        {
+            m_DaiJinQuanNpcXueTiaoUI.InitTimeInfo(timeVal);
+        }
+    }
+
     //****************************************************************************************************************//
     /// <summary>
     /// 玩家游戏评级界面UI.

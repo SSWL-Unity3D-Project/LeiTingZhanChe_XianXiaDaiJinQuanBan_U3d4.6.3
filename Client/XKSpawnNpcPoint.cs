@@ -1044,6 +1044,28 @@ public class XKSpawnNpcPoint : MonoBehaviour
 			transform.position = hitInfo.point;
 		}
 	}
+
+    //**********************************************************************************************//
+    /// <summary>
+    /// 获取npc需要运动的总路程.
+    /// </summary>
+    internal float GetNpcMoveDistance()
+    {
+        float distance = 0f;
+        if (NpcPath != null)
+        {
+            NpcPathCtrl npcPathCom = NpcPath.GetComponent<NpcPathCtrl>();
+            distance += npcPathCom.m_PathLength;
+            if (NpcPath.childCount > 0)
+            {
+                //计算产生点到第一个路径点的距离.
+                Vector3 startPos = transform.position;
+                Vector3 endPos = NpcPath.GetChild(0).position;
+                distance += Vector3.Distance(startPos, endPos);
+            }
+        }
+        return distance;
+    }
 }
 
 public enum SpawnPointType

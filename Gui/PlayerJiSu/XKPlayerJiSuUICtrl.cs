@@ -90,7 +90,7 @@ public class XKPlayerJiSuUICtrl : MonoBehaviour
 	public void HiddenJiSuUI(int key = 0)
 	{
 		if (key == 0) {
-			XKPlayerMoveCtrl playerMoveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(PlayerSt);
+			XKPlayerMoveCtrl playerMoveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(PlayerSt);
 			playerMoveScript.ResetPlayerJiSuState();
 		}
 		gameObject.SetActive(false);

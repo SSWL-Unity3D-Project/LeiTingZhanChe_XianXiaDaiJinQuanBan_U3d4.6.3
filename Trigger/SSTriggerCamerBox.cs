@@ -67,6 +67,7 @@ public class SSTriggerCamerBox : MonoBehaviour
                 npcMoveCom.TriggerRemovePointNpc(0);
                 //镜头继续移动.
                 XkGameCtrl.GetInstance().SetGameCameraIsMoveing(true, NpcJiFenEnum.CheLiang);
+                //SSDebug.LogWarning("SSTriggerCamerBox::OnTriggerExit -> time ==================== " + Time.time);
             }
         }
     }

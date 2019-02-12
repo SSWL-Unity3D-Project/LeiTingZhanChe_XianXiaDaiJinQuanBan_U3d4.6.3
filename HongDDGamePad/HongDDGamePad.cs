@@ -532,7 +532,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 + ", activeState =============== " + activeState);
 
             PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-            XKPlayerMoveCtrl playerCom = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexPlayer);
+            XKPlayerMoveCtrl playerCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
             if (playerCom != null)
             {
                 if (XkPlayerCtrl.GetInstanceFeiJi() != null)
@@ -1956,11 +1956,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         //说明玩家是在游戏倒计时结束前成功续费的.
                         //当前玩家的红点点游戏金额兑换为游戏币.
                         int coin = money / m_GameCoinToMoney;
-                        if (coin > 10)
-                        {
-                            //最多给玩家显示9次复活信息.
-                            coin = 10;
-                        }
+                        //if (coin > 10)
+                        //{
+                        //    //最多给玩家显示9次复活信息.
+                        //    coin = 10;
+                        //}
                         AddWeiXinGameCoinToPlayer(userId, coin);
 
                         //记录玩家登陆游戏的信息.

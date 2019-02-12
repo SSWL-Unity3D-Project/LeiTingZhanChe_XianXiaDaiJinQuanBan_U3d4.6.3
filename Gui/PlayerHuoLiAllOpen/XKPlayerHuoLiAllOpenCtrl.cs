@@ -61,7 +61,7 @@ public class XKPlayerHuoLiAllOpenCtrl : MonoBehaviour
 			return;
 		}
 		
-		Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl(indexVal).PiaoFenPoint;
+		Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal).PiaoFenPoint;
 		Vector3 startPos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(playerTr.position);
 		huoLiOpenMoveCom.SetPlayerHuoLiOpenVal(startPos);
 	}

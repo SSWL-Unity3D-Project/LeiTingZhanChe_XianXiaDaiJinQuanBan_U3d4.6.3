@@ -99,7 +99,7 @@ public class NpcAmmoCtrl : MonoBehaviour {
 		Vector3 posB = AmmoTran.position;
 		if (!isHitObj) {
 			for (int i = 0; i < 4; i++) {
-				playerScript = XKPlayerMoveCtrl.GetXKPlayerMoveCtrl((PlayerEnum)(i+1));
+				playerScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom((PlayerEnum)(i+1));
 				if (playerScript == null || playerScript.GetIsDeathPlayer()) {
 					continue;
 				}

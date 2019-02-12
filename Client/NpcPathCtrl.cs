@@ -5,6 +5,7 @@ public class NpcPathCtrl : MonoBehaviour {
 	public bool IsMoveEndFire;
 	public bool IsAutoMarkName;
 	public bool IsDrawLine;
+    internal float m_PathLength = 0f;
 	void Start()
 	{
 		CheckNpcPathScript();
@@ -17,7 +18,23 @@ public class NpcPathCtrl : MonoBehaviour {
 			obj.name = "null";
 		}
         gameObject.SetActive(false);
-	}
+        GetPathLength();
+    }
+
+    void GetPathLength()
+    {
+        float pathLength = 0f;
+        if (transform.childCount > 1)
+        {
+            for (int i = 0; i < transform.childCount - 1; i++)
+            {
+                Vector3 startPos = transform.GetChild(i).position;
+                Vector3 endPos = transform.GetChild(i + 1).position;
+                pathLength += Vector3.Distance(startPos, endPos);
+            }
+        }
+        m_PathLength = pathLength;
+    }
 
 #if UNITY_EDITOR
     public bool IsDrawGizmos = false;
