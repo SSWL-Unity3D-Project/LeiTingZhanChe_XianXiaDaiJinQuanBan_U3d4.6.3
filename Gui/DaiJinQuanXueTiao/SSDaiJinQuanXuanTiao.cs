@@ -204,7 +204,7 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
             m_DaoJiShiVal--;
             ShowTimeNum(m_DaoJiShiVal);
             ShowTimeHaoMiaoNum(0);
-            SSDebug.Log("UpdateDaoJiShiValue -> m_DaoJiShiVal ============================== " + m_DaoJiShiVal);
+            //SSDebug.Log("UpdateDaoJiShiValue -> m_DaoJiShiVal ============================== " + m_DaoJiShiVal);
         }
         else
         {

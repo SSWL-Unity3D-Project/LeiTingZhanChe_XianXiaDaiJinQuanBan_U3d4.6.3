@@ -607,8 +607,9 @@ public class XkGameCtrl : SSGameMono
 
 			YouLiangDianAddPOne = 0;
 			YouLiangDianAddPTwo = 0;
+            InitZaiWanYiJuData();
 
-			for (int i = 0; i < 4; i++)
+            for (int i = 0; i < PlayerHealthArray.Length; i++)
 			{
 				PlayerHealthArray[i] = MaxPlayerHealth;
 			}
@@ -2288,7 +2289,27 @@ public class XkGameCtrl : SSGameMono
 
         if (_Instance != null)
         {
+            if (XKGlobalData.GetPlayerCoinIsEnough(indexPlayer) == true)
+            {
+                if (GetIsActivePlayer(indexPlayer) == true)
+                {
+                    //玩家币值充足,不用展示评级界面,直接激活对应机位的玩家.
+                    //玩家首次GG之后,没有设置信息.
+                    //设置玩家状态信息.
+                    SetActivePlayer(indexPlayer, false);
+                }
+            }
+            else
+            {
+                if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                {
+                    //显示玩家评级UI界面.
+                    int playerScore = GetPlayerJiFenValue(indexPlayer);
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexPlayer, playerScore);
+                }
+            }
             _Instance.InitGamePlayerInfo(indexPlayer, false);
+
             if (_Instance.m_TriggerManage != null)
             {
                 _Instance.m_TriggerManage.SubTriggerChangeMatEnterCount(indexPlayer);
@@ -3302,25 +3323,25 @@ public class XkGameCtrl : SSGameMono
 			PlayerHealthArray[indexPlayer] = 0f;
 			if (!IsLoadingLevel)
             {
-                if (XKGlobalData.GetPlayerCoinIsEnough(indexVal) == true)
-                {
-                    if (GetIsActivePlayer(indexVal) == true)
-                    {
-                        //玩家币值充足,不用展示评级界面,直接激活对应机位的玩家.
-                        //玩家首次GG之后,没有设置信息.
-                        //设置玩家状态信息.
-                        SetActivePlayer(indexVal, false);
-                    }
-                }
-                else
-                {
-                    if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                    {
-                        //显示玩家评级UI界面.
-                        int playerScore = GetPlayerJiFenValue(indexVal);
-                        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, playerScore);
-                    }
-                }
+                //if (XKGlobalData.GetPlayerCoinIsEnough(indexVal) == true)
+                //{
+                //    if (GetIsActivePlayer(indexVal) == true)
+                //    {
+                //        //玩家币值充足,不用展示评级界面,直接激活对应机位的玩家.
+                //        //玩家首次GG之后,没有设置信息.
+                //        //设置玩家状态信息.
+                //        SetActivePlayer(indexVal, false);
+                //    }
+                //}
+                //else
+                //{
+                //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                //    {
+                //        //显示玩家评级UI界面.
+                //        int playerScore = GetPlayerJiFenValue(indexVal);
+                //        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerPingJiUI(indexVal, playerScore);
+                //    }
+                //}
 				
 				if (dyCtrl != null) {
 					dyCtrl.HiddenPlayerDanYaoInfo();
@@ -3351,6 +3372,13 @@ public class XkGameCtrl : SSGameMono
     /// 再玩一局游戏玩家数据列表.
     /// </summary>
     ZaiWanYiJuPlayerData[] m_ZaiWanYiJuPlayerDtArray = new ZaiWanYiJuPlayerData[3];
+    void InitZaiWanYiJuData()
+    {
+        for (int i = 0; i < m_ZaiWanYiJuPlayerDtArray.Length; i++)
+        {
+            m_ZaiWanYiJuPlayerDtArray[i] = new ZaiWanYiJuPlayerData();
+        }
+    }
     /// <summary>
     /// 设置某机位是否获得过再玩一局游戏奖品.
     /// </summary>

@@ -75,7 +75,7 @@ public class SSChouJiangUI : MonoBehaviour
     {
         if (val == pcvr.ButtonState.DOWN)
         {
-            if (IsPlayCouJiangDaoJiShi == true)
+            if (IsPlayChouJiangDaoJiShi == true)
             {
                 //关闭抽奖界面倒计时.
                 CloseChouJiangDaoJiShi();
@@ -128,17 +128,17 @@ public class SSChouJiangUI : MonoBehaviour
         }
     }
 
-    bool IsPlayCouJiangDaoJiShi = false;
+    bool IsPlayChouJiangDaoJiShi = false;
     /// <summary>
     /// 播放抽奖界面倒计时.
     /// </summary>
     IEnumerator PlayChouJiangDaoJiShi()
     {
-        if (IsPlayCouJiangDaoJiShi == true)
+        if (IsPlayChouJiangDaoJiShi == true)
         {
             yield break;
         }
-        IsPlayCouJiangDaoJiShi = true;
+        IsPlayChouJiangDaoJiShi = true;
 
         int daoJiShiVal = 15;
         do
@@ -156,10 +156,10 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
         }
-        while (daoJiShiVal >= 0 && IsPlayCouJiangDaoJiShi == true);
+        while (daoJiShiVal >= 0 && IsPlayChouJiangDaoJiShi == true);
 
         yield return new WaitForSeconds(0.2f);
-        if (IsPlayCouJiangDaoJiShi == true)
+        if (IsPlayChouJiangDaoJiShi == true)
         {
             //关闭抽奖界面倒计时.
             CloseChouJiangDaoJiShi();
@@ -172,9 +172,9 @@ public class SSChouJiangUI : MonoBehaviour
 
     void CloseChouJiangDaoJiShi()
     {
-        if (IsPlayCouJiangDaoJiShi == true)
+        if (IsPlayChouJiangDaoJiShi == true)
         {
-            IsPlayCouJiangDaoJiShi = false;
+            IsPlayChouJiangDaoJiShi = false;
             if (m_DaoJiShiNumUI != null)
             {
                 m_DaoJiShiNumUI.SetActive(false);
@@ -205,6 +205,10 @@ public class SSChouJiangUI : MonoBehaviour
         /// 奖品发光图片对象.
         /// </summary>
         public GameObject jiangPinFlashObj;
+        public override string ToString()
+        {
+            return "jiangPinType == " + jiangPinType.ToString();
+        }
         public ChouJiangData(int jiangPingIndex, JiangPinState type)
         {
             this.jiangPingIndex = jiangPingIndex;
@@ -380,6 +384,8 @@ public class SSChouJiangUI : MonoBehaviour
         IsInitPlayChouJiangAni = true;
 
         CheckPlayerJiangPinData();
+        //播放抽奖动画.
+        StartCoroutine(PlayChouJiangAnimation());
     }
 
     /// <summary>
@@ -747,6 +753,8 @@ public class SSChouJiangUI : MonoBehaviour
             SSDebug.LogWarning("ShowPlayerChouJiangResult -> m_PlayerJiangPin was null");
             return;
         }
+
+        SSDebug.Log("ShowPlayerChouJiangResult -> playerJiangPin ==== " + m_PlayerJiangPin.ToString());
         //分发玩家的游戏奖品.
         DistributionPlayerJiangPin();
         SetActivePlayerChouJiangResult(true);
