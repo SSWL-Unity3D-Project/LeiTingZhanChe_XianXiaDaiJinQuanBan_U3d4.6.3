@@ -701,8 +701,22 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         PuTongAmmoCount = puTongAmmoNum - 1; //强制保留一定的血值.
                     }
                 }
+
                 //彩票战车和boss的血条UI信息更新.
                 SSUIRoot.GetInstance().m_GameUIManage.SetDaiJinQuanNpcXueTiaoAmount(bloodAmount);
+
+                if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+                {
+                    //没有玩家激活游戏时,Ai都认为是不可以击爆JPBoss特殊武器的.
+                }
+                else
+                {
+                    //JPBoss受到玩家子弹伤害.
+                    if (NpcScript.IsJPBossNpc == true)
+                    {
+                        NpcScript.OnDamageJPBossWeapon(bloodAmount);
+                    }
+                }
             }
         }
 

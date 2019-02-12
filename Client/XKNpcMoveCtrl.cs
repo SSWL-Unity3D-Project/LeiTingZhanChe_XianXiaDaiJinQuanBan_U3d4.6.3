@@ -1988,6 +1988,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		IndexFirePointGroup = 0;
 		MarkCount = 0;
 
+        if (IsJPBossNpc == true)
+        {
+            CloseJPBossWeapon();
+        }
+
 		iTween itweenScript = GetComponent<iTween>();
 		if (itweenScript != null) {
 			itweenScript.isRunning = false;
@@ -2083,6 +2088,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
             //彩票JPBoss.
             IsJPBossNpc = true;
             m_DaiJinQuanState = SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan;
+            InitJPBossWeapon();
 
             if (m_CaiPiaoBossMoveCom == null)
             {
@@ -2216,6 +2222,47 @@ public class XKNpcMoveCtrl : MonoBehaviour
             if (healthScriptTmp != null)
             {
                 healthScriptTmp.SetJPBossHealthInfo(this);
+            }
+        }
+    }
+
+    //***************************************************************************************************//
+    /// <summary>
+    /// JPBoss特殊武器控制.
+    /// </summary>
+    public SSJPBossWeaponManage m_JPBossWeaponManage;
+    /// <summary>
+    /// 初始化JPBoss特殊武器控制.
+    /// </summary>
+    void InitJPBossWeapon()
+    {
+        if (m_JPBossWeaponManage != null)
+        {
+            m_JPBossWeaponManage.Init();
+        }
+    }
+
+    /// <summary>
+    /// 关闭JPBoss特殊武器.
+    /// </summary>
+    void CloseJPBossWeapon()
+    {
+        if (m_JPBossWeaponManage != null)
+        {
+            m_JPBossWeaponManage.CloseWeapon();
+        }
+    }
+
+    /// <summary>
+    /// 当JPBoss受到伤害.
+    /// </summary>
+    internal void OnDamageJPBossWeapon(float heathPer)
+    {
+        if (IsJPBossNpc == true)
+        {
+            if (m_JPBossWeaponManage != null)
+            {
+                m_JPBossWeaponManage.OnDamage(heathPer);
             }
         }
     }
