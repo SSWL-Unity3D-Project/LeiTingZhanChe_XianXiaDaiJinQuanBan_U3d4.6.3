@@ -6,6 +6,10 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
     /// 血条倒计时UI控制组件.
     /// </summary>
     public SSGameNumUI m_TimeNumUI;
+    /// <summary>
+    /// 血条倒计时毫秒UI控制组件.
+    /// </summary>
+    public SSGameNumUI m_TimeHaoMiaoNumUI;
     public UISprite BossXueTiaoSprite;
     public UISprite BossXueTiaoHongSprite;
     /**
@@ -193,14 +197,22 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
             return;
         }
 
+        float dTime = Time.time - m_TimeLastDaoJiShi;
         if (Time.time - m_TimeLastDaoJiShi >= 1f)
         {
             m_TimeLastDaoJiShi = Time.time;
             m_DaoJiShiVal--;
             ShowTimeNum(m_DaoJiShiVal);
+            ShowTimeHaoMiaoNum(0);
             SSDebug.Log("UpdateDaoJiShiValue -> m_DaoJiShiVal ============================== " + m_DaoJiShiVal);
         }
+        else
+        {
+            int val = 100 - ((int)(dTime * 100f) % 100);
+            ShowTimeHaoMiaoNum(val);
+        }
     }
+
 
     /// <summary>
     /// 显示血条倒计时UI数字.
@@ -210,6 +222,17 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
         if (m_TimeNumUI != null && val > -1)
         {
             m_TimeNumUI.ShowNumUI(val);
+        }
+    }
+
+    /// <summary>
+    /// 显示毫秒数字.
+    /// </summary>
+    void ShowTimeHaoMiaoNum(int val)
+    {
+        if (m_TimeHaoMiaoNumUI != null && val > -1)
+        {
+            m_TimeHaoMiaoNumUI.ShowNumUI(val);
         }
     }
 
