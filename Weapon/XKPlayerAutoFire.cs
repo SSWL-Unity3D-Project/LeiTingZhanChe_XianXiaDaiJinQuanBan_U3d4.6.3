@@ -802,7 +802,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		}
 	}
 
-	bool IsHuoLiAllOpen;
+	bool _IsHuoLiAllOpen = false;
+    bool IsHuoLiAllOpen
+    {
+        set
+        {
+            _IsHuoLiAllOpen = value;
+            pcvr.ButtonState btState = _IsHuoLiAllOpen == true ? pcvr.ButtonState.DOWN : pcvr.ButtonState.UP;
+            ClickFireBtEvent(btState);
+        }
+        get { return _IsHuoLiAllOpen; }
+    }
 	public bool GetIsHuoLiAllOpen()
 	{
 		return IsHuoLiAllOpen;
