@@ -17,7 +17,7 @@ public class SSJPBossWeapon : SSGameMono
     /// <summary>
     /// 爆炸粒子产生点.
     /// </summary>
-    public Transform m_ExplorePoint;
+    public Transform[] m_ExplorePoint;
     /// <summary>
     /// 爆炸时需要隐藏的对象数组.
     /// </summary>
@@ -77,9 +77,15 @@ public class SSJPBossWeapon : SSGameMono
         {
             //隐藏攻击武器.
             SetHiddenObjArray(true);
-            if (m_ExplorePrefab != null && m_ExplorePoint != null)
+            if (m_ExplorePrefab != null)
             {
-                Instantiate(m_ExplorePrefab, m_ExplorePoint);
+                for (int i = 0; i < m_ExplorePoint.Length; i++)
+                {
+                    if (m_ExplorePoint[i] != null)
+                    {
+                        Instantiate(m_ExplorePrefab, m_ExplorePoint[i]);
+                    }
+                }
             }
         }
     }
