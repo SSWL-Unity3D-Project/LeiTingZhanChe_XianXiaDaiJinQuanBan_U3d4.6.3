@@ -1549,35 +1549,45 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 return;
             }
+            SSDebug.Log("MakePlayerMianFeiZaiWanYiJu -> indexPlayer ============================ " + indexPlayer);
+            //该玩家可以免费试玩游戏.
+            //给玩家添加一个微信游戏币.
+            AddWeiXinGameCoinToPlayer(indexPlayer, 1);
 
             GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
-            if (m_HongDDGamePadWXPay != null && playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            //if (m_HongDDGamePadWXPay != null && playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
             {
-                if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(playerDt.m_PlayerWeiXinData.userId) == true)
+                //该玩家可以免费试玩游戏.
+                //给玩家添加一个微信游戏币.
+                //AddWeiXinGameCoinToPlayer(indexPlayer, 1);
+
+                //免费体验游戏的玩家.
+                playerDt.IsMianFeiTiYanPlayer = true;
+
+                //记录玩家登陆游戏的信息.
+                if (m_SSBoxPostNet != null)
                 {
-                    //该玩家可以免费试玩游戏.
-                    //给玩家添加一个微信游戏币.
-                    AddWeiXinGameCoinToPlayer(indexPlayer, m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
-
-                    //CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance(indexPlayer);
-                    //if (playerCoinCom != null)
-                    //{
-                    //    playerCoinCom.SetActiveMianFeiTiYanUI(true);
-                    //}
-                    //免费体验游戏的玩家.
-                    playerDt.IsMianFeiTiYanPlayer = true;
-
-                    //记录玩家登陆游戏的信息.
-                    if (m_SSBoxPostNet != null)
-                    {
-                        m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, true);
-                    }
+                    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, true);
                 }
 
-                m_GmWXLoginDt[indexVal].IsActiveGame = true;
+                //m_GmWXLoginDt[indexVal].IsActiveGame = true;
                 m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
-                InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
+                //InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
             }
+            
+            //免费体验游戏的玩家.
+            //playerDt.IsMianFeiTiYanPlayer = true;
+
+            //记录玩家登陆游戏的信息.
+            //if (m_SSBoxPostNet != null)
+            //{
+            //    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, true);
+            //}
+
+            m_GmWXLoginDt[indexVal].IsActiveGame = true;
+            //m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
+            InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
         }
 
         /// <summary>
@@ -1835,10 +1845,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
             do
             {
                 //SSDebug.Log("LoopGetWXPlayerHddPayData -> time == " + time.ToString("f2") + ", RealTime == " + Time.time);
-                if (Time.time - time >= 36f)
+                if (Time.time - time >= 60f)
                 {
                     //轮询检测超时,认为玩家已经不再继续游戏了.
-                    //删除数据.
+                    //删除轮询检测玩家账户的数据.
                     RemoveLoopGetWXHddPayData(userId);
 
                     //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.

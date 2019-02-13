@@ -3406,10 +3406,41 @@ public class XkGameCtrl : SSGameMono
     }
 
     /// <summary>
+    /// 重置玩家激活状态信息.
+    /// </summary>
+    void ResetIsActivePlayer(PlayerEnum indexPlayer)
+    {
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    IsActivePlayerOne = false;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    IsActivePlayerTwo = false;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    IsActivePlayerThree = false;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    IsActivePlayerFour = false;
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
     /// 玩家获得免费再玩一局游戏奖品之后,使玩家免费再玩一局游戏.
     /// </summary>
     public void MakePlayerMianFeiZaiWanYiJu(PlayerEnum indexPlayer)
     {
+        ResetIsActivePlayer(indexPlayer);
         if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
         {
             pcvr.GetInstance().m_HongDDGamePadInterface.MakePlayerMianFeiZaiWanYiJu(indexPlayer);

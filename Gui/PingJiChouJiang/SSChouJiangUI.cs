@@ -658,7 +658,7 @@ public class SSChouJiangUI : MonoBehaviour
             indexJiangPin = GetJiangPinIndexValue(JiangPinState.XieXieCanYu);
         }
 
-        //indexJiangPin = 0; //test.
+        //indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
         if (indexJiangPin < 0 || indexJiangPin >= m_ChouJiangDtArray.Length)
         {
             indexJiangPin = 0;
