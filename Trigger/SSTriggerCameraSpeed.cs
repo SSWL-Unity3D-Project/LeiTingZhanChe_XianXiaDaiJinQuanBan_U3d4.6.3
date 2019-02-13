@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define TEST_YULE_TRIGER
+using UnityEngine;
 
 /// <summary>
 /// 主角路径摄像机速度控制触发器.
@@ -37,6 +38,11 @@ public class SSTriggerCameraSpeed : MonoBehaviour
         {
             Destroy(meshFt);
         }
+
+#if TEST_YULE_TRIGER
+        IndexVal = CountTrigger;
+        CountTrigger++;
+#endif
     }
 
 #if UNITY_EDITOR
@@ -59,13 +65,30 @@ public class SSTriggerCameraSpeed : MonoBehaviour
     }
 #endif
 
+#if TEST_YULE_TRIGER
+    static int CountTrigger = 0;
+    int IndexVal = 0;
+    bool IsHit = false;
+    private void OnGUI()
+    {
+        GUI.Box(new Rect(15f, IndexVal * 25f, 350f, 25f), "IndexVal " + IndexVal + ", TriggerSt " + TriggerSt + ", IsHit " + IsHit);
+    }
+#endif
+
     void OnTriggerEnter(Collider other)
     {
+#if TEST_YULE_TRIGER
+        SSDebug.Log("SSTriggerCameraSpeed::OnTriggerEnter -> 11111 m_CameraSpeed == " + m_CameraSpeed + ", TriggerSt ====== " + TriggerSt);
+#endif
         if (other.GetComponent<XkPlayerCtrl>() == null)
         {
             return;
         }
-        
+
+#if TEST_YULE_TRIGER
+        IsHit = true;
+        SSDebug.Log("SSTriggerCameraSpeed::OnTriggerEnter -> 22222 m_CameraSpeed == " + m_CameraSpeed + ", TriggerSt ====== " + TriggerSt);
+#endif
         if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_AiPathGroup != null)
         {
             //修改娱乐阶段主角镜头运动速度.
