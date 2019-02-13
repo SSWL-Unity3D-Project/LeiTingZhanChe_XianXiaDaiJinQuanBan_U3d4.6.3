@@ -44,6 +44,12 @@ public class SSPingJiUI : MonoBehaviour
             SSDebug.LogWarning("XkGameCtrl.GetInstance().m_PingJiData was null");
         }
 
+        if (m_FenShuNumUI != null)
+        {
+            //展示玩家得分.
+            m_FenShuNumUI.ShowNumUI(fenShu);
+        }
+
         int indexVal = (int)m_PlayerPingJiLevel;
         if (indexVal < m_PingJiImgArray.Length && m_PingJiImgArray[indexVal] != null)
         {

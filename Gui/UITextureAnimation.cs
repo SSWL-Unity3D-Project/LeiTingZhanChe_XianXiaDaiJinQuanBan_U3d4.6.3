@@ -3,6 +3,10 @@
 [RequireComponent(typeof(UITexture))]
 public class UITextureAnimation : MonoBehaviour
 {
+    /// <summary>
+    /// 是否检测图片信息.
+    /// </summary>
+    public bool IsCheckTexture = true;
     public Texture mTexture;
 	public Color mColor = Color.white;
     UITexture mUITexture;
@@ -24,9 +28,12 @@ public class UITextureAnimation : MonoBehaviour
     /// </summary>
     void UpdateUITextureInfo()
     {
-        if (mUITexture.mainTexture != mTexture)
+        if (IsCheckTexture == true)
         {
-            mUITexture.mainTexture = mTexture;
+            if (mUITexture.mainTexture != mTexture)
+            {
+                mUITexture.mainTexture = mTexture;
+            }
         }
 
         if (mUITexture.color != mColor)
