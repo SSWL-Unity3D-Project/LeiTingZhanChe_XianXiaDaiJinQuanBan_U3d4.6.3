@@ -1,4 +1,4 @@
-﻿#define TEST_YULE_TRIGER
+﻿//#define TEST_YULE_TRIGER
 using UnityEngine;
 
 /// <summary>

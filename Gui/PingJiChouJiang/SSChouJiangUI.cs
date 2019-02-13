@@ -472,7 +472,7 @@ public class SSChouJiangUI : MonoBehaviour
                 {
                     if (m_PlayerJiangPin != null)
                     {
-                        step = 8 + m_PlayerJiangPin.jiangPingIndex - 1;
+                        step = 8 + m_PlayerJiangPin.jiangPingIndex - 2;
                     }
                     break;
                 }
@@ -664,6 +664,7 @@ public class SSChouJiangUI : MonoBehaviour
             indexJiangPin = 0;
         }
         m_PlayerJiangPin = m_ChouJiangDtArray[indexJiangPin];
+        SSDebug.Log("CheckPlayerJiangPinData -> m_PlayerJiangPin ================================== " + m_PlayerJiangPin.ToString());
     }
 
     /// <summary>
@@ -687,21 +688,27 @@ public class SSChouJiangUI : MonoBehaviour
         float timeVal = GetTimeChouJiangAni(chouJiangAniStage);
         int maxStep = GetChouJiangAniMoveStep(chouJiangAniStage);
         int stepVal = 0;
+        int stepRecord = 0;
+        //SSDebug.Log("PlayChouJiangAnimation -> maxStep ===================== " + maxStep + ", chouJiangAniStage ==================== " + chouJiangAniStage);
         do
         {
-            int jiangPinGeZi = 8;
-            int indexJiangPinPre = stepVal > 0 ? (stepVal - 1) % jiangPinGeZi : (jiangPinGeZi - 1);
-            int indexJiangPin = stepVal % jiangPinGeZi;
-            SetActiveJiangPinFlash(indexJiangPinPre, false);
-            SetActiveJiangPinFlash(indexJiangPin, true);
-            //音效播放.
-            PlayZhuanDongAudio();
             if (stepVal == maxStep && chouJiangAniStage == ChouJiangAniStage.Stage03)
             {
                 //抽奖动画已经播放结束.
                 isPlayAni = false;
                 break;
             }
+
+            int jiangPinGeZi = 8;
+            int stepTmp = stepRecord % jiangPinGeZi;
+            int indexJiangPinPre = stepTmp > 0 ? (stepTmp - 1) % jiangPinGeZi : (jiangPinGeZi - 1);
+            int indexJiangPin = stepTmp % jiangPinGeZi;
+            stepRecord++;
+            //SSDebug.Log("stepRecord ============= " + stepRecord);
+            SetActiveJiangPinFlash(indexJiangPinPre, false);
+            SetActiveJiangPinFlash(indexJiangPin, true);
+            //音效播放.
+            PlayZhuanDongAudio();
             yield return new WaitForSeconds(timeVal);
 
             stepVal++;
@@ -715,6 +722,7 @@ public class SSChouJiangUI : MonoBehaviour
                     timeVal = GetTimeChouJiangAni(chouJiangAniStage);
                     maxStep = GetChouJiangAniMoveStep(chouJiangAniStage);
                     stepVal = 0;
+                    //SSDebug.Log("PlayChouJiangAnimation -> maxStep ===================== " + maxStep + ", chouJiangAniStage ==================== " + chouJiangAniStage);
                 }
             }
         }
@@ -736,6 +744,7 @@ public class SSChouJiangUI : MonoBehaviour
             {
                 if (m_ChouJiangDtArray[i] != null && m_ChouJiangDtArray[i].jiangPingIndex == indexJiangPin)
                 {
+                    //SSDebug.LogWarning("SetActiveJiangPinFlash -> indexJiangPin == " + indexJiangPin + ", isActive == " + isActive + ", ChouJiangDt == " + m_ChouJiangDtArray[i].ToString());
                     m_ChouJiangDtArray[i].SetActiveFlashObj(isActive);
                     break;
                 }
