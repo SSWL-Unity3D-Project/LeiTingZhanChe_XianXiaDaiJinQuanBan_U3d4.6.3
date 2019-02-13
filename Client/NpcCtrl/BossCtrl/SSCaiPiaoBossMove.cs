@@ -8,6 +8,10 @@ public class SSCaiPiaoBossMove : MonoBehaviour
     /// </summary>
     internal bool IsMoveNpc = false;
     /// <summary>
+    /// 是否锁定JPBoss的运动方向,主要为了避免JPBoss在场景里掉头.
+    /// </summary>
+    internal bool IsLockBossMoveDirection = false;
+    /// <summary>
     /// 移动的方向.
     /// </summary>
     float m_MoveDir = 1f;
@@ -31,6 +35,7 @@ public class SSCaiPiaoBossMove : MonoBehaviour
     public void ResetInfo()
     {
         IsMoveNpc = false;
+        IsLockBossMoveDirection = false;
         IsHitCenterTrigger = false;
         m_CountHitFanWeiTrigger = 0;
     }
@@ -52,6 +57,7 @@ public class SSCaiPiaoBossMove : MonoBehaviour
 
         m_MoveDir = 1f;
         IsMoveNpc = true;
+        IsLockBossMoveDirection = true;
         IsHitCenterTrigger = true;
         m_CountHitFanWeiTrigger = 0;
         //停止镜头移动.

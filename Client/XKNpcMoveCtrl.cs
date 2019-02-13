@@ -210,9 +210,9 @@ public class XKNpcMoveCtrl : MonoBehaviour
             bool isFixRot = true;
             if (m_CaiPiaoBossMoveCom != null)
             {
-                if (m_CaiPiaoBossMoveCom.IsMoveNpc == true)
+                if (m_CaiPiaoBossMoveCom.IsLockBossMoveDirection == true)
                 {
-                    //彩票JPBoss正在进行特殊移动.
+                    //彩票JPBoss正在进行特殊移动,禁止修正运动方向.
                     isFixRot = false;
                 }
             }
