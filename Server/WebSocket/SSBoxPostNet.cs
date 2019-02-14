@@ -23,8 +23,7 @@ public class SSBoxPostNet : MonoBehaviour
         LeiTingZhanChe = 1,         //雷霆战车手柄.
     }
     /// <summary>
-    /// 游戏手柄枚举.
-    /// 游戏码.
+    /// 游戏手柄枚举,红点点游戏码.
     /// </summary>
     [HideInInspector]
     public GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
@@ -146,6 +145,10 @@ public class SSBoxPostNet : MonoBehaviour
         /// 用户登录信息记录.
         /// </summary>
         POST_USER_LOGIN_INFO = 6,
+        /// <summary>
+        /// 向红点点服务器发送支付界面倒计时信息.
+        /// </summary>
+        GET_GAME_PAY_TIME = 6,
     }
 
     /// <summary>
@@ -432,6 +435,21 @@ public class SSBoxPostNet : MonoBehaviour
             Debug.Log("Unity:" + cmd + " -> GetData: " + getData.text);
             switch (cmd)
             {
+                case PostCmd.GET_GAME_PAY_TIME:
+                    {
+                        JsonData jd = JsonMapper.ToObject(getData.text);
+                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        {
+                            //发送支付倒计时信息成功.
+                            SSDebug.Log("Send GAME_PAY_TIME to HddServer Success.");
+                        }
+                        else
+                        {
+                            //发送支付倒计时信息失败.
+                            SSDebug.LogWarning("Send GAME_PAY_TIME to HddServer Failed!");
+                        }
+                        break;
+                    }
                 case PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER:
                     {
 #if USE_OLD_GET_HDD_GAME_CONFIG
@@ -1934,6 +1952,7 @@ public class SSBoxPostNet : MonoBehaviour
             return urlStr;
         }
     }
+
     /// <summary>
     /// 获取游戏在红点点服务器端的配置信息.
     /// screenCode 屏幕码.
@@ -1950,14 +1969,38 @@ public class SSBoxPostNet : MonoBehaviour
             return;
         }
 
-        int screenId = 0;
         if (m_BoxLoginData != null)
         {
             GameConfigUrlData configUrl = new GameConfigUrlData(m_BoxLoginData.m_Address);
-            screenId = Convert.ToInt32(m_BoxLoginData.screenId);
+            int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
             string url = configUrl.GetUrl(m_GamePadState, screenId);
             SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
             StartCoroutine(SendGet(url, PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER));
+        }
+    }
+
+    /// <summary>
+    /// 发送游戏支付倒计时信息给红点点服务器.
+    /// gameCode | Integer | 游戏码 | 是
+    /// userId | Integer | 用户ID | 是
+    /// countDown | Integer | 倒计时时间（秒） | 是
+    /// 支付倒计时 | 域名/backstage/client/client_pay_count_down | GET | 表5.8 | 
+    /// </summary>
+    internal void SendGamePayTimeInfoToHddServer(int userId, int countDown)
+    {
+        if (m_BoxLoginData == null)
+        {
+            SSDebug.LogWarning("SendGamePayTimeInfoToHddServer -> m_BoxLoginData was null");
+            return;
+        }
+
+        if (m_BoxLoginData != null)
+        {
+            int gameCode = (int)m_GamePadState;
+            string url = m_BoxLoginData.m_Address + "/wxbackstage/client/client_pay_count_down"
+                + "?gameCode=" + gameCode + "&userId=" + userId + "&countDown=" + countDown;
+            SSDebug.Log("SendGamePayTimeInfoToHddServer -> url ==== " + url);
+            StartCoroutine(SendGet(url, PostCmd.GET_GAME_PAY_TIME));
         }
     }
 

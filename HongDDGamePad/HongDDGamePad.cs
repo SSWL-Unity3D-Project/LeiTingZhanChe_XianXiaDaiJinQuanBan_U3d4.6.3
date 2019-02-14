@@ -2234,6 +2234,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 发送红点点微信游戏手柄充值界面的倒计时信息.
+        /// </summary>
+        void SendWXPadTopUpPayTime(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.SendGamePayTimeInfoToHddServer(userId, 30);
+            }
+        }
+
+        /// <summary>
         /// 发送打开微信游戏手柄充值界面.
         /// </summary>
         void SendWXPadShowTopUpPanel(int userId)
@@ -2243,6 +2254,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 if (CheckSendPlayerShowPayPanel(userId) == true)
                 {
+                    SendWXPadTopUpPayTime(userId);
                     m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userId);
                 }
             }
