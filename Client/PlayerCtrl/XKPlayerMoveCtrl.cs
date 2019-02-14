@@ -13,6 +13,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	TKMoveState TKMoveSt = TKMoveState.YaoGanBan;
     /// <summary>
+    /// 玩家受到JPBoss火焰伤害时的特效.
+    /// </summary>
+    public GameObject m_HuoYanDamageTX;
+    /// <summary>
     /// 新圆圈特效.
     /// </summary>
     public GameObject m_NewCircleTeXiao;
@@ -1201,7 +1205,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         {
 			DaoJuCtrl.GetInstance().HiddenPlayerDaoJuObj(PlayerIndex, BuJiBaoType.NLHuDun);
 		}
-	}
+
+        //关闭火焰特效.
+        SetActiveHuoYanDamageTX(false);
+    }
 
     internal bool GetIsActive()
     {
@@ -1636,6 +1643,28 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			{
 				XkPlayerCtrl.GetInstanceFeiJi().RemoveGetZhanCheDaiJinQuanPlayer(playerCom);
 			}
+        }
+    }
+
+    //********************************************************************************************************//
+    /// <summary>
+    /// 当JPBoss的火焰武器碰上玩家时进入此函数.
+    /// </summary>
+    internal void OnJPBossHuoYanHitPlayer()
+    {
+        //打开火焰特效.
+        SetActiveHuoYanDamageTX(true);
+    }
+
+    /// <summary>
+    /// 设置火焰特效激活状态.
+    /// </summary>
+    void SetActiveHuoYanDamageTX(bool isActive)
+    {
+        //SSDebug.LogWarning("SetActiveHuoYanDamageTX -> isActive ============================================ " + isActive);
+        if (m_HuoYanDamageTX != null)
+        {
+            m_HuoYanDamageTX.SetActive(isActive);
         }
     }
 }
