@@ -30,11 +30,11 @@ public class SSPingJiData : MonoBehaviour
         if (m_PingJiFenShuArray.Length <= 0 || fenShuVal < m_PingJiFenShuArray[0])
         {
             //最低评级.
-            return PingJiLevel.A;
+            return PingJiLevel.D;
         }
 
         int length = (int)PingJiLevel.SSS + 1;
-        PingJiLevel pingJiLevel = PingJiLevel.A;
+        PingJiLevel pingJiLevel = PingJiLevel.D;
         for (int i = 0; i < length; i++)
         {
             if (i == length - 1)

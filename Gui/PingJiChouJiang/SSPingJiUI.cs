@@ -22,7 +22,7 @@ public class SSPingJiUI : MonoBehaviour
     /// </summary>
     public Texture[] m_PingJiImgArray = new Texture[7];
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
-    SSPingJiData.PingJiLevel m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.A;
+    SSPingJiData.PingJiLevel m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.D;
     internal void Init(PlayerEnum indexPlayer, int fenShu)
     {
         SetActive(false);
@@ -34,7 +34,7 @@ public class SSPingJiUI : MonoBehaviour
             return;
         }
 
-        m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.A;
+        m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.D;
         if (XkGameCtrl.GetInstance().m_PingJiData != null)
         {
             m_PlayerPingJiLevel = XkGameCtrl.GetInstance().m_PingJiData.GetPlayerPingJiLevel(fenShu);
