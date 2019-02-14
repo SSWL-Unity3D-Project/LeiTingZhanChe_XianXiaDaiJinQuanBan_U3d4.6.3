@@ -88,6 +88,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 当展示玩家评级UI时进入此函数.
+        /// 此时需要对微信付费玩家进行红点点账户扣费.
+        /// </summary>
+        internal void OnDisplayPlayerPingJiUI(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnDisplayPlayerPingJiUI(indexPlayer);
+            }
+        }
+
+        /// <summary>
         /// 设置玩家激活状态信息.
         /// </summary>
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)

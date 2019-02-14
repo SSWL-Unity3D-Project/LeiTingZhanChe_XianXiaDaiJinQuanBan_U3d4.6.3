@@ -521,11 +521,43 @@ namespace Assets.XKGame.Script.HongDDGamePad
             DirUp = 7,
             DirLeftUp = 8,
         }
+        
+        /// <summary>
+        /// 当展示玩家评级UI时进入此函数.
+        /// 此时需要对微信付费玩家进行红点点账户扣费.
+        /// </summary>
+        internal void OnDisplayPlayerPingJiUI(PlayerEnum indexPlayer)
+        {
+            int index = (int)indexPlayer - 1;
+            if (index < 0 || index >= m_IndexPlayerActiveGameState.Length)
+            {
+                return;
+            }
+
+            SSDebug.Log("OnDisplayPlayerPingJiUI -> indexPlayer =============================== " + indexPlayer);
+            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.Index.Equals(index); });
+            if (playerDt != null)
+            {
+                if (playerDt.m_PlayerWeiXinData != null)
+                {
+                    int userId = playerDt.m_PlayerWeiXinData.userId;
+                    if (playerDt.IsMianFeiTiYanPlayer == false)
+                    {
+                        //付费玩家进行扣费.
+                        //扣除玩家红点点游戏账户金币.
+                        SubWXPlayerHddPayData(userId);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 4个玩家激活游戏的列表状态(0 未激活, 1 激活).
         /// </summary>
         public byte[] m_IndexPlayerActiveGameState = new byte[3];
+        /// <summary>
+        /// 设置玩家激活游戏状态信息.
+        /// </summary>
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)
         {
             SSDebug.Log("SetIndexPlayerActiveGameState -> index ================= " + index
@@ -558,7 +590,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         {
                             //付费玩家进行扣费.
                             //扣除玩家红点点游戏账户金币.
-                            SubWXPlayerHddPayData(userId);
+                            //SubWXPlayerHddPayData(userId);
                         }
                         else
                         {
@@ -2234,6 +2266,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 发送红点点微信游戏手柄充值界面的倒计时信息.
+        /// </summary>
+        void SendWXPadTopUpPayTime(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.SendGamePayTimeInfoToHddServer(userId, 30);
+            }
+        }
+
+        /// <summary>
         /// 发送打开微信游戏手柄充值界面.
         /// </summary>
         void SendWXPadShowTopUpPanel(int userId)
@@ -2243,6 +2286,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 if (CheckSendPlayerShowPayPanel(userId) == true)
                 {
+                    SendWXPadTopUpPayTime(userId);
                     m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userId);
                 }
             }

@@ -247,8 +247,8 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"topUp\"},\"_msg_name\":\"gamepad\"}";
 
-            Debug.Log("NetSendWeiXinPadShowTopUpPanel:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
-            Debug.Log("NetSendWeiXinPadShowTopUpPanel:: msg == " + msgToSend);
+            SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
+            SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }

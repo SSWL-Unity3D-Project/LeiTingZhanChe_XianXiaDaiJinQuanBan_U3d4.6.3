@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 游戏中UI数字信息控制组件.
@@ -28,6 +29,12 @@ public class SSGameNumUI : SSGameMono
     /// </summary>
     public FixedUiPosData m_FixedUiPosDt;
     /// <summary>
+    /// 数字UI是否为从高位到低位填充.
+    /// 默认值为从高位到低位填充.
+    /// 如果IsUIGaoToDiWei==false则需要动态将其数字UI进行翻转.
+    /// </summary>
+    public bool IsUIGaoToDiWei = true;
+    /// <summary>
     /// 数字UI精灵组件.
     /// m_UISpriteArray[0]   - 最高位.
     /// m_UISpriteArray[max] - 最低位.
@@ -37,11 +44,37 @@ public class SSGameNumUI : SSGameMono
     /// 是否隐藏高位数字的0.
     /// </summary>
     public bool IsHiddenGaoWeiNumZero = true;
+    bool IsInit = false;
+    /// <summary>
+    /// 初始化.
+    /// </summary>
+    void Init()
+    {
+        if (IsInit == true)
+        {
+            return;
+        }
+        IsInit = true;
+
+        if (IsUIGaoToDiWei == false)
+        {
+            //如果IsUIGaoToDiWei==false则需要动态将其数字UI进行翻转.
+            List<UISprite> listUI = new List<UISprite>(m_UISpriteArray);
+            listUI.Reverse();
+            m_UISpriteArray = listUI.ToArray();
+        }
+    }
+
     /// <summary>
     /// 显示UI数量信息.
     /// </summary>
     internal void ShowNumUI(int num, string numHead = "")
     {
+        if (IsInit == false)
+        {
+            Init();
+        }
+
         string numStr = num.ToString();
         if (m_FixedUiPosDt != null && m_FixedUiPosDt.IsFixPosX)
         {
