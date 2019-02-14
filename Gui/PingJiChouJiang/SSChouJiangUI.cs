@@ -679,6 +679,43 @@ public class SSChouJiangUI : MonoBehaviour
     }
 
     /// <summary>
+    /// 获取抽奖界面每一步的间隔时间.
+    /// </summary>
+    float GetChouJiangAnimationStepTime(int maxStep, int curStep, ChouJiangAniStage stage)
+    {
+        float timeVal = 1f;
+        float startTime = 0.1f;
+        float endTime = 1f;
+        bool isFixedTime = true;
+        switch(stage)
+        {
+            case ChouJiangAniStage.Stage01:
+            case ChouJiangAniStage.Stage02:
+                {
+                    startTime = GetTimeChouJiangAni(stage);
+                    int nextStageIndex = (int)stage + 1;
+                    endTime = GetTimeChouJiangAni((ChouJiangAniStage)nextStageIndex);
+                    break;
+                }
+            case ChouJiangAniStage.Stage03:
+                {
+                    //最后阶段不用修改时间.
+                    isFixedTime = false;
+                    timeVal = GetTimeChouJiangAni(stage);
+                    break;
+                }
+        }
+
+        if (isFixedTime == true)
+        {
+            float unitTime = (endTime - startTime) / (maxStep + 2);
+            timeVal = startTime + (unitTime * curStep);
+        }
+        //SSDebug.LogWarning("GetChouJiangAnimationStepTime -> maxStep == " + maxStep + ", curStep == " + curStep + ", stage == " + stage + ", timeVal == " + timeVal);
+        return timeVal;
+    }
+
+    /// <summary>
     /// 播放抽奖动画.
     /// </summary>
     IEnumerator PlayChouJiangAnimation()
@@ -709,7 +746,9 @@ public class SSChouJiangUI : MonoBehaviour
             SetActiveJiangPinFlash(indexJiangPin, true);
             //音效播放.
             PlayZhuanDongAudio();
-            yield return new WaitForSeconds(timeVal);
+            int curStep = (stepVal + 1) >= maxStep ? maxStep + (stepVal + 1 - maxStep) : (stepVal + 1) % maxStep;
+            float timeStep = GetChouJiangAnimationStepTime(maxStep, curStep, chouJiangAniStage);
+            yield return new WaitForSeconds(timeStep);
 
             stepVal++;
             if (stepVal > maxStep)
