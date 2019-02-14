@@ -328,7 +328,7 @@ public class XKCannonCtrl : MonoBehaviour {
 			IsDoFireAnimation = false;
 		}
 	}
-
+    
 	/********************************************************************
 	 * NpcAimPlayerState == 0; -> SpawnPointScript.PointType == SpawnPointType.KongZhong
 	 * NpcAimPlayerState == 1; -> SpawnPointScript.PointType == SpawnPointType.DiMian
@@ -499,7 +499,30 @@ public class XKCannonCtrl : MonoBehaviour {
 		} while (true);
 	}
 
-	IEnumerator SpawnDuoPaoAmmo()
+    /// <summary>
+    /// 是否为JPBoss的特殊武器.
+    /// </summary>
+    bool IsJPBossTeShuWeapon = false;
+    /// <summary>
+    /// 设置是否为JPBoss的特殊武器.
+    /// </summary>
+    internal void SetIsJPBossTeShuWeapon()
+    {
+        IsJPBossTeShuWeapon = true;
+    }
+    /// <summary>
+    /// 是否激活JPBoss的特殊武器.
+    /// </summary>
+    bool IsActiveJPBossTeShuWeapon = false;
+    /// <summary>
+    /// 设置是否激活JPBoss的特殊武器.
+    /// </summary>
+    internal void SetIsActiveJPBossTeShuWeapon(bool isActive)
+    {
+        IsActiveJPBossTeShuWeapon = isActive;
+    }
+
+    IEnumerator SpawnDuoPaoAmmo()
 	{
 		CountPaoGuanAni++;
 		if (CountPaoGuanAni > 1) {
@@ -527,6 +550,17 @@ public class XKCannonCtrl : MonoBehaviour {
 				yield return new WaitForSeconds(0.1f);
 				continue;
 			}
+
+            if (IsJPBossTeShuWeapon == true)
+            {
+                //JPBoss的特殊武器.
+                if (IsActiveJPBossTeShuWeapon == false)
+                {
+                    //JPBoss的特殊武器没有激活.
+                    yield return new WaitForSeconds(0.1f);
+                    continue;
+                }
+            }
             
             if (XkGameCtrl.GetInstance().IsCreatAmmoOnBoss == false)
             {
@@ -556,6 +590,13 @@ public class XKCannonCtrl : MonoBehaviour {
 				yield break;
 			}
 
+            //if (IsJPBossTeShuWeapon == true)
+            //{
+            //    if (NpcMoveScript != null && NpcMoveScript.IsJPBossNpc)
+            //    {
+            //        SSDebug.LogWarning("SpawnDuoPaoAmmo........................................................ name == " + gameObject.name);
+            //    }
+            //}
 			NpcAmmoCtrl AmmoScript = obj.GetComponent<NpcAmmoCtrl>();
 			AmmoScript.SetIsAimFeiJiPlayer(false);
 			obj.transform.parent = XkGameCtrl.NpcAmmoArray;

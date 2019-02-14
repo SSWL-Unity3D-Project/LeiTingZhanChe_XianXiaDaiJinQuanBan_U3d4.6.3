@@ -53,6 +53,8 @@ public class SSJPBossWeapon : SSGameMono
 
         if (m_PaoTaiArray != null)
         {
+            m_PaoTaiArray.SetIsJPBossTeShuWeapon();
+            m_PaoTaiArray.SetIsActiveJPBossTeShuWeapon(isOpen);
             m_PaoTaiArray.FireDis = isOpen == false ? 0f : 1000f;
         }
 

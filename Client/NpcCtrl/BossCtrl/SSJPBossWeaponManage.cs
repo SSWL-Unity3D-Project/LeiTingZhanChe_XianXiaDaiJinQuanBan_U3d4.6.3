@@ -84,6 +84,7 @@ public class SSJPBossWeaponManage : MonoBehaviour
             return;
         }
         IsInit = true;
+        //SSDebug.LogWarning("SSJPBossWeaponManage::Init..........................................");
 
         for (int i = 0; i < m_WeaponDtArray.Length; i++)
         {
@@ -94,6 +95,11 @@ public class SSJPBossWeaponManage : MonoBehaviour
                 {
                     //第一套武器准备攻击玩家.
                     m_WeaponDtArray[i].SetIsOpenFire(true);
+                }
+                else
+                {
+                    //关闭其它特殊武器.
+                    m_WeaponDtArray[i].SetIsOpenFire(false);
                 }
             }
         }
@@ -226,6 +232,7 @@ public class SSJPBossWeaponManage : MonoBehaviour
             return;
         }
 
+        //SSDebug.LogWarning("SSJPBossWeaponManage::CloseWeapon........................................");
         IsInit = false;
         IsCloseWeapon = true;
         for (int i = 0; i < m_WeaponDtArray.Length; i++)
