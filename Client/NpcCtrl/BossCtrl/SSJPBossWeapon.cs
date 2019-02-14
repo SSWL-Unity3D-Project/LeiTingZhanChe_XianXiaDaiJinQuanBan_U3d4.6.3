@@ -83,7 +83,8 @@ public class SSJPBossWeapon : SSGameMono
                 {
                     if (m_ExplorePoint[i] != null)
                     {
-                        Instantiate(m_ExplorePrefab, m_ExplorePoint[i]);
+                        GameObject obj = (GameObject)Instantiate(m_ExplorePrefab, XkGameCtrl.MissionCleanup, m_ExplorePoint[i]);
+                        XkGameCtrl.CheckObjDestroyThisTimed(obj);
                     }
                 }
             }

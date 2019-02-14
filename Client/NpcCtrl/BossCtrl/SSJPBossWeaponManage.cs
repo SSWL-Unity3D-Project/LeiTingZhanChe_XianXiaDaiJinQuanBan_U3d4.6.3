@@ -135,6 +135,7 @@ public class SSJPBossWeaponManage : MonoBehaviour
     void ExploreWeaponCurrent()
     {
         int indexVal = m_IndexWeapon % m_WeaponDtArray.Length;
+        //SSDebug.LogWarning("ExploreWeaponCurrent -> indexVal ====================== " + indexVal);
         ExploreWeapon(indexVal);
     }
 
@@ -174,6 +175,7 @@ public class SSJPBossWeaponManage : MonoBehaviour
     void ChangeNextWeapon()
     {
         int indexVal = m_IndexWeapon % m_WeaponDtArray.Length;
+        //SSDebug.LogWarning("ChangeNextWeapon -> indexVal ====================== " + indexVal);
         if (m_WeaponDtArray[indexVal] != null)
         {
             m_TimeLastWeapon = Time.time;
@@ -204,6 +206,7 @@ public class SSJPBossWeaponManage : MonoBehaviour
             count++;
             if (m_WeaponDtArray[indexNext] != null && m_WeaponDtArray[indexNext].IsExploreWeapon == false)
             {
+                //SSDebug.LogWarning("GetNextWeaponData -> indexNext ==================== " + indexNext);
                 dt = m_WeaponDtArray[indexNext];
                 m_IndexWeapon = indexNext;
                 break;
