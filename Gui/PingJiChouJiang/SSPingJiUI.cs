@@ -14,6 +14,26 @@ public class SSPingJiUI : MonoBehaviour
     /// </summary>
     public SSGameNumUI m_FenShuNumUI;
     /// <summary>
+    /// 分数滚动音效.
+    /// </summary>
+    public AudioSource m_FenShuAinAudio;
+    /// <summary>
+    /// 玩家分数滚动时长.
+    /// </summary>
+    public float m_TimeFenShuAni = 3f;
+    /// <summary>
+    /// 玩家分数滚动开始时间.
+    /// </summary>
+    float m_TimeFenShuStart = 0f;
+    /// <summary>
+    /// 玩家分数.
+    /// </summary>
+    int m_PlayerFenShu = 0;
+    /// <summary>
+    /// 分数动画是否结束.
+    /// </summary>
+    bool IsEndFenShuAni = false;
+    /// <summary>
     /// 玩家评级UI组件.
     /// </summary>
     public UITexture m_PingJiUI;
@@ -27,7 +47,7 @@ public class SSPingJiUI : MonoBehaviour
     {
         SetActive(false);
         m_IndexPlayer = indexPlayer;
-        m_TimeStart = Time.time;
+        m_TimeFenShuStart = m_TimeStart = Time.time;
         if (m_PingJiUI == null)
         {
             SSDebug.LogWarning("SSPingJiUI::Init -> m_PingJiUI was null");
@@ -43,12 +63,7 @@ public class SSPingJiUI : MonoBehaviour
         {
             SSDebug.LogWarning("XkGameCtrl.GetInstance().m_PingJiData was null");
         }
-
-        if (m_FenShuNumUI != null)
-        {
-            //展示玩家得分.
-            m_FenShuNumUI.ShowNumUI(fenShu);
-        }
+        m_PlayerFenShu = fenShu;
 
         int indexVal = (int)m_PlayerPingJiLevel;
         if (indexVal < m_PingJiImgArray.Length && m_PingJiImgArray[indexVal] != null)
@@ -58,6 +73,62 @@ public class SSPingJiUI : MonoBehaviour
         else
         {
             SSDebug.LogWarning("indexVal or m_PingJiImgArray was wrong");
+        }
+    }
+
+    /// <summary>
+    /// 展示玩家分数.
+    /// </summary>
+    void ShowPlayerFenShu(int fenShu)
+    {
+        if (m_FenShuNumUI != null)
+        {
+            //展示玩家得分.
+            m_FenShuNumUI.ShowNumUI(fenShu);
+        }
+    }
+
+    /// <summary>
+    /// 设置分数滚动音效开关.
+    /// </summary>
+    void SetIsPlayFenShuAinAudio(bool isPlay)
+    {
+        if (m_FenShuAinAudio != null && m_FenShuAinAudio.clip != null)
+        {
+            if (isPlay == true)
+            {
+                m_FenShuAinAudio.Play();
+            }
+            else
+            {
+                m_FenShuAinAudio.Stop();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 更新数字滚动.
+    /// </summary>
+    void UpdatePlayerFenAni()
+    {
+        if (IsEndFenShuAni == false)
+        {
+            if (Time.time - m_TimeFenShuStart < m_TimeFenShuAni)
+            {
+                if (Time.frameCount % 2 == 0 && m_FenShuNumUI != null && m_FenShuNumUI.m_UISpriteArray.Length > 0)
+                {
+                    int minFenShu = (m_FenShuNumUI.m_UISpriteArray.Length - 1) * 10;
+                    int maxFenShu = (m_FenShuNumUI.m_UISpriteArray.Length * 10) - 1;
+                    ShowPlayerFenShu(Random.Range(minFenShu, maxFenShu));
+                }
+            }
+            else
+            {
+                //动画播放结束.
+                IsEndFenShuAni = true;
+                ShowPlayerFenShu(m_PlayerFenShu);
+                SetIsPlayFenShuAinAudio(false);
+            }
         }
     }
 
@@ -82,6 +153,11 @@ public class SSPingJiUI : MonoBehaviour
 
     void Update()
     {
+        if (IsEndFenShuAni == false)
+        {
+            UpdatePlayerFenAni();
+        }
+
         if (Time.time - m_TimeStart >= m_TimeHidden && IsRemoveSelf == false)
         {
             if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.A)
