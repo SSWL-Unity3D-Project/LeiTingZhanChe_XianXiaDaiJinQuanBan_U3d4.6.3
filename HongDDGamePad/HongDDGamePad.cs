@@ -1852,6 +1852,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
             if (data != null)
             {
+                SSDebug.Log("RemoveLoopGetWXHddPayData -> remove user data, userId ================== " + userId);
                 m_LoopGetWXHddPayDataList.Remove(data);
                 data = null;
             }
@@ -1941,10 +1942,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //在微信玩家列表信息中没有找到玩家信息.
                     //说明玩家在游戏倒计时结束之后仍然没有成功交费.
                     //删除轮询检测玩家账户的数据.
-                    RemoveLoopGetWXHddPayData(userId);
+                    //RemoveLoopGetWXHddPayData(userId);
 
                     //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
-                    SendWXPadPlayerPayTimeOut(userId);
+                    //SendWXPadPlayerPayTimeOut(userId);
                 }
                 else
                 {

@@ -530,7 +530,7 @@ public class CoinPlayerCtrl : MonoBehaviour
     {
         if (m_FuHuoCiShuObj != null)
         {
-            m_FuHuoCiShuObj.SetActive(!isActive);
+            m_FuHuoCiShuObj.SetActive(true);
         }
 
         if (m_MianFeiTiYanUI != null)
