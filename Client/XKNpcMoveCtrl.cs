@@ -2197,7 +2197,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
         
         Vector3[] nodesArray = new Vector3[2];
         nodesArray[0] = NpcTran.position;
-        if (MarkCount >= NpcPathTran.childCount || MarkCount < 0)
+        if (MarkCount >= NpcPathTran.childCount)
+        {
+            MarkCount = NpcPathTran.childCount - 1; //fixed MarkCount
+        }
+
+        if (MarkCount < 0)
         {
             MarkCount = 0; //fixed MarkCount
         }

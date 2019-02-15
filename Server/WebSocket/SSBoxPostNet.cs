@@ -1028,7 +1028,7 @@ public class SSBoxPostNet : MonoBehaviour
         Debug.Log("url ==== " + m_BoxLoginData.url);
         StartCoroutine(SendPost(m_BoxLoginData.url, form, PostCmd.BoxLogin));
 
-        //获取微信红点点游戏手柄小程序二位码.
+        //获取微信红点点游戏手柄小程序二维码.
         HttpSendGetWeiXinXiaoChengXuUrl();
     }
 
