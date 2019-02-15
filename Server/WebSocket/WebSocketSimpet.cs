@@ -24,6 +24,7 @@ public class WebSocketSimpet : MonoBehaviour
 
         m_SSBoxPostNet = postNet;
         IsInit = true;
+        m_TimeLastXinTiao = Time.time;
     }
 
     void Update()
