@@ -3,6 +3,9 @@
 #define CREAT_BOSS_NPC
 using UnityEngine;
 
+/// <summary>
+/// 控制JPBoss和战车Boss的刷怪逻辑组件.
+/// </summary>
 public class SpawnNpcManage : MonoBehaviour
 {
     /// <summary>
@@ -49,10 +52,15 @@ public class SpawnNpcManage : MonoBehaviour
     [Range(1, 600)]
     public int m_TimeMoveZhanCheNpc = 20;
     /// <summary>
-    /// JPBoss从产生点运动到最后一个路径点所需要的时间.
+    /// 前后刷出的JPBoss从产生点运动到最后一个路径点所需要的时间.
     /// </summary>
     [Range(1, 600)]
     public int m_TimeMoveJPBoss = 20;
+    /// <summary>
+    /// 左右刷出的JPBoss从产生点运动到最后一个路径点所需要的时间.
+    /// </summary>
+    [Range(1, 600)]
+    public int m_TimeZYMoveJPBoss = 20;
     [System.Serializable]
     public class NpcData
     {
@@ -144,7 +152,7 @@ public class SpawnNpcManage : MonoBehaviour
         /// <summary>
         /// 产生npc.
         /// </summary>
-        public GameObject CreatPointNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+        public GameObject CreatPointNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type, SpawnPointState pointState)
         {
             if (SpawnPoint != null)
             {
@@ -187,7 +195,14 @@ public class SpawnNpcManage : MonoBehaviour
                         }
                     case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
                         {
-                            daoJiShi = m_SpawnNpcManage.m_TimeMoveJPBoss;
+                            if (pointState == SpawnPointState.Down || pointState == SpawnPointState.Up)
+                            {
+                                daoJiShi = m_SpawnNpcManage.m_TimeMoveJPBoss;
+                            }
+                            else if (pointState == SpawnPointState.Left || pointState == SpawnPointState.Right)
+                            {
+                                daoJiShi = m_SpawnNpcManage.m_TimeZYMoveJPBoss;
+                            }
                             break;
                         }
                 }
@@ -768,36 +783,22 @@ public class SpawnNpcManage : MonoBehaviour
         //}
 #endif
 
-        if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
+        if (GetIsHaveBoss() == false)
         {
-            //优先产生SuperJPBoss.
-            if (!m_ZhanCheJPBossData.ZhanCheData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.JPBossData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.SuperJPBossData.GetIsHaveNpc())
+            //当前游戏场景中没有任何Boss存在,才允许产生Boss.
+            if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
             {
-                //没有战车、JPBoss和SuperJPBoss时产生JPBoss.
+                //优先产生SuperJPBoss.
                 CreatNpcObj(NpcState.SuperJPBoss, m_CreatZhanCheState.GetSpawnPointState());
             }
-        }
-        else if (m_ZhanCheJPBossData.IsCreatJPBoss)
-        {
-            //其次产生JPBoss.
-            if (!m_ZhanCheJPBossData.ZhanCheData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.JPBossData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.SuperJPBossData.GetIsHaveNpc())
+            else if (m_ZhanCheJPBossData.IsCreatJPBoss)
             {
-                //没有战车、JPBoss和SuperJPBoss时产生JPBoss.
+                //其次产生JPBoss.
                 CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState());
             }
-        }
-        else if (m_ZhanCheJPBossData.IsCreatZhanChe)
-        {
-            //最后产生战车.
-            if (!m_ZhanCheJPBossData.ZhanCheData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.JPBossData.GetIsHaveNpc()
-                && !m_ZhanCheJPBossData.SuperJPBossData.GetIsHaveNpc())
+            else if (m_ZhanCheJPBossData.IsCreatZhanChe)
             {
-                //没有战车、JPBoss和SuperJPBoss时产生JPBoss.
+                //最后产生战车Boss.
                 CreatNpcObj(NpcState.ZhanChe, m_CreatZhanCheState.GetSpawnPointState());
             }
         }
@@ -938,7 +939,7 @@ public class SpawnNpcManage : MonoBehaviour
                     break;
             }
 
-            GameObject obj = data.CreatPointNpc(daiJinQuanType);
+            GameObject obj = data.CreatPointNpc(daiJinQuanType, pointState);
             if (obj != null)
             {
                 XKNpcMoveCtrl npcMove = null;
@@ -1307,5 +1308,29 @@ public class SpawnNpcManage : MonoBehaviour
         MakeAllSpawnPonitsToLand(m_NpcData.UpSpawnPointGp);
         MakeAllSpawnPonitsToLand(m_NpcData.LeftSpawnPointGp);
         MakeAllSpawnPonitsToLand(m_NpcData.RightSpawnPointGp);
+    }
+
+    /// <summary>
+    /// 获取当前游戏场景是否有Boss存在.
+    /// </summary>
+    internal bool GetIsHaveBoss()
+    {
+        bool isHave = true;
+        if (!m_ZhanCheJPBossData.ZhanCheData.GetIsHaveNpc()
+            && !m_ZhanCheJPBossData.JPBossData.GetIsHaveNpc()
+            && !m_ZhanCheJPBossData.SuperJPBossData.GetIsHaveNpc())
+        {
+            //当前没有任何Boss存在.
+            if (XkGameCtrl.GetInstance().IsDisplayBossDeathYanHua == true)
+            {
+                //正在播放boss爆炸粒子和玩家得奖烟花特效.
+            }
+            else
+            {
+                //没有播放boss爆炸粒子和玩家得奖烟花特效.
+                isHave = false;
+            }
+        }
+        return isHave;
     }
 }
