@@ -443,7 +443,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// <summary>
     /// 战车创建和击爆规则数据.
     /// </summary>
-    internal ZhanCheRulerData m_ZhanCheRulerData = new ZhanCheRulerData();
+    public ZhanCheRulerData m_ZhanCheRulerData = new ZhanCheRulerData();
     
     /// <summary>
     /// 获取可以被哪个玩家击爆,通过击爆规则的产生.
@@ -575,11 +575,11 @@ public class SpawnNpcManage : MonoBehaviour
         /// <summary>
         /// 续币最小时间.
         /// </summary>
-        public float TimeXuBiMin = 3f;
+        internal float TimeXuBiMin = 3f;
         /// <summary>
         /// 续币最大时间.
         /// </summary>
-        public float TimeXuBiMax = 5f;
+        internal float TimeXuBiMax = 5f;
         [HideInInspector]
         public float LastTime = 0f;
         /// <summary>
@@ -645,7 +645,7 @@ public class SpawnNpcManage : MonoBehaviour
     /// JPBoss创建规则.
     /// JPBoss击爆条件和战车相同.
     /// </summary>
-    internal JPBossRulerData m_JPBossRulerData = new JPBossRulerData();
+    public JPBossRulerData m_JPBossRulerData = new JPBossRulerData();
 
     /// <summary>
     /// 战车和JPBoss的创建状态.
