@@ -1786,8 +1786,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
         {
             m_GameCoinToMoney = args;
             XKGlobalData.GetInstance().SetCoinToCardVal(args / 100f);
-            SSDebug.Log("UpdateGameCoinToMoney -> m_GameCoinToMoney ====================== " + m_GameCoinToMoney);
-            SSDebug.Log("UpdateGameCoinToMoney -> m_CoinToCard ====================== " + XKGlobalData.GetInstance().m_CoinToCard.ToString());
+            //SSDebug.Log("UpdateGameCoinToMoney -> m_GameCoinToMoney ====================== " + m_GameCoinToMoney);
+            //SSDebug.Log("UpdateGameCoinToMoney -> m_CoinToCard ====================== " + XKGlobalData.GetInstance().m_CoinToCard.ToString());
         }
 
         /// <summary>

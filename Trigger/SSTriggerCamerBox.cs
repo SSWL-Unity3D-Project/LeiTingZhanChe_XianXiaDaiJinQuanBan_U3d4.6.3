@@ -30,6 +30,18 @@ public class SSTriggerCamerBox : MonoBehaviour
                         {
                             isExit = true;
                         }
+
+                        if (npcMoveCom.IsCaiPiaoZhanChe == false)
+                        {
+                            //普通npc走出JPBoss的镜头范围盒子.
+                            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+                            {
+                                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+                                {
+                                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.RemovePuTongNpcToBuJiDt(npcMoveCom.gameObject);
+                                }
+                            }
+                        }
                         break;
                     }
                 case TriggerState.ZhanCheBoss:
@@ -87,6 +99,18 @@ public class SSTriggerCamerBox : MonoBehaviour
                         if (npcMoveCom.GetIsBossNpc() == true)
                         {
                             isEnter = true;
+                        }
+
+                        if (npcMoveCom.IsCaiPiaoZhanChe == false)
+                        {
+                            //普通npc进入JPBoss的镜头范围盒子.
+                            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+                            {
+                                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+                                {
+                                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.AddPuTongNpcToBuJiDt(npcMoveCom.gameObject);
+                                }
+                            }
                         }
                         break;
                     }

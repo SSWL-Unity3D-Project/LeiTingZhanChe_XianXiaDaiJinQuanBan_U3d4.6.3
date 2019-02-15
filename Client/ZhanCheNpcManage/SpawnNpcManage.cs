@@ -1,6 +1,7 @@
 ﻿#define CREAT_NPC
 #define CREAT_ZHAN_CHE_NPC
 #define CREAT_BOSS_NPC
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -127,6 +128,281 @@ public class SpawnNpcManage : MonoBehaviour
     public NpcData m_NpcData;
 
     /// <summary>
+    /// 整型数据区间.
+    /// </summary>
+    [System.Serializable]
+    public class IntRangData
+    {
+        public int min = 0;
+        public int max = 1;
+        /// <summary>
+        /// 获取随机数.
+        /// </summary>
+        internal int GetRandValue()
+        {
+            int rand = 0;
+            if (min > max)
+            {
+                min = max;
+            }
+            rand = Random.Range(min, max);
+            return rand;
+        }
+    }
+
+    /// <summary>
+    /// 补充npc数据,在游戏JPBoss镜头范围内普通npc数量比较少时可以进行动态补充.
+    /// </summary>
+    [System.Serializable]
+    public class NpcBuJiData
+    {
+        /// <summary>
+        /// 检测时间接口.
+        /// </summary>
+        public float timeLoop = 3f;
+        /// <summary>
+        /// 时间记录.
+        /// </summary>
+        internal float timeLastLoop = 0f;
+        /// <summary>
+        /// NPC数量少于X个.
+        /// </summary>
+        public int npcNumMin = 2;
+        /// <summary>
+        /// 随机产生min-max个NPC.
+        /// </summary>
+        public IntRangData rangNpcDt;
+        /// <summary>
+        /// 普通npc预制列表.
+        /// </summary>
+        public GameObject[] NpcPrefabGp;
+        /// <summary>
+        /// 创建B普通npc的产生点组.
+        /// </summary>
+        public SSCreatNpcData[] NpcSpawnPointGp;
+
+        /// <summary>
+        /// JPBoss镜头范围内npc的数量.
+        /// </summary>
+        internal int npcNumCameraBox
+        {
+            get
+            {
+                int num = 0;
+                if (npcListCameraBox != null)
+                {
+                    num = npcListCameraBox.Count;
+                }
+                return num;
+            }
+        }
+        /// <summary>
+        /// JPBoss镜头范围内npc的数据列表.
+        /// </summary>
+        List<GameObject> npcListCameraBox = new List<GameObject>();
+        /// <summary>
+        /// 添加普通npc数据.
+        /// </summary>
+        internal void AddNpc(GameObject obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            if (npcListCameraBox != null && npcListCameraBox.Contains(obj) == false)
+            {
+                npcListCameraBox.Add(obj);
+            }
+        }
+        /// <summary>
+        /// 删除普通npc数据.
+        /// </summary>
+        internal void RemoveNpc(GameObject obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            if (npcListCameraBox != null && npcListCameraBox.Contains(obj) == true)
+            {
+                npcListCameraBox.Remove(obj);
+            }
+        }
+
+        /// <summary>
+        /// 获取是否可以产生普通补给npc.
+        /// </summary>
+        internal bool GetIsCanCreateNpc()
+        {
+            if (Time.time - timeLastLoop < timeLoop)
+            {
+                //间隔时间没有到.
+                return false;
+            }
+
+            bool isCreate = false;
+            if (npcNumCameraBox < npcNumMin)
+            {
+                isCreate = true;
+                //更新时间记录信息.
+                timeLastLoop = Time.time;
+                SSDebug.Log("GetIsCanCreateNpc................ isCreate == " + isCreate + ", time == " + Time.time.ToString("f2"));
+            }
+            return isCreate;
+        }
+
+        /// <summary>
+        /// 获取随机创建的补给npc数量.
+        /// </summary>
+        internal int GetMaxNumCreated()
+        {
+            int maxVal = 0;
+            if (rangNpcDt != null)
+            {
+                maxVal = rangNpcDt.GetRandValue();
+            }
+
+            if (maxVal < 1)
+            {
+                maxVal = 1;
+            }
+            return maxVal;
+        }
+
+        /// <summary>
+        /// 获取普通npc预制.
+        /// </summary>
+        internal GameObject GetRandNpcPrefab()
+        {
+            GameObject obj = null;
+            if (NpcPrefabGp != null)
+            {
+                obj = NpcPrefabGp[Random.Range(0, 10 * NpcPrefabGp.Length) % NpcPrefabGp.Length];
+            }
+            return obj;
+        }
+    }
+    /// <summary>
+    /// 补充npc数据,在游戏JPBoss镜头范围内普通npc数量比较少时可以进行动态补充.
+    /// </summary>
+    public NpcBuJiData m_NpcBuJiDt;
+    /// <summary>
+    /// 添加普通npc到补给npc数据列表.
+    /// </summary>
+    internal void AddPuTongNpcToBuJiDt(GameObject obj)
+    {
+        if (m_NpcBuJiDt != null)
+        {
+            m_NpcBuJiDt.AddNpc(obj);
+        }
+    }
+    /// <summary>
+    /// 删除普通npc到补给npc数据列表.
+    /// </summary>
+    internal void RemovePuTongNpcToBuJiDt(GameObject obj)
+    {
+        if (m_NpcBuJiDt != null)
+        {
+            m_NpcBuJiDt.RemoveNpc(obj);
+        }
+    }
+
+    /// <summary>
+    /// 检测是否需要产生补给npc.
+    /// 空场处增加NPC,镜头前会挂一组产生点跟着镜头移动,每个产生点都能指定单独的路径,产生组上能指定多种NPC,
+    /// 当场景上NPC数量少于X个时（BOSS、战车类不计算）,就会在这组产生点上随机种类产生X-X个NPC.（X为策划可调数字）
+    /// 当前游戏场景中没有Boss并且当前不处于娱乐阶段时,开始执行检测逻辑.
+    /// 补充npc被创建之后就必须添加到补给npc数据列表中.
+    /// </summary>
+    void UpdateCreateBuJiNpc()
+    {
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            if (XkGameCtrl.GetInstance().m_YuLeState == SSTriggerCameraSpeed.TriggerEnum.Open)
+            {
+                //游戏镜头当前处于娱乐阶段.
+                return;
+            }
+        }
+
+        if (GetIsHaveBoss() == true)
+        {
+            //游戏场景当前有Boss.
+            return;
+        }
+
+        if (m_NpcBuJiDt == null)
+        {
+            return;
+        }
+
+        if (m_NpcBuJiDt.GetIsCanCreateNpc() == true)
+        {
+            int maxNpc = m_NpcBuJiDt.GetMaxNumCreated();
+            CreateBuJiNpc(maxNpc);
+        }
+    }
+
+    /// <summary>
+    /// 创建补充的npc.
+    /// </summary>
+    void CreateBuJiNpc(SSCreatNpcData pointDt)
+    {
+        if (pointDt == null || m_NpcBuJiDt == null)
+        {
+            return;
+        }
+
+        GameObject npcPrefab = m_NpcBuJiDt.GetRandNpcPrefab();
+        if (npcPrefab == null)
+        {
+            return;
+        }
+
+        NpcSpawnData npcSpawnDt = GetBuJiNpcSpawnData(pointDt, npcPrefab);
+        if (npcSpawnDt != null)
+        {
+            //创建补充的npc.
+            GameObject obj = npcSpawnDt.CreatPointBuJiNpc();
+            if (obj != null)
+            {
+                //补充npc被创建之后立即添加到数据列表中.
+                AddPuTongNpcToBuJiDt(obj);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 创建补给npc
+    /// </summary>
+    void CreateBuJiNpc(int maxNpc)
+    {
+        int maxPoint = m_NpcBuJiDt.NpcSpawnPointGp.Length;
+        if (maxPoint <= 0)
+        {
+            //没有可用的产生点.
+            return;
+        }
+
+        int indexPoint = Random.Range(0, 100) % maxPoint;
+        int countNpc = 0;
+        do
+        {
+            CreateBuJiNpc(m_NpcBuJiDt.NpcSpawnPointGp[indexPoint]);
+            indexPoint = (indexPoint + 1) % maxPoint;
+            countNpc++;
+            if (countNpc >= maxNpc)
+            {
+                //补给npc已经创建完成.
+                break;
+            }
+        }
+        while (true);
+    }
+
+    /// <summary>
     /// 创建npc的数据.
     /// </summary>
     public class NpcSpawnData
@@ -217,6 +493,29 @@ public class SpawnNpcManage : MonoBehaviour
             else
             {
                 Debug.LogWarning("Unity: CreatPointNpc -> SpawnPoint was null");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 产生补充npc.
+        /// </summary>
+        public GameObject CreatPointBuJiNpc()
+        {
+            if (SpawnPoint != null)
+            {
+                SpawnPoint.NpcObj = NpcPrefab;
+                SpawnPoint.NpcPath = NpcPath.transform;
+                //不进行循环产生npc.
+                SpawnPoint.SpawnMaxNpc = 1;
+                //延迟时间设置为0.
+                SpawnPoint.DelayTimeVal = 0f;
+                SSDebug.Log("CreatPointBuJiNpc.................... NpcPrefab == " + NpcPrefab);
+                return SpawnPoint.SpawnPointAllNpc();
+            }
+            else
+            {
+                Debug.LogWarning("Unity: CreatPointBuJiNpc -> SpawnPoint was null");
                 return null;
             }
         }
@@ -711,7 +1010,7 @@ public class SpawnNpcManage : MonoBehaviour
         //{
         //    CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState()); //test.
         //}
-
+        UpdateCreateBuJiNpc();
         if (Time.time - m_LastUpdateTime < 8f)
         {
             //冷却时间.
@@ -1076,6 +1375,27 @@ public class SpawnNpcManage : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 获取补给npc创建数据信息.
+    /// </summary>
+    NpcSpawnData GetBuJiNpcSpawnData(SSCreatNpcData creatNpcDt, GameObject npcPrefab)
+    {
+        NpcSpawnData data = new NpcSpawnData(this);
+        //获取ncp预制.
+        data.NpcPrefab = npcPrefab;
+        if (creatNpcDt != null)
+        {
+            //获取npc路径.
+            data.NpcPath = creatNpcDt.GetNpcPahtData();
+            //获取产生点组件.
+            data.SpawnPoint = creatNpcDt.m_SpawnPoint;
+        }
+        return data;
+    }
+
+    /// <summary>
+    /// 获取Boss创建数据信息.
+    /// </summary>
     NpcSpawnData GetNpcSpawnData(NpcState npcType, SpawnPointState pointState)
     {
         if (pointState == SpawnPointState.Null)
@@ -1308,6 +1628,8 @@ public class SpawnNpcManage : MonoBehaviour
         MakeAllSpawnPonitsToLand(m_NpcData.UpSpawnPointGp);
         MakeAllSpawnPonitsToLand(m_NpcData.LeftSpawnPointGp);
         MakeAllSpawnPonitsToLand(m_NpcData.RightSpawnPointGp);
+
+        MakeAllSpawnPonitsToLand(m_NpcBuJiDt.NpcSpawnPointGp);
     }
 
     /// <summary>

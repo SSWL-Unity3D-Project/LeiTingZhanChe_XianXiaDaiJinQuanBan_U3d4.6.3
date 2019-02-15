@@ -34,7 +34,7 @@ public class DanMuTextUI : MonoBehaviour
             string danMuInfo = XKGlobalData.GetInstance().m_DanMuInfo;
             if (danMuInfo != "")
             {
-                SSDebug.Log("UpdateDanMuInfo -> danMuInfo ===================== " + danMuInfo);
+                //SSDebug.Log("UpdateDanMuInfo -> danMuInfo ===================== " + danMuInfo);
                 m_DanMuLable.text = danMuInfo;
             }
         }

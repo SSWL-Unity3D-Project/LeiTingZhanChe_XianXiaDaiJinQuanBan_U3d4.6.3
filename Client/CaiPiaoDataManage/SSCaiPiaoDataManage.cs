@@ -214,8 +214,8 @@ public class SSCaiPiaoDataManage : SSGameMono
             ZhanCheChuPiaoLv_01 = zhanChe01;
             ZhanCheChuPiaoLv_02 = zhanChe02;
             JPBossChuPiaoLv = jpBoss;
-            SSDebug.Log("UpdateChuPiaoLvInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
-                + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
+            //SSDebug.Log("UpdateChuPiaoLvInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
+            //    + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
         /// <summary>
         /// 随机道具出票条件(游戏启动币数乘以该值).
@@ -248,8 +248,8 @@ public class SSCaiPiaoDataManage : SSGameMono
             ZhanCheDaiJinQuan_01 = zhanChe01;
             ZhanCheDaiJinQuan_02 = zhanChe02;
             JPBossDaiJinQuan = jpBoss;
-            SSDebug.Log("UpdateDaiJinQuanInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
-                + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
+            //SSDebug.Log("UpdateDaiJinQuanInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
+            //    + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         internal void UpdateJPBossDaiJinQuanShangHuZhiFu(float jpBossDaiJinQuanShangHuZhiFu)
         {
             JPBossDaiJinQuanShangHuZhiFu = jpBossDaiJinQuanShangHuZhiFu;
-            SSDebug.Log("UpdateDaiJinQuanInfo -> jpBossDaiJinQuanShangHuZhiFu == " + jpBossDaiJinQuanShangHuZhiFu);
+            //SSDebug.Log("UpdateDaiJinQuanInfo -> jpBossDaiJinQuanShangHuZhiFu == " + jpBossDaiJinQuanShangHuZhiFu);
         }
 
         /// <summary>
@@ -371,8 +371,8 @@ public class SSCaiPiaoDataManage : SSGameMono
             ZhanCheDeCai_01 = zhanChe01;
             ZhanCheDeCai_02 = zhanChe02;
             JPBossDeCai = jpBoss;
-            SSDebug.Log("UpdateDaiJinQuanCaiChiInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
-                + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
+            //SSDebug.Log("UpdateDaiJinQuanCaiChiInfo -> suiJi == " + suiJi + ", zhanChe01 == " + zhanChe01
+            //    + ", zhanChe02 == " + zhanChe02 + ", jpBoss == " + jpBoss);
         }
         
         /// <summary>

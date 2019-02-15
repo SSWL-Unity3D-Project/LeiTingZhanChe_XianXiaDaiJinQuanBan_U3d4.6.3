@@ -828,7 +828,7 @@ public class XKGlobalData
     {
         m_CaiChiFanJiangLv = args;
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "CaiChiFanJiangLv", args.ToString());
-        SSDebug.Log("SetCaiChiFanJiangLv -> m_CaiChiFanJiangLv ============== " + m_CaiChiFanJiangLv);
+        //SSDebug.Log("SetCaiChiFanJiangLv -> m_CaiChiFanJiangLv ============== " + m_CaiChiFanJiangLv);
     }
     
     /// <summary>
@@ -871,7 +871,7 @@ public class XKGlobalData
     {
         m_MianFeiShiWanCount = args;
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "MianFeiShiWanCount", args.ToString());
-        SSDebug.Log("SetMianFeiShiWanCount -> m_MianFeiShiWanCount ============== " + m_MianFeiShiWanCount);
+        //SSDebug.Log("SetMianFeiShiWanCount -> m_MianFeiShiWanCount ============== " + m_MianFeiShiWanCount);
     }
     
     /// <summary>
@@ -979,10 +979,10 @@ public class XKGlobalData
         JPBossBaoJiangLv = jpBossBaoJiangLv;
         HandleJsonObj.WriteToFileXml(FileNameCaiChi, "JPBossBaoJiangLv", JPBossBaoJiangLv.ToString());
 
-        SSDebug.Log("SetCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
-        SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
-        SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
-        SSDebug.Log("SetCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
+        //SSDebug.Log("SetCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
+        //SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
+        //SSDebug.Log("SetCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
+        //SSDebug.Log("SetCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
     }
 
     /// <summary>
@@ -1140,7 +1140,7 @@ public class XKGlobalData
         if (indexVal > -1 && indexVal < m_HddJiangPinId.Length)
         {
             m_HddJiangPinId[indexVal] = idStr;
-            SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", idStr == " + idStr);
+            //SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", idStr == " + idStr);
         }
     }
 
@@ -1165,7 +1165,7 @@ public class XKGlobalData
         if (indexVal > -1 && indexVal < m_HddJiangChiIsLimit.Length)
         {
             m_HddJiangChiIsLimit[indexVal] = value;
-            SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", IsLimit == " + value);
+            //SSDebug.Log("SetHddJiangPinId -> indexVal == " + indexVal + ", IsLimit == " + value);
         }
     }
 

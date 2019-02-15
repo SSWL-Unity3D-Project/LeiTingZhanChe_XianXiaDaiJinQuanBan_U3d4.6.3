@@ -93,6 +93,7 @@ public class SSTriggerCameraSpeed : MonoBehaviour
         {
             //修改娱乐阶段主角镜头运动速度.
             XkGameCtrl.GetInstance().m_AiPathGroup.m_YuLeMoveSpeed = m_CameraSpeed;
+            XkGameCtrl.GetInstance().m_YuLeState = TriggerSt;
         }
 
         switch (TriggerSt)

@@ -203,6 +203,11 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     [Range(1, 1000)]
     public int m_DaoDanHitBossJiFen = 100;
+    /// <summary>
+    /// 当前游戏镜头的运动状态信息.
+    /// </summary>
+    internal SSTriggerCameraSpeed.TriggerEnum m_YuLeState = SSTriggerCameraSpeed.TriggerEnum.Close;
+
     [System.Serializable]
     public class PlayerDamageData
     {

@@ -150,7 +150,7 @@ public class SSShangHuInfo : MonoBehaviour
             for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
             {
                 m_DaJiangBossShangHuDt[i].ShangHuMing = shangHuInfoArray[i];
-                SSDebug.Log("UpdateDaJiangBossShangHuInfo -> JPShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
+                //SSDebug.Log("UpdateDaJiangBossShangHuInfo -> JPShangHuMing[" + i + "] ===== " + shangHuInfoArray[i]);
             }
         }
     }
@@ -165,7 +165,7 @@ public class SSShangHuInfo : MonoBehaviour
             for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
             {
                 m_DaJiangBossShangHuDt[i].XiangQingInfo = xiangQingInfoArray[i];
-                SSDebug.Log("UpdateDaJiangBossDaiJinQuanXiangQing -> JPDescription[" + i + "] ===== " + xiangQingInfoArray[i]);
+                //SSDebug.Log("UpdateDaJiangBossDaiJinQuanXiangQing -> JPDescription[" + i + "] ===== " + xiangQingInfoArray[i]);
             }
         }
     }
@@ -180,7 +180,7 @@ public class SSShangHuInfo : MonoBehaviour
             for (int i = 0; i < m_DaJiangBossShangHuDt.Length; i++)
             {
                 m_DaJiangBossShangHuDt[i].DaiJinQuanName = infoArray[i];
-                SSDebug.Log("UpdateDaJiangBossDaiJinQuanName -> JPName[" + i + "] ===== " + infoArray[i]);
+                //SSDebug.Log("UpdateDaJiangBossDaiJinQuanName -> JPName[" + i + "] ===== " + infoArray[i]);
             }
         }
     }
@@ -241,7 +241,7 @@ public class SSShangHuInfo : MonoBehaviour
         for (int i = 0; i < m_ShangHuDanMuDt.Length; i++)
         {
             m_ShangHuDanMuDt[i].ShangHuDanMuInfo = shangHuDanMuInfoArray[i];
-            SSDebug.Log("UpdateShangHuDanMuInfo -> ShangHuDanMuInfo[" + i + "] ===== " + shangHuDanMuInfoArray[i]);
+            //SSDebug.Log("UpdateShangHuDanMuInfo -> ShangHuDanMuInfo[" + i + "] ===== " + shangHuDanMuInfoArray[i]);
         }
 
         if (SSUIRoot.GetInstance().m_GameUIManage != null

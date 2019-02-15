@@ -198,7 +198,7 @@
         /// </summary>
         internal void UpdataAllServerConfigData()
         {
-            SSDebug.Log("UpdataAllServerConfigData...");
+            //SSDebug.Log("UpdataAllServerConfigData...");
             if (XKGlobalData.GetInstance() != null)
             {
                 //更新游戏弹幕信息.

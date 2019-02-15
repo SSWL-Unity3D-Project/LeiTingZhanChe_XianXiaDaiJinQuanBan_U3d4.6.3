@@ -12,7 +12,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// <summary>
     /// 可以被哪个玩家击爆.
     /// </summary>
-    public PlayerEnum m_IndexPlayerJiBao;
+    internal PlayerEnum m_IndexPlayerJiBao;
     /// <summary>
     /// 彩票战车npc的代金券变量.
     /// 主要用来区分是战车01还是战车02类型代金券.
@@ -112,11 +112,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
     Vector3 MarkNpcMovePos;
 	bool IsMoveToMarkPoint;
 	NetworkView NetViewCom;
-	public XKPlayerMoveCtrl PlayerMoveScript;
+	XKPlayerMoveCtrl PlayerMoveScript;
 	bool IsCheLiangMoveType;
 	float TimeFire = 1f; //npc开火持续时间.
 	float TimeRun = 1f; //npc开火后奔跑时间.
-	public float DisPlayerVal; //测试Npc和主角的距离.
+	float DisPlayerVal; //测试Npc和主角的距离.
 	public bool IsTestDrawFireDis;
 	Rigidbody RigCom;
 
@@ -1048,7 +1048,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
     /// <summary>
     /// 远离摄像机.
     /// </summary>
-    public bool IsLeaveCamera = false;
+    internal bool IsLeaveCamera = false;
     /// <summary>
     /// 使npc远离摄像机.
     /// </summary>
@@ -1573,6 +1573,17 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
             //删除彩票战车和boss的血条UI.
             SSUIRoot.GetInstance().m_GameUIManage.RemoveDaiJinQuanNpcXueTiaoUI();
+        }
+        else
+        {
+            //普通npc走出JPBoss的镜头范围盒子.
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null)
+            {
+                if (XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+                {
+                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.RemovePuTongNpcToBuJiDt(gameObject);
+                }
+            }
         }
 
 		//XkGameCtrl.ClearNpcSpawnAllAmmo(gameObject);
@@ -2279,6 +2290,112 @@ public class XKNpcMoveCtrl : MonoBehaviour
             }
         }
     }
+
+    /* *******************************************
+    /// <summary>
+    /// 是否进入JPBoss镜头盒子.
+    /// </summary>
+    bool IsEnterJPBossCameraBox = false;
+    /// <summary>
+    /// 设置是否进入JPBoss镜头盒子.
+    /// </summary>
+    internal void SetIsEnterJPBossCameraBox(bool isEnter)
+    {
+        IsEnterJPBossCameraBox = isEnter;
+    }
+
+    /// <summary>
+    /// 跟新检测是否移动普通npc.
+    /// 当有Boss产生而且npc没有碰上JPBoss镜头范围触发器时停止普通npc的运动.
+    /// 当没有Boss产生而且npc没有碰上JPBoss镜头范围触发器时继续开启普通npc的运动.
+    /// 当普通npc已经进入JPBoss镜头范围触发器时,不允许停止npc的运动.
+    /// </summary>
+    void UpdateMoveNpcByCheckBoss()
+    {
+        if (IsCaiPiaoZhanChe == true)
+        {
+            //不是普通npc不用检测.
+            return;
+        }
+        
+        bool isHaveBoss = false;
+        if (XkPlayerCtrl.GetInstanceFeiJi() != null
+            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null)
+        {
+            isHaveBoss = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.GetIsHaveBoss();
+        }
+
+        if (IsEnterJPBossCameraBox == true)
+        {
+            //普通npc已经进入JPBoss镜头范围触发器时不用检测.
+            return;
+        }
+
+        if (Time.frameCount % 10 != 0)
+        {
+            return;
+        }
+
+        if (isHaveBoss == true)
+        {
+            //有Boss存在.
+            if (IsStopMoveNpc == false)
+            {
+                //停止npc的运动.
+                StopMoveNpc();
+            }
+        }
+        else
+        {
+            //没有Boss存在.
+            if (IsStopMoveNpc == true)
+            {
+                //继续npc的运动.
+                ContinueMoveNpc();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 是否停止移动npc.
+    /// </summary>
+    bool IsStopMoveNpc = false;
+    /// <summary>
+    /// 继续移动npc.
+    /// </summary>
+    void ContinueMoveNpc()
+    {
+        iTween iTweenCom = GetComponent<iTween>();
+        if (iTweenCom != null)
+        {
+            if (IsStopMoveNpc == false)
+            {
+                return;
+            }
+            IsStopMoveNpc = true;
+            iTweenCom.isRunning = false;
+            iTweenCom.isPaused = true;
+        }
+    }
+
+    /// <summary>
+    /// 停止移动npc.
+    /// </summary>
+    void StopMoveNpc()
+    {
+        iTween iTweenCom = GetComponent<iTween>();
+        if (iTweenCom != null)
+        {
+            if (IsStopMoveNpc == true)
+            {
+                return;
+            }
+            IsStopMoveNpc = false;
+            iTweenCom.isRunning = true;
+            iTweenCom.isPaused = false;
+        }
+    }
+    ********************************************************************* */
 }
 
 public enum NpcType

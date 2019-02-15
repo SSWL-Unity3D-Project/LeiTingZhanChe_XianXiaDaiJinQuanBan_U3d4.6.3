@@ -318,7 +318,7 @@ public class XKSpawnNpcPoint : MonoBehaviour
     /// </summary>
     bool IsCaiPiaoZhanChePoint = false;
 
-	public void SpawnPointAllNpc()
+	public GameObject SpawnPointAllNpc()
 	{
         //if ("TestNpcFireRunPoint" != gameObject.name)
         //{
@@ -331,11 +331,11 @@ public class XKSpawnNpcPoint : MonoBehaviour
 #endif
 
         if (XkGameCtrl.GetInstance().IsCartoonShootTest && NpcObj == null) {
-			return;
+			return null;
 		}
 		
 		if (!enabled || !gameObject.activeSelf) {
-			return;
+			return null;
 		}
 
         //test
@@ -356,8 +356,21 @@ public class XKSpawnNpcPoint : MonoBehaviour
 //		IsSpawnPointNpc = true;
 		IsRemoveSpawnPointNpc = false;
 		InitSpawnPointInfo();
-		Invoke("StartSpawnNpc", DelayTimeVal);
-	}
+
+        if (DelayTimeVal <= 0f)
+        {
+            StartSpawnNpc();
+        }
+        else
+        {
+            if (DelayTimeVal < 0.5f)
+            {
+                DelayTimeVal = 0.5f;
+            }
+            Invoke("StartSpawnNpc", DelayTimeVal);
+        }
+        return NpcLoopObj;
+    }
 
 	//获取当前产生点产生的Npc.
 	public GameObject GetNpcLoopObj()

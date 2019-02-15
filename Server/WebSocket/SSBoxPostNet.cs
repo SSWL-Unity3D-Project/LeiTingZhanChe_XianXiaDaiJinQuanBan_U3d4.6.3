@@ -491,17 +491,12 @@ public class SSBoxPostNet : MonoBehaviour
                             string superRewardMoney = jd_Data["setting"]["superPrizeBusinessMoney"].ToString(); //超级JP大奖商户支付金额
                             string mod = jd_Data["setting"]["mod"].ToString(); //运营模式
                             string barrage = jd_Data["setting"]["barrage"].ToString(); //弹幕信息
-                            SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
-                            SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
-                            SSDebug.Log("mod ============ " + mod);
-                            //SSDebug.Log("money ============ " + money);
+                            //SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
+                            //SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
+                            //SSDebug.Log("mod ============ " + mod);
 
-                            string payMoney = "1";
-                            //string jsonData_payItemsInfo = jd["data"]["payItems"].ToJson();
-                            //JsonData jd_Data_payItems = JsonMapper.ToObject(jsonData_payItemsInfo);
-                            //payMoney = jd_Data_payItems[0]["money"].ToString(); //付费金额信息
-                            payMoney = jd_Data["payItem"]["money"].ToString();
-                            SSDebug.Log("payItems.money ============ " + payMoney);
+                            string payMoney = jd_Data["payItem"]["money"].ToString();
+                            //SSDebug.Log("payItems.money ============ " + payMoney);
                             
                             int startTime = 0;
                             int endTime = 7;
@@ -573,11 +568,11 @@ public class SSBoxPostNet : MonoBehaviour
                                             jpBossBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
                                             jpBossIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
                                             jpBossPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
-                                            SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
-                                            SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
-                                            SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
-                                            SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
+                                            //SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
+                                            //SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
+                                            //SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
+                                            //SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
+                                            //SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
                                             break;
                                         }
                                     case "2":
@@ -594,11 +589,11 @@ public class SSBoxPostNet : MonoBehaviour
                                             zhanCheBurstRate_01 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
                                             zhanCheIsLimit_01 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
                                             zhanChePrizePool_01 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
-                                            SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
-                                            SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
-                                            SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
-                                            SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
+                                            //SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
+                                            //SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
+                                            //SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
+                                            //SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
+                                            //SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
                                             break;
                                         }
                                     case "3":
@@ -615,11 +610,11 @@ public class SSBoxPostNet : MonoBehaviour
                                             zhanCheBurstRate_02 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
                                             zhanCheIsLimit_02 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
                                             zhanChePrizePool_02 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
-                                            SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
-                                            SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
-                                            SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
-                                            SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
+                                            //SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
+                                            //SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
+                                            //SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
+                                            //SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
+                                            //SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
                                             break;
                                         }
                                     case "4":
@@ -646,11 +641,11 @@ public class SSBoxPostNet : MonoBehaviour
                                             }
                                             daoJuIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
                                             daoJuPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
-                                            SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
-                                            SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
-                                            SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
-                                            SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);
+                                            //SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
+                                            //SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
+                                            //SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
+                                            //SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
+                                            //SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);
                                             break;
                                         }
                                 }
@@ -699,7 +694,7 @@ public class SSBoxPostNet : MonoBehaviour
                             string[] danMuInfoArray = danMuInfo.Split('#');
                             if (danMuInfoArray.Length > 0)
                             {
-                                SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
+                                //SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
                                 gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
                             }
                             gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
