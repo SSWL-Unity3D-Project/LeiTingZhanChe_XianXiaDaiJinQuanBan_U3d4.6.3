@@ -113,9 +113,9 @@ namespace Assets.XKGame.Script.GamePay
 
                 File.SetAttributes(filePath, FileAttributes.Normal);
                 xmlDoc.Save(filePath);
-                UnityEngine.Debug.Log("WriteToFileXml -----------> Time: " + payData.Time
-                    + ", Revenue: " + payData.Revenue
-                    + ", Rebate: " + payData.Rebate);
+                //UnityEngine.Debug.Log("WriteToFileXml -----------> Time: " + payData.Time
+                //    + ", Revenue: " + payData.Revenue
+                //    + ", Rebate: " + payData.Rebate);
             }
         }
         

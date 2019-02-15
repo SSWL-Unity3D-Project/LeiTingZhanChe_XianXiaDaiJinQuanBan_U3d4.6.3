@@ -1244,8 +1244,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			if (ShanShuoObj[i] != null) {
 				ShanShuoObj[i].SetActive(true);
 			}
-		}
-	}
+        }
+
+        //关闭火焰特效.
+        SetActiveHuoYanDamageTX(false);
+    }
 
 	void LoopPlayShanShuo()
 	{
@@ -1661,7 +1664,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     /// </summary>
     void SetActiveHuoYanDamageTX(bool isActive)
     {
-        //SSDebug.LogWarning("SetActiveHuoYanDamageTX -> isActive ============================================ " + isActive);
+        //SSDebug.LogWarning("SetActiveHuoYanDamageTX -> isActive ============= " + isActive);
         if (m_HuoYanDamageTX != null)
         {
             m_HuoYanDamageTX.SetActive(isActive);

@@ -45,17 +45,18 @@ public class SSTriggerPlayerDamage : MonoBehaviour
         {
             return;
         }
-        
+
+        if (IsJPBossHuoYanWeapon == true)
+        {
+            //玩家受到JPBoss的火焰武器伤害.
+            playerMoveCom.OnJPBossHuoYanHitPlayer();
+        }
+
         if (!playerMoveCom.GetIsWuDiState() && !playerMoveCom.GetIsShanShuoState())
         {
             if (!playerMoveCom.GetIsDeathPlayer())
             {
                 XkGameCtrl.GetInstance().SubGamePlayerHealth(playerMoveCom.PlayerIndex, PlayerDamage);
-                if (IsJPBossHuoYanWeapon == true)
-                {
-                    //玩家受到JPBoss的火焰武器伤害.
-                    playerMoveCom.OnJPBossHuoYanHitPlayer();
-                }
             }
         }
     }

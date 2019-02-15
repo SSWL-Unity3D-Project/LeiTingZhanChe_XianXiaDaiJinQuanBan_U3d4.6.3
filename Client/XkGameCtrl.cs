@@ -434,11 +434,11 @@ public class XkGameCtrl : SSGameMono
                 {
                     //检测是否有战车、JPBoss和SuperJPBoss的数据需要清理.
                     //重置战车数据信息.
-                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.ZhanChe);
+                    //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.ZhanChe);
                     //重置JPBoss数据信息.
-                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.JPBoss);
+                    //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.JPBoss);
                     //重置SuperJPBoss数据信息.
-                    XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
+                    //XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.ResetCreatNpcInfo(SpawnNpcManage.NpcState.SuperJPBoss);
                 }
                 
                 if (GetInstance().m_CaiPiaoHealthDt != null)
