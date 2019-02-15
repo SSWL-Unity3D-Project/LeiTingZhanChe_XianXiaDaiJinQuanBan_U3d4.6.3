@@ -14,6 +14,11 @@ public class SSJPBossWeaponManage : MonoBehaviour
         [Range(1f, 100f)]
         public float timeFire = 5f;
         /// <summary>
+        /// 攻击冷却时长.
+        /// </summary>
+        [Range(1f, 100f)]
+        public float timeLengQueFire = 5f;
+        /// <summary>
         /// 攻击武器数组.
         /// </summary>
         public SSJPBossWeapon[] weaponArray;
@@ -124,14 +129,36 @@ public class SSJPBossWeaponManage : MonoBehaviour
     int m_IndexWeapon = 0;
     bool IsCloseWeapon = false;
     /// <summary>
+    /// 是否打开冷却阶段.
+    /// </summary>
+    bool IsOpenLengQueStage = false;
+    /// <summary>
     /// 检测是否打开下一阶段的攻击武器.
     /// </summary>
     void CheckIsOpenNextWeapon()
     {
         int indexVal = m_IndexWeapon % m_WeaponDtArray.Length;
-        if (m_WeaponDtArray[indexVal] != null && Time.time - m_TimeLastWeapon >= m_WeaponDtArray[indexVal].timeFire)
+        if (m_WeaponDtArray[indexVal] != null)
         {
-            ChangeNextWeapon();
+            if (Time.time - m_TimeLastWeapon >= m_WeaponDtArray[indexVal].timeFire)
+            {
+                //当前阶段攻击时间已经结束.
+                if (IsOpenLengQueStage == false)
+                {
+                    //打开冷却阶段.
+                    IsOpenLengQueStage = true;
+                    //关闭所有特殊武器.
+                    CloseAllWeaponOnIntoLengQueStage();
+                    //SSDebug.LogWarning("CheckIsOpenNextWeapon -> into lengQue stage. time =========== " + Time.time.ToString("f2"));
+                }
+
+                if (Time.time - m_TimeLastWeapon >= m_WeaponDtArray[indexVal].timeFire + m_WeaponDtArray[indexVal].timeLengQueFire)
+                {
+                    //当前阶段冷却时长结束之后在开启下一阶段.
+                    ChangeNextWeapon();
+                    //SSDebug.LogWarning("CheckIsOpenNextWeapon -> open next stage. time =========== " + Time.time.ToString("f2"));
+                }
+            }
         }
     }
 
@@ -184,6 +211,8 @@ public class SSJPBossWeaponManage : MonoBehaviour
         //SSDebug.LogWarning("ChangeNextWeapon -> indexVal ====================== " + indexVal);
         if (m_WeaponDtArray[indexVal] != null)
         {
+            //重置冷却阶段控制开关.
+            IsOpenLengQueStage = false;
             m_TimeLastWeapon = Time.time;
             //关闭当前阶段武器.
             m_WeaponDtArray[indexVal].SetIsOpenFire(false);
@@ -235,6 +264,20 @@ public class SSJPBossWeaponManage : MonoBehaviour
         //SSDebug.LogWarning("SSJPBossWeaponManage::CloseWeapon........................................");
         IsInit = false;
         IsCloseWeapon = true;
+        for (int i = 0; i < m_WeaponDtArray.Length; i++)
+        {
+            if (m_WeaponDtArray[i] != null)
+            {
+                m_WeaponDtArray[i].SetIsOpenFire(false);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 关闭所有特殊武器当进入冷却阶段时.
+    /// </summary>
+    void CloseAllWeaponOnIntoLengQueStage()
+    {
         for (int i = 0; i < m_WeaponDtArray.Length; i++)
         {
             if (m_WeaponDtArray[i] != null)

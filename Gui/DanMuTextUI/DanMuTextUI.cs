@@ -64,7 +64,7 @@ public class DanMuTextUI : MonoBehaviour
                         shangHuDanMu = shangHuDanMu.Substring(0, 9);
                     }
                     m_ShangJiNameLable[i].text = shangHuDanMu;
-                    SSDebug.Log("UpdateShangJiaNameInfo -> shangJiaName[" + i + "] ===================== " + m_ShangJiNameLable[i].text);
+                    //SSDebug.Log("UpdateShangJiaNameInfo -> shangJiaName[" + i + "] ===================== " + m_ShangJiNameLable[i].text);
                 }
             }
         }

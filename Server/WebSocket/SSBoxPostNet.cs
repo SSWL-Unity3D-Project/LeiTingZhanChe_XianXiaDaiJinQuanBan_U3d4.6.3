@@ -486,7 +486,7 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             string jsonDataInfo = jd["data"].ToJson();
                             JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
-                            SSDebug.Log("data ============ " + jsonDataInfo);
+                            //SSDebug.Log("data ============ " + jsonDataInfo);
                             string totalReturnRate = jd_Data["setting"]["totalReturnRate"].ToString(); //总返奖率，单位：%
                             string superRewardMoney = jd_Data["setting"]["superPrizeBusinessMoney"].ToString(); //超级JP大奖商户支付金额
                             string mod = jd_Data["setting"]["mod"].ToString(); //运营模式
