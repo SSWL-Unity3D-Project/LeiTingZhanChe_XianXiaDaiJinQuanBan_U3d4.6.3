@@ -166,7 +166,12 @@ public class CoinPlayerCtrl : MonoBehaviour
 		}
 		FreeMode.SetActive(isActive);
 		CoinGroup.SetActive(!isActive);
-	}
+
+        if (m_MianFeiTiYanUI != null)
+        {
+            m_MianFeiTiYanUI.SetActive(false);
+        }
+    }
 
 	void ClickStartBtOneEvent(pcvr.ButtonState state)
 	{
@@ -530,7 +535,7 @@ public class CoinPlayerCtrl : MonoBehaviour
 
         if (m_MianFeiTiYanUI != null)
         {
-            m_MianFeiTiYanUI.SetActive(isActive);
+            m_MianFeiTiYanUI.SetActive(false);
         }
     }
 }
