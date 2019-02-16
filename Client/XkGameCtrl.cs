@@ -3942,6 +3942,13 @@ public class XkGameCtrl : SSGameMono
 
 	public Vector3 GetWorldObjToScreenPos(Vector3 worldPos)
 	{
+        if (Camera.main == null)
+        {
+            Vector3 posTmp = Vector3.zero;
+            posTmp.x = Screen.width * 0.5f;
+            posTmp.y = Screen.height * 0.5f;
+            return posTmp;
+        }
 		Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 		screenPos.z = 0f;
 		screenPos.x = screenPos.x < 0f ? 0f : screenPos.x;
