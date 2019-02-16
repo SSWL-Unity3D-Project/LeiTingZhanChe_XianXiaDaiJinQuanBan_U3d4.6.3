@@ -121,11 +121,11 @@ public class ScreenConfig : MonoBehaviour
         //StartCoroutine(SetGameWindowInfo());
     }
 
-    private void OnGUI()
-    {
-        string info = "sx " + Screen.width + ", sy " + Screen.height;
-        GUI.Box(new Rect(15f, 80f, 200f, 25f), info);
-    }
+    //private void OnGUI()
+    //{
+    //    string info = "sx " + Screen.width + ", sy " + Screen.height;
+    //    GUI.Box(new Rect(15f, 80f, 200f, 25f), info);
+    //}
 
     IEnumerator ResetGameScreenInfo(float time)
     {
