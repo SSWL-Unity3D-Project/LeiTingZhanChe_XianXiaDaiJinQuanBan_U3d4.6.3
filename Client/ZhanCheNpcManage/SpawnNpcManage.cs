@@ -511,7 +511,7 @@ public class SpawnNpcManage : MonoBehaviour
                 //延迟时间设置为0.
                 SpawnPoint.DelayTimeVal = 0f;
                 SSDebug.Log("CreatPointBuJiNpc.................... NpcPrefab == " + NpcPrefab);
-                return SpawnPoint.SpawnPointAllNpc();
+                return SpawnPoint.CreateBuChongNpc();
             }
             else
             {

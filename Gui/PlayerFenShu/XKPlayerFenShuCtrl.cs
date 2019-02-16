@@ -35,9 +35,9 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
             if (fenShuMoveCom != null)
             {
                 fenShuMoveCom.Init(m_FenShuAtlasP1);
+                fenShuMoveCom.SetActive(false);
             }
             FenShuListP1.Add(fenShuMoveCom);
-            obj.SetActive(false);
         }
 
         for (int i = 0; i < MaxPlayerFS; i++)
@@ -50,9 +50,9 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
             if (fenShuMoveCom != null)
             {
                 fenShuMoveCom.Init(m_FenShuAtlasP2);
+                fenShuMoveCom.SetActive(false);
             }
             FenShuListP2.Add(fenShuMoveCom);
-            obj.SetActive(false);
         }
 
         for (int i = 0; i < MaxPlayerFS; i++)
@@ -65,9 +65,9 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
             if (fenShuMoveCom != null)
             {
                 fenShuMoveCom.Init(m_FenShuAtlasP3);
+                fenShuMoveCom.SetActive(false);
             }
             FenShuListP3.Add(fenShuMoveCom);
-            obj.SetActive(false);
         }
     }
 	

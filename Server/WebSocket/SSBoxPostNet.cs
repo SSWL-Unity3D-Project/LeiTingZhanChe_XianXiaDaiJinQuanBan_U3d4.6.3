@@ -33,6 +33,9 @@ public class SSBoxPostNet : MonoBehaviour
 #if !USE_TEST_HDD_SERVER
         //设置红点点正式服务器版本信息.
         XKGameVersionCtrl.SetReleaseGameVersion();
+#else
+        //设置游戏为红点点测试服务器版本信息.
+        XKGameVersionCtrl.SetTestGameVersion();
 #endif
         string boxNum = "000000000000";
 #if UNITY_STANDALONE_WIN

@@ -85,7 +85,7 @@ public class XKPlayerFenShuMove : MonoBehaviour
         transform.localPosition = startPos;
 		transform.localEulerAngles = Vector3.zero;
 		transform.localScale = new Vector3(1f, 1f, 1f);
-		gameObject.SetActive(true);
+        SetActive(true);
 		TweenPosition twPos = gameObject.AddComponent<TweenPosition>();
 		twPos.from = startPos;
 		twPos.to = startPos + new Vector3(0f, 50f, 0f);
@@ -95,6 +95,12 @@ public class XKPlayerFenShuMove : MonoBehaviour
         {
             OpenTweenAlpha();
         });
+
+        if (IsInvoking("HiddenPlayerFenShu") == false)
+        {
+            float hiddenTime = PiaoFenTime + PiaoFenTime + 1f;
+            Invoke("HiddenPlayerFenShu", hiddenTime);
+        }
     }
 
     void OpenTweenAlpha()
@@ -117,12 +123,25 @@ public class XKPlayerFenShuMove : MonoBehaviour
     }
 
 	void HiddenPlayerFenShu()
-	{
-		TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
+    {
+        if (IsInvoking("HiddenPlayerFenShu") == true)
+        {
+            CancelInvoke("HiddenPlayerFenShu");
+        }
+
+        TweenAlpha twAlp = gameObject.GetComponent<TweenAlpha>();
         if (twAlp != null)
         {
             DestroyObject(twAlp);
         }
-		gameObject.SetActive(false);
+        SetActive(false);
 	}
+
+    internal void SetActive(bool isActive)
+    {
+        if (gameObject != null)
+        {
+            gameObject.SetActive(isActive);
+        }
+    }
 }

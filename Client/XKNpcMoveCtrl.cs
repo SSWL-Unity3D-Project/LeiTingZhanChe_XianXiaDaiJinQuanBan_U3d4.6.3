@@ -672,12 +672,22 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
 	XKCannonCtrl[] CannonScript;
 	WaypointProgressTracker WaypointCom;
+    /// <summary>
+    /// 是否为补充npc.
+    /// </summary>
+    bool IsBuChongNpc = false;
 	public void SetSpawnNpcInfo(XKSpawnNpcPoint spawnScript)
 	{
+        if (spawnScript == null)
+        {
+            return;
+        }
+        IsBuChongNpc = spawnScript.GetIsBuChongNpc();
         AddPathNodeData(spawnScript.NpcPath);
 		SetNpcSpawnScriptInfo(spawnScript);
 		IsHuoCheNpc = spawnScript.GetIsHuoCheNpc();
 		TestSpawnPoint = spawnScript.gameObject;
+
 		if (spawnScript.NpcPath != null) {
 			NpcPathScript = spawnScript.NpcPath.GetComponent<NpcPathCtrl>();
 		}
@@ -941,7 +951,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
 				isOrienttopath = false;
 			}
 
-			//Debug.Log("********************************* name " + gameObject.name);
+            //if (IsBuChongNpc == true)
+            //{
+            //    SSDebug.LogWarning("********************************* name " + gameObject.name); //test
+            //}
+            //Debug.Log("********************************* name " + gameObject.name);
             iTween.MoveTo(NpcObj, iTween.Hash("path", nodesArray,
 			                                  "speed", MvSpeed,
 			                                  "orienttopath", isOrienttopath,
@@ -1042,7 +1056,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			return;
 		}
 
-		MoveNpcOnCompelteITween();
+        //if (IsBuChongNpc == true)
+        //{
+        //    SSDebug.LogWarning("test buChongNpc moveing ************** name " + gameObject.name); //test
+        //}
+        MoveNpcOnCompelteITween();
 	}
 
     /// <summary>
@@ -1361,8 +1379,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			itweenScript.isRunning = false;
 			itweenScript.enabled = false;
 			DestroyObject(itweenScript);
-			//Debug.Log("*************************4444 name  " + gameObject.name);
-		}
+            //Debug.Log("*************************4444 name  " + gameObject.name);
+            //if (IsBuChongNpc == true)
+            //{
+            //    SSDebug.LogWarning("remove itweenCom ************** name " + gameObject.name); //test
+            //}
+        }
 
 		NpcMark markScript = null;
 		MarkScriptVal = null;
@@ -1435,12 +1457,16 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
         if (markScript == null)
         {
-            SSDebug.LogWarning("MoveNpcOnCompelteITween -> markScript was null");
+            SSDebug.LogWarning("MoveNpcOnCompelteITweenMove -> markScript was null");
             return;
         }
 
         //Debug.Log("Unity:"+"MoveNpcOnCompelteITween...npc is "+NpcObj.name);
-        if (IsCaiPiaoZhanChe == false)
+        if (IsCaiPiaoZhanChe == true || IsBuChongNpc == true)
+        {
+            //彩票Boss或补充npc不执行路径点的动画时间检测.
+        }
+        else
         {
             if (markScript.AnimatorTime > 0f)
             {
@@ -1594,8 +1620,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			itweenScript.isRunning = false;
 			itweenScript.isPaused = true;
 			Destroy(itweenScript);
-			//Debug.Log("*************************1111 name  " + gameObject.name);
-		}
+            //Debug.Log("*************************1111 name  " + gameObject.name);
+            //if (IsBuChongNpc == true)
+            //{
+            //    SSDebug.LogWarning("remove itweenCom ************** name " + gameObject.name); //test
+            //}
+        }
 
 		if (AnimatorCom != null) {
 			AnimatorCom.enabled = false;
@@ -2023,8 +2053,12 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			itweenScript.isPaused = true;
 			itweenScript.enabled = false;
 			DestroyObject(itweenScript);
-			//Debug.Log("*************************3333 name  " + gameObject.name);
-		}
+            //Debug.Log("*************************3333 name  " + gameObject.name);
+            //if (IsBuChongNpc == true)
+            //{
+            //    SSDebug.LogWarning("remove itweenCom ************** name " + gameObject.name); //test
+            //}
+        }
 
 		XkNpcZaiTiCtrl zaiTiScript = GetComponentInChildren<XkNpcZaiTiCtrl>();
 		if (zaiTiScript != null && zaiTiScript.ZaiTiNpcBuWaWa != null) {
@@ -2175,6 +2209,11 @@ public class XKNpcMoveCtrl : MonoBehaviour
             tweenMove.isRunning = false;
             tweenMove.isPaused = true;
             Destroy(tweenMove);
+
+            //if (IsBuChongNpc == true)
+            //{
+            //    SSDebug.LogWarning("CloseBossMoveing ************** name " + gameObject.name); //test
+            //}
         }
     }
 
