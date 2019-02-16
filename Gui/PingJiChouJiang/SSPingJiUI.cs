@@ -47,7 +47,7 @@ public class SSPingJiUI : MonoBehaviour
     {
         SetActive(false);
         m_IndexPlayer = indexPlayer;
-        m_TimeFenShuStart = m_TimeStart = Time.time;
+        //m_TimeFenShuStart = m_TimeStart = Time.time;
         if (m_PingJiUI == null)
         {
             SSDebug.LogWarning("SSPingJiUI::Init -> m_PingJiUI was null");
@@ -137,7 +137,7 @@ public class SSPingJiUI : MonoBehaviour
         gameObject.SetActive(isActive);
         if (isActive == true)
         {
-            m_TimeStart = Time.time;
+            m_TimeFenShuStart = m_TimeStart = Time.time;
         }
     }
 

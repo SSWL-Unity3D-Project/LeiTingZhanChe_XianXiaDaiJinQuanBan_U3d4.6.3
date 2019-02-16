@@ -78,10 +78,12 @@ public class NpcAmmoCtrl : MonoBehaviour {
 
 	void UpdateAmmoHit()
 	{
-		if (AmmoType == PlayerAmmoType.PaiJiPaoAmmo) {
-			return;
+		if (AmmoType == PlayerAmmoType.PaiJiPaoAmmo)
+        {
+            //更新迫击炮子弹的转向.
+            UpdatePaiJiPaoAmmoForward();
+            return;
 		}
-        UpdatePaiJiPaoAmmoForward();
 
         bool isHitObj = false;
 		XKPlayerMoveCtrl playerScript = null;
@@ -811,6 +813,8 @@ public class NpcAmmoCtrl : MonoBehaviour {
     /// </summary>
     [Range(0f, 100f)]
     public float PaiJiPaoAmmoRotSpeed = 3f;
+    Vector3 m_PaiJiPaoAmmoStartRot = Vector3.zero;
+    Vector3 m_PaiJiPaoAmmoRotCur = Vector3.zero;
     /// <summary>
     /// 更新迫击炮的指向.
     /// </summary>
@@ -826,16 +830,23 @@ public class NpcAmmoCtrl : MonoBehaviour {
             return;
         }
 
-        if (IsMovePaiJiPaoAmmoCoreToTop == true)
+        if (IsMovePaiJiPaoAmmoCoreToTop == false)
         {
             //弹头向上.
-            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(-45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            AmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
         else
         {
             //弹头向下.
-            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(-45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            AmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
+
+        //if (TestPaiJiPaoIndex == 1)
+        //{
+        //    SSDebug.LogWarning("UpdatePaiJiPaoAmmoForward -> m_PaiJiPaoAmmoRotCur ==== " + m_PaiJiPaoAmmoRotCur + ", IsMovePaiJiPaoAmmoCoreToTop == " + IsMovePaiJiPaoAmmoCoreToTop);
+        //}
     }
 
     /// <summary>
@@ -848,10 +859,18 @@ public class NpcAmmoCtrl : MonoBehaviour {
     void MoveTopPaiJiPaoAmmoCoreOnCompelteITween()
     {
         IsMovePaiJiPaoAmmoCoreToTop = true;
+        //if (TestPaiJiPaoIndex == 1)
+        //{
+        //    SSDebug.LogWarning("MoveTopPaiJiPaoAmmoCoreOnCompelteITween.................................");
+        //}
     }
 
+    //static int TestPaiJiPaoCount = 0;
+    //int TestPaiJiPaoIndex = 0;
     void MovePaiJiPaoAmmo()
 	{
+        //TestPaiJiPaoCount++;
+        //TestPaiJiPaoIndex = TestPaiJiPaoCount;
         IsMovePaiJiPaoAmmoCoreToTop = false;
         Vector3 firePos = Vector3.zero;
 		Vector3 vecA = AmmoTran.forward;
@@ -879,8 +898,12 @@ public class NpcAmmoCtrl : MonoBehaviour {
         AmmoCore.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
         iTween.MoveBy(AmmoCore, iTween.Hash("y", lobHeight,
 		                                    "time", lobTime * 0.5f,
-		                                    "easeType", iTween.EaseType.easeOutQuad,
-                                            "oncomplete", "MoveTopPaiJiPaoAmmoCoreOnCompelteITween"));
+		                                    "easeType", iTween.EaseType.easeOutQuad));
+
+        if (IsInvoking("MoveTopPaiJiPaoAmmoCoreOnCompelteITween") == false)
+        {
+            Invoke("MoveTopPaiJiPaoAmmoCoreOnCompelteITween", lobTime * 0.5f);
+        }
 		iTween.MoveBy(AmmoCore, iTween.Hash("y", -lobHeight,
 		                                    "time", lobTime * 0.5f,
 		                                    "delay", lobTime * 0.5f,
@@ -893,7 +916,12 @@ public class NpcAmmoCtrl : MonoBehaviour {
 
 	void MovePaiJiPaoAmmoOnCompelteITween()
 	{
-		Collider[] hits = Physics.OverlapSphere(AmmoTran.position, PaiJiPaoDamageDis, ~IgnoreLayers.value);
+        if (IsInvoking("MoveTopPaiJiPaoAmmoCoreOnCompelteITween") == true)
+        {
+            CancelInvoke("MoveTopPaiJiPaoAmmoCoreOnCompelteITween");
+        }
+
+        Collider[] hits = Physics.OverlapSphere(AmmoTran.position, PaiJiPaoDamageDis, ~IgnoreLayers.value);
 		foreach (Collider c in hits) {
 			if (c.isTrigger) {
 				continue;
