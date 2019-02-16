@@ -816,6 +816,10 @@ public class NpcAmmoCtrl : MonoBehaviour {
     Vector3 m_PaiJiPaoAmmoStartRot = Vector3.zero;
     Vector3 m_PaiJiPaoAmmoRotCur = Vector3.zero;
     /// <summary>
+    /// 迫击炮子弹转向对象.
+    /// </summary>
+    public Transform m_PaiJiPaoRotAmmoCore;
+    /// <summary>
     /// 更新迫击炮的指向.
     /// </summary>
     void UpdatePaiJiPaoAmmoForward()
@@ -825,7 +829,7 @@ public class NpcAmmoCtrl : MonoBehaviour {
             return;
         }
 
-        if(AmmoCore == null)
+        if(m_PaiJiPaoRotAmmoCore == null)
         {
             return;
         }
@@ -834,13 +838,13 @@ public class NpcAmmoCtrl : MonoBehaviour {
         {
             //弹头向上.
             m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(-45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
-            AmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
+            m_PaiJiPaoRotAmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
         else
         {
             //弹头向下.
             m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
-            AmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
+            m_PaiJiPaoRotAmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
 
         //if (TestPaiJiPaoIndex == 1)
