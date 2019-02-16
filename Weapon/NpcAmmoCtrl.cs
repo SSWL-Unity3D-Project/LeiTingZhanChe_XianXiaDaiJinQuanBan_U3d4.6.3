@@ -837,13 +837,13 @@ public class NpcAmmoCtrl : MonoBehaviour {
         if (IsMovePaiJiPaoAmmoCoreToTop == false)
         {
             //弹头向上.
-            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(-45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(-60f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
             m_PaiJiPaoRotAmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
         else
         {
             //弹头向下.
-            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+            m_PaiJiPaoAmmoRotCur = Vector3.Lerp(m_PaiJiPaoAmmoRotCur, new Vector3(60f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
             m_PaiJiPaoRotAmmoCore.transform.localEulerAngles = m_PaiJiPaoAmmoRotCur;
         }
 
