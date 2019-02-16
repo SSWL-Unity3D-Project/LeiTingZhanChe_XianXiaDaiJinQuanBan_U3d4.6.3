@@ -807,6 +807,11 @@ public class NpcAmmoCtrl : MonoBehaviour {
 	[Range(0f, 100f)]public float PaiJiPaoGDMin = 0.5f;
 	GameObject PaiJiPaoTiShi;
     /// <summary>
+    /// 迫击炮子弹转角速度.
+    /// </summary>
+    [Range(0f, 100f)]
+    public float PaiJiPaoAmmoRotSpeed = 3f;
+    /// <summary>
     /// 更新迫击炮的指向.
     /// </summary>
     void UpdatePaiJiPaoAmmoForward()
@@ -816,9 +821,20 @@ public class NpcAmmoCtrl : MonoBehaviour {
             return;
         }
 
-        if (IsMovePaiJiPaoAmmoCoreToTop == true && AmmoCore != null)
+        if(AmmoCore == null)
         {
-            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(45f, 0f, 0f), Time.deltaTime * 3f);
+            return;
+        }
+
+        if (IsMovePaiJiPaoAmmoCoreToTop == true)
+        {
+            //弹头向上.
+            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
+        }
+        else
+        {
+            //弹头向下.
+            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(-45f, 0f, 0f), Time.deltaTime * PaiJiPaoAmmoRotSpeed);
         }
     }
 
@@ -860,7 +876,7 @@ public class NpcAmmoCtrl : MonoBehaviour {
 
 		float lobHeight = PaiJiPaoGDKey * paoDanMVDis + PaiJiPaoGDMin;
 		float lobTime = PaiJiPaoMvTime;
-        AmmoCore.transform.localEulerAngles = new Vector3(-45f, 0f, 0f);
+        AmmoCore.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
         iTween.MoveBy(AmmoCore, iTween.Hash("y", lobHeight,
 		                                    "time", lobTime * 0.5f,
 		                                    "easeType", iTween.EaseType.easeOutQuad,
