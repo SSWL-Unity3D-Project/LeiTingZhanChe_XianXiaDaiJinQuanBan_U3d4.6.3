@@ -81,8 +81,9 @@ public class NpcAmmoCtrl : MonoBehaviour {
 		if (AmmoType == PlayerAmmoType.PaiJiPaoAmmo) {
 			return;
 		}
+        UpdatePaiJiPaoAmmoForward();
 
-		bool isHitObj = false;
+        bool isHitObj = false;
 		XKPlayerMoveCtrl playerScript = null;
 		Collider[] hits = Physics.OverlapSphere(AmmoTran.position, HitRadius, NpcAmmoHitLayer);
 		foreach (Collider c in hits) {
@@ -805,9 +806,38 @@ public class NpcAmmoCtrl : MonoBehaviour {
 	 */
 	[Range(0f, 100f)]public float PaiJiPaoGDMin = 0.5f;
 	GameObject PaiJiPaoTiShi;
-	void MovePaiJiPaoAmmo()
+    /// <summary>
+    /// 更新迫击炮的指向.
+    /// </summary>
+    void UpdatePaiJiPaoAmmoForward()
+    {
+        if (AmmoType != PlayerAmmoType.PaiJiPaoAmmo)
+        {
+            return;
+        }
+
+        if (IsMovePaiJiPaoAmmoCoreToTop == true && AmmoCore != null)
+        {
+            AmmoCore.transform.localEulerAngles = Vector3.Lerp(AmmoCore.transform.localEulerAngles, new Vector3(45f, 0f, 0f), Time.deltaTime * 3f);
+        }
+    }
+
+    /// <summary>
+    /// 迫击炮子弹是否运动到最高点.
+    /// </summary>
+    bool IsMovePaiJiPaoAmmoCoreToTop = false;
+    /// <summary>
+    /// 迫击炮子弹运动到最高点.
+    /// </summary>
+    void MoveTopPaiJiPaoAmmoCoreOnCompelteITween()
+    {
+        IsMovePaiJiPaoAmmoCoreToTop = true;
+    }
+
+    void MovePaiJiPaoAmmo()
 	{
-		Vector3 firePos = Vector3.zero;
+        IsMovePaiJiPaoAmmoCoreToTop = false;
+        Vector3 firePos = Vector3.zero;
 		Vector3 vecA = AmmoTran.forward;
 		vecA.y = 0f;
 		MinPaiJiPaoDis = MinPaiJiPaoDis < MaxPaiJiPaoDis ? MinPaiJiPaoDis : MaxPaiJiPaoDis;
@@ -830,9 +860,11 @@ public class NpcAmmoCtrl : MonoBehaviour {
 
 		float lobHeight = PaiJiPaoGDKey * paoDanMVDis + PaiJiPaoGDMin;
 		float lobTime = PaiJiPaoMvTime;
-		iTween.MoveBy(AmmoCore, iTween.Hash("y", lobHeight,
+        AmmoCore.transform.localEulerAngles = new Vector3(-45f, 0f, 0f);
+        iTween.MoveBy(AmmoCore, iTween.Hash("y", lobHeight,
 		                                    "time", lobTime * 0.5f,
-		                                    "easeType", iTween.EaseType.easeOutQuad));
+		                                    "easeType", iTween.EaseType.easeOutQuad,
+                                            "oncomplete", "MoveTopPaiJiPaoAmmoCoreOnCompelteITween"));
 		iTween.MoveBy(AmmoCore, iTween.Hash("y", -lobHeight,
 		                                    "time", lobTime * 0.5f,
 		                                    "delay", lobTime * 0.5f,
