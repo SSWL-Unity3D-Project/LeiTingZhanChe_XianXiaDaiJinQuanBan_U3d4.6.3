@@ -117,9 +117,14 @@ public class SSPingJiUI : MonoBehaviour
             {
                 if (Time.frameCount % 2 == 0 && m_FenShuNumUI != null && m_FenShuNumUI.m_UISpriteArray.Length > 0)
                 {
-                    int minFenShu = (m_FenShuNumUI.m_UISpriteArray.Length - 1) * 10;
-                    int maxFenShu = (m_FenShuNumUI.m_UISpriteArray.Length * 10) - 1;
-                    ShowPlayerFenShu(Random.Range(minFenShu, maxFenShu));
+                    int length = m_PlayerFenShu.ToString().Length;
+                    int randVal = 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        randVal += (int)Mathf.Pow(10, i) * Random.Range(1, 9);
+                    }
+                    //SSDebug.LogWarning("UpdatePlayerFenAni -> randVal ========== " + randVal);
+                    ShowPlayerFenShu(randVal);
                 }
             }
             else
