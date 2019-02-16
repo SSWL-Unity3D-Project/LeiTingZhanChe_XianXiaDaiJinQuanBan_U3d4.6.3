@@ -80,16 +80,25 @@ public class GameMovieCtrl : SSGameMono
 			//IsTestXiaoScreen = true; //test
 			if (!XkGameCtrl.IsGameOnQuit)
 			{
-				if (!Screen.fullScreen
-					|| Screen.currentResolution.width != XkGameCtrl.ScreenData.width
-					|| Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
-				{
-					if (!IsTestLJGame && !IsTestXiaoScreen)
-					{
-						Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
-					}
-				}
-			}
+				//if (!Screen.fullScreen
+				//	|| Screen.currentResolution.width != XkGameCtrl.ScreenData.width
+				//	|| Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
+				//{
+				//	if (!IsTestLJGame && !IsTestXiaoScreen)
+				//	{
+				//		Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
+				//	}
+                //}
+                //if (Screen.fullScreen == true
+                //    || Screen.currentResolution.width != XkGameCtrl.ScreenData.width
+                //    || Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
+                //{
+                //    if (!IsTestLJGame && !IsTestXiaoScreen)
+                //    {
+                //        gameObject.AddComponent<ScreenConfig>();
+                //    }
+                //}
+            }
 			Debug.Log("Unity:!!!!!!IsGameOnQuit!!!!!!");
 
 			if (!IsTestLJGame)

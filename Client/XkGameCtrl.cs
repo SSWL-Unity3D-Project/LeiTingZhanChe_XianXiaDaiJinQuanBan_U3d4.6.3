@@ -696,16 +696,26 @@ public class XkGameCtrl : SSGameMono
 			}
 			else if (!IsGameOnQuit)
 			{
-				if (!Screen.fullScreen
-					|| Screen.currentResolution.width != ScreenData.width
-                    || Screen.currentResolution.height != ScreenData.height)
-				{
-					if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
-					{
-						Screen.SetResolution(ScreenData.width, ScreenData.height, true);
-					}
-				}
-			}
+                //if (!Screen.fullScreen
+                //	|| Screen.currentResolution.width != ScreenData.width
+                //                || Screen.currentResolution.height != ScreenData.height)
+                //{
+                //	if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
+                //	{
+                //		Screen.SetResolution(ScreenData.width, ScreenData.height, true);
+                //	}
+                //}
+                //if (Screen.fullScreen == true
+                //    || Screen.currentResolution.width != ScreenData.width
+                //    || Screen.currentResolution.height != ScreenData.height)
+                //{
+                //    if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
+                //    {
+                //        gameObject.AddComponent<ScreenConfig>();
+                //    }
+                //}
+                gameObject.AddComponent<ScreenConfig>();
+            }
 
 			NpcAmmoCtrl.NpcAmmoHitLayer = NpcAmmoHitLayer;
 			GameObject obj = null;
