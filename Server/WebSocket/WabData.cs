@@ -156,7 +156,7 @@ public class WabData
         if (ws.InternalRequest.Response != null)
             errorMsg = string.Format("Status Code from Server: {0} and Message: {1}", ws.InternalRequest.Response.StatusCode, ws.InternalRequest.Response.Message);
 
-        Debug.Log("Unity:"+string.Format("-An error occured: {0}\n", ex != null ? ex.Message : "Unknown Error " + errorMsg));
+        Debug.LogWarning("Unity:"+string.Format("-An error occured: {0}\n", ex != null ? ex.Message : "Unknown Error " + errorMsg));
         //if (m_WebSocketSimpet != null && Application.isPlaying == true)
         //{
         //    Debug.Log("Unity:" + "OnError::Restart Web Socket -> url == " + Address);

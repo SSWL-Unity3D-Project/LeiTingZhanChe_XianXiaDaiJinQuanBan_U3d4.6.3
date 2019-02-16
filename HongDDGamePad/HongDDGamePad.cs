@@ -629,7 +629,26 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             m_PlayerPlayGameTimeDtArray[indexVal].SetEndGameTime(Time.time);
             //SSDebug.LogWarning("SetPlayerEndGameTime -> indexPlayer === " + indexPlayer + ", time === " + Time.time.ToString("f2"));
+
+            int gameTime = GetPlayerPlayGameTime(indexPlayer);
+            //发送玩家游戏时长信息到红点点服务器.
+            SendPlayerPlayGameTimeToServer(indexPlayer, gameTime);
         }
+
+        /// <summary>
+        /// 发送玩家游戏时长信息到红点点服务器.
+        /// </summary>
+        void SendPlayerPlayGameTimeToServer(PlayerEnum indexPlayer, int time)
+        {
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            //记录玩家登陆游戏的信息.
+            if (m_SSBoxPostNet != null && playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                int userId = playerDt.m_PlayerWeiXinData.userId;
+                m_SSBoxPostNet.HttpSendPostUserPlayGameTimeInfo(userId, time);
+            }
+        }
+
         /// <summary>
         /// 获取玩家完了多长时间游戏的信息.
         /// </summary>
@@ -642,6 +661,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             return m_PlayerPlayGameTimeDtArray[indexVal].GetPlayGameTime();
         }
+
         /// <summary>
         /// 设置玩家激活游戏状态信息.
         /// </summary>

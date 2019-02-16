@@ -1479,8 +1479,7 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
-
-
+    
     public class PostDataPlayerLogin
     {
         /// <summary>
@@ -1559,17 +1558,73 @@ public class SSBoxPostNet : MonoBehaviour
             StreamReader sr = new StreamReader(stream); //创建一个stream读取流
             string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
             SSDebug.Log("HttpSendPostUserLoginInfo -> msg == " + msg);
+        }
+        finally
+        {
+            //释放资源.
+            if (stream != null)
+            {
+                stream.Close();
+            }
 
-            //JsonData jd = JsonMapper.ToObject(msg);
-            //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-            //{
-            //    //红点点支付平台玩家代金券添加成功.
-            //}
-            //else
-            //{
-            //    //红点点支付平台玩家代金券添加失败.
-            //    SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
-            //}
+            if (response != null)
+            {
+                response.Close();
+            }
+        }
+    }
+    
+    public class PostDataPlayerPlayGameTime
+    {
+        /// <summary>
+        /// 玩家登陆Id信息.
+        /// </summary>
+        public int id = 0;
+        /// <summary>
+        /// 游戏时长.
+        /// </summary>
+        public int gameTime = 0;
+        public PostDataPlayerPlayGameTime(int id, int gameTime)
+        {
+            this.id = id;
+            this.gameTime = gameTime;
+        }
+    }
+
+    /// <summary>
+    /// 用户游戏时长| 域名/wxbackstage/client/memberGameTime | POST | 表5.9 | 
+    /// id | Integer | 用户登录统计返回的id | 是
+    /// gameTime | Integer | 游戏时长，单位（秒） | 是
+    /// </summary>
+    internal void HttpSendPostUserPlayGameTimeInfo(int userId, int time)
+    {
+        if (m_BoxLoginData == null)
+        {
+            SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> m_BoxLoginData was null");
+            return;
+        }
+
+        //POST方法.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/memberGameTime";
+        //http://game.hdiandian.com/wxbackstage/client/memberGameTime
+        SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> url == " + url);
+
+        Encoding encoding = Encoding.GetEncoding("utf-8");
+        PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userId, time);
+        //"{\"id\":941081,\"gameTime\":60}" //发送的消息.
+        string jsonData = JsonMapper.ToJson(postDt);
+        byte[] postData = Encoding.UTF8.GetBytes(jsonData);
+        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
+        //打印返回值.
+        Stream stream = null; //获取响应的流.
+
+        try
+        {
+            //以字符流的方式读取HTTP响应.
+            stream = response.GetResponseStream();
+            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
         }
         finally
         {
