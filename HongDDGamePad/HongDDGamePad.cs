@@ -94,6 +94,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
         void InitInfo()
         {
+            InitPlayerPlayGameTimeData();
             for (int i = 0; i < m_GmWXLoginDt.Length; i++)
             {
                 m_GmWXLoginDt[i] = new GameWeiXinLoginData();
@@ -549,12 +550,98 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
                 }
             }
+
+            //设置玩家结束游戏的时间.
+            SetPlayerEndGameTime(indexPlayer);
         }
 
         /// <summary>
         /// 4个玩家激活游戏的列表状态(0 未激活, 1 激活).
         /// </summary>
         public byte[] m_IndexPlayerActiveGameState = new byte[3];
+        /// <summary>
+        /// 玩家进行游戏的时间.
+        /// </summary>
+        public class PlayerPlayGameTimeData
+        {
+            /// <summary>
+            /// 开始游戏时间.
+            /// </summary>
+            float startGameTime = 0f;
+            /// <summary>
+            /// 结束游戏时间.
+            /// </summary>
+            float endGameTime = 0f;
+            internal void SetStartGameTime(float time)
+            {
+                startGameTime = time;
+            }
+            internal void SetEndGameTime(float time)
+            {
+                endGameTime = time;
+            }
+            internal int GetPlayGameTime()
+            {
+                int time = 30;
+                if (endGameTime > startGameTime)
+                {
+                    time = (int)(endGameTime - startGameTime);
+                }
+                return time;
+            }
+        }
+        /// <summary>
+        /// 玩家进行游戏的时间数据表.
+        /// </summary>
+        PlayerPlayGameTimeData[] m_PlayerPlayGameTimeDtArray = new PlayerPlayGameTimeData[3];
+        /// <summary>
+        /// 初始化.
+        /// </summary>
+        void InitPlayerPlayGameTimeData()
+        {
+            for (int i = 0; i < m_PlayerPlayGameTimeDtArray.Length; i++)
+            {
+                m_PlayerPlayGameTimeDtArray[i] = new PlayerPlayGameTimeData();
+            }
+        }
+        /// <summary>
+        /// 设置玩家开始游戏时间.
+        /// </summary>
+        void SetPlayerStartGameTime(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_PlayerPlayGameTimeDtArray.Length)
+            {
+                return;
+            }
+            m_PlayerPlayGameTimeDtArray[indexVal].SetStartGameTime(Time.time);
+            //SSDebug.LogWarning("SetPlayerStartGameTime -> indexPlayer === " + indexPlayer + ", time === " + Time.time.ToString("f2"));
+        }
+        /// <summary>
+        /// 设置玩家结束游戏时间.
+        /// </summary>
+        void SetPlayerEndGameTime(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_PlayerPlayGameTimeDtArray.Length)
+            {
+                return;
+            }
+            m_PlayerPlayGameTimeDtArray[indexVal].SetEndGameTime(Time.time);
+            //SSDebug.LogWarning("SetPlayerEndGameTime -> indexPlayer === " + indexPlayer + ", time === " + Time.time.ToString("f2"));
+        }
+        /// <summary>
+        /// 获取玩家完了多长时间游戏的信息.
+        /// </summary>
+        int GetPlayerPlayGameTime(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_PlayerPlayGameTimeDtArray.Length)
+            {
+                return 30;
+            }
+            return m_PlayerPlayGameTimeDtArray[indexVal].GetPlayGameTime();
+        }
         /// <summary>
         /// 设置玩家激活游戏状态信息.
         /// </summary>
@@ -673,6 +760,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     m_GmWXLoginDt[index].m_GamePadType = GamePadType.Null;
                     Debug.Log("Unity: SetIndexPlayerActiveGameState -> index == " + index);
                 }
+                //设置玩家开始游戏的时间.
+                SetPlayerStartGameTime(indexPlayer);
             }
         }
 
