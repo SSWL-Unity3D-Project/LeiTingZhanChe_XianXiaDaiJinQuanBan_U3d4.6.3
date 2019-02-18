@@ -187,5 +187,17 @@ public class WabData
                     }
             }
         }
+        else
+        {
+            if (Application.isPlaying == true)
+            {
+                //网络故障,请检查网络并重启游戏.
+                if (SSUIRoot.GetInstance().m_GameUIManage != null
+                    && SSUIRoot.GetInstance().m_GameUIManage.m_WangLuoGuZhangUI == null)
+                {
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+                }
+            }
+        }
     }
 }

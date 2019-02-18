@@ -48,10 +48,15 @@ public class SpawnNpcManage : MonoBehaviour
     [Range(1, 600)]
     public int m_TimeXueTiaoZhanCheNpc = 20;
     /// <summary>
-    /// 战车npc从产生点运动到最后一个路径点所需要的时间.
+    /// 前后刷出的战车npc从产生点运动到最后一个路径点所需要的时间.
     /// </summary>
     [Range(1, 600)]
     public int m_TimeMoveZhanCheNpc = 20;
+    /// <summary>
+    /// 左右刷出的战车npc从产生点运动到最后一个路径点所需要的时间.
+    /// </summary>
+    [Range(1, 600)]
+    public int m_TimeZYMoveZhanCheNpc = 20;
     /// <summary>
     /// 前后刷出的JPBoss从产生点运动到最后一个路径点所需要的时间.
     /// </summary>
@@ -448,7 +453,14 @@ public class SpawnNpcManage : MonoBehaviour
                             float time = 0f;
                             if (m_SpawnNpcManage != null)
                             {
-                                time = m_SpawnNpcManage.m_TimeMoveZhanCheNpc;
+                                if (pointState == SpawnPointState.Down || pointState == SpawnPointState.Up)
+                                {
+                                    time = m_SpawnNpcManage.m_TimeMoveZhanCheNpc;
+                                }
+                                else if (pointState == SpawnPointState.Left || pointState == SpawnPointState.Right)
+                                {
+                                    time = m_SpawnNpcManage.m_TimeZYMoveZhanCheNpc;
+                                }
                             }
 
                             if (time <= 0f)
