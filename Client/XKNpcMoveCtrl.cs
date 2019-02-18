@@ -2330,7 +2330,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
         {
             if (m_JPBossWeaponManage != null)
             {
-                m_JPBossWeaponManage.OnDamage(heathPer);
+                //JPBoss受到伤害.
+                //m_JPBossWeaponManage.OnDamage(heathPer);
             }
         }
     }
