@@ -28,8 +28,14 @@ public class SSChouJiangUI : MonoBehaviour
     /// 抽奖动画提示UI对象.
     /// </summary>
     public GameObject m_TiShiObj;
+    /// <summary>
+    /// 玩家索引信息.
+    /// </summary>
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
-    int m_DaoJiShiVal = 15;
+    /// <summary>
+    /// 自动抽奖倒计时.
+    /// </summary>
+    int m_DaoJiShiVal = 10;
     internal void Init(PlayerEnum indexPlayer)
     {
         m_IndexPlayer = indexPlayer;
