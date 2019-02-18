@@ -1480,6 +1480,25 @@ public class SSBoxPostNet : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// 游戏付费状态.
+    /// </summary>
+    public enum FuFeiState
+    {
+        /// <summary>
+        /// 首次免费
+        /// </summary>
+        ShouCiMianFei = 0,
+        /// <summary>
+        /// 付费
+        /// </summary>
+        FuFei = 1,
+        /// <summary>
+        /// 免费再玩一局
+        /// </summary>
+        MianFeiZaiWanYiJu = 2,
+    }
+
     public class PostDataPlayerLogin
     {
         /// <summary>
@@ -1508,13 +1527,32 @@ public class SSBoxPostNet : MonoBehaviour
             this.screenCode = screenCode;
             this.memberId = memberId;
         }
-        public PostDataPlayerLogin(int gameCode, int screenCode, int memberId, string memberName, bool isFree)
+        public PostDataPlayerLogin(int gameCode, int screenCode, int memberId, string memberName, FuFeiState fuFeiStata)
         {
             this.gameCode = gameCode;
             this.screenCode = screenCode;
             this.memberId = memberId;
             this.memberName = memberName;
-            this.isFree = isFree == false ? "付费" : "免费";
+            string fuFeiStr = "首次免费";
+            switch (fuFeiStata)
+            {
+                case FuFeiState.ShouCiMianFei:
+                    {
+                        fuFeiStr = "首次免费";
+                        break;
+                    }
+                case FuFeiState.FuFei:
+                    {
+                        fuFeiStr = "付费";
+                        break;
+                    }
+                case FuFeiState.MianFeiZaiWanYiJu:
+                    {
+                        fuFeiStr = "免费再玩一局";
+                        break;
+                    }
+            }
+            this.isFree = fuFeiStr;
         }
     }
 
@@ -1526,7 +1564,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// memberName | String | 用户昵称 | 是
     /// isFree | String | 登录时是否付费（取值：付费、免费；2选1） | 是
     /// </summary>
-    internal void HttpSendPostUserLoginInfo(int userId, string userName, bool isFree)
+    internal void HttpSendPostUserLoginInfo(int userId, string userName, FuFeiState fuFeiStata)
     {
         if (m_BoxLoginData == null)
         {
@@ -1543,7 +1581,7 @@ public class SSBoxPostNet : MonoBehaviour
         SSDebug.Log("HttpSendPostUserLoginInfo -> url == " + url);
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
-        PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, isFree);
+        PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, fuFeiStata);
         //"{\"gameCode\":1,\"screenCode\":10155,\"memberId\":94180}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);

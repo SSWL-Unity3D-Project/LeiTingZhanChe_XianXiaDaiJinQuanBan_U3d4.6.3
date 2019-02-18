@@ -1645,7 +1645,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //记录玩家登陆游戏的信息.
                             if (m_SSBoxPostNet != null && val != null)
                             {
-                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(val.userId, val.userName, true);
+                                //首次免费玩家.
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(val.userId, val.userName, SSBoxPostNet.FuFeiState.ShouCiMianFei);
                             }
                         }
                         else
@@ -1709,7 +1710,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 //记录玩家登陆游戏的信息.
                 if (m_SSBoxPostNet != null)
                 {
-                    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, true);
+                    //免费再玩一局游戏道具激活玩家.
+                    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, SSBoxPostNet.FuFeiState.MianFeiZaiWanYiJu);
                 }
 
                 //m_GmWXLoginDt[indexVal].IsActiveGame = true;
@@ -2118,7 +2120,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         //记录玩家登陆游戏的信息.
                         if (m_SSBoxPostNet != null)
                         {
-                            m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                            //付费玩家.
+                            m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, SSBoxPostNet.FuFeiState.FuFei);
                         }
                     }
                 }
@@ -2159,7 +2162,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //记录玩家登陆游戏的信息.
                             if (m_SSBoxPostNet != null)
                             {
-                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, false);
+                                //付费玩家.
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(userId, playerDt.m_PlayerWeiXinData.userName, SSBoxPostNet.FuFeiState.FuFei);
                             }
                         }
                         else
