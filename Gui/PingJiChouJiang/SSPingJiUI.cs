@@ -63,7 +63,13 @@ public class SSPingJiUI : MonoBehaviour
         {
             SSDebug.LogWarning("XkGameCtrl.GetInstance().m_PingJiData was null");
         }
+
+        if (fenShu.ToString().Length > m_FenShuNumUI.m_UISpriteArray.Length)
+        {
+            fenShu = (int)Mathf.Pow(10, fenShu.ToString().Length) - 1;
+        }
         m_PlayerFenShu = fenShu;
+        m_FenShuAnimationData = new FenShuAnimationData(m_TimeFenShuAni, fenShu);
 
         int indexVal = (int)m_PlayerPingJiLevel;
         if (indexVal < m_PingJiImgArray.Length && m_PingJiImgArray[indexVal] != null)
@@ -107,24 +113,184 @@ public class SSPingJiUI : MonoBehaviour
     }
 
     /// <summary>
+    /// 分数动画数据信息.
+    /// </summary>
+    public class FenShuAnimationData
+    {
+        /// <summary>
+        /// 低位数字播放结束还剩多长时间之后播放下一个高位数字的动画.
+        /// </summary>
+        public float nextNumTime = 0.1f;
+        /// <summary>
+        /// 每一位数字需要转动的时间.
+        /// </summary>
+        internal float timeUnit = 1f;
+        public FenShuAnimationData(float timeTotal, int fenShu)
+        {
+            int fenShuLength = fenShu.ToString().Length;
+            timeUnit = timeTotal / fenShuLength;
+            fenShuAniArray = new UnitFenShuAniData[fenShuLength];
+
+            int fenShuTmp = fenShu;
+            for (int i = 0; i < fenShuLength; i++)
+            {
+                fenShuAniArray[i] = new UnitFenShuAniData(fenShuTmp % 10);
+                fenShuTmp = fenShuTmp / 10;
+            }
+            m_MaxFenShuLength = fenShuLength;
+        }
+
+        /// <summary>
+        /// 分数单个数字动画控制列表.
+        /// </summary>
+        UnitFenShuAniData[] fenShuAniArray;
+        /// <summary>
+        /// 分数最大位数.
+        /// </summary>
+        int m_MaxFenShuLength = 1;
+        /// <summary>
+        /// 分数索引.
+        /// </summary>
+        int m_IndexFenShuAni = 0;
+
+        /// <summary>
+        /// 更新游戏是否切换分数索引信息.
+        /// </summary>
+        void UpdateChangeFenShuIndex(float dTime)
+        {
+            if (m_IndexFenShuAni >= m_MaxFenShuLength - 1)
+            {
+                return;
+            }
+
+            float timeVal = (timeUnit * (m_IndexFenShuAni + 1)) - nextNumTime;
+            if (dTime >= timeVal)
+            {
+                //切换一次分数索引信息.
+                StopMoveUnitFenShu();
+            }
+        }
+
+        /// <summary>
+        /// 获取分数信息.
+        /// </summary>
+        internal int GetFenShuValue(float dTime)
+        {
+            UpdateChangeFenShuIndex(dTime);
+
+            int fenShu = 0;
+            int length = m_IndexFenShuAni + 1;
+            if (length > m_MaxFenShuLength)
+            {
+                length = m_MaxFenShuLength;
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                fenShu += GetFenShuUnitValue(i) * (int)Mathf.Pow(10, i);
+            }
+            return fenShu;
+        }
+
+        /// <summary>
+        /// 获取每一位分数的数值.
+        /// </summary>
+        int GetFenShuUnitValue(int indexVal)
+        {
+            int fenShu = 0;
+            if (indexVal >= 0 || indexVal < fenShuAniArray.Length)
+            {
+                fenShu = fenShuAniArray[indexVal].GetFenShuCount();
+            }
+            return fenShu;
+        }
+
+        /// <summary>
+        /// 停止某一位分数的动画.
+        /// 某一位数值不再滚动.
+        /// </summary>
+        void StopMoveUnitFenShu()
+        {
+            if (m_IndexFenShuAni >= 0 || m_IndexFenShuAni < fenShuAniArray.Length)
+            {
+                //SSDebug.LogWarning("StopMoveUnitFenShu -> m_IndexFenShuAni ================ " + m_IndexFenShuAni);
+                fenShuAniArray[m_IndexFenShuAni].SetIsStop(true);
+                //切换一次分数索引信息.
+                m_IndexFenShuAni++;
+            }
+        }
+    }
+    /// <summary>
+    /// 评级分数动画控制组件.
+    /// </summary>
+    FenShuAnimationData m_FenShuAnimationData;
+
+    /// <summary>
+    /// 分数单个数字动画控制.
+    /// </summary>
+    public class UnitFenShuAniData
+    {
+        /// <summary>
+        /// 真实分数数字.
+        /// </summary>
+        int realFenShu = 0;
+        /// <summary>
+        /// 是否停止变化.
+        /// </summary>
+        bool isStop = false;
+        internal void SetIsStop(bool isStop)
+        {
+            this.isStop = isStop;
+        }
+
+        public UnitFenShuAniData(int realFenShu)
+        {
+            this.realFenShu = realFenShu;
+        }
+
+        int fenShuCount = 0;
+        internal int GetFenShuCount()
+        {
+            if (isStop == true)
+            {
+                return realFenShu;
+            }
+
+            int fenShu = fenShuCount % 10;
+            fenShuCount++;
+            return fenShu;
+        }
+    }
+
+    /// <summary>
     /// 更新数字滚动.
     /// </summary>
     void UpdatePlayerFenAni()
     {
         if (IsEndFenShuAni == false)
         {
-            if (Time.time - m_TimeFenShuStart < m_TimeFenShuAni)
+            float dTimeVal = Time.time - m_TimeFenShuStart;
+            if (dTimeVal < m_TimeFenShuAni)
             {
                 if (m_FenShuNumUI != null && m_FenShuNumUI.m_UISpriteArray.Length > 0)
                 {
-                    int length = m_PlayerFenShu.ToString().Length;
-                    int randVal = 0;
-                    for (int i = 0; i < length; i++)
+                    //int length = m_PlayerFenShu.ToString().Length;
+                    //int randVal = 0;
+                    //for (int i = 0; i < length; i++)
+                    //{
+                    //    randVal += (int)Mathf.Pow(10, i) * Random.Range(2, 9);
+                    //}
+
+                    ////SSDebug.LogWarning("UpdatePlayerFenAni -> randVal ========== " + randVal);
+                    //ShowPlayerFenShu(randVal);
+
+                    int fenShu = 0;
+                    if (m_FenShuAnimationData != null)
                     {
-                        randVal += (int)Mathf.Pow(10, i) * Random.Range(2, 9);
+                        fenShu = m_FenShuAnimationData.GetFenShuValue(dTimeVal);
                     }
-                    //SSDebug.LogWarning("UpdatePlayerFenAni -> randVal ========== " + randVal);
-                    ShowPlayerFenShu(randVal);
+                    //SSDebug.LogWarning("UpdatePlayerFenAni -> fenShu ========== " + fenShu);
+                    ShowPlayerFenShu(fenShu);
                 }
             }
             else
