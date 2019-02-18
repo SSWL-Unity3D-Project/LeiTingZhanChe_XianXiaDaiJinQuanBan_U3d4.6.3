@@ -290,6 +290,18 @@ public class SSCaiPiaoDataManage : SSGameMono
         }
 
         /// <summary>
+        /// 获取某种奖池金额是否充足.
+        /// </summary>
+        internal bool GetIsCaiChiEnough(DaiJinQuanState type)
+        {
+            float caiChiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetCaiChiData(type);
+            float caiChiChuPiaoTiaoJian = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetChuPiaoTiaoJian(type);
+            //彩池是否足够.
+            bool isCaiChiZuGou = caiChiVal - caiChiChuPiaoTiaoJian >= 0f ? true : false;
+            return isCaiChiZuGou;
+        }
+
+        /// <summary>
         /// 更新JPBoss代金券商户支付金额信息.
         /// </summary>
         internal void UpdateJPBossDaiJinQuanShangHuZhiFu(float jpBossDaiJinQuanShangHuZhiFu)
