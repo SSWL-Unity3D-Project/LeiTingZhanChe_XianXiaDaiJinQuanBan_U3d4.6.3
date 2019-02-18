@@ -573,6 +573,52 @@ public class SpawnNpcManage : MonoBehaviour
                     {
                         //超过3次检索就不再随机了.
                         rv = 1;
+
+                        int randVal = 0;
+                        if ((IsOpenLeft || IsOpenRight) && (IsOpenUp || IsOpenDown))
+                        {
+                            randVal = Random.Range(0, 100) % 2;
+                        }
+                        else if (IsOpenLeft || IsOpenRight)
+                        {
+                            randVal = 0;
+                        }
+                        else if (IsOpenUp || IsOpenDown)
+                        {
+                            randVal = 1;
+                        }
+
+                        //主动控制产生方位.
+                        if (randVal == 0 && (IsOpenLeft || IsOpenRight))
+                        {
+                            if (IsOpenLeft && IsOpenRight)
+                            {
+                                i = Random.Range(0, 100) % 2;
+                            }
+                            else if (IsOpenLeft)
+                            {
+                                i = 0;
+                            }
+                            else if (IsOpenRight)
+                            {
+                                i = 1;
+                            }
+                        }
+                        else if (randVal == 1 && (IsOpenUp || IsOpenDown))
+                        {
+                            if (IsOpenUp && IsOpenDown)
+                            {
+                                i = (Random.Range(0, 100) % 2) + 2;
+                            }
+                            else if (IsOpenUp)
+                            {
+                                i = 2;
+                            }
+                            else if (IsOpenDown)
+                            {
+                                i = 3;
+                            }
+                        }
                     }
                     else
                     {
