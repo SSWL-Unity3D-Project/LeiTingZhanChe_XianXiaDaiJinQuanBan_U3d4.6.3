@@ -1627,6 +1627,10 @@ public class SSBoxPostNet : MonoBehaviour
             this.id = id;
             this.gameTime = gameTime;
         }
+        public override string ToString()
+        {
+            return "id ==== " + id + ", gameTime ==== " + gameTime;
+        }
     }
 
     /// <summary>
@@ -1649,6 +1653,7 @@ public class SSBoxPostNet : MonoBehaviour
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
         PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userId, time);
+        SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> postDt == " + postDt.ToString());
         //"{\"id\":941081,\"gameTime\":60}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
