@@ -6,6 +6,7 @@ using Assets.XKGame.Script.Server.WebSocket;
 using LitJson;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -1596,6 +1597,16 @@ public class SSBoxPostNet : MonoBehaviour
             StreamReader sr = new StreamReader(stream); //创建一个stream读取流
             string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
             SSDebug.Log("HttpSendPostUserLoginInfo -> msg == " + msg);
+            //{"code":0,"message":"成功",
+            //"data":{"id":2032,"memberId":94180,"screenCode":10155,"gameCode":1,"memberName":"Allen","isFree":"首次免费","loginTime":"2019-02-18 13:31:01"}}
+
+            JsonData jd = JsonMapper.ToObject(msg);
+            m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
+            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            {
+                int id = Convert.ToInt32(jd["data"]["id"].ToString());
+                AddPostUserLoginReceiveData(userId, id);
+            }
         }
         finally
         {
@@ -1611,11 +1622,63 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
     }
-    
+
+    /// <summary>
+    /// 玩家游戏登录消息返回的数据信息.
+    /// </summary>
+    public class PostUserLoginReceiveData
+    {
+        /// <summary>
+        /// 用户id.
+        /// </summary>
+        internal int userId = 0;
+        /// <summary>
+        /// 游戏用户登录消息返回的id信息.
+        /// </summary>
+        internal int id = 0;
+        public PostUserLoginReceiveData(int userId, int id)
+        {
+            this.userId = userId;
+            this.id = id;
+        }
+    }
+    List<PostUserLoginReceiveData> m_PostUserLoginReceiveData = new List<PostUserLoginReceiveData>();
+    PostUserLoginReceiveData FindPostUserLoginReceiveData(int userId)
+    {
+        PostUserLoginReceiveData data = m_PostUserLoginReceiveData.Find((dt) => {
+            return dt.userId.Equals(userId);
+        });
+        return data;
+    }
+    /// <summary>
+    /// 添加玩家游戏登录消息返回的数据信息.
+    /// </summary>
+    void AddPostUserLoginReceiveData(int userId, int id)
+    {
+        PostUserLoginReceiveData data = FindPostUserLoginReceiveData(userId);
+        if (data == null)
+        {
+            m_PostUserLoginReceiveData.Add(new PostUserLoginReceiveData(userId, id));
+        }
+    }
+    /// <summary>
+    /// 删除玩家游戏登录消息返回的数据信息.
+    /// </summary>
+    void RemovePostUserLoginReceiveData(int userId)
+    {
+        PostUserLoginReceiveData data = FindPostUserLoginReceiveData(userId);
+        if (data != null)
+        {
+            m_PostUserLoginReceiveData.Remove(data);
+        }
+    }
+    /// <summary>
+    /// 玩家游戏时长数据信息.
+    /// </summary>
     public class PostDataPlayerPlayGameTime
     {
         /// <summary>
-        /// 玩家登陆Id信息.
+        /// 玩家登录信息返回的id信息.
         /// </summary>
         public int id = 0;
         /// <summary>
@@ -1652,7 +1715,16 @@ public class SSBoxPostNet : MonoBehaviour
         SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> url == " + url);
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
-        PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userId, time);
+        PostUserLoginReceiveData userLoginDt = FindPostUserLoginReceiveData(userId);
+        if (userLoginDt == null)
+        {
+            SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> not find userLoginData!");
+            return;
+        }
+        //删除玩家登录的返回信息.
+        RemovePostUserLoginReceiveData(userId);
+
+        PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userLoginDt.id, time);
         SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> postDt == " + postDt.ToString());
         //"{\"id\":941081,\"gameTime\":60}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
