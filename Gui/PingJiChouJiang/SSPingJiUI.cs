@@ -318,6 +318,11 @@ public class SSPingJiUI : MonoBehaviour
         if (IsRemoveSelf == false)
         {
             IsRemoveSelf = true;
+            if (XkGameCtrl.GetInstance() != null)
+            {
+                //评级结束之后重置玩家分数信息.
+                XkGameCtrl.GetInstance().ResetPlayerInfo(m_IndexPlayer);
+            }
             Destroy(gameObject);
         }
     }
