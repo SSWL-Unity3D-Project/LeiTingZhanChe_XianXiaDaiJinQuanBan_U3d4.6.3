@@ -835,6 +835,10 @@ public class XKGlobalData
     /// 对于每个用户下次免费游戏的间隔时间.
     /// </summary>
     internal int m_TimeMianFeiNum = 20;
+    internal void SetTimeMianFeiNum(int time)
+    {
+        m_TimeMianFeiNum = time;
+    }
     /// <summary>
     /// 游戏免费试玩次数信息.
     /// </summary>

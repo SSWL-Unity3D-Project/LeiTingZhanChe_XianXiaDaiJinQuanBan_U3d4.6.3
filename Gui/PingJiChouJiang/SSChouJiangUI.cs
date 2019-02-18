@@ -146,7 +146,7 @@ public class SSChouJiangUI : MonoBehaviour
         }
         IsPlayChouJiangDaoJiShi = true;
 
-        int daoJiShiVal = 15;
+        int daoJiShiVal = m_DaoJiShiVal;
         do
         {
             ShowChouJiangDaoJiShiUI(daoJiShiVal);
@@ -154,7 +154,6 @@ public class SSChouJiangUI : MonoBehaviour
             if (daoJiShiVal > 0)
             {
                 daoJiShiVal--;
-                m_DaoJiShiVal = daoJiShiVal;
                 if (daoJiShiVal <= 0)
                 {
                     ShowChouJiangDaoJiShiUI(0);

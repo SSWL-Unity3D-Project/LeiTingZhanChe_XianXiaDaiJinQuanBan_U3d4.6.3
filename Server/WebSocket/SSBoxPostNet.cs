@@ -522,6 +522,14 @@ public class SSBoxPostNet : MonoBehaviour
                                 }
                                 //更新代金券有效期限数据.
                                 XKGlobalData.GetInstance().SetHddDaiJinQuanYouXiaoQiDt(startTime, endTime);
+
+                                int freeTimeInterval = 20;
+                                if (jd_Data["setting"].Keys.Contains("freeTimeInterval") == true)
+                                {
+                                    freeTimeInterval = Convert.ToInt32(jd_Data["setting"]["freeTimeInterval"].ToString());
+                                }
+                                //跟新游戏下次免费间隔时间数据.
+                                XKGlobalData.GetInstance().SetTimeMianFeiNum(freeTimeInterval);
                             }
 
                             //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
