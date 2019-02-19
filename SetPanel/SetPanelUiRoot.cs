@@ -11,12 +11,12 @@ public class SetPanelUiRoot : MonoBehaviour
 	public GameObject DuiGouYunYingMode;
 	public GameObject DuiGouFreeMode;
 
-	GameObject DuiGouTextCh;
-	GameObject DuiGouTextEn;
+	//GameObject DuiGouTextCh;
+	//GameObject DuiGouTextEn;
 	public Transform StarTran;
 	
-	UILabel GameAudioVolumeLB;
-	int GameAudioVolume;
+	//UILabel GameAudioVolumeLB;
+	//int GameAudioVolume;
 	GameObject StarObj;
 	
 	enum PanelState
@@ -661,8 +661,8 @@ public class SetPanelUiRoot : MonoBehaviour
 
 	void SetGameTextInfo()
 	{
-		DuiGouTextCh.SetActive(true);
-		DuiGouTextEn.SetActive(false);
+		//DuiGouTextCh.SetActive(true);
+		//DuiGouTextEn.SetActive(false);
 	}
     
 	public UILabel[] JiQiangBtLB;
@@ -719,8 +719,8 @@ public class SetPanelUiRoot : MonoBehaviour
 			val = "7";
 			HandleJsonObj.WriteToFileXml(FileName, "GameAudioVolume", val);
 		}
-		GameAudioVolume = Convert.ToInt32(val);
-		GameAudioVolumeLB.text = GameAudioVolume.ToString();
+		//GameAudioVolume = Convert.ToInt32(val);
+		//GameAudioVolumeLB.text = GameAudioVolume.ToString();
 	}
 
     /// <summary>

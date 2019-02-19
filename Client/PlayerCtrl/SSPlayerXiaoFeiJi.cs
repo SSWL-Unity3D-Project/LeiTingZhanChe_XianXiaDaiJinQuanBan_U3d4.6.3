@@ -194,15 +194,15 @@ public class SSPlayerXiaoFeiJi : MonoBehaviour
         }
         PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
 
-        float OffsetForward = 30f;
+        //float OffsetForward = 30f;
         float firePosValTmp = 100f;
         float fireRayDirLen = 100f;
-        Vector3 mousePosInput = Input.mousePosition;
+        //Vector3 mousePosInput = Input.mousePosition;
         RaycastHit hit;
         Vector3 firePos = Vector3.zero;
-        Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;
-        Vector3 posTmp = Camera.main.ScreenToWorldPoint(mousePos);
-        Vector3 ammoForward = Vector3.Normalize(posTmp - ammoSpawnPos);
+        //Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;
+        //Vector3 posTmp = Camera.main.ScreenToWorldPoint(mousePos);
+        //Vector3 ammoForward = Vector3.Normalize(posTmp - ammoSpawnPos);
         firePos = firePosValTmp * ammoSpawnForward + ammoSpawnPos;
         fireRayDirLen = ammoScript.MvSpeed * ammoScript.LiveTime;
         if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, fireRayDirLen, m_FireLayer.value))

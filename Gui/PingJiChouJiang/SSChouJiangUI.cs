@@ -752,7 +752,7 @@ public class SSChouJiangUI : MonoBehaviour
     {
         bool isPlayAni = true;
         ChouJiangAniStage chouJiangAniStage = ChouJiangAniStage.Stage01;
-        float timeVal = GetTimeChouJiangAni(chouJiangAniStage);
+        //float timeVal = GetTimeChouJiangAni(chouJiangAniStage);
         int maxStep = GetChouJiangAniMoveStep(chouJiangAniStage);
         int stepVal = 0;
         int stepRecord = 0;
@@ -788,7 +788,7 @@ public class SSChouJiangUI : MonoBehaviour
                 if (chouJiangAniStage != ChouJiangAniStage.Null)
                 {
                     //初始化下一阶段的数据.
-                    timeVal = GetTimeChouJiangAni(chouJiangAniStage);
+                    //timeVal = GetTimeChouJiangAni(chouJiangAniStage);
                     maxStep = GetChouJiangAniMoveStep(chouJiangAniStage);
                     stepVal = 0;
                     //SSDebug.Log("PlayChouJiangAnimation -> maxStep ===================== " + maxStep + ", chouJiangAniStage ==================== " + chouJiangAniStage);

@@ -813,7 +813,7 @@ public class NpcAmmoCtrl : MonoBehaviour {
     /// </summary>
     [Range(0f, 100f)]
     public float PaiJiPaoAmmoRotSpeed = 3f;
-    Vector3 m_PaiJiPaoAmmoStartRot = Vector3.zero;
+    //Vector3 m_PaiJiPaoAmmoStartRot = Vector3.zero;
     Vector3 m_PaiJiPaoAmmoRotCur = Vector3.zero;
     /// <summary>
     /// 迫击炮子弹转向对象.

@@ -544,16 +544,16 @@ public class SSCaiPiaoDataManage : SSGameMono
                 case DeCaiState.SuiJiDaoJu:
                     {
                         //随机道具.
-                        float suiJiDaoJuChuPiaoLv = 0f;
-                        SuiJiDaoJuData suiJiDaoJuData = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuiJiDaoJuData;
-                        if (suiJiDaoJuType == SuiJiDaoJuState.TouZi)
-                        {
-                            suiJiDaoJuChuPiaoLv = suiJiDaoJuData.TouZiDePiaoLv;
-                        }
-                        else
-                        {
-                           suiJiDaoJuChuPiaoLv = suiJiDaoJuData.BaoXiangDePiaoLv;
-                        }
+                        //float suiJiDaoJuChuPiaoLv = 0f;
+                        //SuiJiDaoJuData suiJiDaoJuData = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuiJiDaoJuData;
+                        //if (suiJiDaoJuType == SuiJiDaoJuState.TouZi)
+                        //{
+                        //    suiJiDaoJuChuPiaoLv = suiJiDaoJuData.TouZiDePiaoLv;
+                        //}
+                        //else
+                        //{
+                        //   suiJiDaoJuChuPiaoLv = suiJiDaoJuData.BaoXiangDePiaoLv;
+                        //}
                         //val = (int)(coinStart * SuiJiDaoJuChuPiaoTiaoJian);
 
                         //应该给玩家的彩票数量.
@@ -635,16 +635,16 @@ public class SSCaiPiaoDataManage : SSGameMono
                     }
                 case DeCaiState.SuiJiDaoJu:
                     {
-                        float suiJiDaoJuChuPiaoLv = 0f;
-                        SuiJiDaoJuData suiJiDaoJuData = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuiJiDaoJuData;
-                        if (suiJiDaoJuType == SuiJiDaoJuState.TouZi)
-                        {
-                            suiJiDaoJuChuPiaoLv = suiJiDaoJuData.TouZiDePiaoLv;
-                        }
-                        else
-                        {
-                            suiJiDaoJuChuPiaoLv = suiJiDaoJuData.BaoXiangDePiaoLv;
-                        }
+                        //float suiJiDaoJuChuPiaoLv = 0f;
+                        //SuiJiDaoJuData suiJiDaoJuData = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_SuiJiDaoJuData;
+                        //if (suiJiDaoJuType == SuiJiDaoJuState.TouZi)
+                        //{
+                        //    suiJiDaoJuChuPiaoLv = suiJiDaoJuData.TouZiDePiaoLv;
+                        //}
+                        //else
+                        //{
+                        //    suiJiDaoJuChuPiaoLv = suiJiDaoJuData.BaoXiangDePiaoLv;
+                        //}
                         //value = (int)(coinStart * SuiJiDaoJuChuPiaoTiaoJian);
                         //应该给玩家的彩票数量.
                         //value = (int)(value * suiJiDaoJuChuPiaoLv);
@@ -1503,7 +1503,7 @@ public class SSCaiPiaoDataManage : SSGameMono
         if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
         {
             //将玩家得到的代金券信息发送到服务器.
-            string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
+            //string args = "index == " + indexPlayer + ", caiPiao == " + caiPiao;
             pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(indexPlayer, caiPiao, daiJinQaunType);
             if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
             {

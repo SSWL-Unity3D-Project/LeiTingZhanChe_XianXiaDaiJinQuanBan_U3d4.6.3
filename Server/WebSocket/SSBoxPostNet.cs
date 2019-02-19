@@ -913,8 +913,8 @@ public class SSBoxPostNet : MonoBehaviour
                         JsonData jd = JsonMapper.ToObject(getData.text);
                         if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
                         {
-                            string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
-                            string serverTime = jd["data"].ToString().Substring(0, 10);
+                            //string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
+                            //string serverTime = jd["data"].ToString().Substring(0, 10);
                             DateTime systemTimeDt = DateTime.Now;
                             DateTime serverTimeDt = Convert.ToDateTime(jd["data"].ToString());
                             //test
@@ -1098,8 +1098,7 @@ public class SSBoxPostNet : MonoBehaviour
         //消费用户余额的url.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/memberAccount/spend";
         Debug.Log("Unity: url == " + url);
-
-        Encoding encoding = Encoding.GetEncoding("utf-8");
+        
         PostDataHddSubPlayerMoney postDt = new PostDataHddSubPlayerMoney(userId, account);
         //"{\"memberId\":93124,\"account\":100}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
@@ -1311,20 +1310,20 @@ public class SSBoxPostNet : MonoBehaviour
         //worth单位是人民币分.
         int worth = account * 100; //单位从元转换为分.
 
-        int suiJiDaoJuDaiJinQuan = 10;
-        int zhanCheDaiJinQuan_01 = 5;
-        int zhanCheDaiJinQuan_02 = 20;
-        int jpBossDaiJinQuan = 200;
-        if (XkPlayerCtrl.GetInstanceFeiJi() != null
-            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
-            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
-            && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
-        {
-            suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
-            zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
-            zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
-            jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
-        }
+        //int suiJiDaoJuDaiJinQuan = 10;
+        //int zhanCheDaiJinQuan_01 = 5;
+        //int zhanCheDaiJinQuan_02 = 20;
+        //int jpBossDaiJinQuan = 200;
+        //if (XkPlayerCtrl.GetInstanceFeiJi() != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
+        //{
+            //suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
+            //zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
+            //zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
+            //jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
+        //}
 #if TEST_DAI_JIN_QUAN
         //测试代金券.
         if (account == suiJiDaoJuDaiJinQuan)
@@ -1755,7 +1754,7 @@ public class SSBoxPostNet : MonoBehaviour
         //http://game.hdiandian.com/wxbackstage/client/memberGameTime
         //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> url == " + url);
 
-        Encoding encoding = Encoding.GetEncoding("utf-8");
+        //Encoding encoding = Encoding.GetEncoding("utf-8");
         PostUserLoginReceiveData userLoginDt = FindPostUserLoginReceiveData(userId);
         if (userLoginDt == null)
         {
@@ -1811,6 +1810,16 @@ public class SSBoxPostNet : MonoBehaviour
                 StreamReader sr = new StreamReader(stream); //创建一个stream读取流
                 string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
                 //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
+                JsonData jd = JsonMapper.ToObject(msg);
+                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                {
+                    //红点点支付平台玩家游戏时长消息发送成功.
+                }
+                else
+                {
+                    //红点点支付平台玩家游戏时长消息发送失败.
+                    SSDebug.LogWarning("ThreadHttpSendPostHddPlayerGameTimeInfo failed! code == " + jd["code"]);
+                }
             }
             finally
             {

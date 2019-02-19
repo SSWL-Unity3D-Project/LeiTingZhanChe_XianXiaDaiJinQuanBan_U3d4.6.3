@@ -587,7 +587,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 		EndPos = PathNodes[1];
 
 //		Debug.Log("Unity:"+"MovePlayerByMarkSpeed -> start time "+Time.realtimeSinceStartup);
-		float timeLastVal = Time.realtimeSinceStartup;
+		//float timeLastVal = Time.realtimeSinceStartup;
 		float timeRotationVal = 0f;
 		do {
 			if (JiFenJieMianCtrl.GetInstance() != null
@@ -644,7 +644,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			    && PlayerSt != PlayerTypeEnum.CartoonCamera) {
 				if (!XkGameCtrl.IsMoveOnPlayerDeath) {
 					XkGameCtrl.PlayerYouLiangCur = 0;
-					timeLastVal = Time.realtimeSinceStartup;
+					//timeLastVal = Time.realtimeSinceStartup;
 					yield return new WaitForSeconds(0.1f);
 					continue;
 				}
@@ -686,7 +686,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 			//}
 
 			//dTime = TimeUnitMove; //test
-			timeLastVal = Time.realtimeSinceStartup;
+			//timeLastVal = Time.realtimeSinceStartup;
 			float disAimNode = Vector3.Distance(transform.position, EndPos);
             //TestDis = disAimNode;
             if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().GmCamMark != null)
@@ -827,7 +827,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
 						}
 					}
 
-					timeLastVal = Time.realtimeSinceStartup;
+					//timeLastVal = Time.realtimeSinceStartup;
 					timeRotationVal = 0f;
 					SpeedA = SpeedB;
                     if (dotVal > 0f)

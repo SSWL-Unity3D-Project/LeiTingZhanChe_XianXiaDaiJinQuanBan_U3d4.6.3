@@ -1503,7 +1503,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 //用于玩家新进入后激活游戏机位的数据.
                 indexValTmp = RemoveExitPadPlayerData(val.userId);
-                float timeLast = playerExitPadDt.timeLast;
+                //float timeLast = playerExitPadDt.timeLast;
                 if (Time.time - playerExitPadDt.timeLast < 1.5f)
                 {
                     SSDebug.LogWarning("OnEventPlayerLoginBox -> this playerPad have been yaRu shouji houTai......");

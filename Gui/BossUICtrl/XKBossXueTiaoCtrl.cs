@@ -68,32 +68,32 @@ public class XKBossXueTiaoCtrl : MonoBehaviour
 	{
         //不去设置boss血条UI.
         return;
-		if (bossHealth != null && bloodAmount == -1f) {
-			BossHealthScript = bossHealth; //存储Boss血量脚本.
-		}
+		//if (bossHealth != null && bloodAmount == -1f) {
+		//	BossHealthScript = bossHealth; //存储Boss血量脚本.
+		//}
 
-		if (!IsCanSubXueTiaoAmount) {
-			return;
-		}
+		//if (!IsCanSubXueTiaoAmount) {
+		//	return;
+		//}
 
-		if (!gameObject.activeSelf) {
-			return;
-		}
+		//if (!gameObject.activeSelf) {
+		//	return;
+		//}
 
-		bloodAmount = bloodAmount > 1f ? 1f : bloodAmount;
-		bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
-		BossXueTiaoSprite.fillAmount = bloodAmount;
-		if (bloodAmount <= 0f) {
-			//JiFenJieMianCtrl.GetInstance().ShowFinishTaskInfo();
-			IsWuDiPlayer = true;
-			Invoke("DelayActiveJiFenJieMian", 4f);
-			XkGameCtrl.BossRemoveAllNpcAmmo();
-			AudioBeiJingCtrl.StopGameBeiJingAudio();
-			HiddenBossXueTiao();
-			if (BossHealthScript != null && bossHealth == null) {
-				BossHealthScript.OnDamageNpc(99999999, PlayerEnum.Null);
-			}
-		}
+		//bloodAmount = bloodAmount > 1f ? 1f : bloodAmount;
+		//bloodAmount = bloodAmount < 0f ? 0f : bloodAmount;
+		//BossXueTiaoSprite.fillAmount = bloodAmount;
+		//if (bloodAmount <= 0f) {
+		//	//JiFenJieMianCtrl.GetInstance().ShowFinishTaskInfo();
+		//	IsWuDiPlayer = true;
+		//	Invoke("DelayActiveJiFenJieMian", 4f);
+		//	XkGameCtrl.BossRemoveAllNpcAmmo();
+		//	AudioBeiJingCtrl.StopGameBeiJingAudio();
+		//	HiddenBossXueTiao();
+		//	if (BossHealthScript != null && bossHealth == null) {
+		//		BossHealthScript.OnDamageNpc(99999999, PlayerEnum.Null);
+		//	}
+		//}
 	}
 
 	void DelayActiveJiFenJieMian()
