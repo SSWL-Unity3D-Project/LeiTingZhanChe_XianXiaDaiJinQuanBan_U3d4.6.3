@@ -107,7 +107,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet = websocketObj.GetComponent<SSBoxPostNet>();
                 m_SSBoxPostNet.Init();
                 m_SSBoxPostNet.OnReceivedWXPlayerHddPayData += OnReceivedWXPlayerHddPayData;
-                m_SSBoxPostNet.OnReceivedSendPostHddSubPlayerMoneyEvent += OnReceivedSendPostHddSubPlayerMoneyEvent;
+                SSBoxPostNet.OnReceivedSendPostHddSubPlayerMoneyEvent += OnReceivedSendPostHddSubPlayerMoneyEvent;
                 
                 m_BarcodeCam = gameObject.AddComponent<BarcodeCam>();
             }

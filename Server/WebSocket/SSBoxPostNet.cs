@@ -1074,11 +1074,11 @@ public class SSBoxPostNet : MonoBehaviour
     /// 扣费响应事件.
     /// </summary>
     public delegate void EventHandel(int userId, BoxLoginRt type);
-    public event EventHandel OnReceivedSendPostHddSubPlayerMoneyEvent;
+    public static event EventHandel OnReceivedSendPostHddSubPlayerMoneyEvent;
     /// <summary>
     /// 收到扣费回传消息.
     /// </summary>
-    public void OnReceivedSendPostHddSubPlayerMoney(int userId, BoxLoginRt type)
+    public static  void OnReceivedSendPostHddSubPlayerMoney(int userId, BoxLoginRt type)
     {
         if (OnReceivedSendPostHddSubPlayerMoneyEvent != null)
         {
@@ -1104,44 +1104,77 @@ public class SSBoxPostNet : MonoBehaviour
         //"{\"memberId\":93124,\"account\":100}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
-        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
-        //打印返回值.
-        Stream stream = null; //获取响应的流.
 
-        try
+        ThreadHttpSendPostHddSubPlayerMoney threadPostSubMoneyInfo = new ThreadHttpSendPostHddSubPlayerMoney(userId, this, url, postData);
+        if (threadPostSubMoneyInfo != null)
         {
-            //以字符流的方式读取HTTP响应.
-            stream = response.GetResponseStream();
-            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-            //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
-            //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
-            Debug.Log("unity: msg == " + msg);
-            
-            JsonData jd = JsonMapper.ToObject(msg);
-            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-            {
-                //红点点支付平台扣费成功.
-                OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Success);
-            }
-            else
-            {
-                //红点点支付平台扣费失败.
-                Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
-                OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
-            }
+            Thread threadPost = new Thread(new ThreadStart(threadPostSubMoneyInfo.Run));
+            threadPost.Start();
         }
-        finally
+    }
+    
+    /// <summary>
+    /// 通过线程发送玩家的游戏扣费信息到服务器.
+    /// </summary>
+    public class ThreadHttpSendPostHddSubPlayerMoney
+    {
+        string m_Url = "";
+        byte[] m_PostData = null;
+        int userId = 0;
+        public ThreadHttpSendPostHddSubPlayerMoney(int userId, SSBoxPostNet boxPostNet, string url, byte[] postData)
         {
-            //释放资源.
-            if (stream != null)
-            {
-                stream.Close();
-            }
+            this.userId = userId;
+            m_Url = url;
+            m_PostData = postData;
+        }
 
-            if (response != null)
+        ~ThreadHttpSendPostHddSubPlayerMoney()
+        {
+            //SSDebug.Log("~ThreadHttpSendPostHddSubPlayerMoney -> destory this thread*********************************");
+        }
+
+        internal void Run()
+        {
+            Encoding encoding = Encoding.GetEncoding("utf-8");
+            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            //打印返回值.
+            Stream stream = null; //获取响应的流.
+
+            try
             {
-                response.Close();
+                //以字符流的方式读取HTTP响应.
+                stream = response.GetResponseStream();
+                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+                //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
+                //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
+                SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> msg == " + msg);
+
+                JsonData jd = JsonMapper.ToObject(msg);
+                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                {
+                    //红点点支付平台扣费成功.
+                    OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Success);
+                }
+                else
+                {
+                    //红点点支付平台扣费失败.
+                    SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+                    OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
+                }
+            }
+            finally
+            {
+                //释放资源.
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+
+                if (response != null)
+                {
+                    response.Close();
+                }
             }
         }
     }
@@ -1720,7 +1753,7 @@ public class SSBoxPostNet : MonoBehaviour
         //POST方法.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/memberGameTime";
         //http://game.hdiandian.com/wxbackstage/client/memberGameTime
-        SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> url == " + url);
+        //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> url == " + url);
 
         Encoding encoding = Encoding.GetEncoding("utf-8");
         PostUserLoginReceiveData userLoginDt = FindPostUserLoginReceiveData(userId);
@@ -1733,33 +1766,64 @@ public class SSBoxPostNet : MonoBehaviour
         RemovePostUserLoginReceiveData(userId);
 
         PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userLoginDt.id, time);
-        SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> postDt == " + postDt.ToString());
-        //"{\"id\":941081,\"gameTime\":60}" //发送的消息.
+        //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> postDt == " + postDt.ToString());
+        //"{\"id\":2560,\"gameTime\":60}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
-        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
-        //打印返回值.
-        Stream stream = null; //获取响应的流.
-
-        try
+        
+        ThreadHttpSendPostHddPlayerGameTimeInfo threadPostGameTimeInfo = new ThreadHttpSendPostHddPlayerGameTimeInfo(url, postData);
+        if (threadPostGameTimeInfo != null)
         {
-            //以字符流的方式读取HTTP响应.
-            stream = response.GetResponseStream();
-            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-            SSDebug.LogWarning("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
+            Thread threadPost = new Thread(new ThreadStart(threadPostGameTimeInfo.Run));
+            threadPost.Start();
         }
-        finally
+    }
+    
+    /// <summary>
+    /// 通过线程发送玩家的游戏时间信息到服务器.
+    /// </summary>
+    public class ThreadHttpSendPostHddPlayerGameTimeInfo
+    {
+        string m_Url = "";
+        byte[] m_PostData = null;
+        public ThreadHttpSendPostHddPlayerGameTimeInfo(string url, byte[] postData)
         {
-            //释放资源.
-            if (stream != null)
-            {
-                stream.Close();
-            }
+            m_Url = url;
+            m_PostData = postData;
+        }
 
-            if (response != null)
+        ~ThreadHttpSendPostHddPlayerGameTimeInfo()
+        {
+            //SSDebug.Log("~ThreadHttpSendPostHddPlayerGameTimeInfo -> destory this thread*********************************");
+        }
+
+        internal void Run()
+        {
+            Encoding encoding = Encoding.GetEncoding("utf-8");
+            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            //打印返回值.
+            Stream stream = null; //获取响应的流.
+
+            try
             {
-                response.Close();
+                //以字符流的方式读取HTTP响应.
+                stream = response.GetResponseStream();
+                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+                //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
+            }
+            finally
+            {
+                //释放资源.
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+
+                if (response != null)
+                {
+                    response.Close();
+                }
             }
         }
     }

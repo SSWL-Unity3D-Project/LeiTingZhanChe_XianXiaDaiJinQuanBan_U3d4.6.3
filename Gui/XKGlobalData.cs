@@ -837,6 +837,10 @@ public class XKGlobalData
     internal int m_TimeMianFeiNum = 20;
     internal void SetTimeMianFeiNum(int time)
     {
+        if (time < 1 || time > 1440)
+        {
+            time = 20;
+        }
         m_TimeMianFeiNum = time;
     }
     /// <summary>
