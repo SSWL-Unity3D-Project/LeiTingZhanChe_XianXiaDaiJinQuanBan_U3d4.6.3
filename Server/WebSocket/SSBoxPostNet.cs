@@ -1620,45 +1620,82 @@ public class SSBoxPostNet : MonoBehaviour
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/memberLogin";
         //http://game.hdiandian.com/wxbackstage/client/memberLogin
         SSDebug.Log("HttpSendPostUserLoginInfo -> url == " + url);
-
-        Encoding encoding = Encoding.GetEncoding("utf-8");
+        
         PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, fuFeiStata);
         //"{\"gameCode\":1,\"screenCode\":10155,\"memberId\":94180}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
-        HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(url, postData, encoding);
-        //打印返回值.
-        Stream stream = null; //获取响应的流.
-
-        try
+        ThreadHttpSendPostHddPlayerLoginGameInfo threadPostPlayerLoginGameInfo = new ThreadHttpSendPostHddPlayerLoginGameInfo(userId, url, postData);
+        if (threadPostPlayerLoginGameInfo != null)
         {
-            //以字符流的方式读取HTTP响应.
-            stream = response.GetResponseStream();
-            StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-            string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-            SSDebug.Log("HttpSendPostUserLoginInfo -> msg == " + msg);
-            //{"code":0,"message":"成功",
-            //"data":{"id":2032,"memberId":94180,"screenCode":10155,"gameCode":1,"memberName":"Allen","isFree":"首次免费","loginTime":"2019-02-18 13:31:01"}}
-
-            JsonData jd = JsonMapper.ToObject(msg);
-            m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
-            if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-            {
-                int id = Convert.ToInt32(jd["data"]["id"].ToString());
-                AddPostUserLoginReceiveData(userId, id);
-            }
+            Thread threadPost = new Thread(new ThreadStart(threadPostPlayerLoginGameInfo.Run));
+            threadPost.Start();
         }
-        finally
+    }
+    
+    /// <summary>
+    /// 通过线程发送玩家的登录游戏状态信息到服务器.
+    /// </summary>
+    public class ThreadHttpSendPostHddPlayerLoginGameInfo
+    {
+        int userId = 0;
+        string m_Url = "";
+        byte[] m_PostData = null;
+        public ThreadHttpSendPostHddPlayerLoginGameInfo(int userId, string url, byte[] postData)
         {
-            //释放资源.
-            if (stream != null)
-            {
-                stream.Close();
-            }
+            this.userId = userId;
+            m_Url = url;
+            m_PostData = postData;
+        }
 
-            if (response != null)
+        ~ThreadHttpSendPostHddPlayerLoginGameInfo()
+        {
+            //SSDebug.Log("~ThreadHttpSendPostHddPlayerLoginGameInfo -> destory this thread*********************************");
+        }
+
+        internal void Run()
+        {
+            Encoding encoding = Encoding.GetEncoding("utf-8");
+            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            //打印返回值.
+            Stream stream = null; //获取响应的流.
+
+            try
             {
-                response.Close();
+
+                //以字符流的方式读取HTTP响应.
+                stream = response.GetResponseStream();
+                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+                SSDebug.Log("ThreadHttpSendPostHddPlayerLoginGameInfo::run -> msg == " + msg);
+                //{"code":0,"message":"成功",
+                //"data":{"id":2032,"memberId":94180,"screenCode":10155,"gameCode":1,"memberName":"Allen","isFree":"首次免费","loginTime":"2019-02-18 13:31:01"}}
+
+                JsonData jd = JsonMapper.ToObject(msg);
+                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                {
+                    //红点点支付平台玩家的登录游戏状态信息发送成功.
+                    int id = Convert.ToInt32(jd["data"]["id"].ToString());
+                    AddPostUserLoginReceiveData(userId, id);
+                }
+                else
+                {
+                    //红点点支付平台玩家的登录游戏状态信息发送失败.
+                    SSDebug.LogWarning("ThreadHttpSendPostHddPlayerLoginGameInfo failed! code == " + jd["code"]);
+                }
+            }
+            finally
+            {
+                //释放资源.
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+
+                if (response != null)
+                {
+                    response.Close();
+                }
             }
         }
     }
@@ -1682,8 +1719,8 @@ public class SSBoxPostNet : MonoBehaviour
             this.id = id;
         }
     }
-    List<PostUserLoginReceiveData> m_PostUserLoginReceiveData = new List<PostUserLoginReceiveData>();
-    PostUserLoginReceiveData FindPostUserLoginReceiveData(int userId)
+    static List<PostUserLoginReceiveData> m_PostUserLoginReceiveData = new List<PostUserLoginReceiveData>();
+    static PostUserLoginReceiveData FindPostUserLoginReceiveData(int userId)
     {
         PostUserLoginReceiveData data = m_PostUserLoginReceiveData.Find((dt) => {
             return dt.userId.Equals(userId);
@@ -1693,7 +1730,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// <summary>
     /// 添加玩家游戏登录消息返回的数据信息.
     /// </summary>
-    void AddPostUserLoginReceiveData(int userId, int id)
+    static void AddPostUserLoginReceiveData(int userId, int id)
     {
         PostUserLoginReceiveData data = FindPostUserLoginReceiveData(userId);
         if (data == null)
@@ -1704,7 +1741,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// <summary>
     /// 删除玩家游戏登录消息返回的数据信息.
     /// </summary>
-    void RemovePostUserLoginReceiveData(int userId)
+    static void RemovePostUserLoginReceiveData(int userId)
     {
         PostUserLoginReceiveData data = FindPostUserLoginReceiveData(userId);
         if (data != null)
