@@ -153,11 +153,11 @@ public class WabData
     /// </summary>
     bool CheckIsReturnOnError()
     {
-        bool isReturn = true;
+        bool isReturn = false;
         m_OnErrorCount++;
         if (m_OnErrorCount <= m_MaxOnErrorNum)
         {
-            isReturn = false;
+            isReturn = true;
         }
         else
         {
