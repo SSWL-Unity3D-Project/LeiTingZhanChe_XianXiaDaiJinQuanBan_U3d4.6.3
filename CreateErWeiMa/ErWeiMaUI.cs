@@ -202,6 +202,24 @@ public class ErWeiMaUI : MonoBehaviour
         return gameObject.activeInHierarchy;
     }
 
+    /// <summary>
+    /// 准备奖品UI.
+    /// </summary>
+    public GameObject m_ZhunBeiJiangPinUI;
+    /// <summary>
+    /// 设置准备奖品UI是否可见.
+    /// </summary>
+    internal void SetActiveZhunBeiJiangPinUI(bool isActive)
+    {
+        if (m_ZhunBeiJiangPinUI != null)
+        {
+            m_ZhunBeiJiangPinUI.SetActive(isActive);
+        }
+    }
+
+    /// <summary>
+    /// 设置二维码是否可见.
+    /// </summary>
     internal void SetActive(bool isActive)
     {
         if (gameObject.activeInHierarchy != isActive)

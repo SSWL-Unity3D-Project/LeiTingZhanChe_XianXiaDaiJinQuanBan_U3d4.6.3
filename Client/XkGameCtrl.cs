@@ -1087,8 +1087,9 @@ public class XkGameCtrl : SSGameMono
 		//隐藏红点点游戏小程序二维码.
 		if (ErWeiMaUI.GetInstance() != null)
 		{
-			ErWeiMaUI.GetInstance().SetActive(false);
-			IsCheckGameUIErWeiMa = false;
+			//ErWeiMaUI.GetInstance().SetActive(false);
+            ErWeiMaUI.GetInstance().SetActiveZhunBeiJiangPinUI(true);
+            IsCheckGameUIErWeiMa = false;
 		}
 		yield return new WaitForSeconds(40f);
 		
@@ -1098,8 +1099,9 @@ public class XkGameCtrl : SSGameMono
 			//Debug.LogWarning("player have play game...");
 			//显示红点点游戏小程序二维码.
 			if (ErWeiMaUI.GetInstance() != null)
-			{
-				ErWeiMaUI.GetInstance().SetActive(true);
+            {
+                ErWeiMaUI.GetInstance().SetActiveZhunBeiJiangPinUI(false);
+                //ErWeiMaUI.GetInstance().SetActive(true);
 			}
 			IsCheckGameUIErWeiMa = true;
 			yield break;
