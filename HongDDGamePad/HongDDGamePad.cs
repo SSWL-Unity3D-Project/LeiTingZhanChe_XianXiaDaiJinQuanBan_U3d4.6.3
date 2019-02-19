@@ -2414,6 +2414,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         internal void SendPostHddPlayerCouponInfo(PlayerEnum indexPlayer, int money, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
         {
+            if (XkGameCtrl.GetIsActivePlayer(indexPlayer) == false)
+            {
+                return;
+            }
+
             GamePlayerData data = FindGamePlayerData(indexPlayer);
             if (data != null && data.m_PlayerWeiXinData != null)
             {
@@ -2437,7 +2442,46 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfo(userId, account, boxId, daiJinQuanType);
             }
         }
-        
+
+
+        /// <summary>
+        /// 通过抽奖获取的代金券.
+        /// 发送玩家获取商家代金券的信息给服务器.
+        /// indexPlayer玩家索引.
+        /// money代金券金额(元).
+        /// </summary>
+        internal void SendPostHddPlayerCouponInfoByChouJiang(PlayerEnum indexPlayer, int money, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
+        {
+            if (XkGameCtrl.GetIsActivePlayer(indexPlayer) == false)
+            {
+                return;
+            }
+
+            GamePlayerData data = FindGamePlayerData(indexPlayer);
+            if (data != null && data.m_PlayerWeiXinData != null)
+            {
+                int userId = data.m_PlayerWeiXinData.userId;
+                Debug.Log("SendPostHddPlayerCouponInfoByChouJiang -> userId ==== " + userId + ", money ==== " + money);
+                SendPostHddPlayerCouponInfoByChouJiang(userId, money, daiJinQuanType);
+            }
+        }
+
+        /// <summary>
+        /// 通过抽奖获取的代金券.
+        /// 发送玩家获取商家代金券的信息给服务器.
+        /// userId玩家id.
+        /// account代金券金额(元).
+        /// </summary>
+        void SendPostHddPlayerCouponInfoByChouJiang(int userId, int account, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_BoxLoginData != null)
+            {
+                //boxId 游戏盒子Id.最终应该为商家id(有的商家可能是连锁店).
+                string boxId = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+                m_SSBoxPostNet.HttpSendPostHddPlayerCouponInfoByChouJiang(userId, account, boxId, daiJinQuanType);
+            }
+        }
+
         [Serializable]
         public class GamePlayerFullData
         {

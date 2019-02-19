@@ -178,8 +178,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             return url;
         }
-
-
+        
         /// <summary>
         /// 发送玩家获取商家代金券的信息给服务器.
         /// indexPlayer玩家索引.
@@ -190,6 +189,20 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_HongDDGamePadCom != null)
             {
                 m_HongDDGamePadCom.SendPostHddPlayerCouponInfo(indexPlayer, money, daiJinQuanType);
+            }
+        }
+
+        /// <summary>
+        /// 通过抽奖获取的代金券.
+        /// 发送玩家获取商家代金券的信息给服务器.
+        /// indexPlayer玩家索引.
+        /// money代金券金额(元).
+        /// </summary>
+        internal void SendPostHddPlayerCouponInfoByChouJiang(PlayerEnum indexPlayer, int money, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendPostHddPlayerCouponInfoByChouJiang(indexPlayer, money, daiJinQuanType);
             }
         }
 

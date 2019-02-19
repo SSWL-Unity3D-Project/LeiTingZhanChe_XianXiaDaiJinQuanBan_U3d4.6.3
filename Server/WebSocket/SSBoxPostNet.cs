@@ -1304,6 +1304,157 @@ public class SSBoxPostNet : MonoBehaviour
                 + ", endTime == " + endTime;
         }
     }
+    
+    /// <summary>
+    /// 发送玩家通过抽奖获取的代金券信息给服务器.
+    /// 生成现金券 | 域名/wxbackstage/client/coupon/generate | POST
+    /// worth | Integer | 现金券金额，单位：分 | true
+    /// boxId | String | 该现金券绑定的盒子ID | true
+    /// userId | Integer | 用户ID | true
+    /// </summary>
+    public void HttpSendPostHddPlayerCouponInfoByChouJiang(int userId, int account, string boxId, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState daiJinQuanType)
+    {
+        //account单位是人民币元.
+        //worth单位是人民币分.
+        int worth = account * 100; //单位从元转换为分.
+
+        //int suiJiDaoJuDaiJinQuan = 10;
+        //int zhanCheDaiJinQuan_01 = 5;
+        //int zhanCheDaiJinQuan_02 = 20;
+        //int jpBossDaiJinQuan = 200;
+        //if (XkPlayerCtrl.GetInstanceFeiJi() != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
+        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
+        //{
+        //suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
+        //zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
+        //zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
+        //jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
+        //}
+#if TEST_DAI_JIN_QUAN
+        //测试代金券.
+        if (account == suiJiDaoJuDaiJinQuan)
+        {
+            worth = 1; //1分钱.
+        }
+        else if (account == zhanCheDaiJinQuan_01)
+        {
+            worth = 2; //2分钱.
+        }
+        else if (account == zhanCheDaiJinQuan_02)
+        {
+            worth = 3; //3分钱.
+        }
+        else if (account == jpBossDaiJinQuan)
+        {
+            worth = 4; //4分钱.
+        }
+#endif
+        Debug.Log("Unity:" + "HttpSendPostHddPlayerCouponInfoByChouJiang...");
+        Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);
+        //生成现金券的url.
+        string url = m_BoxLoginData.m_Address + "/wxbackstage/client/coupon/generate";
+        Debug.Log("Unity: url == " + url);
+
+        int gameCode = (int)m_GamePadState; //游戏码.
+        int screenCode = 0;
+        if (m_BoxLoginData != null)
+        {
+            screenCode = Convert.ToInt32(m_BoxLoginData.screenId); //屏幕码.
+        }
+
+        int superPrize = 0; //是否为JPBoss代金券.
+        int indexJiangPinId = -1;
+        SSGameLogoData.GameDaiJinQuanMode daiJinQuanMode = SSGameLogoData.m_GameDaiJinQuanMode;
+        if (daiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+        {
+            //海底捞代金券版本游戏.
+            //代金券面值写为0.
+            bool isWuXianJiangChi = false;
+            if (XKGlobalData.GetInstance() != null)
+            {
+                isWuXianJiangChi = XKGlobalData.GetInstance().GetIsWuXianJiangChi(daiJinQuanType);
+            }
+
+            if (isWuXianJiangChi == true)
+            {
+                //海底捞版本奖池为无限大时，发送奖券面值信息为0.
+                worth = 0;
+            }
+        }
+
+        if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)
+        {
+            superPrize = 1; //JPBoss代金券.
+            indexJiangPinId = 0;
+        }
+        else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
+        {
+            indexJiangPinId = 1;
+        }
+        else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02)
+        {
+            indexJiangPinId = 2;
+        }
+        else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan)
+        {
+            indexJiangPinId = 3;
+        }
+
+        string hddJiangPinId = "0";
+        string isLimitStr = "1";
+        if (XKGlobalData.GetInstance() != null)
+        {
+            //获取红点点奖品ID信息.
+            hddJiangPinId = XKGlobalData.GetInstance().GetHddJiangPinId(indexJiangPinId);
+            isLimitStr = XKGlobalData.GetInstance().GetHddJiangChiIsLimit(indexJiangPinId);
+        }
+
+        int prizeId = Convert.ToInt32(hddJiangPinId);
+        int isLimit = Convert.ToInt32(isLimitStr);
+        string daiJinQuanName = ""; //代金券名称.
+        string xiangQingInfo = ""; //代金券使用提示.
+        if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+        {
+            //这里获取游戏抽奖得到代金券的信息.
+            SSShangHuInfo.DaiJinQuanData daiJinQuanDt = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetChouJiangDaiJinQuanDataByDaiJinQuanState(daiJinQuanType);
+            if (daiJinQuanDt != null)
+            {
+                daiJinQuanName = daiJinQuanDt.DaiJinQuanName;
+                xiangQingInfo = daiJinQuanDt.XiangQingInfo;
+            }
+        }
+        SSDebug.Log("HttpSendPostHddPlayerCouponInfoByChouJiang -> daiJinQuanName == " + daiJinQuanName + ", xiangQingInfo == " + xiangQingInfo);
+
+        int startTime = 0;
+        int endTime = 7;
+        if (XKGlobalData.GetInstance() != null)
+        {
+            //更新代金券有效期限数据.
+            startTime = XKGlobalData.GetInstance().GetHddDaiJinQuanStartDay();
+            endTime = XKGlobalData.GetInstance().GetHddDaiJinQuanQiXian();
+        }
+
+        PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
+            daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
+        //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
+        string jsonData = JsonMapper.ToJson(postDt);
+        byte[] postData = Encoding.UTF8.GetBytes(jsonData);
+
+        ThreadHttpSendPostHddPlayerCouponInfo threadPostCouponInfo = new ThreadHttpSendPostHddPlayerCouponInfo(url, postData);
+        if (threadPostCouponInfo != null)
+        {
+            Thread threadPost = new Thread(new ThreadStart(threadPostCouponInfo.Run));
+            threadPost.Start();
+        }
+
+        if (m_WebSocketSimpet != null)
+        {
+            //玩家获得优惠券时发送该消息给服务器.
+            m_WebSocketSimpet.NetSendWeiXinPadPlayerGetCoupon(userId);
+        }
+    }
 
     /// <summary>
     /// 生成现金券 | 域名/wxbackstage/client/coupon/generate | POST
@@ -1350,7 +1501,7 @@ public class SSBoxPostNet : MonoBehaviour
             worth = 4; //4分钱.
         }
 #endif
-        Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
+        Debug.Log("Unity:" + "HttpSendPostHddPlayerCouponInfo...");
         Debug.Log("Unity: memberId == " + userId + ", worth == " + worth + "分, boxId == " + boxId);
         //生成现金券的url.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/coupon/generate";
@@ -1430,7 +1581,7 @@ public class SSBoxPostNet : MonoBehaviour
                 xiangQingInfo = XkGameCtrl.GetInstance().m_SSShangHuInfo.m_DaiJinQuanDt.XiangQingInfo;
             }
         }
-        SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> shangHuInfo == " + daiJinQuanName + ", xiangQingInfo == " + xiangQingInfo);
+        SSDebug.Log("HttpSendPostHddPlayerCouponInfo -> daiJinQuanName == " + daiJinQuanName + ", xiangQingInfo == " + xiangQingInfo);
 
         int startTime = 0;
         int endTime = 7;

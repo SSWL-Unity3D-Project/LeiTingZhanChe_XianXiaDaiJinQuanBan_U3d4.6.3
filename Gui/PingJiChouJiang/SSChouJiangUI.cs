@@ -689,6 +689,7 @@ public class SSChouJiangUI : MonoBehaviour
         }
 
         //indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
+        //indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3); //test.
         if (indexJiangPin < 0 || indexJiangPin >= m_ChouJiangDtArray.Length)
         {
             indexJiangPin = 0;
@@ -935,7 +936,7 @@ public class SSChouJiangUI : MonoBehaviour
                     caiPiao = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetPrintCaiPiaoValueByDeCaiState(deCaiState,
                                   SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, daiJinQaunType);
                 }
-                pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfo(m_IndexPlayer, caiPiao, daiJinQaunType);
+                pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfoByChouJiang(m_IndexPlayer, caiPiao, daiJinQaunType);
             }
 
             //此处添加玩家已经获得该类型奖品的代码.

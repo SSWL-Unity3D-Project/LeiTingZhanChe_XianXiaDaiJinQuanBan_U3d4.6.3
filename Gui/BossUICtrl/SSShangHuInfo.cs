@@ -116,7 +116,52 @@ public class SSShangHuInfo : MonoBehaviour
         }
     }
     internal DaiJinQuanData m_DaiJinQuanDt;
-    
+
+    /// <summary>
+    /// 获取抽奖获得代金券信息.
+    /// </summary>
+    internal DaiJinQuanData GetChouJiangDaiJinQuanDataByDaiJinQuanState(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState stata)
+    {
+        DaiJinQuanData dt = new DaiJinQuanData();
+        string daiJinQuanName = "";
+        string shiYongXiangQing = "";
+        switch (stata)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    if (m_ShangHuDtZhanChe01.Length > 0)
+                    {
+                        daiJinQuanName = m_ShangHuDtZhanChe01[0].DaiJinQuanName;
+                        shiYongXiangQing = m_ShangHuDtZhanChe01[0].XiangQingInfo;
+                    }
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    if (m_ShangHuDtZhanChe01.Length > 0)
+                    {
+                        daiJinQuanName = m_ShangHuDtZhanChe02[0].DaiJinQuanName;
+                        shiYongXiangQing = m_ShangHuDtZhanChe02[0].XiangQingInfo;
+                    }
+                    break;
+                }
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+                    {
+                        ShangHuData shangHuData = XkGameCtrl.GetInstance().m_SSShangHuInfo.GetSuiJiDaoJuShangHuInfo();
+                        daiJinQuanName = shangHuData.DaiJinQuanName;
+                        shiYongXiangQing = shangHuData.XiangQingInfo;
+                    }
+                    break;
+                }
+        }
+        dt.DaiJinQuanName = daiJinQuanName;
+        dt.XiangQingInfo = shiYongXiangQing;
+        return dt;
+    }
+
+
     /// <summary>
     /// 战车01奖品商户名列表信息索引.
     /// </summary>
