@@ -138,7 +138,7 @@ public class SSShangHuInfo : MonoBehaviour
                 }
             case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
                 {
-                    if (m_ShangHuDtZhanChe01.Length > 0)
+                    if (m_ShangHuDtZhanChe02.Length > 0)
                     {
                         daiJinQuanName = m_ShangHuDtZhanChe02[0].DaiJinQuanName;
                         shiYongXiangQing = m_ShangHuDtZhanChe02[0].XiangQingInfo;
