@@ -56,13 +56,13 @@ public class XKPlayerJiJiuBaoCtrl : MonoBehaviour
 	
 	public void ShowPlayerJiJiuBao(PlayerEnum indexVal)
 	{
-		XKPlayerJiJiuBaoMove huoLiOpenMoveCom = GetXKPlayerJiJiuBaoMove();
-		if (huoLiOpenMoveCom == null) {
+		XKPlayerJiJiuBaoMove jiJiuBaoMoveCom = GetXKPlayerJiJiuBaoMove();
+		if (jiJiuBaoMoveCom == null) {
 			return;
 		}
 		
 		Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal).PiaoFenPoint;
 		Vector3 startPos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(playerTr.position);
-		huoLiOpenMoveCom.SetPlayerJiJiuBaoVal(startPos);
+		jiJiuBaoMoveCom.SetPlayerJiJiuBaoVal(startPos);
 	}
 }

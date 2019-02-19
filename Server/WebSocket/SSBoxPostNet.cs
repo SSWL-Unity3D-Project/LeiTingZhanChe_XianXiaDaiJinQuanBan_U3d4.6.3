@@ -374,7 +374,8 @@ public class SSBoxPostNet : MonoBehaviour
                             m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
                             m_BoxLoginDt.token = jd["data"]["token"].ToString();
                             Debug.Log("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
-                            ConnectWebSocketServer();
+                            //ConnectWebSocketServer();
+                            StartCoroutine(DelayConnectWebSocketServer());
 
                             //删除网络故障,请检查网络并重启游戏.
                             //if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -997,6 +998,12 @@ public class SSBoxPostNet : MonoBehaviour
     /// WebSocket通讯控制组件.
     /// </summary>
     public WebSocketSimpet m_WebSocketSimpet;
+    IEnumerator DelayConnectWebSocketServer()
+    {
+        yield return new WaitForSeconds(3f);
+        ConnectWebSocketServer();
+    }
+
     /// <summary>
     /// 链接游戏服务器.
     /// </summary>

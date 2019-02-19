@@ -107,10 +107,10 @@ public class WabData
     void OnOpen(WebSocket ws)
     {
         Debug.Log("Unity:"+"-WebSocket Open!\n");
-        if (m_WebSocketSimpet != null)
-        {
-            m_WebSocketSimpet.NetInitGameWeiXinShouBingData();
-        }
+        //if (m_WebSocketSimpet != null)
+        //{
+        //    m_WebSocketSimpet.NetInitGameWeiXinShouBingData();
+        //}
     }
 
     /// <summary>
@@ -140,6 +140,32 @@ public class WabData
     }
 
     float m_LastTimeError = -100f;
+    /// <summary>
+    /// 收到错误消息的最大次数.
+    /// </summary>
+    int m_MaxOnErrorNum = 3;
+    /// <summary>
+    /// 错误消息的记录次数.
+    /// </summary>
+    int m_OnErrorCount = 0;
+    /// <summary>
+    /// 检测是否退出错误消息.
+    /// </summary>
+    bool CheckIsReturnOnError()
+    {
+        bool isReturn = true;
+        m_OnErrorCount++;
+        if (m_OnErrorCount <= m_MaxOnErrorNum)
+        {
+            isReturn = false;
+        }
+        else
+        {
+            m_OnErrorCount = 0;
+        }
+        return isReturn;
+    }
+
     /// <summary>  
     /// Called when an error occured on client side  
     /// </summary>  
@@ -152,17 +178,16 @@ public class WabData
         }
         m_LastTimeError = Time.time;
 
+        if (CheckIsReturnOnError() == true)
+        {
+            return;
+        }
+
         string errorMsg = string.Empty;
         if (ws.InternalRequest.Response != null)
             errorMsg = string.Format("Status Code from Server: {0} and Message: {1}", ws.InternalRequest.Response.StatusCode, ws.InternalRequest.Response.Message);
 
         Debug.LogWarning("Unity:"+string.Format("-An error occured: {0}\n", ex != null ? ex.Message : "Unknown Error " + errorMsg));
-        //if (m_WebSocketSimpet != null && Application.isPlaying == true)
-        //{
-        //    Debug.Log("Unity:" + "OnError::Restart Web Socket -> url == " + Address);
-        //    m_WebSocketSimpet.OpenWebSocket(Address);
-        //}
-
         if (ex != null)
         {
             switch (ex.Message)

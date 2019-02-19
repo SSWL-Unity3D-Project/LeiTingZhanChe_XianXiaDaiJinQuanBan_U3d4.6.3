@@ -23,7 +23,11 @@ public class PlayerAmmoCtrl : MonoBehaviour
 	[Range(1, 1000)] public int DamageNpc = 1;
 	[Range(1f, 4000f)] public float MvSpeed = 50f;
 	const float MvSpeedMax = 500f;
-	[Range(1f, 1000f)] public float AmmoDamageDis = 50f;
+    /// <summary>
+    /// 子弹的伤害范围.
+    /// </summary>
+    [Range(1f, 1000f)]
+    public float AmmoDamageDis = 50f;
 	[Range(0.001f, 100f)] public float LiveTime = 4f;
 	public GameObject MetalParticle;		//金属.
 	public GameObject ConcreteParticle;		//混凝土.

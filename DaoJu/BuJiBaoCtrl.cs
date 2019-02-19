@@ -203,7 +203,14 @@ public class BuJiBaoCtrl : MonoBehaviour {
 	/// <param name="key">Key.</param>
 	public void RemoveBuJiBao(PlayerEnum playerSt, int keyHit = 0)
 	{
-		if (IsDeath) {
+        if (XkGameCtrl.GetIsDeathPlayer(playerSt) == true)
+        {
+            //玩家血值耗尽.
+            return;
+        }
+
+        if (IsDeath)
+        {
 			return;
 		}
 		IsDeath = true;
@@ -260,10 +267,12 @@ public class BuJiBaoCtrl : MonoBehaviour {
 					XKPlayerJiSuCtrl.GetInstance().ShowPlayerJiSu(playerSt);
 					break;
 				case BuJiBaoType.YiLiaoBaoDJ:
-					isMoveDaoJu = false;
-					XkGameCtrl.AddPlayerHealth(playerSt, XKDaoJuGlobalDt.GetInstance().YiLiaoBaoXueLiangVal);
-					XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
-					break;
+                        {
+                            isMoveDaoJu = false;
+                            XkGameCtrl.AddPlayerHealth(playerSt, XKDaoJuGlobalDt.GetInstance().YiLiaoBaoXueLiangVal);
+                            XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
+                            break;
+                        }
 				case BuJiBaoType.ShuangBeiFenShuDJ:
 					isMoveDaoJu = false;
 					//XKDaoJuGlobalDt.SetTimeFenShuBeiLv(playerSt, FenShuBeiLv);

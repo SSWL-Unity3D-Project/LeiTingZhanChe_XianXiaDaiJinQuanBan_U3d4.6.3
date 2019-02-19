@@ -3666,6 +3666,11 @@ public class XkGameCtrl : SSGameMono
 		}
 
 		int indexVal = (int)playerIndex - 1;
+        if (indexVal < 0 || indexVal >= PlayerHealthArray.Length)
+        {
+            return;
+        }
+
 		PlayerHealthArray[indexVal] += healthVal;
 		if (PlayerHealthArray[indexVal] > MaxPlayerHealth) {
 			PlayerHealthArray[indexVal] = MaxPlayerHealth;
