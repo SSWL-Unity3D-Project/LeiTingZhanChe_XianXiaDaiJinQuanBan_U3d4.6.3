@@ -34,7 +34,7 @@ public class SSJingRuiJiaMi : MonoBehaviour
 		}
 		else
 		{
-			LoadGame();
+            LoadGame();
 		}
 	}
 

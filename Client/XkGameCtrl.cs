@@ -113,6 +113,11 @@ public class XkGameCtrl : SSGameMono
     [Range(0.1f, 1f)]
     public float m_ZhanCheBossBloodPer = 1f;
     /// <summary>
+    /// npc间隔产生时间接口.
+    /// </summary>
+    [Range(0.01f, 100f)]
+    public float m_TimeJianGeCreateNpc = 0.05f;
+    /// <summary>
     /// Boss出场后npc是否继续发射子弹.
     /// </summary>
     public bool IsCreatAmmoOnBoss = false;
@@ -696,25 +701,14 @@ public class XkGameCtrl : SSGameMono
 			}
 			else if (!IsGameOnQuit)
 			{
-                //if (!Screen.fullScreen
-                //	|| Screen.currentResolution.width != ScreenData.width
-                //                || Screen.currentResolution.height != ScreenData.height)
-                //{
-                //	if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
-                //	{
-                //		Screen.SetResolution(ScreenData.width, ScreenData.height, true);
-                //	}
-                //}
-                //if (Screen.fullScreen == true
+                //if (Screen.fullScreen == false
                 //    || Screen.currentResolution.width != ScreenData.width
                 //    || Screen.currentResolution.height != ScreenData.height)
                 //{
-                //    if (GameMovieCtrl.IsActivePlayer && !GameMovieCtrl.IsTestXiaoScreen)
-                //    {
-                //        gameObject.AddComponent<ScreenConfig>();
-                //    }
+                //    Screen.SetResolution(ScreenData.width, ScreenData.height, true);
                 //}
-                gameObject.AddComponent<ScreenConfig>();
+                //gameObject.AddComponent<TestGameWindows>();
+                //gameObject.AddComponent<ScreenConfig>();
             }
 
 			NpcAmmoCtrl.NpcAmmoHitLayer = NpcAmmoHitLayer;

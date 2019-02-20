@@ -1,4 +1,6 @@
-﻿//#define TEST_MOVIE
+﻿#define FULL_GAME_SCREEN_MODE //全屏幕游戏展示.
+//#define TEST_MOVIE
+using System.Collections;
 using UnityEngine;
 
 public class GameMovieCtrl : SSGameMono
@@ -163,9 +165,38 @@ public class GameMovieCtrl : SSGameMono
     void Start()
     {
         //加载游戏关卡.
-        Application.LoadLevel((int)GameLevel.Scene_1);
+        //Application.LoadLevel((int)GameLevel.Scene_1);
+        StartCoroutine(DelayLoadGame());
     }
 
+    IEnumerator DelayLoadGame()
+    {
+#if FULL_GAME_SCREEN_MODE
+        //游戏为全屏展示模式
+        if (Screen.fullScreen == false
+            || Screen.currentResolution.width != XkGameCtrl.ScreenData.width
+            || Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
+        {
+            Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
+        }
+#else
+        //gameObject.AddComponent<TestGameWindows>();
+        //游戏为全屏窗口模式.
+        gameObject.AddComponent<ScreenConfig>();
+#endif
+        yield return new WaitForSeconds(5f);
+        LoadGame();
+    }
+
+    /// <summary>
+    /// 加载游戏场景.
+    /// </summary>
+    void LoadGame()
+    {
+        //加载游戏关卡.
+        Application.LoadLevel((int)GameLevel.Scene_1);
+    }
+    
     void RemoveMovieLogoAni()
     {
         Debug.Log("Unity: RemoveMovieLogoAni...");

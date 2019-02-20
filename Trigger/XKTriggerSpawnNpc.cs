@@ -99,19 +99,22 @@ public class XKTriggerSpawnNpc : MonoBehaviour
             return;
         }
 
+        StartCoroutine(DelayCreateNpc());
         //Debug.Log("Unity:"+"XKTriggerSpawnNpc::OnTriggerEnter -> hit "+other.name);
-        for (int i = 0; i < SpawnPointArray.Length; i++) {
-//			if (SpawnPointArray[i].NpcObj.name != TestNpcName || SpawnPointArray[i].NpcFangZhen != null) {
-//					continue; //test
-//			}
-//
-//			if (IsDonnotSpawnNpcTest) {
-//				return;
-//			}
-//			IsDonnotSpawnNpcTest = true;
-			SpawnPointArray[i].SpawnPointAllNpc();
-		}
+        //for (int i = 0; i < SpawnPointArray.Length; i++) {
+		//	SpawnPointArray[i].SpawnPointAllNpc();
+		//}
 	}
+
+    IEnumerator DelayCreateNpc()
+    {
+        float timeVal = XkGameCtrl.GetInstance().m_TimeJianGeCreateNpc;
+        for (int i = 0; i < SpawnPointArray.Length; i++)
+        {
+            SpawnPointArray[i].SpawnPointAllNpc();
+            yield return new WaitForSeconds(timeVal);
+        }
+    }
 
 	void CleanUpSpawnPointInfo()
 	{
