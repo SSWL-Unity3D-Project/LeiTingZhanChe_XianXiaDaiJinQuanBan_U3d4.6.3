@@ -1015,7 +1015,13 @@ public class SSBoxPostNet : MonoBehaviour
             return;
         }
 
-        string url = "ws://" + m_BoxLoginDt.serverIp + "/websocket.do?token=" + m_BoxLoginDt.token;
+        string serverIp = m_BoxLoginDt.serverIp;
+        if (serverIp.Contains(":") == true)
+        {
+            string[] strSplit = serverIp.Split(':');
+            serverIp = strSplit[0];
+        }
+        string url = "ws://" + serverIp + "/websocket.do?token=" + m_BoxLoginDt.token;
         Debug.Log("Unity:"+"ConnectWebSocket -> url " + url);
         if (m_WebSocketSimpet != null)
         {
