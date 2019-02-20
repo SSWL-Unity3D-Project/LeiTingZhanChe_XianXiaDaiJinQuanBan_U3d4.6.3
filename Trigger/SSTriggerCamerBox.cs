@@ -26,7 +26,7 @@ public class SSTriggerCamerBox : MonoBehaviour
             {
                 case TriggerState.JPBoss:
                     {
-                        if (npcMoveCom.GetIsBossNpc() == true)
+                        if (npcMoveCom.IsEnterCameraBox == true && npcMoveCom.GetIsBossNpc() == true)
                         {
                             isExit = true;
                         }
@@ -46,7 +46,7 @@ public class SSTriggerCamerBox : MonoBehaviour
                     }
                 case TriggerState.ZhanCheBoss:
                     {
-                        if (npcMoveCom.GetIsBossNpc() == false)
+                        if (npcMoveCom.IsEnterCameraBox == true && npcMoveCom.GetIsBossNpc() == false)
                         {
                             isExit = true;
                         }
