@@ -29,6 +29,14 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     public GameObject m_TiShiObj;
     /// <summary>
+    /// 展示抽奖结果的恭喜获得UI.
+    /// </summary>
+    public GameObject m_GongXiUIObj;
+    /// <summary>
+    /// 展示抽奖结果的谢谢参与UI.
+    /// </summary>
+    public GameObject m_XieXieCanYuUIObj;
+    /// <summary>
     /// 玩家索引信息.
     /// </summary>
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
@@ -39,6 +47,7 @@ public class SSChouJiangUI : MonoBehaviour
     internal void Init(PlayerEnum indexPlayer)
     {
         m_IndexPlayer = indexPlayer;
+        HiddeChouJiangZhanShiUI();
         InitJiangPinUI();
         SetActivePlayerChouJiangResult(false);
         StartCoroutine(PlayChouJiangDaoJiShi());
@@ -1013,6 +1022,11 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     void SetActivePlayerChouJiangResult(bool isActive)
     {
+        if (isActive == true)
+        {
+            DisplayChouJiangResult();
+        }
+
         if (m_ChouJiangResulteUIObj != null)
         {
             m_ChouJiangResulteUIObj.SetActive(isActive);
@@ -1048,6 +1062,47 @@ public class SSChouJiangUI : MonoBehaviour
                     }
             }
             m_ResulteLabel.text = info;
+        }
+    }
+
+    /// <summary>
+    /// 显示抽奖结果UI.
+    /// </summary>
+    void DisplayChouJiangResult()
+    {
+        if (m_PlayerJiangPin != null)
+        {
+            bool isZhongJiang = true;
+            if (m_PlayerJiangPin.jiangPinType == JiangPinState.XieXieCanYu)
+            {
+                isZhongJiang = false;
+            }
+
+            if (m_GongXiUIObj != null)
+            {
+                m_GongXiUIObj.SetActive(isZhongJiang);
+            }
+
+            if (m_XieXieCanYuUIObj != null)
+            {
+                m_XieXieCanYuUIObj.SetActive(!isZhongJiang);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 隐藏抽奖展示结果UI.
+    /// </summary>
+    void HiddeChouJiangZhanShiUI()
+    {
+        if (m_GongXiUIObj != null)
+        {
+            m_GongXiUIObj.SetActive(false);
+        }
+
+        if (m_XieXieCanYuUIObj != null)
+        {
+            m_XieXieCanYuUIObj.SetActive(false);
         }
     }
     #endregion
