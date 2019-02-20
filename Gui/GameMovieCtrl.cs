@@ -173,12 +173,7 @@ public class GameMovieCtrl : SSGameMono
     {
 #if FULL_GAME_SCREEN_MODE
         //游戏为全屏展示模式
-        if (Screen.fullScreen == false
-            || Screen.currentResolution.width != XkGameCtrl.ScreenData.width
-            || Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
-        {
-            Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
-        }
+        XkGameCtrl.MakeGameToFullScreen();
 #else
         //gameObject.AddComponent<TestGameWindows>();
         //游戏为全屏窗口模式.

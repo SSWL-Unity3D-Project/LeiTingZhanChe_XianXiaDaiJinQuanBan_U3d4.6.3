@@ -3,7 +3,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class TestGameWindows : MonoBehaviour
+public class SSGameWindowManage : MonoBehaviour
 {
 #if UNITY_EDITOR
     // Update is called once per frame
@@ -13,7 +13,7 @@ public class TestGameWindows : MonoBehaviour
     //}
 #else
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         UpdataGameWindows();
     }
@@ -28,7 +28,7 @@ public class TestGameWindows : MonoBehaviour
             SetGameWindows();
         }
     }
-    
+
     /// <summary>
     /// 激活并显示窗口。如果窗口最小化或最大化，则系统将窗口恢复到原来的尺寸和位置。
     /// 在恢复最小化窗口时，应用程序应该指定这个标志。nCmdShow=9
@@ -96,3 +96,4 @@ public class TestGameWindows : MonoBehaviour
         XkGameCtrl.MakeGameToFullScreen();
     }
 }
+

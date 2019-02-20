@@ -709,6 +709,8 @@ public class XkGameCtrl : SSGameMono
                 //}
                 //gameObject.AddComponent<TestGameWindows>();
                 //gameObject.AddComponent<ScreenConfig>();
+                //添加游戏窗口是否最小化的检测组件.
+                gameObject.AddComponent<SSGameWindowManage>();
             }
 
 			NpcAmmoCtrl.NpcAmmoHitLayer = NpcAmmoHitLayer;
@@ -4210,6 +4212,20 @@ public class XkGameCtrl : SSGameMono
             isCanPlay = true;
         }
         return isCanPlay;
+    }
+
+    /// <summary>
+    /// 使游戏全屏化.
+    /// </summary>
+    public static void MakeGameToFullScreen()
+    {
+        //游戏为全屏展示模式
+        if (Screen.fullScreen == false
+            || Screen.currentResolution.width != XkGameCtrl.ScreenData.width
+            || Screen.currentResolution.height != XkGameCtrl.ScreenData.height)
+        {
+            Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
+        }
     }
 
 #if DRAW_GAME_INFO
