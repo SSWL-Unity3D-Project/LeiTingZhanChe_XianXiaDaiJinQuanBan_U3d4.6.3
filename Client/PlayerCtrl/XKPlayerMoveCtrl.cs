@@ -1120,7 +1120,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		PlayerTran.position = pos;
 		PlayerTran.forward = forwordVal;
 
-		if (isChangePos) {
+        //关闭火焰特效.
+        SetActiveHuoYanDamageTX(false);
+
+        if (isChangePos) {
 			IsDeathPlayer = true;
 		}
 
@@ -1655,6 +1658,12 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     /// </summary>
     internal void OnJPBossHuoYanHitPlayer()
     {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //当没有玩家激活游戏时,不用展示玩家的受伤火焰特效.
+            return;
+        }
+
         //打开火焰特效.
         SetActiveHuoYanDamageTX(true);
     }
