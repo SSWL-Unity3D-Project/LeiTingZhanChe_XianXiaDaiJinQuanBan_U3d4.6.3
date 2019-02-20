@@ -1250,35 +1250,6 @@ public class SSBoxPostNet : MonoBehaviour
         /// 代金券结束期限时间.
         /// </summary>
         public int endTime = 7;
-        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal)
-        {
-            worth = worthVal;
-            boxId = boxIdVal;
-            userId = userIdVal;
-        }
-        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal, string nameVal, int superPrizeVal)
-        {
-            worth = worthVal;
-            boxId = boxIdVal;
-            userId = userIdVal;
-            gameCode = gameCodeVal;
-            screenCode = screenCodeVal;
-            name = nameVal;
-            superPrize = superPrizeVal;
-        }
-        public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal, string nameVal, int superPrizeVal, int prizeIdVal, int isLimitVal)
-        {
-            worth = worthVal;
-            boxId = boxIdVal;
-            userId = userIdVal;
-            gameCode = gameCodeVal;
-            screenCode = screenCodeVal;
-            name = nameVal;
-            superPrize = superPrizeVal;
-            prizeId = prizeIdVal;
-            isLimit = isLimitVal;
-            SSDebug.Log("PostDataPlayerCouponInfo -> " + ToString());
-        }
         public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal,
             string nameVal, string descriptionVal, int superPrizeVal, int prizeIdVal, int isLimitVal,
             int startTimeVal, int endTimeVal)
