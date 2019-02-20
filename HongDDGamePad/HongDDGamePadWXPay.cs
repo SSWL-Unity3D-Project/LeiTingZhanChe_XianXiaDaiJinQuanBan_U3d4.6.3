@@ -246,7 +246,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 System.TimeSpan ts = ts2.Subtract(ts1).Duration();
 
                 int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
-                if (dTime > 20 * 60)
+                int minTime = XKGlobalData.GetInstance().m_TimeMianFeiNum * 60; //秒.
+                if (dTime > minTime)
                 {
                     playerDt.TimeVal = System.DateTime.Now;
                     //时间差值大于20分钟后,可以被激活.
