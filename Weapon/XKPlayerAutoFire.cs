@@ -2070,7 +2070,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 //		#endif
 		
 		for (int i = 0; i < 5; i++) {
-			if (PaoTaRealObj.Length >= i && PaoTaRealObj[i] != null) {
+			if (PaoTaRealObj.Length > i && PaoTaRealObj[i] != null) {
 				PaoTaRealObj[i].SetActive(indexJH == i);
 			}
 		}

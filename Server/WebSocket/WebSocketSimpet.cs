@@ -324,6 +324,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"CloseConnect\",\"userId\":\"" + userId + "\"},\"_msg_name\":\"gamepad\"}";
             SSDebug.Log("NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
+            //SSDebug.LogError("test **************** NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }
@@ -333,6 +334,7 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     public void OnMessageReceived(string message)
     {
+        //SSDebug.LogError("test ---- OnMessageReceived -> message == " + message);
         //Debug.LogWarning("OnMessageReceived -> message == " + message);
         if (IsCheckXinTiaoMsg)
         {

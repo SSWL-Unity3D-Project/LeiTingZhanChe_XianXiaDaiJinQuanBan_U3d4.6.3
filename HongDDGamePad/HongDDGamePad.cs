@@ -1988,8 +1988,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
             float time = Time.time;
             do
             {
-                //SSDebug.Log("LoopGetWXPlayerHddPayData -> time == " + time.ToString("f2") + ", RealTime == " + Time.time);
-                if (Time.time - time >= 60f)
+                float dTime = Time.time - time;
+                //SSDebug.LogWarning("LoopGetWXPlayerHddPayData -> time == " + time.ToString("f2")
+                    //+ ", RealTime == " + Time.time.ToString("f2")
+                    //+ ", dTime == " + dTime.ToString("f2")
+                    //+ ", userId == " + userId);
+                if (dTime >= 60f)
                 {
                     //轮询检测超时,认为玩家已经不再继续游戏了.
                     //删除轮询检测玩家账户的数据.
