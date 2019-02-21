@@ -24,7 +24,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         {
             XmlDocument xmlDoc = new XmlDocument();
             XmlElement root = xmlDoc.CreateElement("ConfigData");
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < m_MaxPlayerNum; i++)
             {
                 //玩家信息.
                 XmlElement elmNew = xmlDoc.CreateElement("PlayerData");
@@ -211,6 +211,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 玩家数量最大值信息.
+        /// </summary>
+        int m_MaxPlayerNum = 90;
+        /// <summary>
         /// 添加免费试玩游戏的玩家信息.
         /// </summary>
         bool AddFreePlayGamePlayerInfo(int userId)
@@ -224,8 +228,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 playerDt.TimeVal = System.DateTime.Now;
                 m_FreePlayGamePlayerDataList.Add(playerDt);
 
-                //免费试玩游戏玩家信息记录12个,超过12个后之前被挤出的玩家可以再次免费试玩游戏!
-                if (m_FreePlayGamePlayerDataList.Count > 12)
+                //免费试玩游戏玩家信息记录m_MaxPlayerNum个,超过m_MaxPlayerNum个后之前被挤出的玩家可以再次免费试玩游戏!
+                if (m_FreePlayGamePlayerDataList.Count > m_MaxPlayerNum)
                 {
                     //删除试玩游戏玩家列表信息的第一个元素.
                     m_FreePlayGamePlayerDataList.RemoveAt(0);
