@@ -2188,7 +2188,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         {
             return;
         }
-        m_ChongJiBoPaoTaAni.ResetTrigger("Fire");
+        //m_ChongJiBoPaoTaAni.ResetTrigger("Fire");
         m_ChongJiBoPaoTaAni.SetTrigger("Fire");
     }
 }
