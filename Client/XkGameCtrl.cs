@@ -3512,7 +3512,8 @@ public class XkGameCtrl : SSGameMono
 					playerMoveCtrl.SetIsQiangJiFire(false);
 					playerMoveCtrl.SetIsPaiJiPaoFire(false);
 					playerMoveCtrl.SetIsSanDanZPFire(false);
-					XKPlayerAutoFire.GetInstanceAutoFire(indexVal).SetAmmoStateZhuPao(PlayerAmmoType.DaoDanAmmo);
+					playerMoveCtrl.SetIsOpenChongJiBoZPFire(false);
+                    XKPlayerAutoFire.GetInstanceAutoFire(indexVal).SetAmmoStateZhuPao(PlayerAmmoType.DaoDanAmmo);
 					XKPlayerAutoFire.GetInstanceAutoFire(indexVal).SetAmmoStateJiQiang(PlayerAmmoType.PuTongAmmo);
 				}
 			}

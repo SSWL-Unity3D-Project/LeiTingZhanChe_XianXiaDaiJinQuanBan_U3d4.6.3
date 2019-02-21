@@ -16,6 +16,9 @@ public class SSPlayerAmmoData : SSGameMono
         return obj;
     }
 
+    /// <summary>
+    /// 设置子弹不同等级的显示状态.
+    /// </summary>
     internal void SetActiveAmmoCore(int index)
     {
         if (index >= 0 && index <= AmmoCoreArray.Length)

@@ -22,6 +22,7 @@ public enum BuJiBaoType
 	PaiJiPaoDJ,				//迫击炮道具.
 	ZhuPaoSanDanDJ,			//主炮散弹道具.
 	HuoLiAllOpenDJ,			//主炮和机枪火力全开道具.
+    ChongJiBoDJ,            //主炮冲击波道具.
 }
 
 public enum PlayerEnum
@@ -56,6 +57,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
 	Transform DaoJuTr;
 	bool IsMoveOverDaoJuToPlayer;
 	BoxCollider BoxCol;
+    Rigidbody m_Rigibody;
 //	NetworkView NetworkViewCom;
 	void Start()
 	{
@@ -68,13 +70,47 @@ public class BuJiBaoCtrl : MonoBehaviour {
         transform.SetParent(XkGameCtrl.GetInstance().DaoJuArray);
 		DaoJuTr = transform;
 		BoxCol = GetComponent<BoxCollider>();
-	}
-
+        m_Rigibody = GetComponent<Rigidbody>();
+    }
+    
 	void Update()
 	{
 		CheckCameraDis();
 
-		if (IsHiddenDaoJuTr) {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有玩家激活游戏时.
+            if (Time.frameCount % 10 == 0)
+            {
+                if (m_Rigibody != null && m_Rigibody.isKinematic == false)
+                {
+                    m_Rigibody.isKinematic = true;
+                }
+
+                if (BoxCol != null && BoxCol.isTrigger == false)
+                {
+                    BoxCol.isTrigger = true;
+                }
+            }
+            return;
+        }
+        else
+        {
+            if (Time.frameCount % 10 == 0)
+            {
+                if (BoxCol != null && BoxCol.isTrigger == true)
+                {
+                    BoxCol.isTrigger = false;
+                }
+
+                if (m_Rigibody != null && m_Rigibody.isKinematic == true)
+                {
+                    m_Rigibody.isKinematic = false;
+                }
+            }
+        }
+
+        if (IsHiddenDaoJuTr) {
 			return;
 		}
 
@@ -146,7 +182,13 @@ public class BuJiBaoCtrl : MonoBehaviour {
     }
 
 	void OnCollisionEnter(Collision collision)
-	{
+    {
+        if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
+        {
+            //没有玩家激活游戏时.
+            return;
+        }
+
         if (IsCaiPiaoDaoJu)
         {
             //彩票随机道具不接受玩家碰撞得取.
@@ -299,10 +341,14 @@ public class BuJiBaoCtrl : MonoBehaviour {
 					isMoveDaoJu = false;
 					XKDaoJuGlobalDt.SetPlayerIsPaiJiPaoFire(playerSt);
 					break;
-				case BuJiBaoType.ZhuPaoSanDanDJ:
-					isMoveDaoJu = false;
-					XKDaoJuGlobalDt.SetPlayerIsSanDanZPFire(playerSt);
-					break;
+                case BuJiBaoType.ChongJiBoDJ:
+                    isMoveDaoJu = false;
+                    XKDaoJuGlobalDt.SetPlayerIsOpenChongJiBoZPFire(playerSt);
+                    break;
+                case BuJiBaoType.ZhuPaoSanDanDJ:
+				    isMoveDaoJu = false;
+				    XKDaoJuGlobalDt.SetPlayerIsSanDanZPFire(playerSt);
+				    break;
 				case BuJiBaoType.HuoLiAllOpenDJ:
 					//isMoveDaoJu = false;
 					XKDaoJuGlobalDt.SetPlayerIsHuoLiAllOpen(playerSt);

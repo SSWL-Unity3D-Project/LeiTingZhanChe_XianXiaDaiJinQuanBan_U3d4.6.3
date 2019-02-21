@@ -14,6 +14,7 @@ public enum PlayerAmmoType
 	ChuanTouAmmo,	//穿甲弹(主角穿甲弹).
 	JianSuAmmo,		//减速弹.
 	PaiJiPaoAmmo,	//迫击炮(npc迫击炮子弹).
+    ChongJiBoAmmo,  //冲击波子弹.
 }
 
 public class XKPlayerAutoFire : SSGameMono
@@ -23,6 +24,7 @@ public class XKPlayerAutoFire : SSGameMono
 	 * PaoTaRealObj[1] -> 主炮穿甲弹炮塔.
 	 * PaoTaRealObj[2] -> 主炮散弹炮塔.
 	 * PaoTaRealObj[3] -> 主炮迫击炮炮塔.
+	 * PaoTaRealObj[4] -> 主炮冲击波炮塔.
 	 */
     public GameObject[] PaoTaRealObj;
 	/**
@@ -47,6 +49,10 @@ public class XKPlayerAutoFire : SSGameMono
 	/// 主角主炮发射子弹的起始点.
 	/// </summary>
 	public Transform[] AmmoStartPosZP;
+    /// <summary>
+    /// 冲击波主炮子弹产生点.
+    /// </summary>
+    public Transform ChongJiBoZPAmmoSpawnPoint;
 //	Transform[] DaoDanAmmoPosOne;
 //	Transform[] DaoDanAmmoPosTwo;
 	//普通子弹开火粒子.
@@ -70,9 +76,13 @@ public class XKPlayerAutoFire : SSGameMono
 	//public GameObject SanDanAmmo;
 	//public GameObject GenZongDanAmmo;
 	GameObject ChuanTouDanAmmo;
-	//public GameObject JianSuDanAmmo;
+    //public GameObject JianSuDanAmmo;
+    /// <summary>
+    /// 冲击波子弹.
+    /// </summary>
+    GameObject AmmoChongJiBoZP;
 	GameObject AmmoSanDanZP;
-	Transform TanKeTran;
+    Transform TanKeTran;
 	
 	//GameObject[] AmmoParticleObj = new GameObject[2];
 	//GameObject[] SanDanAmmoParticleObj = new GameObject[14];
@@ -156,13 +166,14 @@ public class XKPlayerAutoFire : SSGameMono
 	public static List<PlayerAmmoCtrl> AmmoList_TK;				//普通子弹.
 	public static List<PlayerAmmoCtrl> AmmoGaoBaoList_TK;		//高爆子弹.
 	public static List<PlayerAmmoCtrl> AmmoDaoDanList_TK;		//高爆子弹.
-	public static List<PlayerAmmoCtrl> AmmoSanDanList_TK;		//散弹.
-	public static List<PlayerAmmoCtrl> AmmoGenZongDanList_TK;	//跟踪弹.
+	public static List<PlayerAmmoCtrl> AmmoChongJiBoList_TK;    //冲击波子弹.
+	public static List<PlayerAmmoCtrl> AmmoSanDanList_TK;       //散弹.
+    public static List<PlayerAmmoCtrl> AmmoGenZongDanList_TK;	//跟踪弹.
 	public static List<PlayerAmmoCtrl> AmmoPaiJiPaoList_TK;		//迫击炮子弹.
 	public static List<PlayerAmmoCtrl> AmmoChuanTouDanList_TK;	//穿透弹.
-	public static List<PlayerAmmoCtrl> AmmoJianSuDanList_TK;	//减速弹.
+	public static List<PlayerAmmoCtrl> AmmoJianSuDanList_TK;    //减速弹.
 
-	/**
+    /**
 PlayerFireAudio[0] -> 主角机枪开枪音效.
 PlayerFireAudio[1] -> 主角机枪前后发射音效.
 PlayerFireAudio[2] -> 主角机枪长程机枪音效.
@@ -174,7 +185,11 @@ PlayerFireAudio[7] -> 主角主炮炮击跑音效.
 PlayerFireAudio[8] -> 主角主炮散弹音效.
 PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	 */
-	public AudioSource[] PlayerFireAudio;
+    public AudioSource[] PlayerFireAudio;
+    /// <summary>
+    /// 主角主炮冲击波子弹开火音效.
+    /// </summary>
+    public AudioSource ChongJiBoFireAudio;
 	bool IsPSAutoFire;
 	public static bool IsAimPlayerPOne;
 	public static bool IsAimPlayerPTwo;
@@ -246,8 +261,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		//PuTongAmmo = XKPlayerGlobalDt.GetInstance().PuTongJQAmmo;
 		DaoDanZPAmmo = XKPlayerGlobalDt.GetInstance().DaoDanZPAmmo;
 		ChuanTouDanAmmo = XKDaoJuGlobalDt.GetInstance().AmmoChuanJiaDanZP;
+		AmmoChongJiBoZP = XKDaoJuGlobalDt.GetInstance().AmmoChongJiBoZP;
 		AmmoSanDanZP = XKDaoJuGlobalDt.GetInstance().AmmoSanDanZP;
-		PaiJiPaoAmmo = XKDaoJuGlobalDt.GetInstance().AmmoPaiJiPao;
+        PaiJiPaoAmmo = XKDaoJuGlobalDt.GetInstance().AmmoPaiJiPao;
 		ChangChengAmmo = XKDaoJuGlobalDt.GetInstance().AmmoChangCheng;
 		QiangJiAmmo = XKDaoJuGlobalDt.GetInstance().AmmoQiangJi;
 		AmmoHuoLiOpenJQ = XKDaoJuGlobalDt.GetInstance().AmmoHuoLiOpenJQ;
@@ -773,11 +789,43 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		ZhuPaoAmmoSt = daoJuTypeVal;
 		if (isFire) {
 			IsSanDanZPFire = false;
-			//IsPaiJiPaoFire = false;
-		}
+            //IsPaiJiPaoFire = false;
+            IsOpenChongJiBoZPFire = false;
+        }
 	}
-	
-	bool IsSanDanZPFire = false;
+
+    /// <summary>
+    /// 是否开启了主炮冲击波子弹.
+    /// </summary>
+    bool IsOpenChongJiBoZPFire = false;
+    internal void SetIsOpenChongJiBoZPFire(bool isFire)
+    {
+        IsOpenChongJiBoZPFire = isFire;
+        if (IsOpenChongJiBoZPFire == isFire)
+        {
+            if (isFire == true)
+            {
+                XKPlayerAutoFire.GetInstanceAutoFire(PlayerIndex).SetAmmoStateZhuPao(PlayerAmmoType.ChongJiBoAmmo);
+            }
+            return;
+        }
+        IsOpenChongJiBoZPFire = isFire;
+        ChangePlayerPaoTaObj(isFire == true ? PlayerAmmoType.ChongJiBoAmmo : PlayerAmmoType.Null);
+        PlayerAmmoType ammoTypeVal = isFire == true ? PlayerAmmoType.ChongJiBoAmmo : PlayerAmmoType.DaoDanAmmo;
+        XKPlayerAutoFire.GetInstanceAutoFire(PlayerIndex).SetAmmoStateZhuPao(ammoTypeVal);
+        //Debug.Log("Unity:"+"SetIsOpenChongJiBoZPFire -> isFire "+isFire);
+
+        BuJiBaoType daoJuTypeVal = isFire == true ? BuJiBaoType.ChongJiBoDJ : BuJiBaoType.DaoDan;
+        ZhuPaoAmmoSt = daoJuTypeVal;
+        if (isFire)
+        {
+            //IsOpenChongJiBoZPFire = false;
+            IsSanDanZPFire = false;
+            IsPaiJiPaoFire = false;
+        }
+    }
+    
+    bool IsSanDanZPFire = false;
 	public void SetIsSanDanZPFire(bool isFire)
     {
         if (IsSanDanZPFire == isFire)
@@ -796,9 +844,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 		BuJiBaoType daoJuTypeVal = isFire == true ? BuJiBaoType.ZhuPaoSanDanDJ : BuJiBaoType.DaoDan;
 		ZhuPaoAmmoSt = daoJuTypeVal;
-		if (isFire) {
-			//IsSanDanZPFire = false;
-			IsPaiJiPaoFire = false;
+		if (isFire)
+        {
+            IsOpenChongJiBoZPFire = false;
+            //IsSanDanZPFire = false;
+            IsPaiJiPaoFire = false;
 		}
 	}
 
@@ -984,6 +1034,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         obj.transform.parent = XkGameCtrl.PlayerAmmoArray;
 
         PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
+        if (ammoScript == null)
+        {
+            return;
+        }
+
+        if (ammoScript.AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            //冲击波子弹不用运动.
+            ammoScript.StartMoveAmmo(Vector3.zero, PlayerIndex, this);
+            return;
+        }
         Vector3 mousePosInput = Input.mousePosition;
         //if (pcvr.bIsHardWare) {
         //mousePosInput = pcvr.CrossPositionTwo;
@@ -995,6 +1056,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         RaycastHit hit;
         if (!IsPSAutoFire)
         {
+            //正常游戏模式.
             firePos = FirePosValTmp * ammoSpawnForward + ammoSpawnPos;
             FireRayDirLen = ammoScript.MvSpeed * ammoScript.LiveTime;
             if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, FireRayDirLen, FireLayer.value))
@@ -1008,6 +1070,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
         }
         else
         {
+            //拍摄游戏循环动画模式.
             Vector3 ammoForward = Vector3.Normalize(posTmp - ammoSpawnPos);
             ammoForward = obj.transform.forward;
             firePos = FirePosValTmp * ammoForward + ammoSpawnPos;
@@ -1103,6 +1166,18 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		obj.transform.parent = XkGameCtrl.PlayerAmmoArray;
 
 		PlayerAmmoCtrl ammoScript = obj.GetComponent<PlayerAmmoCtrl>();
+        if (ammoScript == null)
+        {
+            return;
+        }
+
+        if (ammoScript.AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            //冲击波子弹不用运动.
+            ammoScript.StartMoveAmmo(Vector3.zero, PlayerIndex, this);
+            return;
+        }
+
 		Vector3 mousePosInput = Input.mousePosition;
 		//if (pcvr.bIsHardWare) {
 			//mousePosInput = pcvr.CrossPositionTwo;
@@ -1112,8 +1187,10 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		Vector3 mousePos = mousePosInput + Vector3.forward * OffsetForward;
 		Vector3 posTmp = Camera.main.ScreenToWorldPoint(mousePos);
 		RaycastHit hit;
-		if (!IsPSAutoFire) {
-			firePos = FirePosValTmp * ammoSpawnForward + ammoSpawnPos;
+		if (!IsPSAutoFire)
+        {
+            //正常游戏模式.
+            firePos = FirePosValTmp * ammoSpawnForward + ammoSpawnPos;
 			FireRayDirLen = ammoScript.MvSpeed * ammoScript.LiveTime;
 			if (Physics.Raycast(ammoSpawnPos, ammoSpawnForward, out hit, FireRayDirLen, FireLayer.value)) {
 				//Debug.Log("Unity:"+"Player fire obj -> "+hit.collider.name);
@@ -1122,8 +1199,10 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 				}
 			}
 		}
-		else {
-		    Vector3 ammoForward = Vector3.Normalize( posTmp - ammoSpawnPos );
+		else
+        {
+            //拍摄游戏循环动画模式.
+            Vector3 ammoForward = Vector3.Normalize( posTmp - ammoSpawnPos );
 			ammoForward = obj.transform.forward;
 			firePos = FirePosValTmp * ammoForward + ammoSpawnPos;
 			if (Physics.Raycast(ammoSpawnPos, ammoForward, out hit, FireRayDirLen, FireLayer.value)) {
@@ -1247,6 +1326,24 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			}
 			break;*/
 			
+		case PlayerAmmoType.ChongJiBoAmmo:
+            max = AmmoChongJiBoList_TK.Count;
+            for (int i = 0; i < max; i++)
+            {
+                if (!AmmoChongJiBoList_TK[i].gameObject.activeSelf)
+                {
+                    objAmmo = AmmoChongJiBoList_TK[i].gameObject;
+                    break;
+                }
+            }
+
+            if (objAmmo == null)
+            {
+                objAmmo = SpawnPlayerAmmo(AmmoChongJiBoZP, ammoPos, ammoRot);
+                HandleAmmoList(objAmmo.GetComponent<PlayerAmmoCtrl>());
+            }
+			break;
+
 		case PlayerAmmoType.SanDanAmmo:
 			max = AmmoSanDanList_TK.Count;
 			for (int i = 0; i < max; i++) {
@@ -1367,6 +1464,13 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 				return;
 			}
 			AmmoGaoBaoList_TK.Add(scriptAmmo);
+			break;
+			
+		case PlayerAmmoType.ChongJiBoAmmo:
+			if (AmmoChongJiBoList_TK.Contains(scriptAmmo)) {
+				return;
+			}
+			AmmoChongJiBoList_TK.Add(scriptAmmo);
 			break;
 			
 		case PlayerAmmoType.SanDanAmmo:
@@ -1579,8 +1683,13 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		
 		if (IsHuoLiAllOpen) {
 			audioSoureCom = PlayerFireAudio[9];
-		}
-		PlayFireAudio(audioSoureCom);
+        }
+
+        if (IsOpenChongJiBoZPFire)
+        {
+            audioSoureCom = ChongJiBoFireAudio;
+        }
+        PlayFireAudio(audioSoureCom);
 	}
 
 	void CheckPSTriggerAutoFire()
@@ -1716,6 +1825,12 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
                         ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_PaiJiPaoAmmoDengJiLiZiDt;
                         break;
                     }
+                case PlayerAmmoType.ChongJiBoAmmo:
+                    {
+                        //冲击波主炮子弹.
+                        //ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_SanDanZhuPaoAmmoDengJiLiZiDt;
+                        break;
+                    }
                 case PlayerAmmoType.SanDanAmmo:
                     {
                         //散弹主炮子弹.
@@ -1742,6 +1857,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
             }
 		}
 
+        bool isCreateFireLiZi = true;
 		//Debug.Log("Unity:"+"ammoType "+ammoType+", PlayerIndex "+PlayerIndex+", SpawnPlayerAmmoByAmmoType");
 		switch (ammoType) {
 		case PlayerAmmoType.PuTongAmmo:
@@ -1753,6 +1869,22 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			//XkGameCtrl.GetInstance().SubGaoBaoDanNum(PlayerIndex);
 			break;*/
 			
+		case PlayerAmmoType.ChongJiBoAmmo:
+			//if (ammoIndex == 0) {
+			//	return obj;
+			//}
+			//ammoParticle = SanDanAmmoParticle[ammoIndex];
+			//XkGameCtrl.GetInstance().SubSanDanNum(PlayerIndex);
+			//SpawnPlayerAllSanDanAmmo(ammoIndex);
+            //冲击波子弹不用产生开火粒子特效.
+            isCreateFireLiZi = false;
+            if (ChongJiBoZPAmmoSpawnPoint != null)
+            {
+                ammoSpawnPos = ChongJiBoZPAmmoSpawnPoint.position;
+                ammoSpawnRot = ChongJiBoZPAmmoSpawnPoint.rotation;
+            }
+			break;
+
 		case PlayerAmmoType.SanDanAmmo:
 			if (ammoIndex == 0) {
 				return obj;
@@ -1785,7 +1917,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			ammoParticle = DaoDanAmmoParticle[ammoIndex];
 			break;
 		}
-		SpawnPlayerAmmoParticle(ammoParticle, ammoSpawnPos, ammoSpawnRot);
+
+        if (isCreateFireLiZi == true)
+        {
+            SpawnPlayerAmmoParticle(ammoParticle, ammoSpawnPos, ammoSpawnRot);
+        }
 		obj = GetPlayerAmmo(ammoType, ammoSpawnPos, ammoSpawnRot, ammoIndex);
 		return obj;
 	}
@@ -1855,15 +1991,29 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		if (ammoType == PlayerAmmoType.ChuanTouAmmo) {
 			IsSanDanZPFire = false;
 			IsPaiJiPaoFire = false;
+            IsOpenChongJiBoZPFire = false;
 			ChangePlayerPaoTaObj(ammoType);
 		}
-		else if (ammoType == PlayerAmmoType.SanDanAmmo) {
-			IsPaiJiPaoFire = false;
-			ChangePlayerPaoTaObj(ammoType);
-		}
-		else if (ammoType == PlayerAmmoType.PaiJiPaoAmmo) {
-			IsPaiJiPaoFire = false;
-			ChangePlayerPaoTaObj(ammoType);
+		else if (ammoType == PlayerAmmoType.SanDanAmmo)
+        {
+            //IsSanDanZPFire = false;
+            IsPaiJiPaoFire = false;
+            IsOpenChongJiBoZPFire = false;
+            ChangePlayerPaoTaObj(ammoType);
+        }
+        else if (ammoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            IsSanDanZPFire = false;
+            IsPaiJiPaoFire = false;
+            //IsOpenChongJiBoZPFire = false;
+            ChangePlayerPaoTaObj(ammoType);
+        }
+        else if (ammoType == PlayerAmmoType.PaiJiPaoAmmo)
+        {
+            IsSanDanZPFire = false;
+            //IsPaiJiPaoFire = false;
+            IsOpenChongJiBoZPFire = false;
+            ChangePlayerPaoTaObj(ammoType);
 		}
 		else {
 			ChangePlayerPaoTaObj(PlayerAmmoType.Null);
@@ -1910,14 +2060,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		case PlayerAmmoType.PaiJiPaoAmmo:
 			indexJH = 3;
 			break;
-		}
+        case PlayerAmmoType.ChongJiBoAmmo:
+            indexJH = 4;
+                break;
+        }
 
 //		#if UNITY_EDITOR
 //		Debug.Log("Unity:"+"ChangePlayerPaoTaObj -> indexJH "+indexJH);
 //		#endif
 		
-		for (int i = 0; i < 4; i++) {
-			if (PaoTaRealObj.Length >= 4 && PaoTaRealObj[i] != null) {
+		for (int i = 0; i < 5; i++) {
+			if (PaoTaRealObj.Length >= i && PaoTaRealObj[i] != null) {
 				PaoTaRealObj[i].SetActive(indexJH == i);
 			}
 		}

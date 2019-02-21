@@ -75,6 +75,12 @@ public class PlayerAmmoCtrl : MonoBehaviour
 			return;
 		}
 
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            //冲击波子弹只进行一次范围伤害计算不用进行轮询更新.
+            return;
+        }
+
         if (AmmoType == PlayerAmmoType.DaoDanAmmo
             || AmmoType == PlayerAmmoType.ChuanTouAmmo
             || AmmoType == PlayerAmmoType.SanDanAmmo)
@@ -173,7 +179,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 if (AmmoType == PlayerAmmoType.ChuanTouAmmo
                     || AmmoType == PlayerAmmoType.DaoDanAmmo
                     || AmmoType == PlayerAmmoType.PaiJiPaoAmmo
-                    || AmmoType == PlayerAmmoType.SanDanAmmo)
+                    || AmmoType == PlayerAmmoType.SanDanAmmo
+                    || AmmoType == PlayerAmmoType.ChongJiBoAmmo)
                 {
                     //获取玩家对代金券npc的暴击伤害.
                     XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.CheckPlayerBaoJiDengJi(AmmoType, PlayerState, healthScript);
@@ -215,7 +222,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
             if (AmmoType == PlayerAmmoType.DaoDanAmmo
                 || AmmoType == PlayerAmmoType.GaoBaoAmmo
                 || AmmoType == PlayerAmmoType.PuTongAmmo
-                || AmmoType == PlayerAmmoType.SanDanAmmo)
+                || AmmoType == PlayerAmmoType.SanDanAmmo
+                || AmmoType == PlayerAmmoType.ChongJiBoAmmo)
             {
                 if (hitObjNpc.layer != LayerMask.NameToLayer("Default"))
                 {
@@ -271,7 +279,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
 
 		AmmoTran = transform;
 		PlayerState = playerIndex;
-		MoveAmmoByItween(firePos, ammoMovePath, autoFireCom);
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            //冲击波子弹不用运动,只需要检测一次范围伤害.
+            CheckPlayerAmmoForwardHitNpc();
+            MoveAmmoOnCompelteITween();
+        }
+        else
+        {
+            MoveAmmoByItween(firePos, ammoMovePath, autoFireCom);
+        }
 		IsHandleRpc = true;
 	}
 
@@ -328,6 +345,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 case PlayerAmmoType.PaiJiPaoAmmo:
                 case PlayerAmmoType.ChuanTouAmmo:
                 case PlayerAmmoType.SanDanAmmo:
+                case PlayerAmmoType.ChongJiBoAmmo:
                     {
                         m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
                         break;
@@ -810,8 +828,14 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 continue;
             }
 
-            if (AmmoType != PlayerAmmoType.PaiJiPaoAmmo)
+            if (AmmoType == PlayerAmmoType.PaiJiPaoAmmo || AmmoType == PlayerAmmoType.ChongJiBoAmmo)
             {
+                //范围伤害类型子弹.
+                //迫击炮和冲击波子弹需要忽略主角碰撞范围.
+            }
+            else 
+            {
+                //非范围伤害类型子弹.
                 playerMvFanWei = col.GetComponent<XKPlayerMvFanWei>();
                 if (playerMvFanWei != null)
                 {

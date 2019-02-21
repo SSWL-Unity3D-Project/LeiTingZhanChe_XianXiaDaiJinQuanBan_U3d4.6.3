@@ -631,7 +631,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                     if(pAmmoType == PlayerAmmoType.DaoDanAmmo
                         || pAmmoType == PlayerAmmoType.PaiJiPaoAmmo
                         || pAmmoType == PlayerAmmoType.ChuanTouAmmo
-                        || pAmmoType == PlayerAmmoType.SanDanAmmo)
+                        || pAmmoType == PlayerAmmoType.SanDanAmmo
+                        || pAmmoType == PlayerAmmoType.ChongJiBoAmmo)
                     {
                         int jiFenVal = XkGameCtrl.GetInstance().m_DaoDanHitBossJiFen;
                         XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, jiFenVal);

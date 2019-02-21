@@ -1290,9 +1290,14 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	public void SetIsPaiJiPaoFire(bool isFire)
 	{
 		FireScript.SetIsPaiJiPaoFire(isFire);
-	}
+    }
 
-	public void SetIsSanDanZPFire(bool isFire)
+    public void SetIsOpenChongJiBoZPFire(bool isFire)
+    {
+        FireScript.SetIsOpenChongJiBoZPFire(isFire);
+    }
+
+    public void SetIsSanDanZPFire(bool isFire)
 	{
 		FireScript.SetIsSanDanZPFire(isFire);
 	}

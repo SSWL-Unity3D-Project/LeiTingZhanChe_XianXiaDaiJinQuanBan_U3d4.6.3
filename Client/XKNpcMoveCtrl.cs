@@ -1666,7 +1666,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
 				case PlayerAmmoType.GenZongAmmo:
 				case PlayerAmmoType.JianSuAmmo:
 				case PlayerAmmoType.SanDanAmmo:
-					float powerVal = XKPlayerGlobalDt.GetInstance().DaoDanPowerNpc;
+				case PlayerAmmoType.ChongJiBoAmmo:
+                    float powerVal = XKPlayerGlobalDt.GetInstance().DaoDanPowerNpc;
 					RigCom.AddForce(-NpcTran.forward * powerVal, ForceMode.Impulse);
 					BuWaWaRigidbody.AddForce(-NpcTran.forward * powerVal, ForceMode.Impulse);
 					break;

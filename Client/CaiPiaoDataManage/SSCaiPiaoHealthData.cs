@@ -267,6 +267,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                 case PlayerAmmoType.PaiJiPaoAmmo:
                 case PlayerAmmoType.ChuanTouAmmo:
                 case PlayerAmmoType.SanDanAmmo:
+                case PlayerAmmoType.ChongJiBoAmmo:
                     {
                         if (Time.time - m_PlayerBaoJiDt[indexVal].TimeBaoJi > 0.05f)
                         {

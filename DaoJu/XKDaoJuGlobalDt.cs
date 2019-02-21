@@ -49,6 +49,10 @@ public class XKDaoJuGlobalDt : MonoBehaviour
 	 * 散弹主炮子弹.
 	 */
 	public GameObject AmmoSanDanZP;
+    /// <summary>
+    /// 冲击波主炮道具子弹.
+    /// </summary>
+    public GameObject AmmoChongJiBoZP;
 	const int AmmoSanDanZPIndex = 1;
 	const PlayerAmmoType AmmoSanDanZPType = PlayerAmmoType.SanDanAmmo;
 	/**
@@ -166,9 +170,15 @@ public class XKDaoJuGlobalDt : MonoBehaviour
 	{
 		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
 		moveScript.SetIsSanDanZPFire(true);
-	}
+    }
 
-	public static void SetPlayerIsHuoLiAllOpen(PlayerEnum indexPlayer, bool isFire = true)
+    public static void SetPlayerIsOpenChongJiBoZPFire(PlayerEnum indexPlayer)
+    {
+        XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+        moveScript.SetIsOpenChongJiBoZPFire(true);
+    }
+
+    public static void SetPlayerIsHuoLiAllOpen(PlayerEnum indexPlayer, bool isFire = true)
 	{
 		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
 		if (moveScript == null) {
