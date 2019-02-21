@@ -27,6 +27,10 @@ public class XKPlayerAutoFire : SSGameMono
 	 * PaoTaRealObj[4] -> 主炮冲击波炮塔.
 	 */
     public GameObject[] PaoTaRealObj;
+    /// <summary>
+    /// 冲击波炮塔动画控制组件.
+    /// </summary>
+    public Animator m_ChongJiBoPaoTaAni;
 	/**
 	 * IsLockPaoTa == true -> 子弹向镜头正前方打,炮塔转向不跟随坦克机身的转向.
 	 * IsLockPaoTa == false -> 子弹向子弹产生点方向打,炮塔转向跟随坦克机身的转向.
@@ -327,8 +331,15 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 			AmmoSanDanList_TK.Clear();
 		}
 		AmmoSanDanList_TK = new List<PlayerAmmoCtrl>(MaxAmmoCount);
-		
-		if (AmmoGenZongDanList_TK != null) {
+
+        //冲击波子弹.
+        if (AmmoChongJiBoList_TK != null)
+        {
+            AmmoChongJiBoList_TK.Clear();
+        }
+        AmmoChongJiBoList_TK = new List<PlayerAmmoCtrl>(MaxAmmoCount);
+
+        if (AmmoGenZongDanList_TK != null) {
 			AmmoGenZongDanList_TK.Clear();
 		}
 		AmmoGenZongDanList_TK = new List<PlayerAmmoCtrl>(MaxAmmoCount);
@@ -1829,6 +1840,8 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
                     {
                         //冲击波主炮子弹.
                         //ammoLiZiDt = XKPlayerGlobalDt.GetInstance().m_SanDanZhuPaoAmmoDengJiLiZiDt;
+                        //播放冲击波炮塔发射子弹动画.
+                        PlayChongJiBoPaoTaFireAni();
                         break;
                     }
                 case PlayerAmmoType.SanDanAmmo:
@@ -2164,5 +2177,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
                 m_PlayerXiaoFeiJiList[i].CreatFeiJiAmmo(this);
             }
         }
+    }
+
+    /// <summary>
+    /// 播放冲击波炮塔开火动画.
+    /// </summary>
+    void PlayChongJiBoPaoTaFireAni()
+    {
+        if (m_ChongJiBoPaoTaAni == null)
+        {
+            return;
+        }
+        m_ChongJiBoPaoTaAni.SetTrigger("Fire");
     }
 }

@@ -1272,6 +1272,7 @@ public class SSBoxPostNet : MonoBehaviour
             startTime = startTimeVal;
             endTime = endTimeVal;
             SSDebug.Log("PostDataPlayerCouponInfo -> " + ToString());
+            //SSDebug.LogWarning("PostDataPlayerCouponInfo -> " + ToString());
         }
         public override string ToString()
         {
