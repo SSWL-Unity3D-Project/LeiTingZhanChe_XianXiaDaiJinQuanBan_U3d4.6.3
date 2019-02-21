@@ -1223,6 +1223,10 @@ public class SSBoxPostNet : MonoBehaviour
         /// </summary>
         public int screenCode = 0;
         /// <summary>
+        /// prizeLevel | Integer | 奖品等级（1，2，3，4） | true
+        /// </summary>
+        public int prizeLevel = 4;
+        /// <summary>
         /// 代金券名称.
         /// </summary>
         public string name = "恭喜获得抵扣代金券";
@@ -1251,7 +1255,7 @@ public class SSBoxPostNet : MonoBehaviour
         /// </summary>
         public int endTime = 7;
         public PostDataPlayerCouponInfo(int worthVal, string boxIdVal, int userIdVal, int gameCodeVal, int screenCodeVal,
-            string nameVal, string descriptionVal, int superPrizeVal, int prizeIdVal, int isLimitVal,
+            int prizeLevel, string nameVal, string descriptionVal, int superPrizeVal, int prizeIdVal, int isLimitVal,
             int startTimeVal, int endTimeVal)
         {
             worth = worthVal;
@@ -1259,6 +1263,7 @@ public class SSBoxPostNet : MonoBehaviour
             userId = userIdVal;
             gameCode = gameCodeVal;
             screenCode = screenCodeVal;
+            this.prizeLevel = prizeLevel;
             name = nameVal;
             description = descriptionVal;
             superPrize = superPrizeVal;
@@ -1272,6 +1277,7 @@ public class SSBoxPostNet : MonoBehaviour
         {
             return "worth == " + worth + ", boxId == " + boxId + ", userId == " + userId + ", gameCode == " + gameCode
                 + ", screenCode == " + screenCode
+                + ", prizeLevel == " + prizeLevel
                 + ", name == " + name
                 + ", description == " + description
                 + ", superPrize == " + superPrize
@@ -1361,22 +1367,33 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
 
+        int prizeLevel = -1;
         if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)
         {
             superPrize = 1; //JPBoss代金券.
             indexJiangPinId = 0;
+            prizeLevel = 1;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
         {
             indexJiangPinId = 1;
+            prizeLevel = 2;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02)
         {
             indexJiangPinId = 2;
+            prizeLevel = 3;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan)
         {
             indexJiangPinId = 3;
+            prizeLevel = 4;
+        }
+
+        if (prizeLevel == -1)
+        {
+            SSDebug.LogWarning("HttpSendPostHddPlayerCouponInfoByChouJiang -> prizeLevel was wrong! daiJinQuanType == " + daiJinQuanType);
+            return;
         }
 
         string hddJiangPinId = "0";
@@ -1414,7 +1431,7 @@ public class SSBoxPostNet : MonoBehaviour
         }
 
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
-            daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
+            prizeLevel, daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
@@ -1511,22 +1528,33 @@ public class SSBoxPostNet : MonoBehaviour
             }
         }
 
+        int prizeLevel = -1;
         if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan)
         {
             superPrize = 1; //JPBoss代金券.
             indexJiangPinId = 0;
+            prizeLevel = 1;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01)
         {
             indexJiangPinId = 1;
+            prizeLevel = 2;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02)
         {
             indexJiangPinId = 2;
+            prizeLevel = 3;
         }
         else if (daiJinQuanType == SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan)
         {
             indexJiangPinId = 3;
+            prizeLevel = 4;
+        }
+
+        if (prizeLevel == -1)
+        {
+            SSDebug.LogWarning("HttpSendPostHddPlayerCouponInfo -> prizeLevel was wrong! daiJinQuanType == " + daiJinQuanType);
+            return;
         }
 
         string hddJiangPinId = "0";
@@ -1570,7 +1598,7 @@ public class SSBoxPostNet : MonoBehaviour
         }
 
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
-            daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
+            prizeLevel, daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
         string jsonData = JsonMapper.ToJson(postDt);
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
