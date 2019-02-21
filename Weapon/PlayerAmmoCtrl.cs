@@ -2,6 +2,7 @@
 #define USE_SPHERE_HIT
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PlayerAmmoCtrl : MonoBehaviour
 {
@@ -283,7 +284,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
         {
             //冲击波子弹不用运动,只需要检测一次范围伤害.
             CheckPlayerAmmoForwardHitNpc();
-            MoveAmmoOnCompelteITween();
+            DelayRemoveChongJiBoAmmo();
         }
         else
         {
@@ -291,6 +292,15 @@ public class PlayerAmmoCtrl : MonoBehaviour
         }
 		IsHandleRpc = true;
 	}
+
+    /// <summary>
+    /// 延迟删除冲击波子弹.
+    /// </summary>
+    IEnumerator DelayRemoveChongJiBoAmmo()
+    {
+        yield return new WaitForSeconds(LiveTime);
+        MoveAmmoOnCompelteITween();
+    }
 
 	void ResetTrailScriptInfo()
 	{
