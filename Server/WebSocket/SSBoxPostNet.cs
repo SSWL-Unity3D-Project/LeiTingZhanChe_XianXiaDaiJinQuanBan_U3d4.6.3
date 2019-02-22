@@ -21,14 +21,13 @@ public class SSBoxPostNet : MonoBehaviour
     public enum GamePadState
     {
         Default = 0,                //默认手柄.
-        LeiTingZhanChe = 1,         //雷霆战车手柄.
-        //LeiTingZhanChe = 99,         //雷霆战车手柄测试.
+        //LeiTingZhanChe = 1,         //雷霆战车手柄.
+        LeiTingZhanChe = 99,         //雷霆战车手柄无重连测试.
     }
     /// <summary>
     /// 游戏手柄枚举,红点点游戏码.
     /// </summary>
-    [HideInInspector]
-    public GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
+    internal GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
 
     public void Init()
     {
@@ -229,14 +228,8 @@ public class SSBoxPostNet : MonoBehaviour
         /// </summary>
         public string GetWXCodeGame(GamePadState pad)
         {
-            switch (pad)
-            {
-                case GamePadState.LeiTingZhanChe:
-                    {
-                        WXCodeGame = WXCodeGameLeiTingZheChe;
-                        break;
-                    }
-            }
+            int codeGame = (int)pad;
+            WXCodeGame = codeGame.ToString();
             return WXCodeGame;
         }
         /// <summary>
