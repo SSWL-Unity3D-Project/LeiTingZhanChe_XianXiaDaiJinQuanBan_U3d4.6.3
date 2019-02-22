@@ -74,6 +74,11 @@ public class XkGameCtrl : SSGameMono
     /// 彩票算法模式.
     /// </summary>
     internal CaiPiaoModeSuanFa m_CaiPiaoMode = CaiPiaoModeSuanFa.GuDing;
+    /// <summary>
+    /// 再玩一局游戏奖品出奖概率控制接口.
+    /// </summary>
+    [Range(0, 100)]
+    public int m_ZaiWanYiJuGaiLv = 20;
     bool _IsDisplayBossDeathYanHua = false;
     /// <summary>
     /// 是否在显示Boss爆炸粒子和玩家得奖烟花.
@@ -519,6 +524,10 @@ public class XkGameCtrl : SSGameMono
     }
 
     /// <summary>
+    /// 游戏抽奖数据.
+    /// </summary>
+    internal SSChouJiangData m_SSChouJiangDt;
+    /// <summary>
     /// 游戏触发器管理.
     /// </summary>
     internal SSTriggerManage m_TriggerManage;
@@ -849,6 +858,7 @@ public class XkGameCtrl : SSGameMono
             {
                 gmVersionCom.Init();
             }
+            InitChouJiangData();
 
 #if DRAW_DEBUG_CAIPIAO_INFO
             //测试代金券信息.
@@ -876,6 +886,18 @@ public class XkGameCtrl : SSGameMono
 #if DRAW_DEBUG_BAOJI_INFO
     internal SSDebugBaoJi m_SSDebugBaoJi = null;
 #endif
+
+    /// <summary>
+    /// 初始化抽奖数据.
+    /// </summary>
+    void InitChouJiangData()
+    {
+        if (m_SSChouJiangDt == null)
+        {
+            m_SSChouJiangDt = gameObject.AddComponent<SSChouJiangData>();
+            m_SSChouJiangDt.Init(m_ZaiWanYiJuGaiLv);
+        }
+    }
 
     private void ClickTVYaoKongExitBtEvent(pcvr.ButtonState val)
     {

@@ -21,8 +21,8 @@ public class SSBoxPostNet : MonoBehaviour
     public enum GamePadState
     {
         Default = 0,                //默认手柄.
-        //LeiTingZhanChe = 1,         //雷霆战车手柄.
-        LeiTingZhanChe = 99,         //雷霆战车手柄无重连测试.
+        LeiTingZhanChe = 1,         //雷霆战车手柄.
+        //LeiTingZhanChe = 99,         //雷霆战车手柄无重连测试.
     }
     /// <summary>
     /// 游戏手柄枚举,红点点游戏码.

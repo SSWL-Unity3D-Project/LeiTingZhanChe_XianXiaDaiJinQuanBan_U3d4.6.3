@@ -521,7 +521,7 @@ public class SSChouJiangUI : MonoBehaviour
         /// <summary>
         /// 再来一局游戏的随机概率.
         /// </summary>
-        public int ZaiWanYiJu = 50;
+        //public int ZaiWanYiJu = 50;
     }
     /// <summary>
     /// 各种奖品的中奖概率.
@@ -546,7 +546,11 @@ public class SSChouJiangUI : MonoBehaviour
         {
             case JiangPinState.ZaiWanYiJu:
                 {
-                    gaiLv = m_ZhongJiangGaiLvDt.ZaiWanYiJu;
+                    //gaiLv = m_ZhongJiangGaiLvDt.ZaiWanYiJu;
+                    if (XkGameCtrl.GetInstance() != null)
+                    {
+                        gaiLv = XkGameCtrl.GetInstance().m_ZaiWanYiJuGaiLv;
+                    }
                     break;
                 }
             case JiangPinState.JiangPin2:
