@@ -2403,6 +2403,11 @@ public class XkGameCtrl : SSGameMono
             {
                 SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
             }
+
+            if (GetInstance().m_SSChouJiangDt != null)
+            {
+                GetInstance().m_SSChouJiangDt.AddPlayerNum();
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerOne);
@@ -2452,6 +2457,11 @@ public class XkGameCtrl : SSGameMono
             if (SSHaiDiLaoBaoJiang.GetInstance() != null)
             {
                 SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
+            }
+
+            if (GetInstance().m_SSChouJiangDt != null)
+            {
+                GetInstance().m_SSChouJiangDt.AddPlayerNum();
             }
         }
 		else {
@@ -2503,6 +2513,11 @@ public class XkGameCtrl : SSGameMono
             {
                 SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
             }
+
+            if (GetInstance().m_SSChouJiangDt != null)
+            {
+                GetInstance().m_SSChouJiangDt.AddPlayerNum();
+            }
         }
 		else {
 			XKPlayerScoreCtrl.HiddenPlayerScore(PlayerEnum.PlayerThree);
@@ -2552,6 +2567,11 @@ public class XkGameCtrl : SSGameMono
             if (SSHaiDiLaoBaoJiang.GetInstance() != null)
             {
                 SSHaiDiLaoBaoJiang.GetInstance().AddPlayerNum();
+            }
+
+            if (GetInstance().m_SSChouJiangDt != null)
+            {
+                GetInstance().m_SSChouJiangDt.AddPlayerNum();
             }
         }
 		else {

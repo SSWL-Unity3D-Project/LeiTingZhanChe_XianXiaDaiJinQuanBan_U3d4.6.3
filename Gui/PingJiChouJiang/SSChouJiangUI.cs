@@ -674,7 +674,7 @@ public class SSChouJiangUI : MonoBehaviour
         if (indexJiangPin == -1)
         {
             //再玩一局游戏奖品.
-            isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin4);
+            isZhongJiang = GetIsCanZhongJiang(JiangPinState.ZaiWanYiJu);
             bool isCanZaiWanYiJu = true;
             if (XkGameCtrl.GetInstance() != null)
             {
@@ -688,10 +688,24 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
 
+            if (isCanZaiWanYiJu == true)
+            {
+                //按照人数对再玩一局游戏奖品进行判断是否可以出奖.
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+                {
+                    isCanZaiWanYiJu = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanOutZaiWanYiJuJiangPin();
+                }
+            }
+
             if (isZhongJiang == true && isCanZaiWanYiJu == true)
             {
                 //获得再玩一局游戏奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu);
+                //按照人数再玩一局游戏奖品已经爆奖.
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+                {
+                    XkGameCtrl.GetInstance().m_SSChouJiangDt.SetIsHaveBaoJiang(true);
+                }
             }
         }
 

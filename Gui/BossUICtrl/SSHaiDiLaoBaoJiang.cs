@@ -54,6 +54,11 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 		/// </summary>
 		internal void UpdateMaxPlayer(int baoJiangLv)
 		{
+            if (baoJiangLv < 0 || baoJiangLv > 100)
+            {
+                baoJiangLv = 50;
+            }
+
             if (baoJiangLv == 0)
             {
                 maxPlayer = ZeroPlayer;
@@ -278,7 +283,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
     }
 
     /// <summary>
-    /// 获取是否已经击爆了莫衷类型的奖品npc.
+    /// 获取是否已经击爆了某种类型的奖品npc.
     /// </summary>
     internal bool GetIsHaveJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {

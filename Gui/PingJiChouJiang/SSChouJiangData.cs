@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
+using System.Xml;
+using System.IO;
 
 public class SSChouJiangData : MonoBehaviour
 {
@@ -16,15 +18,26 @@ public class SSChouJiangData : MonoBehaviour
         /// <summary>
         /// 当前人数.
         /// </summary>
-        internal int curPlayer = 10;
+        int curPlayer = 10;
+        internal void SetCurrentPlayerNum(int num)
+        {
+            curPlayer = num;
+        }
+        internal int GetCurrentPlayerNum()
+        {
+            return curPlayer;
+        }
         /// <summary>
         /// 随机概率.
         /// </summary>
-        int suiJiGaiLv = 50;
+        int suiJiGaiLv = 30;
         /// <summary>
         /// 没有人可以爆奖.
         /// </summary>
         int ZeroPlayer = 999999999;
+        /// <summary>
+        /// 更新游戏在几个人里出一次奖.
+        /// </summary>
         internal void SetMaxPlayer(int baoJiangLv)
         {
             if (baoJiangLv < 0 || baoJiangLv > 100)
@@ -55,9 +68,63 @@ public class SSChouJiangData : MonoBehaviour
         {
             IsHaveBaoJiang = isJiBaoNpc;
         }
+
         internal bool GetIsHaveJiBaoNpc()
         {
             return IsHaveBaoJiang;
+        }
+
+        /// <summary>
+        /// 获取是否可以爆奖.
+        /// </summary>
+        internal bool GetIsCanBaoJiang()
+        {
+            if (IsHaveBaoJiang == true)
+            {
+                //已经有玩家击爆奖,其余玩家不能在出该奖品了.
+                return false;
+            }
+
+            if (ZeroPlayer == maxPlayer)
+            {
+                //游戏后台配置爆奖率为0时不允许爆奖.
+                return false;
+            }
+
+            if (curPlayer >= maxPlayer)
+            {
+                //当前玩家人数已经积累的足够多了,新来的玩家都可以击爆npc.
+                return true;
+            }
+
+            bool isCanJiBao = true;
+            int randNum = (UnityEngine.Random.Range(0, 1000) % 100) + 1;
+            if (randNum > suiJiGaiLv)
+            {
+                isCanJiBao = false;
+            }
+            return isCanJiBao;
+        }
+
+        internal bool AddCurrentNum()
+        {
+            bool isReset = false;
+            curPlayer++;
+            if (IsHaveBaoJiang == true)
+            {
+                if (curPlayer > maxPlayer)
+                {
+                    isReset = true;
+                    ResetCurrentNum();
+                }
+            }
+            return isReset;
+        }
+
+        void ResetCurrentNum()
+        {
+            IsHaveBaoJiang = false;
+            curPlayer = 1;
         }
     }
     ZaiWanYiJuJiangPinData m_ZaiWanYiJuJiangPinDt = new ZaiWanYiJuJiangPinData();
@@ -68,6 +135,13 @@ public class SSChouJiangData : MonoBehaviour
     internal void Init(int gaiLv)
     {
         SetZaiWanYiJuJiangPinDtMaxPlayer(gaiLv);
+        int num = ReadCurrentNumPlayer();
+        bool isHaveBaoJiang = ReadIsHaveBaoJiang();
+        if (m_ZaiWanYiJuJiangPinDt != null)
+        {
+            m_ZaiWanYiJuJiangPinDt.SetCurrentPlayerNum(num);
+            m_ZaiWanYiJuJiangPinDt.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+        }
     }
 
     /// <summary>
@@ -77,7 +151,205 @@ public class SSChouJiangData : MonoBehaviour
     {
         if (m_ZaiWanYiJuJiangPinDt != null)
         {
-
+            m_ZaiWanYiJuJiangPinDt.SetMaxPlayer(gaiLv);
         }
     }
+
+    /// <summary>
+    /// 获取是否可以出再玩一局游戏奖品.
+    /// </summary>
+    internal bool GetIsCanOutZaiWanYiJuJiangPin()
+    {
+        bool isCanOut = false;
+        if (m_ZaiWanYiJuJiangPinDt != null)
+        {
+            isCanOut = m_ZaiWanYiJuJiangPinDt.GetIsCanBaoJiang();
+        }
+        return isCanOut;
+    }
+    
+    /// <summary>
+    /// 设置是否已经爆奖.
+    /// </summary>
+    internal void SetIsHaveBaoJiang(bool isHaveBaoJiang)
+    {
+        if (m_ZaiWanYiJuJiangPinDt != null)
+        {
+            WriteIsHaveBaoJiang(isHaveBaoJiang);
+            m_ZaiWanYiJuJiangPinDt.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+        }
+    }
+
+    /// <summary>
+    /// 添加玩家数量.
+    /// </summary>
+    internal void AddPlayerNum()
+    {
+        if (m_ZaiWanYiJuJiangPinDt != null)
+        {
+            bool isReset = m_ZaiWanYiJuJiangPinDt.AddCurrentNum();
+            WriteCurrentNumPlayer(m_ZaiWanYiJuJiangPinDt.GetCurrentPlayerNum());
+            if (isReset == true)
+            {
+                //重置爆奖信息
+                WriteIsHaveBaoJiang(false);
+            }
+        }
+    }
+
+
+    #region 爆奖数据的读写操作
+    /// <summary>
+    /// 爆奖信息.
+    /// </summary>
+    string FileName = "../config/ZaiWanYiJuJiangPingConfig.xml";
+    /// <summary>
+    /// 读取当前奖品已经有几个玩家了.
+    /// </summary>
+    int ReadCurrentNumPlayer()
+    {
+        int num = 0;
+        string ele = "BaoJiangDt";
+        string atr = "CurrentPlayer";
+        string info = ReadFromFileXml(FileName, ele, atr);
+        if (info != null && info != "")
+        {
+            num = Convert.ToInt32(info);
+        }
+        else
+        {
+            WriteToFileXml(FileName, ele, atr, num.ToString());
+        }
+        return num;
+    }
+
+    /// <summary>
+    /// 写入当前奖品已经有几个玩家了.
+    /// </summary>
+    void WriteCurrentNumPlayer(int num)
+    {
+        string ele = "BaoJiangDt";
+        string atr = "CurrentPlayer";
+        WriteToFileXml(FileName, ele, atr, num.ToString());
+    }
+
+    /// <summary>
+    /// 读取当前奖池是否已经爆奖.
+    /// </summary>
+    bool ReadIsHaveBaoJiang()
+    {
+        int baoJiangInfo = 0;
+        string ele = "BaoJiangDt";
+        string attribute = "IsHaveBaoJiang";
+        string info = ReadFromFileXml(FileName, ele, attribute);
+        if (info != null && info != "")
+        {
+            baoJiangInfo = Convert.ToInt32(info);
+        }
+        else
+        {
+            WriteToFileXml(FileName, ele, attribute, baoJiangInfo.ToString());
+        }
+        return baoJiangInfo == 0 ? false : true;
+    }
+
+    /// <summary>
+    /// 写入当前奖池是否已经爆奖.
+    /// </summary>
+    void WriteIsHaveBaoJiang(bool isHaveBaoJiang)
+    {
+        int num = isHaveBaoJiang == true ? 1 : 0;
+        string ele = "BaoJiangDt";
+        string attribute = "IsHaveBaoJiang";
+        WriteToFileXml(FileName, ele, attribute, num.ToString());
+    }
+
+    /// <summary>
+    /// 创建爆奖数据信息.
+    /// </summary>
+    void CreatBaoJiangData(string filepath)
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+        XmlElement root = xmlDoc.CreateElement("ConfigBaoJiangData");
+        XmlElement elmNew = xmlDoc.CreateElement("BaoJiangDt");
+        root.AppendChild(elmNew);
+        xmlDoc.AppendChild(root);
+        xmlDoc.Save(filepath);
+        File.SetAttributes(filepath, FileAttributes.Normal);
+    }
+
+    /// <summary>
+    /// 写入单条数据.
+    /// </summary>
+    void WriteToFileXml(string fileName, string elementName, string attribute, string valueStr)
+    {
+        string filepath = Application.dataPath + "/" + fileName;
+#if UNITY_ANDROID
+		filepath = Application.persistentDataPath + "//" + fileName;
+#endif
+
+        //create file
+        if (!File.Exists(filepath))
+        {
+            CreatBaoJiangData(filepath);
+        }
+
+        //update value
+        if (File.Exists(filepath))
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(filepath);
+            XmlNodeList nodeList = xmlDoc.SelectSingleNode("ConfigBaoJiangData").ChildNodes;
+
+            foreach (XmlElement xe in nodeList)
+            {
+                if (xe.Name == elementName)
+                {
+                    xe.SetAttribute(attribute, valueStr);
+                    break;
+                }
+            }
+            File.SetAttributes(filepath, FileAttributes.Normal);
+            xmlDoc.Save(filepath);
+        }
+    }
+
+    /// <summary>
+    /// 读取单条数据.
+    /// </summary>
+    string ReadFromFileXml(string fileName, string elementName, string attribute)
+    {
+        string filepath = Application.dataPath + "/" + fileName;
+#if UNITY_ANDROID
+		//filepath = Application.persistentDataPath + "//" + fileName;
+#endif
+        string valueStr = null;
+        if (File.Exists(filepath))
+        {
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(filepath);
+                XmlNodeList nodeList = xmlDoc.SelectSingleNode("ConfigBaoJiangData").ChildNodes;
+                foreach (XmlElement xe in nodeList)
+                {
+                    if (xe.Name == elementName)
+                    {
+                        valueStr = xe.GetAttribute(attribute);
+                        break;
+                    }
+                }
+                File.SetAttributes(filepath, FileAttributes.Normal);
+                xmlDoc.Save(filepath);
+            }
+            catch (Exception exception)
+            {
+                File.SetAttributes(filepath, FileAttributes.Normal);
+                File.Delete(filepath);
+                SSDebug.LogError("error: xml was wrong! " + exception);
+            }
+        }
+        return valueStr;
+    }
+    #endregion
 }
