@@ -301,14 +301,16 @@ public class WebSocketSimpet : MonoBehaviour
 
     /// <summary>
     /// 当游戏中玩家续费倒计时结束之后,玩家仍然没有成功续费时,客户端需要发送"充值超时,请稍后重新扫码"的消息给服务器.
+    /// 支付超时踢人消息.
     /// </summary>
-    public void NetSendWXPadPlayerPayTimeOut(int userId)
+    public void NetSendWXPadPlayerPayTimeOutCloseConnect(int userId)
     {
         NetSendWXPadPlayerCloseConnect(userId);
     }
 
     /// <summary>
     /// 发送关闭游戏手柄的消息.
+    /// 踢人消息.
     /// </summary>
     void NetSendWXPadPlayerCloseConnect(int userId)
     {

@@ -3029,6 +3029,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadGamePlayerFull(userId);
                 }
             }
+
+            //发送踢人消息.
+            StartCoroutine(DelaySendWXPadPlayerCloseConnectMsg(userId));
         }
         
         /// <summary>
@@ -3095,7 +3098,25 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //并且将玩家信息踢出.
                     AddPayTimeOutData(userId);
                     StartCoroutine(DelayRemovePayTimeOutData(userId));
-                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOut(userId);
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOutCloseConnect(userId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 延迟发送踢人消息.
+        /// </summary>
+        IEnumerator DelaySendWXPadPlayerCloseConnectMsg(int userId)
+        {
+            yield return new WaitForSeconds(5f);
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                if (FindPayTimeOutData(userId) == null)
+                {
+                    //在游戏没有空余机位时延迟一定时间发送玩家被踢出的消息给服务器.
+                    //并且将玩家信息踢出.
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerPayTimeOutCloseConnect(userId);
                 }
             }
         }

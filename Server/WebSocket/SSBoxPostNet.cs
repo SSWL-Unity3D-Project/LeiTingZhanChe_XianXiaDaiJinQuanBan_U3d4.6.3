@@ -22,6 +22,7 @@ public class SSBoxPostNet : MonoBehaviour
     {
         Default = 0,                //默认手柄.
         LeiTingZhanChe = 1,         //雷霆战车手柄.
+        //LeiTingZhanChe = 99,         //雷霆战车手柄测试.
     }
     /// <summary>
     /// 游戏手柄枚举,红点点游戏码.
@@ -2387,9 +2388,13 @@ public class SSBoxPostNet : MonoBehaviour
 #else
         public string m_Url = "/xcx_backstage/game_back/get/setting_info?"; //新版本.
 #endif
-        public int LeiTingZhanCheGameCode = 1;
-        public GameConfigUrlData(string headUrl)
+        /// <summary>
+        /// 红点点游戏手柄代码.
+        /// </summary>
+        public int HDDGameCode = 1;
+        public GameConfigUrlData(SSBoxPostNet boxNet, string headUrl)
         {
+            HDDGameCode = (int)boxNet.m_GamePadState;
             m_HeadUrl = headUrl;
         }
 
@@ -2400,7 +2405,7 @@ public class SSBoxPostNet : MonoBehaviour
             {
                 case GamePadState.LeiTingZhanChe:
                     {
-                        gameCode = LeiTingZhanCheGameCode;
+                        gameCode = HDDGameCode;
                         break;
                     }
             }
@@ -2427,7 +2432,7 @@ public class SSBoxPostNet : MonoBehaviour
 
         if (m_BoxLoginData != null)
         {
-            GameConfigUrlData configUrl = new GameConfigUrlData(m_BoxLoginData.m_Address);
+            GameConfigUrlData configUrl = new GameConfigUrlData(this, m_BoxLoginData.m_Address);
             int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
             string url = configUrl.GetUrl(m_GamePadState, screenId);
             SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
