@@ -591,6 +591,8 @@ public class SSChouJiangUI : MonoBehaviour
         bool isCanJiBao = false;
         //彩池金额是否充足.
         bool isCaiChiEnough = false;
+        //该奖品是否可以爆奖按照人次.
+        bool isDaiJinQuanBaoJiang = false;
         //海底捞菜品券游戏.
         if (SSHaiDiLaoBaoJiang.GetInstance() != null)
         {
@@ -614,7 +616,12 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
 
-            if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true)
+            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+            {
+                isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+            }
+
+            if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
             {
                 //获得奖品2-战车01奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
@@ -643,7 +650,12 @@ public class SSChouJiangUI : MonoBehaviour
                     }
                 }
 
-                if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true)
+                if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                {
+                    isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                }
+
+                if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
                     //获得奖品3-战车02奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
@@ -663,7 +675,12 @@ public class SSChouJiangUI : MonoBehaviour
                     isCaiChiEnough = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetIsCaiChiEnough(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
                 }
 
-                if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true)
+                if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                {
+                    isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                }
+
+                if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
                     //获得奖品4-随机道具奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
