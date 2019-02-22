@@ -35,6 +35,16 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
         /// <summary>
+        /// 设置玩家微信头像url.
+        /// </summary>
+        void SetPlayerHeadUrl(int indexVal, string url)
+        {
+            if (indexVal > -1 && indexVal < m_PlayerHeadUrl.Length)
+            {
+                m_PlayerHeadUrl[indexVal] = url;
+            }
+        }
+        /// <summary>
         /// 微信小程序虚拟手柄.
         /// </summary>
         internal SSBoxPostNet.WeiXinShouBingEnum m_WXShouBingType
@@ -464,10 +474,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
             GamePlayerData playerDt = FindGamePlayerData(userId);
             if (playerDt != null)
             {
+                //ResetPlayerHeadUrl(playerDt.Index);
                 m_GamePlayerData.Remove(playerDt);
             }
         }
-        
+
         /// <summary>
         /// 删除玩家微信数据信息.
         /// </summary>
@@ -1676,7 +1687,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
                 
                 m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
-                m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
+                //m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
+                SetPlayerHeadUrl(indexPlayer, playerDt.m_PlayerWeiXinData.headUrl);
                 InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
             }
         }
@@ -1715,7 +1727,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
 
                 //m_GmWXLoginDt[indexVal].IsActiveGame = true;
-                m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
+                //m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
+                SetPlayerHeadUrl(indexVal, playerDt.m_PlayerWeiXinData.headUrl);
                 //InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
             }
             
@@ -2003,6 +2016,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     SendWXPadPlayerPayTimeOut(userId);
                     //清除玩家的扣费数据.
                     RemovePlayerPayData(userId);
+                    //删除玩家微信信息.
+                    RemoveGamePlayerData(userId);
                     yield break;
                 }
 
@@ -2151,7 +2166,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             m_GmWXLoginDt[indexPlayer].m_GamePadType = GamePadType.WeiXin_ShouBing;
 
                             m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
-                            m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
+                            //m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
+                            SetPlayerHeadUrl(indexPlayer, playerDt.m_PlayerWeiXinData.headUrl);
 
                             //当前有空余机位可以进行游戏.
                             //当前玩家的红点点游戏金额兑换为游戏币.

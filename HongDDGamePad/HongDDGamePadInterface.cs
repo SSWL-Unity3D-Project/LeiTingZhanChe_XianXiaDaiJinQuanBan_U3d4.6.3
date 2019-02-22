@@ -174,7 +174,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
             string url = "";
             if (m_HongDDGamePadCom != null)
             {
-                url = m_HongDDGamePadCom.m_PlayerHeadUrl[index];
+                if (index >= 0 && index < m_HongDDGamePadCom.m_PlayerHeadUrl.Length)
+                {
+                    url = m_HongDDGamePadCom.m_PlayerHeadUrl[index];
+                }
             }
             return url;
         }
