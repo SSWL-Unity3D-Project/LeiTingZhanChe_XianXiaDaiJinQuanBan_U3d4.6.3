@@ -79,6 +79,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
         if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
         {
             //冲击波子弹只进行一次范围伤害计算不用进行轮询更新.
+            UpdateRemoveChongJiBoAmmo();
             return;
         }
 
@@ -134,6 +135,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
 			if (checkCam != null)
             {
                 IsHitNpcAmmo = true;
+                //SSDebug.LogWarning("MoveAmmoOnCompelteITween ============== 55555555555555555");
                 MoveAmmoOnCompelteITween();
 				return true;
 			}
@@ -210,7 +212,15 @@ public class PlayerAmmoCtrl : MonoBehaviour
             if (isStopCheckHit == true)
             {
                 //停止子弹的伤害检测.
-                MoveAmmoOnCompelteITween();
+                if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+                {
+                    //冲击波子弹不允许调用MoveAmmoOnCompelteITween.
+                }
+                else
+                {
+                    //SSDebug.LogWarning("MoveAmmoOnCompelteITween ============== 44444444444444444");
+                    MoveAmmoOnCompelteITween();
+                }
             }
 		}
 
@@ -236,6 +246,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                     }
                     else
                     {
+                        //SSDebug.LogWarning("MoveAmmoOnCompelteITween ============== 333333333333333");
                         MoveAmmoOnCompelteITween();
                     }
                     isStopCheckHit = true;
@@ -251,8 +262,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
     //    IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
     //}
 
-    //static int TestChongJiBoCount = 0;
-	public void StartMoveAmmo(Vector3 firePos,
+    static int TestChongJiBoCount = 0;
+    public void StartMoveAmmo(Vector3 firePos,
         PlayerEnum playerIndex,
         XKPlayerAutoFire autoFireCom = null,
         NpcPathCtrl ammoMovePath = null,
@@ -279,14 +290,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		IsChuanJiaDanHitCamColForward = false;
         IsCreatAmmoParticle = false;
 
+        m_TimeLast = Time.time;
         ObjAmmo = gameObject;
-		if (!ObjAmmo.activeSelf) {
-			ObjAmmo.SetActive(true);
-			IsDestroyAmmo = false;
+        if (IsDestroyAmmo == true)
+        {
+            ObjAmmo.SetActive(true);
+            IsDestroyAmmo = false;
             IsHitNpcAmmo = false;
         }
 
-		AmmoTran = transform;
+        AmmoTran = transform;
 		PlayerState = playerIndex;
         if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
         {
@@ -296,9 +309,9 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
             }
             CheckPlayerAmmoForwardHitNpc();
-            DelayRemoveChongJiBoAmmo();
-            //TestChongJiBoCount++;
-            //SSDebug.LogWarning("TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
+            //StartCoroutine(DelayRemoveChongJiBoAmmo());
+            TestChongJiBoCount++;
+            SSDebug.LogWarning("TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
         }
         else
         {
@@ -308,12 +321,20 @@ public class PlayerAmmoCtrl : MonoBehaviour
 	}
 
     /// <summary>
-    /// 延迟删除冲击波子弹.
+    /// 时间记录.
     /// </summary>
-    IEnumerator DelayRemoveChongJiBoAmmo()
+    float m_TimeLast = 0f;
+    /// <summary>
+    /// 持续检测是否可以隐藏冲击波子弹.
+    /// </summary>
+    void UpdateRemoveChongJiBoAmmo()
     {
-        yield return new WaitForSeconds(LiveTime);
-        MoveAmmoOnCompelteITween();
+        if (Time.time - m_TimeLast >= LiveTime && IsDestroyAmmo == false)
+        {
+            m_TimeLast = Time.time;
+            //SSDebug.LogWarning("MoveAmmoOnCompelteITween ============== 222222222222222");
+            MoveAmmoOnCompelteITween();
+        }
     }
 
 	void ResetTrailScriptInfo()
@@ -818,10 +839,11 @@ public class PlayerAmmoCtrl : MonoBehaviour
     }
 	void DaleyHiddenPlayerAmmo()
     {
-        //if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
-        //{
-        //    SSDebug.LogWarning("**** TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
-        //}
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        {
+            //SSDebug.LogWarning("**** TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
+            SSDebug.LogWarning("**** TestChongJiBoAmmo AmmoActive == " + gameObject.activeInHierarchy);
+        }
         gameObject.SetActive(false);
     }
 
@@ -887,6 +909,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                         {
                             isBreak = true;
                             obj = col.gameObject;
+                            //SSDebug.LogWarning("MoveAmmoOnCompelteITween ============== 111111111111");
                             MoveAmmoOnCompelteITween();
                             break;
                         }
