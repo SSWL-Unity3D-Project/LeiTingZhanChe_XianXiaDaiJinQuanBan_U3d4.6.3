@@ -341,6 +341,12 @@ public class SSPingJiUI : MonoBehaviour
         {
             if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.A)
             {
+                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                {
+                    //此时需要对微信玩家进行的游戏时长信息发送给红点点服务器.
+                    pcvr.GetInstance().m_HongDDGamePadInterface.SetPlayerEndGameTime(m_IndexPlayer);
+                }
+
                 //设置玩家状态信息.
                 XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
                 //玩家评级过低,显示倒计时界面.

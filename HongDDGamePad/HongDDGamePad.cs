@@ -1,4 +1,6 @@
-﻿//#define TEST_DEBUG_PLAYER_PAD_INFO
+﻿//#define USE_HDD_PAD_BT_ACTIVE_PLAYER //使用红点点手柄按键消息激活游戏主角
+#define USE_HDD_PAD_LOGIN_MSG＿ACTIVE_PLAYER //使用红点点手柄登陆消息激活游戏主角
+//#define TEST_DEBUG_PLAYER_PAD_INFO
 //#define USE_WX_GAME_PAD_ACTIVE_PLAYER
 using UnityEngine;
 using System.Collections;
@@ -563,7 +565,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
 
             //设置玩家结束游戏的时间.
-            SetPlayerEndGameTime(indexPlayer);
+            //SetPlayerEndGameTime(indexPlayer);
         }
 
         /// <summary>
@@ -596,7 +598,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 int time = 30;
                 if (endGameTime > startGameTime)
                 {
-                    time = (int)(endGameTime - startGameTime);
+                    time = (int)(endGameTime - startGameTime) + 6;
                 }
                 return time;
             }
@@ -631,7 +633,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 设置玩家结束游戏时间.
         /// </summary>
-        void SetPlayerEndGameTime(PlayerEnum indexPlayer)
+        internal void SetPlayerEndGameTime(PlayerEnum indexPlayer)
         {
             int indexVal = (int)indexPlayer - 1;
             if (indexVal < 0 || indexVal >= m_PlayerPlayGameTimeDtArray.Length)
@@ -937,6 +939,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
 
+#if USE_HDD_PAD_BT_ACTIVE_PLAYER //使用红点点手柄按键消息激活游戏主角
         /// <summary>
         /// 发射按键响应.
         /// </summary>
@@ -1070,6 +1073,143 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
         }
+#endif
+
+#if USE_HDD_PAD_LOGIN_MSG＿ACTIVE_PLAYER //使用红点点手柄登陆消息激活游戏主角
+        /// <summary>
+        /// 发射按键响应.
+        /// </summary>
+        private void OnEventActionOperation(string val, int userId)
+        {
+            //bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
+            //if (isHaveEmptyJiWei == false)
+            //{
+            //    //当前没有空余机位.
+            //    SendWXPadGamePlayerFull(userId);
+            //    return;
+            //}
+
+            //Debug.Log("Unity:"+"pcvr::OnEventActionOperation -> userId " + userId + ", val " + val);
+            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => { return dt.m_PlayerWeiXinData.userId.Equals(userId); });
+            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
+            {
+                //Debug.Log("Unity:"+"OnEventActionOperation -> playerIndex == " + playerDt.Index);
+                playerDt.IsExitWeiXin = false;
+                if (m_IndexPlayerActiveGameState[playerDt.Index] == (int)PlayerActiveState.JiHuo)
+                {
+                    //处于激活状态的玩家才可以进行游戏操作.
+                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    {
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.DOWN);
+#endif
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireAUp.ToString()
+                        || val == PlayerShouBingFireBt.fireXUp.ToString())
+                    {
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.UP);
+#endif
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.DOWN);
+#endif
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBUp.ToString()
+                        || val == PlayerShouBingFireBt.fireYUp.ToString())
+                    {
+                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+#if TEST_DEBUG_PLAYER_PAD_INFO
+                        OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.UP);
+#endif
+                    }
+                }
+                else
+                {
+#if USE_WX_GAME_PAD_ACTIVE_PLAYER
+                    //test 通过微信游戏手柄的按键消息来激活对应玩家的游戏.
+                    //处于没有激活状态的玩家才可以进行游戏操作.
+                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    {
+                        OnClickWXGamePadBt(pcvr.ButtonState.DOWN, userId);
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        OnClickWXGamePadBt(pcvr.ButtonState.DOWN, userId);
+                        InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+                    }
+                    //test
+#else
+                    bool isSendMsg = false;
+                    //玩家币值不够,需要拉起微信游戏手柄的充值界面.
+                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    {
+                        //SendWXPadShowTopUpPanel(userId);
+                        isSendMsg = true;
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        //SendWXPadShowTopUpPanel(userId);
+                        isSendMsg = true;
+                    }
+
+                    if (isSendMsg == true)
+                    {
+                        PlayerEnum indexPlayer = (PlayerEnum)(playerDt.Index + 1);
+                        DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(indexPlayer);
+                        if (daoJiShiCom != null)
+                        {
+                            if (daoJiShiCom.GetIsPlayDaoJishi() == true && daoJiShiCom.DaoJiShiCount > 8)
+                            {
+                                //倒计时刚开始显示,还没有到8时,不进行消息发送.
+                                isSendMsg = false;
+                            }
+
+                            if (isSendMsg == true)
+                            {
+                                //玩家主动放弃支付.
+                                if (daoJiShiCom.GetIsPlayDaoJishi() == true)
+                                {
+                                    //游戏结束倒计时播放中
+                                    daoJiShiCom.WXPlayerStopGameDaoJiShi();
+                                }
+                                else
+                                {
+                                    //游戏结束倒计时没有播放时.
+                                    OnPlayerGameDaoJiShiOver(indexPlayer);
+                                }
+                                SendWXPadPlayerPayTimeOut(userId);
+                            }
+                        }
+                    }
+#endif
+                }
+            }
+        }
+#endif
 
         /// <summary>
         /// 清理玩家的按键和移动信息.
@@ -1504,6 +1644,270 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
 
+#if USE_HDD_PAD_BT_ACTIVE_PLAYER //使用红点点手柄按键消息激活游戏主角
+        private void OnEventPlayerLoginBox(WebSocketSimpet.PlayerWeiXinData val)
+        {
+            Debug.Log("Unity:" + "pcvr::OnEventPlayerLoginBox -> userName " + val.userName + ", userId " + val.userId
+                + ", time == " + DateTime.Now.ToString());
+            int indexValTmp = -1;
+            GameExitPadPlayerData playerExitPadDt = FindExitPadPlayerData(val.userId);
+            if (playerExitPadDt != null)
+            {
+                //用于玩家新进入后激活游戏机位的数据.
+                indexValTmp = RemoveExitPadPlayerData(val.userId);
+                //float timeLast = playerExitPadDt.timeLast;
+                if (Time.time - playerExitPadDt.timeLast < 1.5f)
+                {
+                    SSDebug.LogWarning("OnEventPlayerLoginBox -> this playerPad have been yaRu shouji houTai......");
+                    return;
+                }
+            }
+
+            int indexPlayer = GetActivePlayerIndex();
+            if (indexPlayer < -1 || indexPlayer >= m_IndexPlayerActiveGameState.Length)
+            {
+                //当前机位没有空余机位.
+            }
+            else
+            {
+                GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
+                    if (dt.m_PlayerWeiXinData != null)
+                    {
+                        return dt.m_PlayerWeiXinData.userId.Equals(val.userId);
+                    }
+                    return dt.m_PlayerWeiXinData.Equals(val);
+                });
+
+                //当前机位有空余机位.
+                if (m_HongDDGamePadWXPay != null)
+                {
+                    //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
+                    if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
+                    {
+                        if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(val.userId) == true)
+                        {
+                            //该玩家可以免费试玩游戏.
+                            //给玩家添加一个微信游戏币.
+                            AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
+                            //直接打开微信小程序游戏手柄.
+                            //m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                            CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance((PlayerEnum)(indexPlayer + 1));
+                            if (playerCoinCom != null)
+                            {
+                                playerCoinCom.SetActiveMianFeiTiYanUI(true);
+                            }
+                            //免费体验游戏的玩家.
+                            playerDt.IsMianFeiTiYanPlayer = true;
+
+                            //记录玩家登陆游戏的信息.
+                            if (m_SSBoxPostNet != null && val != null)
+                            {
+                                //首次免费玩家.
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(val.userId, val.userName, SSBoxPostNet.FuFeiState.ShouCiMianFei);
+                            }
+                        }
+                        else
+                        {
+                            //该玩家不可以试玩游戏.
+                            //拉起玩家手机微信小程序支付界面.
+                            m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+                            //测试:直接给玩家2个游戏币.
+                            //AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
+
+                            //获取微信玩家的红点点游戏账户数据.
+                            GetWXPlayerHddPayData(val.userId);
+                            playerDt.IsMianFeiTiYanPlayer = false;
+                            playerDt.IsGetWXPlayerHddPayData = true;
+                        }
+                    }
+                    else
+                    {
+                        //拉起玩家手机微信小程序支付界面.
+                        m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                        //获取微信玩家的红点点游戏账户数据.
+                        GetWXPlayerHddPayData(val.userId);
+                        playerDt.IsMianFeiTiYanPlayer = false;
+                        playerDt.IsGetWXPlayerHddPayData = true;
+                    }
+                }
+
+#if NO_USE_CODE
+            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
+                if (dt.m_PlayerWeiXinData != null)
+                {
+                    return dt.m_PlayerWeiXinData.userId.Equals(val.userId);
+                }
+                return dt.m_PlayerWeiXinData.Equals(val);
+            });
+
+            //发送微信玩家获得的游戏代金券信息给服务器.
+            //SendPostHddPlayerCouponInfo(val.userId, 1);//test.
+
+            int indexPlayer = -1;
+            bool isGamePlayerFull = false; //游戏激活人数是否已经满了.
+            bool isActivePlayer = false;
+            if (playerDt == null)
+            {
+                if (indexValTmp != -1)
+                {
+                    indexPlayer = indexValTmp;
+                }
+                else
+                {
+                    indexPlayer = GetActivePlayerIndex();
+                }
+
+                if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
+                {
+                    Debug.Log("Unity:" + "Active player, indexPlayer == " + indexPlayer);
+                    playerDt = new GamePlayerData();
+                    playerDt.m_PlayerWeiXinData = val;
+                    playerDt.Index = indexPlayer;
+                    m_GamePlayerData.Add(playerDt);
+                    isActivePlayer = true;
+                    m_GmWXLoginDt[indexPlayer].IsLoginWX = true;
+                    m_GmWXLoginDt[indexPlayer].m_GamePadType = GamePadType.WeiXin_ShouBing;
+                }
+                else
+                {
+                    //游戏激活人数已满.
+                    Debug.Log("Unity:" + "have not empty player!");
+                    isGamePlayerFull = true;
+                }
+            }
+            else
+            {
+                SSDebug.Log("player have active game!");
+                playerDt.IsExitWeiXin = false;
+                if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
+                {
+                    PlayerActiveState playerSt = (PlayerActiveState)m_IndexPlayerActiveGameState[playerDt.Index];
+                    switch (playerSt)
+                    {
+                        case PlayerActiveState.WeiJiHuo:
+                            {
+                                isActivePlayer = true;
+                                indexPlayer = playerDt.Index;
+                                m_GmWXLoginDt[indexPlayer].IsLoginWX = true;
+                                m_GmWXLoginDt[indexPlayer].m_GamePadType = GamePadType.WeiXin_ShouBing;
+                                break;
+                            }
+                        case PlayerActiveState.JiHuo:
+                            {
+                                GamePlayerData playerTmpDt = m_GamePlayerData.Find((dt) =>
+                                {
+                                    return dt.Index.Equals(playerDt.Index);
+                                });
+
+                                if (playerTmpDt != null
+                                    && playerTmpDt.m_PlayerWeiXinData != null
+                                    && val.userId == playerTmpDt.m_PlayerWeiXinData.userId)
+                                {
+                                    Debug.Log("Unity: " + playerTmpDt.m_PlayerWeiXinData.userName + " have active " + " player!");
+                                }
+                                else
+                                {
+                                    indexPlayer = GetActivePlayerIndex();
+                                    if (indexPlayer > -1 && indexPlayer < m_IndexPlayerActiveGameState.Length)
+                                    {
+                                        Debug.Log("Unity: player active -> indexPlayer == " + indexPlayer);
+                                        isActivePlayer = true;
+                                        playerDt.Index = indexPlayer;
+                                        m_GmWXLoginDt[indexPlayer].IsLoginWX = true;
+                                        m_GmWXLoginDt[indexPlayer].m_GamePadType = GamePadType.WeiXin_ShouBing;
+                                    }
+                                    else
+                                    {
+                                        //游戏激活人数已满.
+                                        Debug.Log("Unity:" + " ---> have not empty player!");
+                                        isGamePlayerFull = true;
+                                    }
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
+
+            if (isGamePlayerFull == true)
+            {
+                //if (m_HongDDGamePadWXPay != null)
+                //{
+                //    //游戏激活人数已满.
+                //    m_HongDDGamePadWXPay.CToS_GamePlayerIsFull("");
+                //}
+                //游戏激活人数已满.
+                SendWXPadGamePlayerFull(val.userId);
+            }
+
+            if (isActivePlayer)
+            {
+                if (m_HongDDGamePadWXPay != null)
+                {
+                    //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
+                    if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
+                    {
+                        if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(val.userId) == true)
+                        {
+                            //该玩家可以免费试玩游戏.
+                            //给玩家添加一个微信游戏币.
+                            AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
+                            //直接打开微信小程序游戏手柄.
+                            //m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                            CoinPlayerCtrl playerCoinCom = CoinPlayerCtrl.GetInstance((PlayerEnum)(indexPlayer + 1));
+                            if (playerCoinCom != null)
+                            {
+                                playerCoinCom.SetActiveMianFeiTiYanUI(true);
+                            }
+                            //免费体验游戏的玩家.
+                            playerDt.IsMianFeiTiYanPlayer = true;
+
+                            //记录玩家登陆游戏的信息.
+                            if (m_SSBoxPostNet != null && val != null)
+                            {
+                                //首次免费玩家.
+                                m_SSBoxPostNet.HttpSendPostUserLoginInfo(val.userId, val.userName, SSBoxPostNet.FuFeiState.ShouCiMianFei);
+                            }
+                        }
+                        else
+                        {
+                            //该玩家不可以试玩游戏.
+                            //拉起玩家手机微信小程序支付界面.
+                            m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+                            //测试:直接给玩家2个游戏币.
+                            //AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
+
+                            //获取微信玩家的红点点游戏账户数据.
+                            GetWXPlayerHddPayData(val.userId);
+                            playerDt.IsMianFeiTiYanPlayer = false;
+                            playerDt.IsGetWXPlayerHddPayData = true;
+                        }
+                    }
+                    else
+                    {
+                        //拉起玩家手机微信小程序支付界面.
+                        m_HongDDGamePadWXPay.CToS_GameIsCanFreePlay("");
+
+                        //获取微信玩家的红点点游戏账户数据.
+                        GetWXPlayerHddPayData(val.userId);
+                        playerDt.IsMianFeiTiYanPlayer = false;
+                        playerDt.IsGetWXPlayerHddPayData = true;
+                    }
+                }
+
+                m_GmWXLoginDt[indexPlayer].IsActiveGame = true;
+                //m_PlayerHeadUrl[indexPlayer] = playerDt.m_PlayerWeiXinData.headUrl;
+                SetPlayerHeadUrl(indexPlayer, playerDt.m_PlayerWeiXinData.headUrl);
+                InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
+            }
+#endif
+        }
+#endif
+
+#if USE_HDD_PAD_LOGIN_MSG＿ACTIVE_PLAYER //使用红点点手柄登陆消息激活游戏主角
         private void OnEventPlayerLoginBox(WebSocketSimpet.PlayerWeiXinData val)
         {
             Debug.Log("Unity:" + "pcvr::OnEventPlayerLoginBox -> userName " + val.userName + ", userId " + val.userId
@@ -1692,6 +2096,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 InputEventCtrl.GetInstance().OnClickGameStartBt(indexPlayer);
             }
         }
+#endif
 
         /// <summary>
         /// 玩家获得免费再玩一局游戏奖品之后,使玩家免费再玩一局游戏.

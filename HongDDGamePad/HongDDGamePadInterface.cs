@@ -100,6 +100,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 设置玩家结束游戏时间.
+        /// </summary>
+        internal void SetPlayerEndGameTime(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                //设置玩家结束游戏的时间.
+                m_HongDDGamePadCom.SetPlayerEndGameTime(indexPlayer);
+            }
+        }
+
+        /// <summary>
         /// 设置玩家激活状态信息.
         /// </summary>
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)

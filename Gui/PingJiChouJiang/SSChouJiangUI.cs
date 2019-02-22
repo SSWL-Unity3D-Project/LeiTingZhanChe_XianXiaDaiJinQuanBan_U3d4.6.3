@@ -958,6 +958,12 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
         }
+
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            //此时需要对微信玩家进行的游戏时长信息发送给红点点服务器.
+            pcvr.GetInstance().m_HongDDGamePadInterface.SetPlayerEndGameTime(m_IndexPlayer);
+        }
     }
 
     bool IsRemoveSelf = false;
