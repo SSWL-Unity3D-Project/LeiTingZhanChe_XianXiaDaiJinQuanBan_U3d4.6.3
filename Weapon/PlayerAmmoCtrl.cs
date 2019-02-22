@@ -230,7 +230,14 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 {
                     //SSDebug.Log("hitObjNpc ===================================== " + hitObjNpc.name);
                     IsHitNpcAmmo = true;
-                    MoveAmmoOnCompelteITween();
+                    if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+                    {
+                        //冲击波子弹不允许在这里调用MoveAmmoOnCompelteITween,否则会被瞬间删除.
+                    }
+                    else
+                    {
+                        MoveAmmoOnCompelteITween();
+                    }
                     isStopCheckHit = true;
                 }
             }
@@ -244,6 +251,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
     //    IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
     //}
 
+    //static int TestChongJiBoCount = 0;
 	public void StartMoveAmmo(Vector3 firePos,
         PlayerEnum playerIndex,
         XKPlayerAutoFire autoFireCom = null,
@@ -283,8 +291,14 @@ public class PlayerAmmoCtrl : MonoBehaviour
         if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
         {
             //冲击波子弹不用运动,只需要检测一次范围伤害.
+            if (m_AmmmoData != null && autoFireCom != null)
+            {
+                m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
+            }
             CheckPlayerAmmoForwardHitNpc();
             DelayRemoveChongJiBoAmmo();
+            //TestChongJiBoCount++;
+            //SSDebug.LogWarning("TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
         }
         else
         {
@@ -553,8 +567,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
 		if (objParticle == null) {
 			return;
 		}
-		
-		GameObject obj = (GameObject)Instantiate(objParticle, AmmoTran.position, AmmoTran.rotation);
+
+        Vector3 pos = AmmoTran.position;
+        Quaternion rot = AmmoTran.rotation;
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo && healthScript != null && healthScript.DeathExplodePoint != null)
+        {
+            //冲击波子弹.
+            pos = healthScript.DeathExplodePoint.position;
+            rot = healthScript.DeathExplodePoint.rotation;
+        }
+		GameObject obj = (GameObject)Instantiate(objParticle, pos, rot);
 		Transform tran = obj.transform;
 		tran.parent = XkGameCtrl.PlayerAmmoArray;
 		XkGameCtrl.CheckObjDestroyThisTimed(obj);
@@ -795,9 +817,13 @@ public class PlayerAmmoCtrl : MonoBehaviour
         get { return _IsHitNpcAmmo; }
     }
 	void DaleyHiddenPlayerAmmo()
-	{
-		gameObject.SetActive(false);
-	}
+    {
+        //if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        //{
+        //    SSDebug.LogWarning("**** TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
+        //}
+        gameObject.SetActive(false);
+    }
 
 	void CheckPlayerAmmoForwardHitNpc()
 	{
