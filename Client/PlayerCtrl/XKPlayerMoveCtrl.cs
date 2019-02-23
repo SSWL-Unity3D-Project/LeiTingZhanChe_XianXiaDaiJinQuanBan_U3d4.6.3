@@ -177,32 +177,42 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	}
 
 	void FixedUpdate()
-	{
-		if (!IsMoveToTiaoYueDian) {
-			switch (TKMoveSt) {
-			case TKMoveState.U_FangXiangPan:
-				CheckPlayerFangXiang();
-				CheckPlayerYouMen();
-				break;
-			case TKMoveState.YaoGanBan:
-				CheckPlayerYaoGanInput();
-				break;
-			}
-			return;
-		}
+    {
+        switch (TKMoveSt)
+        {
+            case TKMoveState.U_FangXiangPan:
+                CheckPlayerFangXiang();
+                CheckPlayerYouMen();
+                break;
+            case TKMoveState.YaoGanBan:
+                CheckPlayerYaoGanInput();
+                break;
+        }
+        //if (!IsMoveToTiaoYueDian) {
+		//	switch (TKMoveSt) {
+		//	case TKMoveState.U_FangXiangPan:
+		//		CheckPlayerFangXiang();
+		//		CheckPlayerYouMen();
+		//		break;
+		//	case TKMoveState.YaoGanBan:
+		//		CheckPlayerYaoGanInput();
+		//		break;
+		//	}
+		//	return;
+		//}
 		//PlayerTran.position = TiaoBanObjAy[1].transform.position;
-		PlayerTran.position = Vector3.Lerp(PlayerTran.position,
-		                                   TiaoBanObjAy[1].transform.position,
-		                                   Time.deltaTime * 20f);
+		//PlayerTran.position = Vector3.Lerp(PlayerTran.position,
+		//                                   TiaoBanObjAy[1].transform.position,
+		//                                   Time.deltaTime * 20f);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (IsMoveToTiaoYueDian) {
+		//if (IsMoveToTiaoYueDian) {
 			//PlayerTran.position = TiaoBanObjAy[1].transform.position;
-			return;
-		}
+		//	return;
+		//}
 
 		if (!XkGameCtrl.GetInstance().IsCartoonShootTest) {
 			CheckPlayerIsResetPosition();
@@ -227,13 +237,13 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	{
 		//Debug.Log("Unity:"+"OnCollisionEnter -> colName "+collision.gameObject.name);
 		CheckPlayerIsOpenCheckPaoWuXianTerrain(collision.gameObject);
-		if (IsMoveToTiaoYueDian) {
+		//if (IsMoveToTiaoYueDian) {
 //			if (playerFanWeiScript != null) {
 //				OnHitMoveFanWeiByPaoWuXianRun();
 //				MovePlayerOverPaoWuXianByITween(1);
 //			}
-			return;
-		}
+		//	return;
+		//}
 
         XKPlayerMvFanWei playerFanWeiScript = collision.transform.GetComponentInParent<XKPlayerMvFanWei>();
         if (playerFanWeiScript != null) {
@@ -254,9 +264,9 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	
 	void OnCollisionExit(Collision collision)
 	{
-		if (IsMoveToTiaoYueDian) {
-			return;
-		}
+		//if (IsMoveToTiaoYueDian) {
+		//	return;
+		//}
 
 		XKPlayerMvFanWei playerFanWeiScript = collision.transform.GetComponentInParent<XKPlayerMvFanWei>();
 		if (playerFanWeiScript != null) {
@@ -1470,12 +1480,12 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	}
 
 	public GameObject PlayerCore;
-	bool IsMoveToTiaoYueDian;
+	//bool IsMoveToTiaoYueDian;
 	public GameObject[] TiaoBanObjAy;
-	public bool GetIsMoveToTiaoYueDian()
-	{
-		return IsMoveToTiaoYueDian;	
-	}
+	//public bool GetIsMoveToTiaoYueDian()
+	//{
+	//	return IsMoveToTiaoYueDian;	
+	//}
 
 	public void MakePlayerToTiaoYueDian(Transform tiaoYueDianTr)
 	{
@@ -1509,9 +1519,9 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public void MovePlayerOverPaoWuXianByITween(int key = 0)
 	{
-		if (!IsMoveToTiaoYueDian) {
-			return;
-		}
+		//if (!IsMoveToTiaoYueDian) {
+		//	return;
+		//}
 		ClearItweenScript(TiaoBanObjAy[0]);
 		ClearItweenScript(TiaoBanObjAy[1]);
 

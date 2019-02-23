@@ -91,11 +91,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// 当展示玩家评级UI时进入此函数.
         /// 此时需要对微信付费玩家进行红点点账户扣费.
         /// </summary>
-        internal void OnDisplayPlayerPingJiUI(PlayerEnum indexPlayer)
+        internal void OnNeedSubPlayerMoney(PlayerEnum indexPlayer)
         {
             if (m_HongDDGamePadCom != null)
             {
-                m_HongDDGamePadCom.OnDisplayPlayerPingJiUI(indexPlayer);
+                m_HongDDGamePadCom.OnNeedSubPlayerMoney(indexPlayer);
             }
         }
 
@@ -170,13 +170,13 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 添加微信玩家游戏币.
         /// </summary>
-        internal void AddWeiXinGameCoinToPlayer(int userId, int coin)
-        {
-            if (m_HongDDGamePadCom != null)
-            {
-                m_HongDDGamePadCom.AddWeiXinGameCoinToPlayer(userId, coin);
-            }
-        }
+        //internal void AddWeiXinGameCoinToPlayer(int userId, int coin)
+        //{
+        //    if (m_HongDDGamePadCom != null)
+        //    {
+        //        m_HongDDGamePadCom.AddWeiXinGameCoinToPlayer(userId, coin);
+        //    }
+        //}
 
         /// <summary>
         /// 获取玩家微信头像url.

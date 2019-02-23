@@ -169,7 +169,7 @@ public class WebSocketSimpet : MonoBehaviour
             // Send message to the server.
             _wabData.WebSocket.Send(msgToSend);
 #if UNITY_EDITOR
-            Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend);
+            //Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend);
 #endif
         }
         else
@@ -274,7 +274,7 @@ public class WebSocketSimpet : MonoBehaviour
             Debug.Log("NetSendWeiXinPadGamePlayerFull:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
-        NetSendWXPadPlayerCloseConnect(userId);
+        //NetSendWXPadPlayerCloseConnect(userId);
     }
     
     /// <summary>
@@ -343,7 +343,7 @@ public class WebSocketSimpet : MonoBehaviour
             if (message == m_XinTiaoReturnMsg)
             {
 #if UNITY_EDITOR
-                Debug.Log("Unity:"+"XinTiao Check Success!");
+                //Debug.Log("Unity:"+"XinTiao Check Success!");
 #endif
                 IsCheckXinTiaoMsg = false;
                 //删除网络故障,请检查网络并重启游戏.

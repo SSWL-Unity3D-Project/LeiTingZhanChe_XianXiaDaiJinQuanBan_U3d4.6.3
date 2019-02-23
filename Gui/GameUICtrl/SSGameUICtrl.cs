@@ -1697,7 +1697,7 @@ public class SSGameUICtrl : SSGameMono
                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
                 {
                     //此时需要对微信付费玩家进行红点点账户扣费.
-                    pcvr.GetInstance().m_HongDDGamePadInterface.OnDisplayPlayerPingJiUI(indexPlayer);
+                    pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(indexPlayer);
                 }
             }
             else

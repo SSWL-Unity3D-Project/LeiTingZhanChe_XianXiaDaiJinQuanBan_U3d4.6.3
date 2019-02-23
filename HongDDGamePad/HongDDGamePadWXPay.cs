@@ -180,7 +180,22 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return false;
             }
 
-            bool isCanPlayGame = AddFreePlayGamePlayerInfo(userId);
+            bool isCanPlayGame = GetPlayerIsCanFreePlayGame(userId);
+            return isCanPlayGame;
+        }
+        
+        /// <summary>
+        /// 检测登录游戏的玩家是否可以免费试玩游戏.
+        /// </summary>
+        public bool CheckLoginPlayerIsCanFreePlayGame(int userId)
+        {
+            if (m_GameConfigData.MianFeiShiWanCount == 0)
+            {
+                //后台配置信息里免费试玩次数为0.
+                return false;
+            }
+
+            bool isCanPlayGame = GetLoginPlayerIsCanFreePlayGame(userId);
             return isCanPlayGame;
         }
 
@@ -215,9 +230,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         int m_MaxPlayerNum = 90;
         /// <summary>
-        /// 添加免费试玩游戏的玩家信息.
+        /// 获取玩家是否可以免费试玩游戏.
         /// </summary>
-        bool AddFreePlayGamePlayerInfo(int userId)
+        bool GetPlayerIsCanFreePlayGame(int userId)
         {
             bool isCanFreePlayGame = false;
             FreePlayGamePlayerData playerDt = m_FreePlayGamePlayerDataList.Find((dt) => { return dt.UserId.Equals(userId); });
@@ -254,14 +269,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 if (dTime > minTime)
                 {
                     playerDt.TimeVal = System.DateTime.Now;
-                    //时间差值大于20分钟后,可以被激活.
+                    //时间差值大于免费间隔时间后,可以被激活.
                     //可以免费试玩游戏.
                     isCanFreePlayGame = true;
 
                     //将玩家信息存入配置信息文件中.
                     WriteGamePlayerData();
                 }
-                SSDebug.Log("AddFreePlayGamePlayerInfo -> dTime =============== " + dTime + "s");
+                SSDebug.Log("GetPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
             }
 
             //yyyy - MM - dd hh: mm: ss
@@ -272,6 +287,51 @@ namespace Assets.XKGame.Script.HongDDGamePad
             //System.TimeSpan ts00 = ts21.Subtract(ts11).Duration();
             //int dTime11 = ts00.Hours * 3600 + ts00.Minutes * 60 + ts00.Seconds;
             //SSDebug.Log("AddFreePlayGamePlayerInfo -> dTime =============== " + dTime11 + "s");
+            return isCanFreePlayGame;
+        }
+
+        /// <summary>
+        /// 获取登录游戏的玩家是否可以免费试玩游戏.
+        /// </summary>
+        bool GetLoginPlayerIsCanFreePlayGame(int userId)
+        {
+            bool isCanFreePlayGame = false;
+            FreePlayGamePlayerData playerDt = m_FreePlayGamePlayerDataList.Find((dt) => { return dt.UserId.Equals(userId); });
+            if (playerDt == null)
+            {
+                //可以免费试玩游戏.
+                isCanFreePlayGame = true;
+            }
+            else
+            {
+                //数据列表里有玩家的记录信息.
+                System.DateTime timeNow = System.DateTime.Now;
+                System.DateTime timeRecord = playerDt.TimeVal;
+
+                System.TimeSpan ts1 = new System.TimeSpan(timeNow.Ticks);
+                System.TimeSpan ts2 = new System.TimeSpan(timeRecord.Ticks);
+                System.TimeSpan ts = ts2.Subtract(ts1).Duration();
+
+                int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                int minTime = XKGlobalData.GetInstance().m_TimeMianFeiNum * 60; //秒.
+                if (dTime > minTime)
+                {
+                    //playerDt.TimeVal = System.DateTime.Now;
+                    //时间差值大于免费间隔时间后,可以被激活.
+                    //可以免费试玩游戏.
+                    isCanFreePlayGame = true;
+                }
+                SSDebug.LogWarning("GetLoginPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
+            }
+
+            //yyyy - MM - dd hh: mm: ss
+            //System.DateTime t1 = System.DateTime.Now;
+            //System.DateTime t2 = System.Convert.ToDateTime("2019-01-07 13:45:10");
+            //System.TimeSpan ts11 = new System.TimeSpan(t1.Ticks);
+            //System.TimeSpan ts21 = new System.TimeSpan(t2.Ticks);
+            //System.TimeSpan ts00 = ts21.Subtract(ts11).Duration();
+            //int dTime11 = ts00.Hours * 3600 + ts00.Minutes * 60 + ts00.Seconds;
+            //SSDebug.Log("GetLoginPlayerIsCanFreePlayGame -> dTime =============== " + dTime11 + "s");
             return isCanFreePlayGame;
         }
         #endregion
@@ -352,38 +412,38 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// 如果玩家充值成功,需要服务器返回给游戏客户端的消息中包含玩家选择的复活次数信息,方便游戏给玩家
         /// 分配对应的复活次数信息.
         /// </summary>
-        public void SToC_PlayerPayStateInfo(string args)
-        {
-            UnityEngine.Debug.Log("Unity: SToC_PlayerPayStateInfo -> args == " + args);
-            bool isPaySuccess = false;
-            isPaySuccess = true; //test
-            if (isPaySuccess == true)
-            {
-                //支付成功.
-                int userId = 0;
-                int fuHuoCiShu = 2;
-                int gameCoin = fuHuoCiShu + 1;
-                if (pcvr.GetInstance() != null)
-                {
-                    pcvr.GetInstance().m_HongDDGamePadInterface.AddWeiXinGameCoinToPlayer(userId, gameCoin);
-                }
-            }
-            else
-            {
-                //支付失败.
-                bool isPayTimeOut = false; //是否支付超时.
-                if (isPayTimeOut == true)
-                {
-                    //支付超时.
-                    //剔除占位而没有付款的玩家.
-                    int userId = 0;
-                    if (pcvr.GetInstance() != null)
-                    {
-                        pcvr.GetInstance().m_HongDDGamePadInterface.RemoveWeiXinPadPlayerData(userId);
-                    }
-                }
-            }
-        }
+        //public void SToC_PlayerPayStateInfo(string args)
+        //{
+        //    UnityEngine.Debug.Log("Unity: SToC_PlayerPayStateInfo -> args == " + args);
+        //    bool isPaySuccess = false;
+        //    isPaySuccess = true; //test
+        //    if (isPaySuccess == true)
+        //    {
+        //        //支付成功.
+        //        int userId = 0;
+        //        int fuHuoCiShu = 2;
+        //        int gameCoin = fuHuoCiShu + 1;
+        //        if (pcvr.GetInstance() != null)
+        //        {
+        //            pcvr.GetInstance().m_HongDDGamePadInterface.AddWeiXinGameCoinToPlayer(userId, gameCoin);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //支付失败.
+        //        bool isPayTimeOut = false; //是否支付超时.
+        //        if (isPayTimeOut == true)
+        //        {
+        //            //支付超时.
+        //            //剔除占位而没有付款的玩家.
+        //            int userId = 0;
+        //            if (pcvr.GetInstance() != null)
+        //            {
+        //                pcvr.GetInstance().m_HongDDGamePadInterface.RemoveWeiXinPadPlayerData(userId);
+        //            }
+        //        }
+        //    }
+        //}
         #endregion
     }
 }
