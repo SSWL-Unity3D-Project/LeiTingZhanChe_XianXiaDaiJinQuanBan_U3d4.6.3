@@ -227,7 +227,6 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	{
 		//Debug.Log("Unity:"+"OnCollisionEnter -> colName "+collision.gameObject.name);
 		CheckPlayerIsOpenCheckPaoWuXianTerrain(collision.gameObject);
-		XKPlayerMvFanWei playerFanWeiScript = collision.transform.GetComponentInParent<XKPlayerMvFanWei>();
 		if (IsMoveToTiaoYueDian) {
 //			if (playerFanWeiScript != null) {
 //				OnHitMoveFanWeiByPaoWuXianRun();
@@ -236,12 +235,15 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			return;
 		}
 
-		if (playerFanWeiScript != null) {
+        XKPlayerMvFanWei playerFanWeiScript = collision.transform.GetComponentInParent<XKPlayerMvFanWei>();
+        if (playerFanWeiScript != null) {
 			if (playerFanWeiScript.FanWeiState == PointState.Hou) {
-				//Debug.Log("Unity:"+"OnCollisionEnter -> FanWeiState "+playerFanWeiScript.FanWeiState);
+				//Debug.LogError("Unity:"+"OnCollisionEnter -> FanWeiState "+playerFanWeiScript.FanWeiState);
 				RigCom.drag = 10f;
 				IsAutoMoving = true;
-			}
+                IsHitMvFanWeiHou = true;
+                m_LastHitFanWeiHouTime = Time.time;
+            }
 		}
 
 		XKPlayerMoveCtrl playerMvScript = collision.transform.GetComponentInParent<XKPlayerMoveCtrl>();
@@ -259,10 +261,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		XKPlayerMvFanWei playerFanWeiScript = collision.transform.GetComponentInParent<XKPlayerMvFanWei>();
 		if (playerFanWeiScript != null) {
 			if (playerFanWeiScript.FanWeiState == PointState.Hou) {
-				//Debug.Log("Unity:"+"OnCollisionExit -> FanWeiState "+playerFanWeiScript.FanWeiState);
+				//Debug.LogError("Unity:"+"OnCollisionExit -> FanWeiState "+playerFanWeiScript.FanWeiState);
 				RigCom.drag = 100f;
 				IsAutoMoving = false;
-			}
+                IsHitMvFanWeiHou = false;
+            }
 		}
 	}
 
@@ -856,9 +859,9 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	void UpdatePlayerHitCameraBack()
 	{
-		if (XKTriggerStopMovePlayer.IsActiveTrigger) {
-			return;
-		}
+		//if (XKTriggerStopMovePlayer.IsActiveTrigger) {
+		//	return;
+		//}
 
 		if (PlayerRealYM < 0f && PlayerFangXiangVal == 0f) {
 			return;
@@ -875,33 +878,41 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	float PlayerRealYM;
 	float PlayerMvSpeedCur;
 	void ChangePlayerMoving(float mvVal)
-	{
-		PlayerYouMenVal = mvVal;
+    {
+        //SSDebug.Log("PlayerFangXiangVal == " + PlayerFangXiangVal
+        //        + ", PlayerRealYM == " + PlayerRealYM
+        //        + ", PlayerFangXiangVal == " + PlayerFangXiangVal
+        //        + ", TKMoveSt == " + TKMoveSt
+        //        + ", mvVal == " + mvVal);
+        PlayerYouMenVal = mvVal;
 		PlayerMvSpeedCur = RigCom.velocity.magnitude;
-		if (PlayerPointForward.GetIsOutGameCamera()) {
-			StopMovePlayer();
-			return;
-		}
+		//if (PlayerPointForward.GetIsOutGameCamera()) {
+		//	StopMovePlayer();
+		//	return;
+		//}
+        //SSDebug.Log("1111111111111111111111111111111111");
 
-		if (mvVal == 0f) {
+        if (mvVal == 0f) {
 			StopMovePlayer();
 //			if (!IsInvoking("StopMovePlayer")) {
 //				Invoke("StopMovePlayer", 0f);
 //			}
 			return;
-		}
+        }
+        //SSDebug.Log("22222222222222222222222222222");
 
-		if (IsHitMvFanWeiHou) {
+        if (IsHitMvFanWeiHou) {
 			if (PlayerFangXiangVal == 0f && PlayerRealYM < 0f) {
 				return;
 			}
-		}
+        }
+        //SSDebug.Log("333333333333333333333333333333333");
 
-		if (RigCom.drag != 10f) {
+        if (RigCom.drag != 10f) {
 			RigCom.drag = 10f;
 		}
 
-		float mvSpeedVal = PlayerMvSpeed;
+        float mvSpeedVal = PlayerMvSpeed;
 		Vector3 moveDir = Vector3.zero;
 		switch (TKMoveSt) {
 		case TKMoveState.U_FangXiangPan:
@@ -913,6 +924,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 				moveDir = PlayerTran.forward;
 			}
 			else {
+                //SSDebug.LogWarning("PlayerFangXiangVal == " + PlayerFangXiangVal
+                //        + ", PlayerRealYM == " + PlayerRealYM + ", PlayerFangXiangVal == " + PlayerFangXiangVal);
 				if (PlayerFangXiangVal == 0f || PlayerRealYM > 0f) {
 					moveDir = PlayerTran.forward;
 				}
@@ -929,11 +942,14 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 						}*/
 						
 						if (PlayerFangXiangVal > 0f) {
+                            //SSDebug.LogWarning("************************111");
 							moveDir = -(XKPlayerMvFanWei.GetInstanceHou().transform.right);
 						}
 						
-						if (PlayerFangXiangVal < 0f) {
-							moveDir = (XKPlayerMvFanWei.GetInstanceHou().transform.right);
+						if (PlayerFangXiangVal < 0f)
+                        {
+                            //SSDebug.LogWarning("************************222");
+                            moveDir = (XKPlayerMvFanWei.GetInstanceHou().transform.right);
 						}
 						/*if (PlayerRealYM < 0f) {
 							if (PlayerFangXiangVal > 0f) {
@@ -1338,33 +1354,47 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		}
 	}
 
-//	void OnGUI()
-//	{
-//		string strA = "localEulerAngles "+PlayerCore.transform.localEulerAngles.ToString("f2")
-//			+", PlayerRotStateYG "+PlayerRotStateYG;
-//		GUI.Box(new Rect(0f, 0f, 400f, 25f), strA);
-//	}
-
-	bool IsHitMvFanWeiHou;
+    //	void OnGUI()
+    //	{
+    //		string strA = "localEulerAngles "+PlayerCore.transform.localEulerAngles.ToString("f2")
+    //			+", PlayerRotStateYG "+PlayerRotStateYG;
+    //		GUI.Box(new Rect(0f, 0f, 400f, 25f), strA);
+    //	}
+    
+    bool IsHitMvFanWeiHou;
+    float m_LastHitFanWeiHouTime = 0f;
 	void CheckPlayerMvFanWeiHou()
 	{
-		Transform tranA = XKPlayerMvFanWei.GetInstanceHou().transform;
-		Transform tranB = PlayerTran;
-		Vector3 posA = tranA.position;
-		Vector3 posB = tranB.position;
-		Vector3 vecA = -tranA.forward;
-		Vector3 vecB = Vector3.zero;
-		float cosAB = 0f;
-		float disAB = 0f;
-		float disVal = 0f;
-		vecB = posB - posA;
-		vecA.y = vecB.y = 0f;
-		disAB = vecB.magnitude;
-		cosAB = Vector3.Dot(vecA.normalized, vecB.normalized);
-		disVal = cosAB * disAB;
-		float minDis = 0.5f + (tranA.lossyScale.z * 0.5f);
+        if (IsHitMvFanWeiHou == true)
+        {
+            if (Time.time - m_LastHitFanWeiHouTime >= 1f)
+            {
+                IsHitMvFanWeiHou = false;
+                m_LastHitFanWeiHouTime = Time.time;
+            }
+        }
+		//Transform tranA = XKPlayerMvFanWei.GetInstanceHou().transform;
+		//Transform tranB = PlayerTran;
+		//Vector3 posA = tranA.position;
+		//Vector3 posB = tranB.position;
+		//Vector3 vecA = -tranA.forward;
+		//Vector3 vecB = Vector3.zero;
+		//float cosAB = 0f;
+		//float disAB = 0f;
+		//float disVal = 0f;
+		//vecB = posB - posA;
+		//vecA.y = vecB.y = 0f;
+		//disAB = vecB.magnitude;
+		//cosAB = Vector3.Dot(vecA.normalized, vecB.normalized);
+		//disVal = cosAB * disAB;
+        //float disPlayerToCol = Mathf.Sqrt(Mathf.Pow(disAB, 2f) - Mathf.Pow(disVal, 2f));
+		//float minDis = 0.5f + (tranA.lossyScale.z * 0.5f);
+		//float minDis = 1f;
 		//TestMinDisVal = minDis;
-		IsHitMvFanWeiHou = disVal > minDis ? false : true;
+		//IsHitMvFanWeiHou = disVal > minDis ? false : true;
+        //IsHitMvFanWeiHou = disPlayerToCol > minDis ? false : true;
+        //SSDebug.Log("disVal ================== " + disVal);
+        //SSDebug.Log("disPlayerToCol ================== " + disPlayerToCol);
 	}
 
 	void CheckPlayerIsResetPosition()
@@ -1435,7 +1465,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		if (RigCom == null) {
 			return;
 		}
-		IsMoveToTiaoYueDian = isKine;
+		//IsMoveToTiaoYueDian = isKine;
 		RigCom.useGravity = !isKine;
 	}
 
