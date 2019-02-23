@@ -847,6 +847,8 @@ public class InputEventCtrl : MonoBehaviour
         IsUsePcInputTest = true;
 #endif
 
+#if UNITY_EDITOR
+        //发布出来的游戏不允许用键盘进行投币.
         if (Input.GetKeyUp(KeyCode.T))
         {
             if (pcvr.IsHongDDShouBing)
@@ -920,16 +922,17 @@ public class InputEventCtrl : MonoBehaviour
                 }
             }
 		}
-		
-		//if (Input.GetKeyUp(KeyCode.I)) {
-		//	if (XKGlobalData.GameVersionPlayer == 0) {
-		//		int coinVal = XKGlobalData.CoinPlayerFour + 1;
-		//		XKGlobalData.SetCoinPlayerFour(coinVal);
-		//	}
-		//}
+#endif
 
-		//StartBt PlayerOne
-		if (Input.GetKeyUp(KeyCode.G)) {
+        //if (Input.GetKeyUp(KeyCode.I)) {
+        //	if (XKGlobalData.GameVersionPlayer == 0) {
+        //		int coinVal = XKGlobalData.CoinPlayerFour + 1;
+        //		XKGlobalData.SetCoinPlayerFour(coinVal);
+        //	}
+        //}
+
+        //StartBt PlayerOne
+        if (Input.GetKeyUp(KeyCode.G)) {
 			ClickStartBtOne( pcvr.ButtonState.UP );
 		}
 		
