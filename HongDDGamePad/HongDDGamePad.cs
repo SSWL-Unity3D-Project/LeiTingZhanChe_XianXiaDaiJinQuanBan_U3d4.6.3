@@ -1093,17 +1093,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
                         if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
                         {
-                            SSDebug.LogWarning("******************** userId ==================== " + userId);
+                            //SSDebug.LogWarning("******************** userId ==================== " + userId);
                             if (m_HongDDGamePadWXPay.CheckPlayerIsCanFreePlayGame(userId) == true)
                             {
                                 //该玩家可以免费试玩游戏.
                                 //给玩家添加一个微信游戏币.
                                 PlayerEnum playerEnum = GetCanActivePlayerEnum();
-                                SSDebug.LogWarning("******************** playerEnum ==================== " + playerEnum);
+                                //SSDebug.LogWarning("******************** playerEnum ==================== " + playerEnum);
                                 int indexPlayer = (int)playerEnum - 1;
                                 AddWeiXinGameCoinToPlayer(playerEnum, m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
 
-                                SSDebug.LogWarning("******************** activePlayer ==================== " + playerEnum);
+                                //SSDebug.LogWarning("******************** activePlayer ==================== " + playerEnum);
                                 //在登录玩家列表中找到了该玩家的信息.
                                 //免费体验游戏的玩家.
                                 loginPlayerDt.SetIsMianFeiTiYanPlayer(true);
@@ -1163,38 +1163,34 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
                 }
             }
-            else
-            {
-                //在玩家微信数据列表中可以找到该玩家的信息.
-            }
 
-            //**********************************************************************************************************************//
-            if (playerDt != null && playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
+            //在玩家微信数据列表中可以找到该玩家的信息.
+            if (playerDt.Index > -1 && playerDt.Index < m_IndexPlayerActiveGameState.Length)
             {
                 //Debug.Log("Unity:"+"OnEventActionOperation -> playerIndex == " + playerDt.Index);
                 playerDt.IsExitWeiXin = false;
                 if (m_IndexPlayerActiveGameState[playerDt.Index] == (int)PlayerActiveState.JiHuo)
                 {
                     //处于激活状态的玩家才可以进行游戏操作.
-                    if (val == PlayerShouBingFireBt.fireADown.ToString()
-                        || val == PlayerShouBingFireBt.fireXDown.ToString())
-                    {
-                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
-                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
-#if TEST_DEBUG_PLAYER_PAD_INFO
-                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.DOWN);
-#endif
-                    }
+//                    if (val == PlayerShouBingFireBt.fireADown.ToString()
+//                        || val == PlayerShouBingFireBt.fireXDown.ToString())
+//                    {
+//                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.DOWN);
+//                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.DOWN);
+//#if TEST_DEBUG_PLAYER_PAD_INFO
+//                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.DOWN);
+//#endif
+//                    }
 
-                    if (val == PlayerShouBingFireBt.fireAUp.ToString()
-                        || val == PlayerShouBingFireBt.fireXUp.ToString())
-                    {
-                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
-                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
-#if TEST_DEBUG_PLAYER_PAD_INFO
-                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.UP);
-#endif
-                    }
+//                    if (val == PlayerShouBingFireBt.fireAUp.ToString()
+//                        || val == PlayerShouBingFireBt.fireXUp.ToString())
+//                    {
+//                        //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
+//                        InputEventCtrl.GetInstance().OnClickDaoDanBt(playerDt.Index, pcvr.ButtonState.UP);
+//#if TEST_DEBUG_PLAYER_PAD_INFO
+//                        OnReceivePlayerPadBtInfo(PadBtState.PuTong, playerDt.Index, pcvr.ButtonState.UP);
+//#endif
+//                    }
 
                     if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
@@ -1205,8 +1201,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.DOWN);
 #endif
                     }
-
-                    if (val == PlayerShouBingFireBt.fireBUp.ToString()
+                    else if (val == PlayerShouBingFireBt.fireBUp.ToString()
                         || val == PlayerShouBingFireBt.fireYUp.ToString())
                     {
                         //InputEventCtrl.GetInstance().OnClickFireBt(playerDt.Index, pcvr.ButtonState.UP);
@@ -1246,8 +1241,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         //SendWXPadShowTopUpPanel(userId);
                         isSendMsg = true;
                     }
-
-                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                    else if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
                     {
                         //SendWXPadShowTopUpPanel(userId);

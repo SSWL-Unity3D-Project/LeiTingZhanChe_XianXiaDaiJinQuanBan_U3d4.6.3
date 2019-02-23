@@ -1143,12 +1143,13 @@ public class SpawnNpcManage : MonoBehaviour
         if (GetIsHaveBoss() == false)
         {
             //当前游戏场景中没有任何Boss存在,才允许产生Boss.
-            if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
-            {
-                //优先产生SuperJPBoss.
-                CreatNpcObj(NpcState.SuperJPBoss, m_CreatZhanCheState.GetSpawnPointState());
-            }
-            else if (m_ZhanCheJPBossData.IsCreatJPBoss)
+            //if (m_ZhanCheJPBossData.IsCreatSuperJPBoss)
+            //{
+            //    //优先产生SuperJPBoss.
+            //    CreatNpcObj(NpcState.SuperJPBoss, m_CreatZhanCheState.GetSpawnPointState());
+            //}
+            //else
+            if (m_ZhanCheJPBossData.IsCreatJPBoss)
             {
                 //其次产生JPBoss.
                 CreatNpcObj(NpcState.JPBoss, m_CreatZhanCheState.GetSpawnPointState());
@@ -1375,59 +1376,58 @@ public class SpawnNpcManage : MonoBehaviour
                             }
                             break;
                         }
-                    case NpcState.SuperJPBoss:
-                        {
-                            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_AiPathGroup != null
-                                && XkGameCtrl.GetInstance().m_AiPathGroup.m_CameraMoveType != AiPathGroupCtrl.MoveState.YuLe)
-                            {
-                                XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Boss);
-                            }
-                            m_ZhanCheJPBossData.SuperJPBossData.AddNpcToList(obj);
+                    //case NpcState.SuperJPBoss:
+                    //    {
+                    //        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_AiPathGroup != null
+                    //            && XkGameCtrl.GetInstance().m_AiPathGroup.m_CameraMoveType != AiPathGroupCtrl.MoveState.YuLe)
+                    //        {
+                    //            XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.Boss);
+                    //        }
+                    //        m_ZhanCheJPBossData.SuperJPBossData.AddNpcToList(obj);
+                    
+                    //        npcMove = obj.GetComponent<XKNpcMoveCtrl>();
+                    //        if (npcMove != null)
+                    //        {
+                    //            switch (pointState)
+                    //            {
+                    //                case SpawnPointState.Up:
+                    //                    {
+                    //                        npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
+                    //                        break;
+                    //                    }
+                    //                case SpawnPointState.Down:
+                    //                    {
+                    //                        npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
+                    //                        break;
+                    //                    }
+                    //                case SpawnPointState.Left:
+                    //                    {
+                    //                        npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
+                    //                        break;
+                    //                    }
+                    //                case SpawnPointState.Right:
+                    //                    {
+                    //                        npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
+                    //                        break;
+                    //                    }
+                    //            }
+                    //        }
 
+                    //        //if (XKBossLXCtrl.GetInstance() != null)
+                    //        //{
+                    //        //    //播放boss来袭UI.
+                    //        //    XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+                    //        //    AudioBeiJingCtrl.StopGameBeiJingAudio();
+                    //        //}
 
-                            npcMove = obj.GetComponent<XKNpcMoveCtrl>();
-                            if (npcMove != null)
-                            {
-                                switch (pointState)
-                                {
-                                    case SpawnPointState.Up:
-                                        {
-                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Qian;
-                                            break;
-                                        }
-                                    case SpawnPointState.Down:
-                                        {
-                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Hou;
-                                            break;
-                                        }
-                                    case SpawnPointState.Left:
-                                        {
-                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.Zuo;
-                                            break;
-                                        }
-                                    case SpawnPointState.Right:
-                                        {
-                                            npcMove.m_TriggerDir = SSTriggerCaiPiaoBossMove.TriggerDir.You;
-                                            break;
-                                        }
-                                }
-                            }
-
-                            //if (XKBossLXCtrl.GetInstance() != null)
-                            //{
-                            //    //播放boss来袭UI.
-                            //    XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
-                            //    AudioBeiJingCtrl.StopGameBeiJingAudio();
-                            //}
-
-                            //播放boss来袭UI.
-                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                            {
-                                SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI(npcType);
-                                AudioBeiJingCtrl.StopGameBeiJingAudio();
-                            }
-                            break;
-                        }
+                    //        //播放boss来袭UI.
+                    //        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                    //        {
+                    //            SSUIRoot.GetInstance().m_GameUIManage.CreatBossLaiXiUI(npcType);
+                    //            AudioBeiJingCtrl.StopGameBeiJingAudio();
+                    //        }
+                    //        break;
+                    //    }
                 }
             }
         }
