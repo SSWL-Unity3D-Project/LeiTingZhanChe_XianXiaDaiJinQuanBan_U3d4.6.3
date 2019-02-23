@@ -14,10 +14,21 @@ public class SSNpcPiaoFenMove : MonoBehaviour
     UISprite m_SpriteUI;
     //	[Range(0, 999999)]public int FenShuTest = 123456;
     // Update is called once per frame
-    //	void Update()
-    //	{
-    //		SetPlayerFenShuVal(FenShuTest);
-    //	}
+    void Update()
+    {
+        //SetPlayerFenShuVal(FenShuTest);
+        UpdateRemovePiaoFen();
+    }
+
+    float m_TimeLast = 0f;
+    void UpdateRemovePiaoFen()
+    {
+        if (Time.time - m_TimeLast > 4f)
+        {
+            m_TimeLast = Time.time;
+            HiddenFenShu();
+        }
+    }
 
     public void ShowFenShuVal(int fenShuVal, Vector3 startPos, UIAtlas fenShuAtlas, Texture jiaHaoImg)
     {
@@ -71,6 +82,7 @@ public class SSNpcPiaoFenMove : MonoBehaviour
             m_SpriteUI.alpha = 1f;
         }
 
+        m_TimeLast = Time.time;
         transform.localPosition = startPos;
         transform.localEulerAngles = Vector3.zero;
         transform.localScale = new Vector3(1f, 1f, 1f);
