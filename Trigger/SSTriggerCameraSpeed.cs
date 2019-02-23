@@ -106,6 +106,7 @@ public class SSTriggerCameraSpeed : MonoBehaviour
                     {
                         XkGameCtrl.GetInstance().m_AiPathGroup.SetCameraMoveType(AiPathGroupCtrl.MoveState.YuLe);
                     }
+                    Resources.UnloadUnusedAssets();
                     break;
                 }
             case TriggerEnum.Close:

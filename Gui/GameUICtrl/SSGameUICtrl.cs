@@ -1154,7 +1154,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveBossLaiXiUI...");
             m_BossLaiXiUI.RemoveSelf();
             m_BossLaiXiUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
         CreatBaoJiTiShiUI();
     }
@@ -1219,7 +1219,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveCeShiUI...");
             Destroy(m_CeShiUI);
             m_CeShiUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1260,7 +1260,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveTotalJiFenJieMianUI...");
             m_TotalJiFenJieMianUI.RemoveSelf();
             m_TotalJiFenJieMianUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
     
@@ -1299,7 +1299,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveXuanYaLuDuanUI...");
             Destroy(m_XuanYaLuDuanUI);
             m_XuanYaLuDuanUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1340,7 +1340,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveGameTimeUI...");
             m_GameTimeUI.RemoveSelf();
             m_GameTimeUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1381,7 +1381,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveTotalGameOverUI...");
             m_TotalGameOverUI.RemoveSelf();
             m_TotalGameOverUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1422,7 +1422,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveQuanBuTongGuanUI...");
             m_QuanBuTongGuanUI.RemoveSelf();
             m_QuanBuTongGuanUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
     
@@ -1463,7 +1463,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveGameStageUI...");
             m_GameStageUI.RemoveSelf();
             m_GameStageUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
     
@@ -1504,7 +1504,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveBossXueTiaoUI...");
             m_BossXueTiaoUI.RemoveSelf();
             m_BossXueTiaoUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1545,7 +1545,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveGameStartTimeUI...");
             m_GameStartTimeUI.RemoveSelf();
             m_GameStartTimeUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1616,7 +1616,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemoveDaiJinQuanNpcXueTiaoUI...");
             m_DaiJinQuanNpcXueTiaoUI.RemoveSelf();
             m_DaiJinQuanNpcXueTiaoUI = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1741,7 +1741,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemovePlayerPingJiUI -> indexPlayer ============ " + indexPlayer);
             m_PingJiUIArray[indexVal].RemoveSelf();
             m_PingJiUIArray[indexVal] = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 
@@ -1813,7 +1813,7 @@ public class SSGameUICtrl : SSGameMono
             UnityLog("RemovePlayerChouJiangUI -> indexPlayer ============ " + indexPlayer);
             m_ChouJiangUIArray[indexVal].RemoveSelf();
             m_ChouJiangUIArray[indexVal] = null;
-            Resources.UnloadUnusedAssets();
+            //Resources.UnloadUnusedAssets();
         }
     }
 }
