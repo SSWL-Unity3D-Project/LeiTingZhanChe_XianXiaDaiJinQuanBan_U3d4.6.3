@@ -276,9 +276,11 @@ public class DaoJiShiCtrl : MonoBehaviour
 			DestroyObject(tweenScaleCom);
 		}
 
-		tweenScaleCom = DaoJiShiObj.AddComponent<TweenScale>();
+        m_TimeLastChange = Time.time;
+        IsOpenChangeDaoJiShi = true;
+        tweenScaleCom = DaoJiShiObj.AddComponent<TweenScale>();
 		tweenScaleCom.enabled = false;
-		tweenScaleCom.duration = 3f;
+		tweenScaleCom.duration = m_TimeChangeVal;
 		tweenScaleCom.from = new Vector3(1.2f, 1.2f, 1f);
 		tweenScaleCom.to = new Vector3(1f, 1f, 1f);
 		EventDelegate.Add(tweenScaleCom.onFinished, delegate{
@@ -305,9 +307,34 @@ public class DaoJiShiCtrl : MonoBehaviour
         XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
     }
 
+    /// <summary>
+    /// 倒计时变化间隔时间.
+    /// </summary>
+    float m_TimeChangeVal = 3f;
+    float m_TimeLastChange = 0f;
+    bool IsOpenChangeDaoJiShi = false;
+    /// <summary>
+    /// 避免因为游戏卡顿导致倒计时界面始终不动停留在游戏画面上.
+    /// </summary>
+    void UpdataChangDaoJiShiVal()
+    {
+        if (IsOpenChangeDaoJiShi == false)
+        {
+            return;
+        }
+
+        if (Time.time - m_TimeLastChange >= m_TimeChangeVal + 1f)
+        {
+            m_TimeLastChange = Time.time;
+            ChangeDaoJiShiVal();
+        }
+    }
+
 	void ChangeDaoJiShiVal()
 	{
-		if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
+        m_TimeLastChange = Time.time;
+        IsOpenChangeDaoJiShi = false;
+        if (JiFenJieMianCtrl.GetInstance() != null && JiFenJieMianCtrl.GetInstance().GetIsShowFinishTask()) {
 			StopDaoJiShi();
 			return;
 		}

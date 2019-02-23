@@ -633,6 +633,16 @@ public class SSChouJiangUI : MonoBehaviour
             {
                 //获得奖品2-战车01奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
+
+                //此处添加玩家已经获得该类型奖品的代码.
+                if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                {
+                    if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                    {
+                        //设置已经击爆npc的数据信息.
+                        SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+                    }
+                }
             }
 
             if (indexJiangPin == -1)
@@ -673,6 +683,16 @@ public class SSChouJiangUI : MonoBehaviour
                 {
                     //获得奖品3-战车02奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
+
+                    //此处添加玩家已经获得该类型奖品的代码.
+                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                    {
+                        if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                        {
+                            //设置已经击爆npc的数据信息.
+                            SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                        }
+                    }
                 }
             }
 
@@ -704,6 +724,16 @@ public class SSChouJiangUI : MonoBehaviour
                 {
                     //获得奖品4-随机道具奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
+
+                    //此处添加玩家已经获得该类型奖品的代码.
+                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                    {
+                        if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                        {
+                            //设置已经击爆npc的数据信息.
+                            SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                        }
+                    }
                 }
             }
         }
@@ -1007,16 +1037,6 @@ public class SSChouJiangUI : MonoBehaviour
                                   SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, daiJinQaunType);
                 }
                 pcvr.GetInstance().m_HongDDGamePadInterface.SendPostHddPlayerCouponInfoByChouJiang(m_IndexPlayer, caiPiao, daiJinQaunType);
-            }
-
-            //此处添加玩家已经获得该类型奖品的代码.
-            if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
-            {
-                if (SSHaiDiLaoBaoJiang.GetInstance() != null)
-                {
-                    //设置已经击爆npc的数据信息.
-                    SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, daiJinQaunType);
-                }
             }
         }
 
