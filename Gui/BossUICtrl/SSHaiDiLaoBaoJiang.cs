@@ -133,6 +133,26 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 			}
 			return isCanJiBao;
 		}
+
+        /// <summary>
+        /// 获取人数是否已经积累足够.
+        /// </summary>
+        internal bool GetIsEnoughPlayerNum()
+        {
+            if (ZeroPlayer == maxPlayer)
+            {
+                //游戏后台配置爆奖率为0时不允许爆奖.
+                return false;
+            }
+
+            if (currentNum >= maxPlayer)
+            {
+                //当前玩家人数已经积累的足够多了,新来的玩家都可以击爆npc.
+                return true;
+            }
+            //人数不够.
+            return false;
+        }
 	}
 	/// <summary>
 	/// JPBoss爆奖数据控制.
@@ -356,6 +376,44 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             isCanJiBao = baoJiangDt.GetIsCanJiBaoNpc();
         }
         return isCanJiBao;
+    }
+
+    /// <summary>
+    /// 获取人数是否积累足够.
+    /// </summary>
+    internal bool GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        BaoJiangData baoJiangDt = null;
+        switch (type)
+        {
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan:
+                {
+                    baoJiangDt = m_BaoJiangDtJPBoss;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01:
+                {
+                    baoJiangDt = m_BaoJiangDtZhanChe01;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02:
+                {
+                    baoJiangDt = m_BaoJiangDtZhanChe02;
+                }
+                break;
+            case SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan:
+                {
+                    baoJiangDt = m_BaoJiangDtSuiJiDaoJu;
+                }
+                break;
+        }
+
+        bool isEnough = false;
+        if (baoJiangDt != null)
+        {
+            isEnough = baoJiangDt.GetIsEnoughPlayerNum();
+        }
+        return isEnough;
     }
 
     internal void AddPlayerNum()

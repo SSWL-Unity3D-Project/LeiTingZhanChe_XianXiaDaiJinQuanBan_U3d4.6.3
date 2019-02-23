@@ -106,6 +106,26 @@ public class SSChouJiangData : MonoBehaviour
             return isCanJiBao;
         }
 
+        /// <summary>
+        /// 获取人数是否足够.
+        /// </summary>
+        internal bool GetIsEnoughPlayerNum()
+        {
+            if (ZeroPlayer == maxPlayer)
+            {
+                //游戏后台配置爆奖率为0时不允许爆奖.
+                return false;
+            }
+
+            if (curPlayer >= maxPlayer)
+            {
+                //当前玩家人数已经积累的足够多了,新来的玩家都可以击爆npc.
+                return true;
+            }
+            //人数不足.
+            return false;
+        }
+
         internal bool AddCurrentNum()
         {
             bool isReset = false;
@@ -167,7 +187,20 @@ public class SSChouJiangData : MonoBehaviour
         }
         return isCanOut;
     }
-    
+
+    /// <summary>
+    /// 获取是否可以出再玩一局游戏奖品.
+    /// </summary>
+    internal bool GetIsEnoughPlayerNum()
+    {
+        bool isEnough = false;
+        if (m_ZaiWanYiJuJiangPinDt != null)
+        {
+            isEnough = m_ZaiWanYiJuJiangPinDt.GetIsEnoughPlayerNum();
+        }
+        return isEnough;
+    }
+
     /// <summary>
     /// 设置是否已经爆奖.
     /// </summary>
