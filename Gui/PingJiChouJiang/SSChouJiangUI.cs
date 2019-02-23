@@ -533,42 +533,27 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     bool GetIsCanZhongJiang(JiangPinState type)
     {
-        //if (m_ZhongJiangGaiLvDt == null)
-        //{
-        //    SSDebug.LogWarning("GetIsCanZhongJiang -> m_ZhongJiangGaiLvDt was null");
-        //    return false;
-        //}
-
         bool isZhongJiang = false;
         int randVal = Random.Range(0, 1000) % 100;
         int gaiLv = 50;
-        //switch (type)
-        //{
-        //    case JiangPinState.ZaiWanYiJu:
-        //        {
-        //            //gaiLv = m_ZhongJiangGaiLvDt.ZaiWanYiJu;
-        //            if (XkGameCtrl.GetInstance() != null)
-        //            {
-        //                gaiLv = XkGameCtrl.GetInstance().m_ZaiWanYiJuGaiLv;
-        //            }
-        //            break;
-        //        }
-        //    case JiangPinState.JiangPin2:
-        //        {
-        //            gaiLv = m_ZhongJiangGaiLvDt.JiangPin02;
-        //            break;
-        //        }
-        //    case JiangPinState.JiangPin3:
-        //        {
-        //            gaiLv = m_ZhongJiangGaiLvDt.JiangPin03;
-        //            break;
-        //        }
-        //    case JiangPinState.JiangPin4:
-        //        {
-        //            gaiLv = m_ZhongJiangGaiLvDt.JiangPin04;
-        //            break;
-        //        }
-        //}
+        //根据各个奖品对应的人头数进行概率数值运算.
+        switch (type)
+        {
+            case JiangPinState.JiangPin2:
+            case JiangPinState.JiangPin3:
+            case JiangPinState.JiangPin4:
+                {
+                    //奖品2,3,4不需要在这里进行随机计算.
+                    //SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc 奖品2,3,4用这个函数就可以进行控制了.
+                    gaiLv = 100;
+                    break;
+                }
+            case JiangPinState.ZaiWanYiJu:
+                {
+                    gaiLv = 100;
+                    break;
+                }
+        }
         isZhongJiang = randVal < gaiLv ? true : false;
         return isZhongJiang;
     }
@@ -585,22 +570,22 @@ public class SSChouJiangUI : MonoBehaviour
         //当前机位如果还没有获得免费继续游戏奖品的情况下,那么此时玩家有机会随机到免费继续游戏奖品.
         //当前玩家不能获取任何奖品的情况下,那么此时玩家只能在谢谢参与奖品里随机一个了.
         int indexJiangPin = -1;
-        //是否击爆.
+        //是否击爆(是否已经出奖).
         bool isHaveJiBao = false;
-        bool isZhongJiang = false;
+        //bool isZhongJiang = true;
         bool isCanJiBao = false;
         //彩池金额是否充足.
         bool isCaiChiEnough = false;
         //该奖品是否可以爆奖按照人次.
         bool isDaiJinQuanBaoJiang = false;
         //人数是否足够.
-        bool isEnoughPlayerNum = false;
+        //bool isEnoughPlayerNum = false;
         //海底捞菜品券游戏.
         if (SSHaiDiLaoBaoJiang.GetInstance() != null)
         {
             //奖品2-战车01奖品.
             isHaveJiBao = SSHaiDiLaoBaoJiang.GetInstance().GetIsHaveJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
-            isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin2);
+            //isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin2);
             if (XkPlayerCtrl.GetInstanceFeiJi() != null
                 && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
                 && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
@@ -621,15 +606,16 @@ public class SSChouJiangUI : MonoBehaviour
             if (SSHaiDiLaoBaoJiang.GetInstance() != null)
             {
                 isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
-                isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
-                if (isEnoughPlayerNum == true)
-                {
+                //isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+                //if (isEnoughPlayerNum == true)
+                //{
                     //人数足够必然放奖.
-                    isZhongJiang = true;
-                }
+                    //isZhongJiang = true;
+                //}
             }
 
-            if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+            //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+            if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
             {
                 //获得奖品2-战车01奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
@@ -650,7 +636,7 @@ public class SSChouJiangUI : MonoBehaviour
                 //奖品3-战车02奖品.
                 isCanJiBao = false;
                 isHaveJiBao = SSHaiDiLaoBaoJiang.GetInstance().GetIsHaveJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
-                isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin3);
+                //isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin3);
                 if (XkPlayerCtrl.GetInstanceFeiJi() != null
                     && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
                     && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
@@ -671,15 +657,16 @@ public class SSChouJiangUI : MonoBehaviour
                 if (SSHaiDiLaoBaoJiang.GetInstance() != null)
                 {
                     isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
-                    isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
-                    if (isEnoughPlayerNum == true)
-                    {
+                    //isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                    //if (isEnoughPlayerNum == true)
+                    //{
                         //人数足够必然放奖.
-                        isZhongJiang = true;
-                    }
+                        //isZhongJiang = true;
+                    //}
                 }
 
-                if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
                     //获得奖品3-战车02奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
@@ -700,7 +687,7 @@ public class SSChouJiangUI : MonoBehaviour
             {
                 //奖品4-随机道具奖品.
                 isHaveJiBao = SSHaiDiLaoBaoJiang.GetInstance().GetIsHaveJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
-                isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin4);
+                //isZhongJiang = GetIsCanZhongJiang(JiangPinState.JiangPin4);
                 if (XkPlayerCtrl.GetInstanceFeiJi() != null
                     && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
                     && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
@@ -712,15 +699,16 @@ public class SSChouJiangUI : MonoBehaviour
                 if (SSHaiDiLaoBaoJiang.GetInstance() != null)
                 {
                     isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
-                    isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
-                    if (isEnoughPlayerNum == true)
-                    {
+                    //isEnoughPlayerNum = SSHaiDiLaoBaoJiang.GetInstance().GetIsEnoughPlayerNum(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                    //if (isEnoughPlayerNum == true)
+                    //{
                         //人数足够必然放奖.
-                        isZhongJiang = true;
-                    }
+                    //    isZhongJiang = true;
+                    //}
                 }
 
-                if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                //if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                if (isHaveJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
                     //获得奖品4-随机道具奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
@@ -741,7 +729,7 @@ public class SSChouJiangUI : MonoBehaviour
         if (indexJiangPin == -1)
         {
             //再玩一局游戏奖品.
-            isZhongJiang = GetIsCanZhongJiang(JiangPinState.ZaiWanYiJu);
+            //isZhongJiang = GetIsCanZhongJiang(JiangPinState.ZaiWanYiJu);
             bool isCanZaiWanYiJu = true;
             if (XkGameCtrl.GetInstance() != null)
             {
@@ -761,16 +749,17 @@ public class SSChouJiangUI : MonoBehaviour
                 if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                 {
                     isCanZaiWanYiJu = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanOutZaiWanYiJuJiangPin();
-                    isEnoughPlayerNum = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsEnoughPlayerNum();
-                    if (isEnoughPlayerNum == true)
-                    {
+                    //isEnoughPlayerNum = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsEnoughPlayerNum();
+                    //if (isEnoughPlayerNum == true)
+                    //{
                         //人数足够必然放奖.
-                        isZhongJiang = true;
-                    }
+                        //isZhongJiang = true;
+                    //}
                 }
             }
 
-            if (isZhongJiang == true && isCanZaiWanYiJu == true)
+            //if (isZhongJiang == true && isCanZaiWanYiJu == true)
+            if (isCanZaiWanYiJu == true)
             {
                 //获得再玩一局游戏奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu);

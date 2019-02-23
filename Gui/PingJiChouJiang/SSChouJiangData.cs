@@ -12,6 +12,18 @@ public class SSChouJiangData : MonoBehaviour
     public class ZaiWanYiJuJiangPinData
     {
         /// <summary>
+        /// 爆奖率.
+        /// </summary>
+        [Range(0, 100)]
+        int m_BaoJiangLv = 50;
+        /// <summary>
+        /// 设置爆奖率.
+        /// </summary>
+        void SetBaoJiangLv(int baoJiangLv)
+        {
+            m_BaoJiangLv = baoJiangLv;
+        }
+        /// <summary>
         /// 最大人数.
         /// </summary>
         internal int maxPlayer = 10;
@@ -30,7 +42,7 @@ public class SSChouJiangData : MonoBehaviour
         /// <summary>
         /// 随机概率.
         /// </summary>
-        int suiJiGaiLv = 30;
+        //int suiJiGaiLv = 30;
         /// <summary>
         /// 没有人可以爆奖.
         /// </summary>
@@ -44,6 +56,7 @@ public class SSChouJiangData : MonoBehaviour
             {
                 baoJiangLv = 50;
             }
+            SetBaoJiangLv(baoJiangLv);
 
             if (baoJiangLv == 0)
             {
@@ -99,7 +112,9 @@ public class SSChouJiangData : MonoBehaviour
 
             bool isCanJiBao = true;
             int randNum = (UnityEngine.Random.Range(0, 1000) % 100) + 1;
-            if (randNum > suiJiGaiLv)
+            //该玩家在游戏中的爆奖概率 = 累计人头数×该奖池爆奖率.(累计人头数 <= 最大人头数)
+            int baoJiangGaiLv = curPlayer * m_BaoJiangLv;
+            if (randNum > baoJiangGaiLv)
             {
                 isCanJiBao = false;
             }

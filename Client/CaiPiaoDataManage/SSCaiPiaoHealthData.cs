@@ -120,6 +120,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
                 isDaiJinQuanBaoJiang = SSHaiDiLaoBaoJiang.GetInstance().GetIsCanJiBaoNpc(type);
             }
         }
+
         //SSDebug.LogWarning("isDaiJinQuanBaoJiang == " + isDaiJinQuanBaoJiang + ", randVal == " + randVal + ", baoJiangLv == " + baoJiangLv);
         if (isCaiChiZuGou == true && isDaiJinQuanBaoJiang == true)
         {

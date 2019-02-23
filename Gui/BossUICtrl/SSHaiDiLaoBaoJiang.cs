@@ -15,7 +15,14 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 		/// 爆奖率.
 		/// </summary>
 		[Range(0, 100)]
-		public int m_BaoJiangLv = 50;
+		int m_BaoJiangLv = 50;
+        /// <summary>
+        /// 设置爆奖率.
+        /// </summary>
+        void SetBaoJiangLv(int baoJiangLv)
+        {
+            m_BaoJiangLv = baoJiangLv;
+        }
 		/// <summary>
 		/// 几个人里出一次奖.
 		/// </summary>
@@ -58,6 +65,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 baoJiangLv = 50;
             }
+            SetBaoJiangLv(baoJiangLv);
 
             if (baoJiangLv == 0)
             {
@@ -127,7 +135,9 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 
 			bool isCanJiBao = true;
 			int randNum = (UnityEngine.Random.Range(0, 1000) % 100) + 1;
-			if (randNum > m_BaoJiangLv)
+            //该玩家在游戏中的爆奖概率 = 累计人头数×该奖池爆奖率.(累计人头数 <= 最大人头数)
+            int baoJiangGaiLv = currentNum * m_BaoJiangLv;
+            if (randNum > baoJiangGaiLv)
 			{
 				isCanJiBao = false;
 			}
