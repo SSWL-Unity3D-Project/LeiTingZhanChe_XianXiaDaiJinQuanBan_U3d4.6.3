@@ -262,7 +262,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
     //    IsXiaoFeiJiAmmo = isXiaoFeiJiAmmo;
     //}
 
-    static int TestChongJiBoCount = 0;
+    //static int TestChongJiBoCount = 0;
     public void StartMoveAmmo(Vector3 firePos,
         PlayerEnum playerIndex,
         XKPlayerAutoFire autoFireCom = null,
@@ -310,8 +310,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
             }
             CheckPlayerAmmoForwardHitNpc();
             //StartCoroutine(DelayRemoveChongJiBoAmmo());
-            TestChongJiBoCount++;
-            SSDebug.LogWarning("TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
+            //TestChongJiBoCount++;
+            //SSDebug.LogWarning("TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
         }
         else
         {
@@ -842,7 +842,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
         if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
         {
             //SSDebug.LogWarning("**** TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
-            SSDebug.LogWarning("**** TestChongJiBoAmmo AmmoActive == " + gameObject.activeInHierarchy);
+            //SSDebug.LogWarning("**** TestChongJiBoAmmo AmmoActive == " + gameObject.activeInHierarchy);
         }
         gameObject.SetActive(false);
     }
