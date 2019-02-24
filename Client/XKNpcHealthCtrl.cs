@@ -362,7 +362,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
         }
     }
 
-    bool IsGetTotalHealthData = false;
+    internal bool IsGetTotalHealthData = false;
     /// <summary>
     /// 重置信息.
     /// </summary>

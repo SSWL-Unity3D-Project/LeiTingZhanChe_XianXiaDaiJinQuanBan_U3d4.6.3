@@ -627,7 +627,24 @@ public class XKNpcMoveCtrl : MonoBehaviour
             XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
             if (healthScript != null)
             {
-                healthScript.SetNpcMoveScript(this);
+                bool isSetHealthScript = false;
+                if (IsCaiPiaoZhanChe == true)
+                {
+                    //彩票战车.
+                    if (healthScript.IsGetTotalHealthData == false)
+                    {
+                        isSetHealthScript = true;
+                    }
+                }
+                else
+                {
+                    isSetHealthScript = true;
+                }
+
+                if (isSetHealthScript == true)
+                {
+                    healthScript.SetNpcMoveScript(this);
+                }
             }
         }
 
@@ -843,9 +860,8 @@ public class XKNpcMoveCtrl : MonoBehaviour
         if (RealNpcTran != null)
         {
             XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
-            if (healthScript != null)
+            if (healthScript != null && healthScript.IsGetTotalHealthData == false)
             {
-                healthScript.ResetIsGetTotalHealthData();
                 healthScript.SetNpcMoveScript(this);
             }
         }
@@ -1600,6 +1616,15 @@ public class XKNpcMoveCtrl : MonoBehaviour
 
             //删除彩票战车和boss的血条UI.
             SSUIRoot.GetInstance().m_GameUIManage.RemoveDaiJinQuanNpcXueTiaoUI();
+
+            if (RealNpcTran != null)
+            {
+                XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
+                if (healthScript != null && healthScript.IsGetTotalHealthData == true)
+                {
+                    healthScript.ResetIsGetTotalHealthData(); ;
+                }
+            }
         }
         else
         {

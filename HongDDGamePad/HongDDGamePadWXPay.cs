@@ -276,7 +276,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //将玩家信息存入配置信息文件中.
                     WriteGamePlayerData();
                 }
-                SSDebug.Log("GetPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
+                //SSDebug.Log("GetPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
             }
 
             //yyyy - MM - dd hh: mm: ss
@@ -321,7 +321,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //可以免费试玩游戏.
                     isCanFreePlayGame = true;
                 }
-                SSDebug.LogWarning("GetLoginPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
+                //SSDebug.LogWarning("GetLoginPlayerIsCanFreePlayGame -> dTime =============== " + dTime + "s");
             }
 
             //yyyy - MM - dd hh: mm: ss

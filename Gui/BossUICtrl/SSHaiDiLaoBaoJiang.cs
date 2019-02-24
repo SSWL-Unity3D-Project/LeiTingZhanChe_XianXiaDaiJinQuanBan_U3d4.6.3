@@ -31,6 +31,15 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 		/// 当前已经有几个人进行游戏(对同一微信玩家不进行去重).
 		/// </summary>
 		int currentNum = 0;
+        /// <summary>
+        /// 最少人数之后的百分比.
+        /// 积累人数在这个百分比之后才允许放奖.
+        /// </summary>
+        int[] minNumPerArray = new int[3] { 30, 39, 36 };
+        /// <summary>
+        /// 最少人数之后的百分比索引.
+        /// </summary>
+        int indexMinNumPer = 0;
         internal void SetCurrentNum(int num)
         {
             currentNum = num;
@@ -109,7 +118,9 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 currentNum = 1;
             }
-		}
+            //改变最小比例人数索引.
+            indexMinNumPer = (indexMinNumPer + 1) % minNumPerArray.Length;
+        }
 
 		/// <summary>
 		/// 获取是否可以击爆Npc.
@@ -134,7 +145,15 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
                 return false;
             }
 
-			if (currentNum >= maxPlayer)
+            int minNum = (int)(maxPlayer * (minNumPerArray[indexMinNumPer] / 100f));
+            //SSDebug.LogWarning("minNum ======= " + minNum + ", currentNum === " + currentNum + ", maxPlayer == " + maxPlayer);
+            if (minNum >= currentNum)
+            {
+                //积累人数没有达到放奖的最小比例人数时不允许放奖.
+                return false;
+            }
+
+            if (currentNum >= maxPlayer)
 			{
 				//当前玩家人数已经积累的足够多了,新来的玩家都可以击爆npc.
 				return true;
