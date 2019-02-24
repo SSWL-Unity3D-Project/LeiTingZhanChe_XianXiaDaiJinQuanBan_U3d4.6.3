@@ -144,6 +144,8 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 			int randNum = (UnityEngine.Random.Range(0, 1000) % 100) + 1;
             //该玩家在游戏中的爆奖概率 = 累计人头数×该奖池爆奖率.(累计人头数 <= 最大人头数)
             int baoJiangGaiLv = currentNum * m_BaoJiangLv;
+            //SSDebug.LogWarning("baoJiangGaiLv bossBaoJi == " + baoJiangGaiLv + ", currentNum == " + currentNum
+            //    + ", m_BaoJiangLv == " + m_BaoJiangLv + ", randNum == " + randNum);
             if (randNum > baoJiangGaiLv)
 			{
 				isCanJiBao = false;

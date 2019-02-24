@@ -845,6 +845,7 @@ public class XKNpcMoveCtrl : MonoBehaviour
             XKNpcHealthCtrl healthScript = RealNpcTran.GetComponent<XKNpcHealthCtrl>();
             if (healthScript != null)
             {
+                healthScript.ResetIsGetTotalHealthData();
                 healthScript.SetNpcMoveScript(this);
             }
         }

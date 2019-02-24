@@ -96,7 +96,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
     /// <summary>
     /// 获取JPBoss和战车Npc的血值数据.
     /// </summary>
-    internal void GetTotalHealData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    internal void GetTotalHealthData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
     {
         m_CurrentDaiJinQuanState = type;
         float caiChiVal = XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.GetCaiChiData(type);

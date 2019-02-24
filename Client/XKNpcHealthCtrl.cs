@@ -361,7 +361,16 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             }
         }
     }
-    
+
+    bool IsGetTotalHealthData = false;
+    /// <summary>
+    /// 重置信息.
+    /// </summary>
+    internal void ResetIsGetTotalHealthData()
+    {
+        IsGetTotalHealthData = false;
+    }
+
     /// <summary>
     /// npc彩票显示组件.
     /// </summary>
@@ -382,18 +391,19 @@ public class XKNpcHealthCtrl : MonoBehaviour {
             {
                 if (NpcScript.IsCaiPiaoZhanChe == true)
                 {
-                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                    if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null && IsGetTotalHealthData == false)
                     {
+                        IsGetTotalHealthData = true;
                         //获取获取JPBoss和战车Npc的血值数据.
                         if (NpcScript.IsJPBossNpc == true)
                         {
                             //JPBoss战车.
-                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
+                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealthData(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
                         }
                         else
                         {
                             //战车01或02.
-                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealData(NpcScript.m_DaiJinQuanState);
+                            XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.GetTotalHealthData(NpcScript.m_DaiJinQuanState);
                         }
                         //保存代金券npc的血条脚本.
                         XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.SaveDaiJinQuanHealth(this);
