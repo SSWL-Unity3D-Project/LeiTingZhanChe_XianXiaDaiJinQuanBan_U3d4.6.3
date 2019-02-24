@@ -324,7 +324,8 @@ public class BuJiBaoCtrl : MonoBehaviour {
 				switch (BuJiBao) {
 				case BuJiBaoType.FenShuDJ:
 					isMoveDaoJu = false;
-					XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, GetJiFen());
+					//XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, GetJiFen());
+					XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, FenShuVal);
 					break;
 				case BuJiBaoType.JiSuDJ:
 					//isMoveDaoJu = false;
