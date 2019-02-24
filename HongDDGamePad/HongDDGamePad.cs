@@ -524,10 +524,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         GamePlayerData FindGamePlayerData(int userId)
         {
-            GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
-                return dt.m_PlayerWeiXinData.userId.Equals(userId);
-            });
-            return playerDt;
+            //GamePlayerData playerDt = m_GamePlayerData.Find((dt) => {
+            //    return dt.m_PlayerWeiXinData.userId.Equals(userId);
+            //});
+            //return playerDt;
+            return FindGamePlayerDataByDictionary(userId);
         }
 
         /// <summary>
@@ -550,6 +551,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (playerDt != null && m_GamePlayerData != null && m_GamePlayerData.Contains(playerDt) == false)
             {
                 m_GamePlayerData.Add(playerDt);
+                if (playerDt.m_PlayerWeiXinData != null)
+                {
+                    //在字典中添加玩家数据信息.
+                    AddGamePlayerDataByDictionary(playerDt);
+                }
             }
         }
 
@@ -562,6 +568,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (playerDt != null)
             {
                 m_GamePlayerData.Remove(playerDt);
+                if (playerDt.m_PlayerWeiXinData != null)
+                {
+                    //在字典中删除玩家数据信息.
+                    RemoveGamePlayerDataByDictionary(playerDt.m_PlayerWeiXinData.userId);
+                }
             }
         }
 
@@ -1050,6 +1061,52 @@ namespace Assets.XKGame.Script.HongDDGamePad
         //}
 
 #if USE_HDD_PAD_BT_ACTIVE_PLAYER //使用红点点手柄按键消息激活游戏主角
+            
+        /// <summary>
+        /// 创建泛型哈希表,Key类型为int,Value类型为GamePlayerData.
+        /// </summary>
+        Dictionary<int, GamePlayerData> m_PlayerDataDictionary = new Dictionary<int, GamePlayerData>();
+        /// <summary>
+        /// 查找玩家信息.
+        /// </summary>
+        GamePlayerData FindGamePlayerDataByDictionary(int userId)
+        {
+            GamePlayerData playerDt = null;
+            if (m_PlayerDataDictionary != null && m_PlayerDataDictionary.ContainsKey(userId) == true)
+            {
+                playerDt = m_PlayerDataDictionary[userId];
+            }
+            return playerDt;
+        }
+
+        /// <summary>
+        /// 添加玩家数据.
+        /// </summary>
+        void AddGamePlayerDataByDictionary(GamePlayerData playerDt)
+        {
+            if (m_PlayerDataDictionary != null && playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                if (m_PlayerDataDictionary.ContainsKey(playerDt.m_PlayerWeiXinData.userId) == false)
+                {
+                    m_PlayerDataDictionary.Add(playerDt.m_PlayerWeiXinData.userId, playerDt);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 删除玩家数据.
+        /// </summary>
+        void RemoveGamePlayerDataByDictionary(int userId)
+        {
+            if (m_PlayerDataDictionary != null)
+            {
+                if (m_PlayerDataDictionary.ContainsKey(userId) == true)
+                {
+                    m_PlayerDataDictionary.Remove(userId);
+                }
+            }
+        }
+
         /// <summary>
         /// 发射按键响应.
         /// </summary>
@@ -1064,7 +1121,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
             //}
 
             //Debug.Log("Unity:"+"pcvr::OnEventActionOperation -> userId " + userId + ", val " + val);
-            GamePlayerData playerDt = FindGamePlayerData(userId);
+            //GamePlayerData playerDt = FindGamePlayerData(userId);
+            GamePlayerData playerDt = FindGamePlayerDataByDictionary(userId);
             if (playerDt == null)
             {
                 //在玩家微信数据列表中找不到该玩家的信息.
