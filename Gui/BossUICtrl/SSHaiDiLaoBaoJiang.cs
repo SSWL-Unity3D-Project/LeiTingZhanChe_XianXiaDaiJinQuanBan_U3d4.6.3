@@ -146,6 +146,12 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             }
 
             int minNum = (int)(maxPlayer * (minNumPerArray[indexMinNumPer] / 100f));
+            if (maxPlayer <= 10)
+            {
+                //最小人数低于10人时强制在一半人数之后允许放奖.
+                minNum = (int)(maxPlayer * 0.5f);
+            }
+
             //SSDebug.LogWarning("minNum ======= " + minNum + ", currentNum === " + currentNum + ", maxPlayer == " + maxPlayer);
             if (minNum >= currentNum)
             {
