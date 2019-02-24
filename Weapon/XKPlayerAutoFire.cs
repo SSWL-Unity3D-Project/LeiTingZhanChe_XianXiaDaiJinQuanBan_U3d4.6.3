@@ -1142,7 +1142,6 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 //		if (!XkGameCtrl.IsActivePlayerTwo) {
 //			return;
 //		}
-
         
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {

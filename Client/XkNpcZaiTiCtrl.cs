@@ -79,7 +79,9 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 
 		if (ZaiTiNpcBuWaWa != null) {
 			ZaiTiNpcBuWaWa.gameObject.SetActive (false);
-		}
+            //取消布娃娃.
+            ZaiTiNpcBuWaWa = null;
+        }
 		NpcObj = gameObject;
 		//NpcTran = transform;
 		

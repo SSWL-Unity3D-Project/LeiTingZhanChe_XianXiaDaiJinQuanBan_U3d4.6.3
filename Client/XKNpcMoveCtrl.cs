@@ -600,7 +600,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
 			}
 			
 			XkNpcZaiTiCtrl zaiTiScript = GetComponentInChildren<XkNpcZaiTiCtrl>();
-			BuWaWaRigidbody = zaiTiScript.ZaiTiNpcBuWaWa;
+            if (zaiTiScript.ZaiTiNpcBuWaWa != null)
+            {
+                BuWaWaRigidbody = zaiTiScript.ZaiTiNpcBuWaWa;
+            }
 		}
 
 		if (MoveStyle == UITweener.Style.Loop) {
@@ -1205,7 +1208,10 @@ public class XKNpcMoveCtrl : MonoBehaviour
 		for (int i = 0; i < zaiTiScript.Length; i++) {
 			zaiTiScript[i].SetIsZaiNpc();
 			zaiTiAniList.Add(zaiTiScript[i].ZaiTiNpcAni);
-			zaiTiRigList.Add(zaiTiScript[i].ZaiTiNpcBuWaWa);
+            if (zaiTiScript[i].ZaiTiNpcBuWaWa != null)
+            {
+                zaiTiRigList.Add(zaiTiScript[i].ZaiTiNpcBuWaWa);
+            }
 		}
 		ZaiTiNpcAni = zaiTiAniList.ToArray();
 		ZaiTiNpcBuWaWa = zaiTiRigList.ToArray();
