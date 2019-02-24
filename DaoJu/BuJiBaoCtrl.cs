@@ -237,13 +237,37 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		RemoveBuJiBao(PlayerEnum.Null);
 	}
 
-	/// <summary>
-	/// Removes the bu ji bao. playerSt == 0 -> hit TerrainLayer,
-	/// playerSt == 1 -> PlayerOne, playerSt == 2 -> PlayerTwo.
-	/// playerSt == 3 -> PlayerThree, playerSt == 4 -> PlayerFour.
-	/// </summary>
-	/// <param name="key">Key.</param>
-	public void RemoveBuJiBao(PlayerEnum playerSt, int keyHit = 0)
+    /// <summary>
+    /// 获取积分.
+    /// </summary>
+    int GetJiFen()
+    {
+        //1位玩家时目前得分不变,2位玩家时得分变为原来的1.5倍,3位玩家时得分变为原来的2倍.
+        float fenZhiBeiLv = 1f;
+        switch (XkGameCtrl.PlayerActiveNum)
+        {
+            case 2:
+                {
+                    fenZhiBeiLv = 1.5f;
+                    break;
+                }
+            case 3:
+                {
+                    fenZhiBeiLv = 2f;
+                    break;
+                }
+        }
+        int jiFen = (int)(FenShuVal * fenZhiBeiLv);
+        return jiFen;
+    }
+
+    /// <summary>
+    /// Removes the bu ji bao. playerSt == 0 -> hit TerrainLayer,
+    /// playerSt == 1 -> PlayerOne, playerSt == 2 -> PlayerTwo.
+    /// playerSt == 3 -> PlayerThree, playerSt == 4 -> PlayerFour.
+    /// </summary>
+    /// <param name="key">Key.</param>
+    public void RemoveBuJiBao(PlayerEnum playerSt, int keyHit = 0)
 	{
         if (XkGameCtrl.GetIsDeathPlayer(playerSt) == true)
         {
@@ -300,7 +324,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
 				switch (BuJiBao) {
 				case BuJiBaoType.FenShuDJ:
 					isMoveDaoJu = false;
-					XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, FenShuVal);
+					XKPlayerFenShuCtrl.GetInstance().ShowPlayerFenShu(playerSt, GetJiFen());
 					break;
 				case BuJiBaoType.JiSuDJ:
 					//isMoveDaoJu = false;
