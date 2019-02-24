@@ -356,6 +356,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
                 {
                     perVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurrentTotalHealthDt.UIHealthPer;
+                    //重置Boss为不可以被击爆,避免玩家击爆AI坦克刷出的可以被击爆的Boss.
+                    XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurrentTotalHealthDt.IsCanJiBao = false;
                 }
                 SSUIRoot.GetInstance().m_GameUIManage.BackBloodBossAmount(perVal);
             }
