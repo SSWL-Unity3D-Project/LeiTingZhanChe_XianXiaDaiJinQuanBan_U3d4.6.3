@@ -159,7 +159,14 @@ public class SSChouJiangData : MonoBehaviour
         void ResetCurrentNum()
         {
             IsHaveBaoJiang = false;
-            curPlayer = 1;
+            if (curPlayer > maxPlayer)
+            {
+                curPlayer = curPlayer - maxPlayer;
+            }
+            else
+            {
+                curPlayer = 1;
+            }
         }
     }
     ZaiWanYiJuJiangPinData m_ZaiWanYiJuJiangPinDt = new ZaiWanYiJuJiangPinData();

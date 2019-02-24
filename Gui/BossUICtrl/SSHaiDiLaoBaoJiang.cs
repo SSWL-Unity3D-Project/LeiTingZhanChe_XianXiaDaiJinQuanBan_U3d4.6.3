@@ -101,7 +101,14 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 		void ResetCurrentNum()
 		{
 			IsHaveJiBaoNpc = false;
-			currentNum = 1;
+            if (currentNum > maxPlayer)
+            {
+                currentNum = currentNum - maxPlayer;
+            }
+            else
+            {
+                currentNum = 1;
+            }
 		}
 
 		/// <summary>
