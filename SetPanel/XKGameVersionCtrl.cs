@@ -3,7 +3,7 @@
 public class XKGameVersionCtrl : MonoBehaviour
 {
     UILabel VersionLB;
-    static string _GameVersion = "Version: 20190220.01";
+    static string _GameVersion = "Version: 20190223.01";
     public static string GameVersion
     {
         get
