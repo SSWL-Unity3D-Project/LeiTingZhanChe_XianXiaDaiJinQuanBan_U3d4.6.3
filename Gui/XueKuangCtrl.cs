@@ -86,7 +86,7 @@ public class XueKuangCtrl : MonoBehaviour
         m_WeiXinHead.mainTexture = m_TouMingHead;
     }
 
-    SSGameObjFlash m_GameObjFlash = null;
+    //SSGameObjFlash m_GameObjFlash = null;
     public void HandlePlayerXueTiaoInfo(float playerBlood)
 	{
         if (XueTiaoSprite == null)
@@ -97,33 +97,33 @@ public class XueKuangCtrl : MonoBehaviour
         float amount = (XkGameCtrl.KeyBloodUI * playerBlood) + XkGameCtrl.MinBloodUIAmount;
         amount = Mathf.Clamp01(amount);
         XueTiaoSprite.fillAmount = amount;
-        if (XueTiaoSprite.fillAmount <= 0.4f)
-        {
-            if (XueTiaoSprite.fillAmount <= 0f)
-            {
-                if (m_GameObjFlash != null)
-                {
-                    m_GameObjFlash.RemoveSelf();
-                    m_GameObjFlash = null;
-                }
-            }
-            else
-            {
+        //if (XueTiaoSprite.fillAmount <= 0.4f)
+        //{
+            //if (XueTiaoSprite.fillAmount <= 0f)
+            //{
+                //if (m_GameObjFlash != null)
+                //{
+                //    m_GameObjFlash.RemoveSelf();
+                //    m_GameObjFlash = null;
+                //}
+            //}
+            //else
+            //{
                 //if (m_GameObjFlash == null)
                 //{
                 //    m_GameObjFlash = gameObject.AddComponent<SSGameObjFlash>();
                 //    m_GameObjFlash.Init(0.25f, XueTiaoSprite.gameObject);
                 //}
-            }
-        }
-        else
-        {
-            if (m_GameObjFlash != null)
-            {
-                m_GameObjFlash.RemoveSelf();
-                m_GameObjFlash = null;
-            }
-        }
+            //}
+        //}
+        //else
+        //{
+            //if (m_GameObjFlash != null)
+            //{
+            //    m_GameObjFlash.RemoveSelf();
+            //    m_GameObjFlash = null;
+            //}
+        //}
 	}
 
 	public void HandleXueKuangNum(bool isActive)
@@ -201,11 +201,11 @@ public class XueKuangCtrl : MonoBehaviour
 		//XueTiaoSprite.gameObject.SetActive(isActiveInfo);
 		XueTiaoSprite.gameObject.SetActive(isActive);
         XueTiaoSprite.fillAmount = 1f;
-        if (m_GameObjFlash != null)
-        {
-            m_GameObjFlash.RemoveSelf();
-            m_GameObjFlash = null;
-        }
+        //if (m_GameObjFlash != null)
+        //{
+        //    m_GameObjFlash.RemoveSelf();
+        //    m_GameObjFlash = null;
+        //}
     }
 
 	public static XueKuangCtrl GetXueKuangCtrl(PlayerEnum playerIndex)

@@ -15,6 +15,9 @@ public class XKPlayerCamera : MonoBehaviour
     /// 玩家3彩票移动的终点.
     /// </summary>
     public Transform m_CaiPiaoEndTrP3;
+    /// <summary>
+    /// 玩家产生点.
+    /// </summary>
     public Transform[] PlayerSpawnPoint;
 	public Transform DaoJuSpawnPointArray;
 	Transform[] DaoJuSpawnPoint;

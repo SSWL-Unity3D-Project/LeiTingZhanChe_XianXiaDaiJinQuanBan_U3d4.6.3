@@ -108,7 +108,43 @@ public class XKPlayerAutoFire : SSGameMono
 
 //	[Range(1f, 500f)] public float DaoDanTimeMin = 1.5f; //导弹冷却时间.
 	bool IsActiveFireBtJQ; //机枪开火.
-	bool IsActiveFireBtZP; //主炮开火.
+    bool _IsActiveFireBtZP;
+    /// <summary>
+    /// 主炮开火.
+    /// </summary>
+    bool IsActiveFireBtZP
+    {
+        set
+        {
+            _IsActiveFireBtZP = value;
+        }
+        get
+        {
+            if (XkGameCtrl.GetInstance() != null)
+            {
+                if (XkGameCtrl.GetInstance().GetIsActiveAiPlayer() == true)
+                {
+                    //没有玩家激活游戏.
+                    return _IsActiveFireBtZP;
+                }
+                else
+                {
+                    if (XkGameCtrl.GetIsActivePlayer(PlayerIndex) == true
+                        &&  XkGameCtrl.GetIsDeathPlayer(PlayerIndex) == false)
+                    {
+                        //只要玩家激活游戏就持续开火.
+                        return true;
+                    }
+                    else
+                    {
+                        //玩家GG之后关闭开火.
+                        return false;
+                    }
+                }
+            }
+            return _IsActiveFireBtZP;
+        }
+    }
 	float LastFireTimeJiQiang = -1f;
 	float LastFireTimeZhuPao = -1f;
     /// <summary>

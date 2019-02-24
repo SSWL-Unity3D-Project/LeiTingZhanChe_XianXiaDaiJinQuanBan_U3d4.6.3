@@ -91,9 +91,10 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 
         if (Time.frameCount % 3 == 0)
         {
-            if (XkGameCtrl.GetIsActivePlayer(PlayerSt) == false)
+            if (XkGameCtrl.GetIsActivePlayer(PlayerSt) == false || XkGameCtrl.GetIsDeathPlayer(PlayerSt) == true)
             {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                SetActivePlayerXuTiao(false);
                 return;
             }
         }
@@ -158,6 +159,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
     {
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
+            //没有玩家激活游戏.
             return;
         }
 #if !USE_PLAYER_WX_HEAD
@@ -193,11 +195,11 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
         {
             if (fillVal <= 0f)
             {
-                if (m_GameObjFlash != null)
-                {
-                    m_GameObjFlash.RemoveSelf();
-                    m_GameObjFlash = null;
-                }
+                //if (m_GameObjFlash != null)
+                //{
+                //    m_GameObjFlash.RemoveSelf();
+                //    m_GameObjFlash = null;
+                //}
                 SetActiveXueTiaoFlash(false);
             }
             else
@@ -212,26 +214,41 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
         }
         else
         {
-            if (m_GameObjFlash != null)
-            {
-                m_GameObjFlash.RemoveSelf();
-                m_GameObjFlash = null;
-            }
+            //if (m_GameObjFlash != null)
+            //{
+            //    m_GameObjFlash.RemoveSelf();
+            //    m_GameObjFlash = null;
+            //}
             SetActiveXueTiaoFlash(false);
         }
 
         float xueLiangVal = 1f - fillVal;
 		xueLiangVal = Mathf.Clamp01(xueLiangVal);
 		NengLiangRenderer.materials[0].SetTextureOffset("_MainTex", new Vector2(xueLiangVal, 0f));
-		bool isActiveXT = xueLiangVal >= 1f ? false : true;
-        if (isActiveXT == true)
-        {
-            isActiveXT = XkGameCtrl.GetIsActivePlayer(PlayerSt);
-        }
-		gameObject.SetActive(isActiveXT);
-        SetActiveHead(isActiveXT);
+		//bool isActiveXT = fillVal <= 0f ? false : true;
+  //      if (isActiveXT == true)
+  //      {
+  //          isActiveXT = XkGameCtrl.GetIsActivePlayer(PlayerSt);
+  //          if (XkGameCtrl.GetIsDeathPlayer(PlayerSt) == true)
+  //          {
+  //              isActiveXT = false;
+  //          }
+  //      }
+		//gameObject.SetActive(isActiveXT);
+        //SetActiveHead(isActiveXT);
     }
-    SSGameObjFlash m_GameObjFlash = null;
+
+    internal void SetActivePlayerXuTiao(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+        SetActiveHead(isActive);
+        if (isActive == false)
+        {
+            SetActiveXueTiaoFlash(false);
+        }
+    }
+
+    //SSGameObjFlash m_GameObjFlash = null;
     /// <summary>
     /// 玩家血条外发光闪烁.
     /// </summary>
@@ -246,7 +263,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 	
 	public void SetPlayerIndex(PlayerEnum playerIndex)
 	{
-		bool isActiveXT = XkGameCtrl.GetIsActivePlayer(playerIndex);
+		//bool isActiveXT = XkGameCtrl.GetIsActivePlayer(playerIndex);
 		PlayerSt = playerIndex;
 		switch (PlayerSt) {
 		case PlayerEnum.PlayerOne:
@@ -271,8 +288,8 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		OffsetXT = NengLianTran.localPosition;
 		NengLianParentTr = NengLianTran.parent;
 		NengLianTran.parent = XkGameCtrl.MissionCleanup;
-		gameObject.SetActive(isActiveXT);
-        SetActiveHead(isActiveXT);
+		//gameObject.SetActive(isActiveXT);
+        //SetActiveHead(isActiveXT);
     }
 
     void SetActiveHead(bool isActive)

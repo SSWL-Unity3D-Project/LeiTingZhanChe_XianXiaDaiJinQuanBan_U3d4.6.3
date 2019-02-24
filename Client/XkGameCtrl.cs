@@ -2293,10 +2293,17 @@ public class XkGameCtrl : SSGameMono
 
     static void SetIsDeathPlayer(PlayerEnum indexPlayer, bool isDeathPlayer)
     {
+        //SSDebug.LogWarning("SetIsDeathPlayer -> indexPlayer === " + indexPlayer + ", isDeathPlayer === " + isDeathPlayer);
         int indexVal = (int)indexPlayer - 1;
         if (indexVal > -1 && indexVal < IsDeathPlayerArray.Length)
         {
             IsDeathPlayerArray[indexVal] = isDeathPlayer;
+        }
+
+        PlayerXueTiaoCtrl playerXueTiaoCom = PlayerXueTiaoCtrl.GetInstance(indexPlayer);
+        if (playerXueTiaoCom != null)
+        {
+            playerXueTiaoCom.SetActivePlayerXuTiao(!isDeathPlayer);
         }
     }
 
@@ -3238,11 +3245,12 @@ public class XkGameCtrl : SSGameMono
 		Vector3 posTmp = startPos;
 		Vector3 forwardVal = tran.forward;
 		RaycastHit hitInfo;
-		float disVal = 25f;
-		Physics.Raycast(startPos, forwardVal, out hitInfo, disVal, LandLayer);
+		float disVal = 200f;
+        startPos += -forwardVal * 30f;
+        Physics.Raycast(startPos, forwardVal, out hitInfo, disVal, LandLayer);
 		if (hitInfo.collider != null){
-			posTmp = hitInfo.point;
-		}
+			posTmp = hitInfo.point + (Vector3.up * 2f);
+        }
 		else {
 			bool isContinue = true;
 			int indexVal = 0;
@@ -3268,7 +3276,7 @@ public class XkGameCtrl : SSGameMono
 				forwardVal = tranTmp.forward;
 				Physics.Raycast(startPos, forwardVal, out hitInfo, disVal, LandLayer);
 				if (hitInfo.collider != null){
-					posTmp = hitInfo.point;
+					posTmp = hitInfo.point + (Vector3.up * 2f);
 					isContinue = false;
 					break;
 				}
@@ -4276,6 +4284,18 @@ public class XkGameCtrl : SSGameMono
         {
             Screen.SetResolution(XkGameCtrl.ScreenData.width, XkGameCtrl.ScreenData.height, true);
         }
+    }
+
+    /// <summary>
+    /// 获取当前是否激活了AI坦克.
+    /// </summary>
+    internal bool GetIsActiveAiPlayer()
+    {
+        if (m_GamePlayerAiData != null)
+        {
+            return m_GamePlayerAiData.IsActiveAiPlayer;
+        }
+        return true;
     }
 
 #if DRAW_GAME_INFO
