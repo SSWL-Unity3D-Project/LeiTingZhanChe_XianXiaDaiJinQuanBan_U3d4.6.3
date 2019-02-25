@@ -616,24 +616,28 @@ public class SSChouJiangUI : MonoBehaviour
                 //}
             }
 
-            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
-            {
-                isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin2);
-            }
 
             //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-            if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
+            if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
             {
-                //获得奖品2-战车01奖品.
-                indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
-
-                //此处添加玩家已经获得该类型奖品的代码.
-                if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                 {
-                    if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin2);
+                }
+
+                if (isCanFangJiangByTime == true)
+                {
+                    //获得奖品2-战车01奖品.
+                    indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
+
+                    //此处添加玩家已经获得该类型奖品的代码.
+                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
                     {
-                        //设置已经击爆npc的数据信息.
-                        SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+                        if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                        {
+                            //设置已经击爆npc的数据信息.
+                            SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
+                        }
                     }
                 }
             }
@@ -671,25 +675,28 @@ public class SSChouJiangUI : MonoBehaviour
                         //isZhongJiang = true;
                     //}
                 }
-
-                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
-                {
-                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin3);
-                }
-
+                
                 //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-                if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
+                if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
-                    //获得奖品3-战车02奖品.
-                    indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
-
-                    //此处添加玩家已经获得该类型奖品的代码.
-                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                    if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                     {
-                        if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                        isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin3);
+                    }
+
+                    if (isCanFangJiangByTime == true)
+                    {
+                        //获得奖品3-战车02奖品.
+                        indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
+
+                        //此处添加玩家已经获得该类型奖品的代码.
+                        if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
                         {
-                            //设置已经击爆npc的数据信息.
-                            SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                            {
+                                //设置已经击爆npc的数据信息.
+                                SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
+                            }
                         }
                     }
                 }
@@ -718,25 +725,28 @@ public class SSChouJiangUI : MonoBehaviour
                     //    isZhongJiang = true;
                     //}
                 }
-                
-                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
-                {
-                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin4);
-                }
 
                 //if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-                if (isHaveJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
+                if (isHaveJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
                 {
-                    //获得奖品4-随机道具奖品.
-                    indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
-
-                    //此处添加玩家已经获得该类型奖品的代码.
-                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                    if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                     {
-                        if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                        isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin4);
+                    }
+
+                    if (isCanFangJiangByTime == true)
+                    {
+                        //获得奖品4-随机道具奖品.
+                        indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
+
+                        //此处添加玩家已经获得该类型奖品的代码.
+                        if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
                         {
-                            //设置已经击爆npc的数据信息.
-                            SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                            if (SSHaiDiLaoBaoJiang.GetInstance() != null)
+                            {
+                                //设置已经击爆npc的数据信息.
+                                SSHaiDiLaoBaoJiang.GetInstance().SetIsHaveJiBaoNpc(true, SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
+                            }
                         }
                     }
                 }
@@ -774,21 +784,24 @@ public class SSChouJiangUI : MonoBehaviour
                     //}
                 }
             }
-
-            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
-            {
-                isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.ZaiWanYiJu);
-            }
             
             //if (isZhongJiang == true && isCanZaiWanYiJu == true)
-            if (isCanZaiWanYiJu == true && isCanFangJiangByTime == true)
+            if (isCanZaiWanYiJu == true)
             {
-                //获得再玩一局游戏奖品.
-                indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu);
-                //按照人数再玩一局游戏奖品已经爆奖.
                 if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                 {
-                    XkGameCtrl.GetInstance().m_SSChouJiangDt.SetIsHaveBaoJiang(true);
+                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.ZaiWanYiJu);
+                }
+
+                if (isCanFangJiangByTime == true)
+                {
+                    //获得再玩一局游戏奖品.
+                    indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu);
+                    //按照人数再玩一局游戏奖品已经爆奖.
+                    if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+                    {
+                        XkGameCtrl.GetInstance().m_SSChouJiangDt.SetIsHaveBaoJiang(true);
+                    }
                 }
             }
         }

@@ -285,6 +285,7 @@ public class SSChouJiangData : MonoBehaviour
                 isCanFangJiang = true;
                 fangJiangTime = Time.time;
             }
+            //SSDebug.LogWarning("GetIsCanFangJiang -> isCanFangJiang == " + isCanFangJiang + ", type == " + type);
             return isCanFangJiang;
         }
     }
