@@ -425,7 +425,7 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 		
 		if (objAmmo == null) {
 			objAmmo = SpawnNpcAmmo(spawnPoint, ammoPrefabObj);
-			HandleAmmoList( objAmmo.GetComponent<NpcAmmoCtrl>() );
+			HandleAmmoList( objAmmo.GetComponent<NpcAmmoCtrl>() ); //npc子弹列表.
 		}
 		
 		if (objAmmo != null) {

@@ -578,6 +578,8 @@ public class SSChouJiangUI : MonoBehaviour
         bool isCaiChiEnough = false;
         //该奖品是否可以爆奖按照人次.
         bool isDaiJinQuanBaoJiang = false;
+        //按照时间计算是否可以放奖.
+        bool isCanFangJiangByTime = false;
         //人数是否足够.
         //bool isEnoughPlayerNum = false;
         //海底捞菜品券游戏.
@@ -614,8 +616,13 @@ public class SSChouJiangUI : MonoBehaviour
                 //}
             }
 
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+            {
+                isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin2);
+            }
+
             //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-            if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+            if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
             {
                 //获得奖品2-战车01奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin2);
@@ -665,8 +672,13 @@ public class SSChouJiangUI : MonoBehaviour
                     //}
                 }
 
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+                {
+                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin3);
+                }
+
                 //if (isHaveJiBao == false && isZhongJiang == true && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-                if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                if (isHaveJiBao == false && isCanJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
                 {
                     //获得奖品3-战车02奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3);
@@ -706,9 +718,14 @@ public class SSChouJiangUI : MonoBehaviour
                     //    isZhongJiang = true;
                     //}
                 }
+                
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+                {
+                    isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.JiangPin4);
+                }
 
                 //if (isHaveJiBao == false && isZhongJiang == true && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
-                if (isHaveJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true)
+                if (isHaveJiBao == false && isCaiChiEnough == true && isDaiJinQuanBaoJiang == true && isCanFangJiangByTime == true)
                 {
                     //获得奖品4-随机道具奖品.
                     indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin4);
@@ -758,8 +775,13 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
 
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
+            {
+                isCanFangJiangByTime = XkGameCtrl.GetInstance().m_SSChouJiangDt.GetIsCanFangJiangByTime(JiangPinState.ZaiWanYiJu);
+            }
+            
             //if (isZhongJiang == true && isCanZaiWanYiJu == true)
-            if (isCanZaiWanYiJu == true)
+            if (isCanZaiWanYiJu == true && isCanFangJiangByTime == true)
             {
                 //获得再玩一局游戏奖品.
                 indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu);

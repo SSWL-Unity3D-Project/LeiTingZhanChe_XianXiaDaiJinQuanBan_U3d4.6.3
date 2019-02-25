@@ -186,6 +186,7 @@ public class SSChouJiangData : MonoBehaviour
             m_ZaiWanYiJuJiangPinDt.SetCurrentPlayerNum(num);
             m_ZaiWanYiJuJiangPinDt.SetIsHaveJiBaoNpc(isHaveBaoJiang);
         }
+        InitJiangPinTimeData();
     }
 
     /// <summary>
@@ -254,6 +255,71 @@ public class SSChouJiangData : MonoBehaviour
         }
     }
 
+    #region 抽奖中各项奖品间隔时间控制
+    //对各项奖池的数值因为是延迟减去的,所以导致同时多人抽奖时只要满足放奖条件就会出奖,最终导致
+    //奖池为负数问题出现. 对此问题需要进行时间保护,就是当同一奖池放奖之后的3分钟内不允许在出第二个奖品.
+    public class JiangPinTimeData
+    {
+        /// <summary>
+        /// 奖品类型.
+        /// </summary>
+        public SSChouJiangUI.JiangPinState type;
+        /// <summary>
+        /// 最后一次放出奖品的时间.
+        /// </summary>
+        float fangJiangTime = 0f;
+        public JiangPinTimeData(SSChouJiangUI.JiangPinState type)
+        {
+            this.type = type;
+            fangJiangTime = Time.time;
+        }
+        /// <summary>
+        /// 获取是否可以放奖.
+        /// </summary>
+        internal bool GetIsCanFangJiang()
+        {
+            bool isCanFangJiang = false;
+            if (Time.time - fangJiangTime > 180)
+            {
+                //同一奖品需要间隔一定时间之后才允许再次放奖.
+                isCanFangJiang = true;
+                fangJiangTime = Time.time;
+            }
+            return isCanFangJiang;
+        }
+    }
+
+    /// <summary>
+    /// 奖品放奖时间数据.
+    /// </summary>
+    JiangPinTimeData[] m_JiangPinTimeDtArray;
+    void InitJiangPinTimeData()
+    {
+        m_JiangPinTimeDtArray = new JiangPinTimeData[4];
+        m_JiangPinTimeDtArray[0] = new JiangPinTimeData(SSChouJiangUI.JiangPinState.JiangPin2);
+        m_JiangPinTimeDtArray[1] = new JiangPinTimeData(SSChouJiangUI.JiangPinState.JiangPin3);
+        m_JiangPinTimeDtArray[2] = new JiangPinTimeData(SSChouJiangUI.JiangPinState.JiangPin4);
+        m_JiangPinTimeDtArray[3] = new JiangPinTimeData(SSChouJiangUI.JiangPinState.ZaiWanYiJu);
+    }
+
+    /// <summary>
+    /// 按照奖品类型获取是否可以进行放奖.
+    /// </summary>
+    internal bool GetIsCanFangJiangByTime(SSChouJiangUI.JiangPinState type)
+    {
+        for (int i = 0; i < m_JiangPinTimeDtArray.Length; i++)
+        {
+            if (m_JiangPinTimeDtArray[i] != null && m_JiangPinTimeDtArray[i].type == type)
+            {
+                //找到奖品最后一次放奖时间数据.
+                return m_JiangPinTimeDtArray[i].GetIsCanFangJiang();
+            }
+        }
+        //没有找到奖品最后一次放奖时间数据.
+        return false;
+    }
+
+    #endregion
 
     #region 爆奖数据的读写操作
     /// <summary>

@@ -715,8 +715,8 @@ public class XKCannonCtrl : MonoBehaviour {
 		
 		if (objAmmo == null) {
 			objAmmo = SpawnNpcAmmo(spawnPoint);
-			HandleAmmoList( objAmmo.GetComponent<NpcAmmoCtrl>() );
-		}
+			HandleAmmoList( objAmmo.GetComponent<NpcAmmoCtrl>() ); //npc子弹列表.
+        }
 		
 		if (objAmmo != null) {
 			Transform tranAmmo = objAmmo.transform;

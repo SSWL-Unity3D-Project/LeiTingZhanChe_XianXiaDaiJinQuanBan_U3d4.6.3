@@ -2851,8 +2851,8 @@ public class XkGameCtrl : SSGameMono
 
 	public static void BossRemoveAllNpcAmmo()
 	{
-		NpcAmmoCtrl[] npcAmmoCom = NpcAmmoArray.GetComponentsInChildren<NpcAmmoCtrl>();
-		for (int i = 0; i < npcAmmoCom.Length; i++) {
+		NpcAmmoCtrl[] npcAmmoCom = NpcAmmoArray.GetComponentsInChildren<NpcAmmoCtrl>(); //npc子弹列表.
+        for (int i = 0; i < npcAmmoCom.Length; i++) {
 			npcAmmoCom[i].RemoveAmmo(1);
 		}
 	}
