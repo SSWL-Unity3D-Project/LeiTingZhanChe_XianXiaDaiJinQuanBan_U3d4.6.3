@@ -1,4 +1,4 @@
-﻿//#define USE_TEST_HDD_SERVER //使用红点点测试服务器.
+﻿#define USE_TEST_HDD_SERVER //使用红点点测试服务器.
 //#define USE_OLD_GET_HDD_GAME_CONFIG //使用旧版本后台数据管理接口.
 //#define TEST_DAI_JIN_QUAN //测试代金券.
 using Assets.XKGame.Script.Comm;
@@ -31,6 +31,8 @@ public class SSBoxPostNet : MonoBehaviour
 
     public void Init()
     {
+        InitHddBoxLoginData();
+
 #if !USE_TEST_HDD_SERVER
         //设置红点点正式服务器版本信息.
         XKGameVersionCtrl.SetReleaseGameVersion();
@@ -294,11 +296,24 @@ public class SSBoxPostNet : MonoBehaviour
             _HAED_WX_XiaoChengXu_Url = address; //微信小程序地址修改.
         }
     }
+    //#if USE_TEST_HDD_SERVER
+    //    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
+    //#else
+    //    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
+    //#endif
+
+    public BoxLoginData m_BoxLoginData = null;
+    /// <summary>
+    /// 初始化红点点游戏盒子数据信息.
+    /// </summary>
+    void InitHddBoxLoginData()
+    {
 #if USE_TEST_HDD_SERVER
-    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
+        m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
 #else
-    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
+        m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
 #endif
+    }
 
     public enum GamePayPlatform
     {
