@@ -1185,6 +1185,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
                                 //激活玩家之后需要删除玩家登陆数据信息.
                                 RemoveLoginGamePlayerData(userId);
+                                
+                                //发送手柄隐藏开始按键的消息.
+                                SendWXPadHiddenStartBt(userId);
                                 return;
                             }
                             //else
@@ -1945,6 +1948,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 GamePlayerData loginPlayerDt = new GamePlayerData();
                 loginPlayerDt.m_PlayerWeiXinData = weiXinDt;
                 AddLoginGamePlayerData(loginPlayerDt);
+
+                //发送手柄显示开始按键的消息.
+                SendWXPadShowStartBt(weiXinDt.userId);
             }
 
             bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
@@ -3219,6 +3225,30 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
             StartCoroutine(LoopGetWXPlayerHddPayData(userId));
+        }
+        
+        /// <summary>
+        /// 发送显示微信游戏手柄开始.
+        /// </summary>
+        void SendWXPadShowStartBt(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowStartBt(userId);
+            }
+        }
+
+        /// <summary>
+        /// 发送显示微信游戏手柄开始.
+        /// </summary>
+        void SendWXPadHiddenStartBt(int userId)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadHiddenStartBt(userId);
+            }
         }
 
         /// <summary>

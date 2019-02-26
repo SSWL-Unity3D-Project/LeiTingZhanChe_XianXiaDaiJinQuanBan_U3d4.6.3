@@ -496,4 +496,52 @@ public class WebSocketSimpet : MonoBehaviour
     //    GUI.Box(new Rect(10f, 0f, Screen.width - 20f, 25f), _address);
     //}
     #endregion
+
+    #region 手柄免费开始游戏按键的显示与隐藏控制
+    /// <summary>
+    /// 手柄免费开始游戏按键的显示.
+    /// 当玩家可以免费激活游戏时发送该网络消息.
+    /// </summary>
+    public void NetSendWeiXinPadShowStartBt(int userId)
+    {
+        if (m_SSBoxPostNet == null || m_SSBoxPostNet.m_BoxLoginData == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_show"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_show\"},\"_msg_name\":\"gamepad\"}";
+
+            SSDebug.LogWarning("NetSendWeiXinPadShowStartBt:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
+
+    /// <summary>
+    /// 手柄免费开始游戏按键的隐藏.
+    /// 当玩家可以免费激活游戏时发送该网络消息.
+    /// </summary>
+    public void NetSendWeiXinPadHiddenStartBt(int userId)
+    {
+        if (m_SSBoxPostNet == null || m_SSBoxPostNet.m_BoxLoginData == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_hide"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_hide\"},\"_msg_name\":\"gamepad\"}";
+
+            SSDebug.LogWarning("NetSendWeiXinPadHiddenStartBt:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
+    #endregion
 }

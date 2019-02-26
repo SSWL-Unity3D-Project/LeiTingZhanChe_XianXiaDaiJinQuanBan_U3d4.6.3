@@ -2179,13 +2179,14 @@ public class SSBoxPostNet : MonoBehaviour
             //发布版游戏强制重新获取小程序二维码.
             SSDebug.Log("Reload WX_XiaoChengXu_ErWeiMa....................................");
 #else
-            string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
-            //Debug.Log("Unity: path ============================= " + path);
-            if (File.Exists(path) == true)
-            {
-                DelayReadWeiXinXiaoChengXuErWeiMa();
-                return;
-            }
+            //如果有二维码,则不再重复进行二维码下载.
+            //string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
+            ////Debug.Log("Unity: path ============================= " + path);
+            //if (File.Exists(path) == true)
+            //{
+            //    DelayReadWeiXinXiaoChengXuErWeiMa();
+            //    return;
+            //}
 #endif
         }
         else
