@@ -1756,6 +1756,74 @@ public class SSBoxPostNet : MonoBehaviour
     }
 
     /// <summary>
+    /// 玩家登录数据.
+    /// </summary>
+    public class PlayerLoginData
+    {
+        /// <summary>
+        /// 用户Id.
+        /// </summary>
+        internal int userId = 0;
+        public PlayerLoginData(int userId)
+        {
+            this.userId = userId;
+        }
+    }
+    /// <summary>
+    /// 玩家登录数据.
+    /// </summary>
+    List<PlayerLoginData> m_PlayerLoginDt = new List<PlayerLoginData>();
+
+    /// <summary>
+    /// 查找玩家登录数据.
+    /// </summary>
+    PlayerLoginData FindPlayerloginData(int userId)
+    {
+        if (m_PlayerLoginDt == null)
+        {
+            return null;
+        }
+
+        PlayerLoginData loginData = m_PlayerLoginDt.Find((dt) => {
+            return dt.userId.Equals(userId);
+        });
+        return loginData;
+    }
+
+    /// <summary>
+    /// 添加玩家登录数据.
+    /// </summary>
+    void AddPlayerloginData(int userId)
+    {
+        PlayerLoginData loginData = FindPlayerloginData(userId);
+        if (loginData == null && m_PlayerLoginDt != null)
+        {
+            m_PlayerLoginDt.Add(new PlayerLoginData(userId));
+        }
+    }
+
+    /// <summary>
+    /// 删除玩家登录数据.
+    /// </summary>
+    void RemovePlayerloginData(int userId)
+    {
+        PlayerLoginData loginData = FindPlayerloginData(userId);
+        if (loginData != null && m_PlayerLoginDt != null)
+        {
+            m_PlayerLoginDt.Remove(loginData);
+        }
+    }
+
+    /// <summary>
+    /// 延迟删除玩家登录数据信息.
+    /// </summary>
+    IEnumerator DelayRemovePlayerLoginData(int userId)
+    {
+        yield return new WaitForSeconds(5f);
+        RemovePlayerloginData(userId);
+    }
+
+    /// <summary>
     /// 用户登录记录| 域名/wxbackstage/client/memberLogin | POST |
     /// gameCode | Integer | 游戏码 | 是
     /// screenCode | Integer | 屏幕码 | 是
@@ -1770,6 +1838,16 @@ public class SSBoxPostNet : MonoBehaviour
             SSDebug.LogWarning("HttpSendPostUserLoginInfo -> m_BoxLoginData was null");
             return;
         }
+
+        PlayerLoginData loginData = FindPlayerloginData(userId);
+        if (loginData != null)
+        {
+            //该玩家登录消息已经发送过了,不允许重复发送.
+            return;
+        }
+        AddPlayerloginData(userId);
+        StartCoroutine(DelayRemovePlayerLoginData(userId));
+
         //游戏对照码.
         int gameCode = (int)m_GamePadState;
         int screenCode = Convert.ToInt32(m_BoxLoginData.screenId);
