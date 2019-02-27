@@ -2331,7 +2331,14 @@ public class XkGameCtrl : SSGameMono
 
         if (_Instance != null)
         {
-            if (XKGlobalData.GetPlayerCoinIsEnough(indexPlayer) == true)
+            bool isCanXuMing = true;
+            if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+            {
+                //当前机位是否可以续命.
+                isCanXuMing = XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(indexPlayer);
+            }
+
+            if (isCanXuMing && XKGlobalData.GetPlayerCoinIsEnough(indexPlayer) == true)
             {
                 if (GetIsActivePlayer(indexPlayer) == true)
                 {
@@ -2346,6 +2353,12 @@ public class XkGameCtrl : SSGameMono
                 {
                     //此时需要对微信付费玩家进行红点点账户扣费.
                     pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(indexPlayer);
+                }
+                
+                //当前机位续命一次.
+                if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                {
+                    XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(indexPlayer);
                 }
             }
             else
@@ -2849,6 +2862,9 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
 
+    /// <summary>
+    /// 删除boss发射的子弹.
+    /// </summary>
 	public static void BossRemoveAllNpcAmmo()
 	{
 		NpcAmmoCtrl[] npcAmmoCom = NpcAmmoArray.GetComponentsInChildren<NpcAmmoCtrl>(); //npc子弹列表.
@@ -3374,6 +3390,12 @@ public class XkGameCtrl : SSGameMono
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerZhengChangDeCai(indexVal, false);
                 }
 				djsCtrl.StopDaoJiShi();
+
+                //当前机位续命一次.
+                if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                {
+                    XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(indexVal);
+                }
             }
             else
             {

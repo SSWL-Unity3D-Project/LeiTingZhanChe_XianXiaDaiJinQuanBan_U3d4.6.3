@@ -784,7 +784,17 @@ public class SSChouJiangUI : MonoBehaviour
                     //}
                 }
             }
-            
+
+            if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+            {
+                bool isCanXuMing = XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(m_IndexPlayer);
+                if (isCanXuMing == false)
+                {
+                    //玩家续命次数超出,不允许发送再玩一局游戏奖品.
+                    isCanZaiWanYiJu = false;
+                }
+            }
+
             //if (isZhongJiang == true && isCanZaiWanYiJu == true)
             if (isCanZaiWanYiJu == true)
             {
@@ -801,6 +811,12 @@ public class SSChouJiangUI : MonoBehaviour
                     if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_SSChouJiangDt != null)
                     {
                         XkGameCtrl.GetInstance().m_SSChouJiangDt.SetIsHaveBaoJiang(true);
+                    }
+                    
+                    //当前机位续命一次.
+                    if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                    {
+                        XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(m_IndexPlayer);
                     }
                 }
             }

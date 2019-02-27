@@ -324,9 +324,28 @@ public class XKGlobalData
         InitCaiChiBaoJiangLv();
         InitMianFeiShiWanCount();
         InitGameCoinToMoney();
+        InitSSGameXuMingData();
     }
-    
-	void InitInfo()
+
+    #region 游戏玩家续命次数信息
+    /// <summary>
+    /// 游戏续命玩家数据.
+    /// </summary>
+    internal SSGameXuMingData m_SSGameXuMingData;
+    /// <summary>
+    /// 初始化玩家续命数据.
+    /// </summary>
+    void InitSSGameXuMingData()
+    {
+        if (m_SSGameXuMingData == null)
+        {
+            m_SSGameXuMingData = new SSGameXuMingData();
+            m_SSGameXuMingData.Init();
+        }
+    }
+    #endregion
+
+    void InitInfo()
 	{
 #if UNITY_STANDALONE_WIN
         FilePath = Application.dataPath + "/../config";

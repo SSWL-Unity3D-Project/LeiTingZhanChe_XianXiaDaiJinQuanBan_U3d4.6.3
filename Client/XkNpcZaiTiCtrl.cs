@@ -378,6 +378,9 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 		AmmoList = new List<NpcAmmoCtrl>(5);
 	}
 	
+    /// <summary>
+    /// 添加npc子弹.
+    /// </summary>
 	void HandleAmmoList(NpcAmmoCtrl scriptAmmo)
 	{
 		if (AmmoList.Contains(scriptAmmo)) {
@@ -386,6 +389,9 @@ public class XkNpcZaiTiCtrl : MonoBehaviour {
 		AmmoList.Add(scriptAmmo);
 	}
 	
+    /// <summary>
+    /// 清除npc子弹.
+    /// </summary>
 	public void ClearNpcAmmoList()
 	{
 		if (IsClearNpcAmmo) {

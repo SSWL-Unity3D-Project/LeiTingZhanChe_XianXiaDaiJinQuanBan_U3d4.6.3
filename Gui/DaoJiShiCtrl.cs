@@ -149,6 +149,20 @@ public class DaoJiShiCtrl : MonoBehaviour
 
 	public void StartPlayDaoJiShi()
 	{
+        if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+        {
+            if (XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(PlayerIndex) == false)
+            {
+                //续命次数超出.
+                //此时需要发送不允许继续游戏的消息给手柄,30秒之后游戏发送踢出该玩家的消息给手柄(同时需要清除玩家的微信数据)
+                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                {
+                    //清理玩家微信数据.
+                    pcvr.GetInstance().m_HongDDGamePadInterface.SendWXPadShowFangChenMiPanel(PlayerIndex);
+                }
+            }
+        }
+
 		if (GameOverCtrl.IsShowGameOver) {
 			return;
 		}
@@ -354,6 +368,12 @@ public class DaoJiShiCtrl : MonoBehaviour
             //}
 
             XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
+            
+            if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+            {
+                //如果当前机位游戏续命倒计时结束之后就清除续命计数信息.
+                XKGlobalData.GetInstance().m_SSGameXuMingData.ResetXuMingCount(PlayerIndex);
+            }
             return;
 		}
 

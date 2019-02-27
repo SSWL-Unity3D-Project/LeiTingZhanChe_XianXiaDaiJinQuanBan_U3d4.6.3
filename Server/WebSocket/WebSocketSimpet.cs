@@ -303,16 +303,16 @@ public class WebSocketSimpet : MonoBehaviour
     /// 当游戏中玩家续费倒计时结束之后,玩家仍然没有成功续费时,客户端需要发送"充值超时,请稍后重新扫码"的消息给服务器.
     /// 支付超时踢人消息.
     /// </summary>
-    public void NetSendWXPadPlayerPayTimeOutCloseConnect(int userId)
-    {
-        NetSendWXPadPlayerCloseConnect(userId);
-    }
+    //public void NetSendWXPadPlayerPayTimeOutCloseConnect(int userId)
+    //{
+    //    NetSendWXPadPlayerCloseConnect(userId);
+    //}
 
     /// <summary>
     /// 发送关闭游戏手柄的消息.
     /// 踢人消息.
     /// </summary>
-    void NetSendWXPadPlayerCloseConnect(int userId)
+    public void NetSendWXPadPlayerCloseConnect(int userId)
     {
         if (m_SSBoxPostNet == null)
         {
@@ -327,6 +327,28 @@ public class WebSocketSimpet : MonoBehaviour
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"CloseConnect\",\"userId\":\"" + userId + "\"},\"_msg_name\":\"gamepad\"}";
             SSDebug.Log("NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
             //SSDebug.LogError("test **************** NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
+            _wabData.WebSocket.Send(msgToSend);
+        }
+    }
+    
+    /// <summary>
+    /// 发送游戏手柄展示防沉迷界面的消息.
+    /// </summary>
+    public void NetSendWXPadPlayerFangChenMiMsg(int userId)
+    {
+        if (m_SSBoxPostNet == null)
+        {
+            return;
+        }
+
+        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        {
+            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"anti_addication"},"_msg_name":"gamepad"}
+            string msgToSend = boxNumber + "," + boxNumber + "," + userId
+                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"anti_addication\"},\"_msg_name\":\"gamepad\"}";
+            SSDebug.Log("NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
+            //SSDebug.LogError("test **************** NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }
@@ -387,7 +409,7 @@ public class WebSocketSimpet : MonoBehaviour
                 }
             case "actionOperation": //手柄按键消息.
                 {
-                    //{"data":"fireA","type":"actionOperation","userId":"93124"}
+                    //{"data":"fireBUp","type":"actionOperation","userId":"9"}
                     string btVal = jd["data"].ToString();
                     int userId = Convert.ToInt32(jd["userId"].ToString());
                     OnNetReceiveActionOperationMsg(btVal, userId);

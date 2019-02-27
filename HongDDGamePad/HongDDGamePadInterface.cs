@@ -287,6 +287,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.RemoveGamePlayerData(indexPlayer);
             }
         }
+        
+        /// <summary>
+        /// 发送红点点微信游戏手柄展示防沉迷的消息.
+        /// </summary>
+        internal void SendWXPadShowFangChenMiPanel(PlayerEnum playerIndex)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendWXPadShowFangChenMiPanel(playerIndex);
+            }
+        }
         #endregion
     }
 }
