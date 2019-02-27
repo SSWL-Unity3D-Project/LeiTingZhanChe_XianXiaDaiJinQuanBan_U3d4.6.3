@@ -321,6 +321,14 @@ public class DaoJiShiCtrl : MonoBehaviour
         XkGameCtrl.GetInstance().ResetPlayerInfo(PlayerIndex);
     }
 
+    void Update()
+    {
+        if (IsOpenChangeDaoJiShi == true)
+        {
+            UpdataChangDaoJiShiVal();
+        }
+    }
+
     /// <summary>
     /// 倒计时变化间隔时间.
     /// </summary>
@@ -337,7 +345,7 @@ public class DaoJiShiCtrl : MonoBehaviour
             return;
         }
 
-        if (Time.time - m_TimeLastChange >= m_TimeChangeVal + 1f)
+        if (Time.time - m_TimeLastChange >= m_TimeChangeVal + 6f)
         {
             m_TimeLastChange = Time.time;
             ChangeDaoJiShiVal();

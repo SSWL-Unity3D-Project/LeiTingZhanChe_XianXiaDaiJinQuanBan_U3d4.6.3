@@ -11,8 +11,8 @@ public class SSGameXuMingData
         /// <summary>
         /// 最大续命次数.
         /// </summary>
-        //int maxXuMingNum = 10;
-        int maxXuMingNum = 2; //test
+        int maxXuMingNum = 10;
+        //int maxXuMingNum = 1; //test
         /// <summary>
         /// 增加续命次数.
         /// </summary>
@@ -34,6 +34,7 @@ public class SSGameXuMingData
         /// </summary>
         internal bool GetIsCanXuMing()
         {
+            //SSDebug.LogWarning("GetIsCanXuMing -> xuMingCount == " + xuMingCount + ", maxXuMingNum == " + maxXuMingNum);
             return xuMingCount < maxXuMingNum ? true : false;
         }
     }
@@ -60,12 +61,12 @@ public class SSGameXuMingData
     internal bool GetIsCanXuMing(PlayerEnum indexPlayer)
     {
         int indexVal = (int)indexPlayer - 1;
-        if (indexVal < 0 && indexVal > m_XuMingDtArray.Length)
+        if (indexVal >= 0 && indexVal < m_XuMingDtArray.Length)
         {
             if (m_XuMingDtArray[indexVal] != null)
             {
-                SSDebug.LogWarning("GetIsCanXuMing -> indexPlayer == " + indexPlayer
-                    + ", isCanXuMing == " + m_XuMingDtArray[indexVal].GetIsCanXuMing());
+                //SSDebug.LogWarning("GetIsCanXuMing -> indexPlayer == " + indexPlayer
+                //    + ", isCanXuMing == " + m_XuMingDtArray[indexVal].GetIsCanXuMing());
                 return m_XuMingDtArray[indexVal].GetIsCanXuMing();
             }
         }
@@ -78,11 +79,11 @@ public class SSGameXuMingData
     internal void AddXuMingCount(PlayerEnum indexPlayer)
     {
         int indexVal = (int)indexPlayer - 1;
-        if (indexVal < 0 && indexVal > m_XuMingDtArray.Length)
+        if (indexVal >= 0 && indexVal < m_XuMingDtArray.Length)
         {
             if (m_XuMingDtArray[indexVal] != null)
             {
-                SSDebug.LogWarning("AddXuMingCount -> indexPlayer == " + indexPlayer);
+                //SSDebug.LogWarning("AddXuMingCount -> indexPlayer == " + indexPlayer);
                 m_XuMingDtArray[indexVal].AddXuMingCount();
             }
         }
@@ -94,11 +95,11 @@ public class SSGameXuMingData
     internal void ResetXuMingCount(PlayerEnum indexPlayer)
     {
         int indexVal = (int)indexPlayer - 1;
-        if (indexVal < 0 && indexVal > m_XuMingDtArray.Length)
+        if (indexVal >= 0 && indexVal < m_XuMingDtArray.Length)
         {
             if (m_XuMingDtArray[indexVal] != null)
             {
-                SSDebug.LogWarning("ResetXuMingCount -> indexPlayer == " + indexPlayer);
+                //SSDebug.LogWarning("ResetXuMingCount -> indexPlayer == " + indexPlayer);
                 m_XuMingDtArray[indexVal].ResetXuMingCount();
             }
         }

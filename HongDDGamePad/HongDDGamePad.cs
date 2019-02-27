@@ -2395,7 +2395,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     }
             }
 
-            if (coinTotal >= XKGlobalData.GameNeedCoin)
+            if (coinTotal >= XKGlobalData.GameNeedCoin && XkGameCtrl.GetIsActivePlayer(playerIndex) == false)
             {
                 //玩家币值足够,则开启游戏.
                 InputEventCtrl.GetInstance().OnClickGameStartBt((int)playerIndex - 1);
@@ -3041,7 +3041,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         m_SSBoxPostNet.m_WebSocketSimpet.NetSendWXPadPlayerFangChenMiMsg(dt.m_PlayerWeiXinData.userId);
                     }
-                    //30秒游戏发送踢出该玩家的消息给手柄(同时需要清除玩家的微信数据)
+                    //35秒游戏发送踢出该玩家的消息给手柄(同时需要清除玩家的微信数据)
                     StartCoroutine(DelaySendCloseConnectFromShowFangChenMi(dt.m_PlayerWeiXinData.userId));
                 }
             }
@@ -3049,11 +3049,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
         /// <summary>
         /// 当发送红点点微信游戏手柄展示防沉迷的消息之后
-        /// 30秒游戏发送踢出该玩家的消息给手柄(同时需要清除玩家的微信数据)
+        /// 35秒游戏发送踢出该玩家的消息给手柄(同时需要清除玩家的微信数据)
         /// </summary>
         IEnumerator DelaySendCloseConnectFromShowFangChenMi(int userId)
         {
-            yield return new WaitForSeconds(30f);
+            yield return new WaitForSeconds(35f);
             //此处添加踢人消息.
             //游戏续命次数超出发送踢人消息.
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null)

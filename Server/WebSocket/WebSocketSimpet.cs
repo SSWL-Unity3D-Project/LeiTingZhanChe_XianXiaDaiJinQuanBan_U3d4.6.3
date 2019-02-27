@@ -348,7 +348,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"anti_addication\"},\"_msg_name\":\"gamepad\"}";
             SSDebug.Log("NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
-            //SSDebug.LogError("test **************** NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
+            //SSDebug.LogWarning("test ******************** NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }
@@ -561,7 +561,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_hide\"},\"_msg_name\":\"gamepad\"}";
 
-            SSDebug.LogWarning("NetSendWeiXinPadHiddenStartBt:: msg == " + msgToSend);
+            //SSDebug.LogWarning("NetSendWeiXinPadHiddenStartBt:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }

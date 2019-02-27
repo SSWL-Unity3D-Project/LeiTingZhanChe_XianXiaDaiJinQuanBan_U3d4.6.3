@@ -3383,6 +3383,12 @@ public class XkGameCtrl : SSGameMono
                     //增加玩家续币数量信息.
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerXuBiVal(indexVal);
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerZhengChangDeCai(indexVal, true);
+
+                    //当前机位续命一次.
+                    if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                    {
+                        XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(indexVal);
+                    }
                 }
                 else
                 {
@@ -3390,12 +3396,6 @@ public class XkGameCtrl : SSGameMono
                     XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.AddPlayerZhengChangDeCai(indexVal, false);
                 }
 				djsCtrl.StopDaoJiShi();
-
-                //当前机位续命一次.
-                if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
-                {
-                    XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(indexVal);
-                }
             }
             else
             {
