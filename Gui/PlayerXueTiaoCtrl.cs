@@ -1,4 +1,5 @@
-﻿#define USE_PLAYER_WX_HEAD
+﻿//#define OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
+#define USE_PLAYER_WX_HEAD
 using UnityEngine;
 
 public class PlayerXueTiaoCtrl : MonoBehaviour
@@ -80,6 +81,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 #endif
     }
 
+#if OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
     // Update is called once per frame
     void Update()
 	{
@@ -149,6 +151,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 			break;
 		}
 	}
+#endif
 
     /// <summary>
     /// 微信头像url.
@@ -287,8 +290,10 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		NengLianTran = transform;
 		OffsetXT = NengLianTran.localPosition;
 		NengLianParentTr = NengLianTran.parent;
-		NengLianTran.parent = XkGameCtrl.MissionCleanup;
-		//gameObject.SetActive(isActiveXT);
+#if OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
+        NengLianTran.parent = XkGameCtrl.MissionCleanup;
+#endif
+        //gameObject.SetActive(isActiveXT);
         //SetActiveHead(isActiveXT);
     }
 
