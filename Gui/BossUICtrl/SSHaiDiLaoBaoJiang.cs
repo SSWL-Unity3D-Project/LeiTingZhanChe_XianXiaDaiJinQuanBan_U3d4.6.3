@@ -39,7 +39,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
         /// <summary>
         /// 最少人数之后的百分比索引.
         /// </summary>
-        int indexMinNumPer = 0;
+        internal int indexMinNumPer = 0;
         internal void SetCurrentNum(int num)
         {
             currentNum = num;
@@ -237,6 +237,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 
             isHaveBaoJiang = GetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
             m_BaoJiangDtJPBoss.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+            m_BaoJiangDtJPBoss.indexMinNumPer = GetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan);
         }
 
         if (m_BaoJiangDtZhanChe01 != null)
@@ -246,6 +247,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 
             isHaveBaoJiang = GetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
             m_BaoJiangDtZhanChe01.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+            m_BaoJiangDtZhanChe01.indexMinNumPer = GetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01);
         }
 
         if (m_BaoJiangDtZhanChe02 != null)
@@ -255,6 +257,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 
             isHaveBaoJiang = GetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
             m_BaoJiangDtZhanChe02.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+            m_BaoJiangDtZhanChe02.indexMinNumPer = GetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02);
         }
 
         if (m_BaoJiangDtSuiJiDaoJu != null)
@@ -264,6 +267,7 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
 
             isHaveBaoJiang = GetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
             m_BaoJiangDtSuiJiDaoJu.SetIsHaveJiBaoNpc(isHaveBaoJiang);
+            m_BaoJiangDtSuiJiDaoJu.indexMinNumPer = GetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan);
         }
     }
 
@@ -471,6 +475,8 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 //重置击爆信息
                 SetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan, false);
+                //设置最少出奖人数百分比.
+                SetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.JPBossDaiJinQuan, m_BaoJiangDtJPBoss.indexMinNumPer);
             }
         }
 
@@ -482,6 +488,8 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 //重置击爆信息
                 SetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01, false);
+                //设置最少出奖人数百分比.
+                SetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_01, m_BaoJiangDtZhanChe01.indexMinNumPer);
             }
         }
 
@@ -493,6 +501,8 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 //重置击爆信息
                 SetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02, false);
+                //设置最少出奖人数百分比.
+                SetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.ZhanCheDaiJinQuan_02, m_BaoJiangDtZhanChe02.indexMinNumPer);
             }
         }
 
@@ -504,6 +514,8 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
             {
                 //重置击爆信息
                 SetIsHaveBaoJiang(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan, false);
+                //设置最少出奖人数百分比.
+                SetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState.SuiJiDaoJuDaiJinQuan, m_BaoJiangDtSuiJiDaoJu.indexMinNumPer);
             }
         }
     }
@@ -569,6 +581,35 @@ public class SSHaiDiLaoBaoJiang : MonoBehaviour
         string ele = "BaoJiangDt";
         string attribute = "IsBaoJiang" + type.ToString();
         WriteToFileXml(FileName, ele, attribute, num.ToString());
+    }
+
+    /// <summary>
+    /// 获取当前奖池最少中奖人数比例索引.
+    /// </summary>
+    int GetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type)
+    {
+        int indexVal = 0;
+        string ele = "BaoJiangDt";
+        string attr = type.ToString() + "MinNumPerIndex";
+        string info = ReadFromFileXml(FileName, ele, attr);
+        if (info != null && info != "")
+        {
+            indexVal = Convert.ToInt32(info);
+        }
+        else
+        {
+            WriteToFileXml(FileName, ele, type.ToString(), indexVal.ToString());
+        }
+        return indexVal;
+    }
+
+    /// <summary>
+    /// 设置当前奖池最少中奖人数比例索引.
+    /// </summary>
+    void SetMinNumPerArrayIndex(SSCaiPiaoDataManage.GameCaiPiaoData.DaiJinQuanState type, int indexVal)
+    {
+        string attr = type.ToString() + "MinNumPerIndex";
+        WriteToFileXml(FileName, "BaoJiangDt", attr, indexVal.ToString());
     }
 
     /// <summary>
