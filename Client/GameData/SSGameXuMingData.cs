@@ -11,7 +11,8 @@ public class SSGameXuMingData
         /// <summary>
         /// 最大续命次数.
         /// </summary>
-        int maxXuMingNum = 10;
+        //int maxXuMingNum = 10;
+        int maxXuMingNum = 2; //test
         /// <summary>
         /// 增加续命次数.
         /// </summary>

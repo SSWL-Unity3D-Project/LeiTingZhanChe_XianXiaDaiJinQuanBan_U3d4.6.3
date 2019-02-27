@@ -613,6 +613,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
             fireYUp,
             fireAUp,
             fireBUp,
+            startGameBtUp,
+            startGameBtDown,
         }
 
         /// <summary>
@@ -1159,7 +1161,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         return;
                     }
 
-                    if (m_HongDDGamePadWXPay != null)
+                    //必须是收到开始按键按下消息才允许激活免费试玩游戏玩家.
+                    if (m_HongDDGamePadWXPay != null && val == PlayerShouBingFireBt.startGameBtDown.ToString())
                     {
                         //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
                         if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
@@ -1203,39 +1206,10 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 SendWXPadHiddenStartBt(userId);
                                 return;
                             }
-                            //else
-                            //{
-                            //    //该玩家不可以试玩游戏.
-                            //    //测试:直接给玩家2个游戏币.
-                            //    //AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), 2); //test.
-
-                            //    //获取微信玩家的红点点游戏账户数据.
-                            //    //GetWXPlayerHddPayData(val.userId);
-                            //    //playerDt.IsMianFeiTiYanPlayer = false;
-                            //    //playerDt.IsGetWXPlayerHddPayData = true;
-
-                            //    //如果当前有空余机位但是玩家不能进行免费试玩需要发送付费消息给手柄.
-                            //    isSendDisplayFuFeiPanel = true;
-                            //}
                         }
-                        //else
-                        //{
-                        //    //获取微信玩家的红点点游戏账户数据.
-                        //    //GetWXPlayerHddPayData(val.userId);
-                        //    //playerDt.IsMianFeiTiYanPlayer = false;
-                        //    //playerDt.IsGetWXPlayerHddPayData = true;
-
-                        //    //如果当前有空余机位但是玩家不能进行免费试玩需要发送付费消息给手柄.
-                        //    isSendDisplayFuFeiPanel = true;
-                        //}
-
-                        //if (isSendDisplayFuFeiPanel == true)
-                        //{
-                        //    //发送付费消息给手柄.
-                        //    SendWXPadShowTopUpPanel(userId);
-                        //}
                     }
                 }
+                return;
             }
 
             //在玩家微信数据列表中可以找到该玩家的信息.
@@ -1309,13 +1283,14 @@ namespace Assets.XKGame.Script.HongDDGamePad
 #else
                     bool isSendMsg = false;
                     //玩家币值不够,需要拉起微信游戏手柄的充值界面.
-                    if (val == PlayerShouBingFireBt.fireADown.ToString()
-                        || val == PlayerShouBingFireBt.fireXDown.ToString())
-                    {
-                        //SendWXPadShowTopUpPanel(userId);
-                        isSendMsg = true;
-                    }
-                    else if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                    //if (val == PlayerShouBingFireBt.fireADown.ToString()
+                    //    || val == PlayerShouBingFireBt.fireXDown.ToString())
+                    //{
+                    //    //SendWXPadShowTopUpPanel(userId);
+                    //    isSendMsg = true;
+                    //}
+                    //else if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
                         || val == PlayerShouBingFireBt.fireYDown.ToString())
                     {
                         //SendWXPadShowTopUpPanel(userId);

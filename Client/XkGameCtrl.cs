@@ -2,7 +2,7 @@
 //#define DEBUG_SHOW_RESTART_GAME_TIME //测试游戏重启倒计时信息.
 //#define TEST_SCREEN_CONFIG
 //#define TEST_UPDATA_GAME
-#define DRAW_DEBUG_CAIPIAO_INFO
+//#define DRAW_DEBUG_CAIPIAO_INFO
 //#define DRAW_DEBUG_BAOJI_INFO
 //#define DRAW_GAME_INFO
 using UnityEngine;

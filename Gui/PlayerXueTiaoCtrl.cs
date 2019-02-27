@@ -1,4 +1,5 @@
-﻿//#define OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
+﻿//#define OPEN_XUETIAO_GENSUI_POINT //打开血条跟随坐标的逻辑.
+//#define OPEN_XUETIAO_GENSUI_BIAN_POS //打开血条跟随并且变换位置的逻辑.
 #define USE_PLAYER_WX_HEAD
 using UnityEngine;
 
@@ -81,7 +82,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 #endif
     }
 
-#if OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
+#if OPEN_XUETIAO_GENSUI_BIAN_POS //打开血条跟随逻辑.
     // Update is called once per frame
     void Update()
 	{
@@ -290,7 +291,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 		NengLianTran = transform;
 		OffsetXT = NengLianTran.localPosition;
 		NengLianParentTr = NengLianTran.parent;
-#if OPEN_XUETIAO_GENSUI //打开血条跟随逻辑.
+#if OPEN_XUETIAO_GENSUI_BIAN_POS //打开血条跟随逻辑.
         NengLianTran.parent = XkGameCtrl.MissionCleanup;
 #endif
         //gameObject.SetActive(isActiveXT);

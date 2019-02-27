@@ -36,6 +36,9 @@ public class XKPlayerAutoFire : SSGameMono
 	 * IsLockPaoTa == false -> 子弹向子弹产生点方向打,炮塔转向跟随坦克机身的转向.
 	 */
 	public bool IsLockPaoTa;
+    /// <summary>
+    /// 炮塔转向控制.
+    /// </summary>
 	public Transform PaoTaTr;
 	/**
 	 * 炮塔开火点控制.
@@ -399,9 +402,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (IsLockPaoTa) {
-			UpdatePaoTaRot();
-		}
+		//if (IsLockPaoTa) {
+		//	UpdatePaoTaRot();
+		//}
 
 		if (XKTriggerClosePlayerUI.IsClosePlayerUI) {
 			return;
@@ -2074,8 +2077,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		int indexVal = (int)PlayerIndex - 1;
 		JiQiangFireAudioState[indexVal] = IsActiveFireBtJQ == true ? 1 : 0;
 	}
-	
-	void UpdatePaoTaRot()
+
+    /// <summary>
+    /// 更新炮塔转向.
+    /// </summary>
+    internal void UpdatePaoTaRot()
 	{
 		if (!IsLockPaoTa) {
 			return;

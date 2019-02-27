@@ -188,6 +188,12 @@ public class XKPlayerMoveCtrl : MonoBehaviour
                 CheckPlayerYaoGanInput();
                 break;
         }
+
+        //if (FireScript != null)
+        //{
+        //    FireScript.UpdatePaoTaRot();
+        //}
+
         //if (!IsMoveToTiaoYueDian) {
 		//	switch (TKMoveSt) {
 		//	case TKMoveState.U_FangXiangPan:
@@ -231,6 +237,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		CheckCheTiPointArray();
 
         CheckPlayerToMainCameraDistance();
+
+        if (FireScript != null)
+        {
+            FireScript.UpdatePaoTaRot();
+        }
     }
 
 	void OnCollisionEnter(Collision collision)
