@@ -16,6 +16,10 @@ public class SSPingJiData : MonoBehaviour
         SS = 5,
         SSS = 6,
     }
+    /// <summary>
+    /// 评级达到多少可以进入抽奖.
+    /// </summary>
+    public PingJiLevel m_ChouJiangPingJi = PingJiLevel.A;
 
     private void Start()
     {
@@ -23,6 +27,20 @@ public class SSPingJiData : MonoBehaviour
         {
             XkGameCtrl.GetInstance().m_PingJiData = this;
         }
+    }
+
+    /// <summary>
+    /// 获取游戏抽奖最低分数.
+    /// </summary>
+    internal int GetChouJiangMinScore()
+    {
+        int score = 40000;
+        int indexVal = (int)m_ChouJiangPingJi;
+        if (indexVal >= 0 && indexVal < m_PingJiFenShuArray.Length)
+        {
+            score = m_PingJiFenShuArray[indexVal];
+        }
+        return score;
     }
 
     internal PingJiLevel GetPlayerPingJiLevel(int fenShuVal)

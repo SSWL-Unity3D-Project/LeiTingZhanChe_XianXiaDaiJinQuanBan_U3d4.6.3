@@ -174,7 +174,7 @@ public class WebSocketSimpet : MonoBehaviour
         }
         else
         {
-            Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> Restart game box!");
+            Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> Restart game box! time == " + Time.time.ToString("f2"));
             m_SSBoxPostNet.HttpSendPostLoginBox();
         }
     }

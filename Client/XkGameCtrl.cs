@@ -12,6 +12,7 @@ using Assets.XKGame.Script.GamePay;
 using System.Collections;
 using Assets.XKGame.Script.Server.WebSocket;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 public enum NpcJiFenEnum
 {
@@ -479,7 +480,7 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 获取玩家积分信息.
     /// </summary>
-    static int GetPlayerJiFenValue(PlayerEnum indexPlayer)
+    public static int GetPlayerJiFenValue(PlayerEnum indexPlayer)
     {
         int indexVal = (int)indexPlayer - 1;
         if (indexVal < 0 || indexVal >= PlayerJiFenArray.Length)
@@ -4318,6 +4319,15 @@ public class XkGameCtrl : SSGameMono
             return m_GamePlayerAiData.IsActiveAiPlayer;
         }
         return true;
+    }
+
+    /// <summary>
+    /// 释放游戏游离资源.
+    /// </summary>
+    public void UnloadUnusedAssets()
+    {
+        //释放游戏游离资源.
+        Resources.UnloadUnusedAssets();
     }
 
 #if DRAW_GAME_INFO

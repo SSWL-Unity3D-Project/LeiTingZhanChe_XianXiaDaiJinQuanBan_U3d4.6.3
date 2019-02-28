@@ -522,12 +522,12 @@ public class SpawnNpcManage : MonoBehaviour
                 SpawnPoint.SpawnMaxNpc = 1;
                 //延迟时间设置为0.
                 SpawnPoint.DelayTimeVal = 0f;
-                SSDebug.Log("CreatPointBuJiNpc.................... NpcPrefab == " + NpcPrefab);
+                //SSDebug.Log("CreatPointBuJiNpc.................... NpcPrefab == " + NpcPrefab);
                 return SpawnPoint.CreateBuChongNpc();
             }
             else
             {
-                Debug.LogWarning("Unity: CreatPointBuJiNpc -> SpawnPoint was null");
+                //Debug.LogWarning("Unity: CreatPointBuJiNpc -> SpawnPoint was null");
                 return null;
             }
         }

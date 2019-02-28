@@ -1699,6 +1699,13 @@ public class SSGameUICtrl : SSGameMono
                     //此时需要对微信付费玩家进行红点点账户扣费.
                     pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(indexPlayer);
                 }
+
+                SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(indexPlayer);
+                if (playerScoreManage != null)
+                {
+                    //创建玩家评级UI界面时.
+                    playerScoreManage.OnCreatePingJiPanel();
+                }
             }
             else
             {
@@ -1752,7 +1759,7 @@ public class SSGameUICtrl : SSGameMono
     /// <summary>
     /// 产生玩家游戏抽奖界面UI.
     /// </summary>
-    internal void CreatPlayerChouJiangUI(PlayerEnum indexPlayer)
+    internal void CreatPlayerChouJiangUI(PlayerEnum indexPlayer, bool isCanChouJiang)
     {
         int indexVal = (int)indexPlayer - 1;
         if (indexVal >= m_ChouJiangUIArray.Length)
@@ -1770,7 +1777,7 @@ public class SSGameUICtrl : SSGameMono
                 Debug.Log("Unity: CreatPlayerChouJiangUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_ChouJiangUIArray[indexVal] = obj.GetComponent<SSChouJiangUI>();
-                m_ChouJiangUIArray[indexVal].Init(indexPlayer);
+                m_ChouJiangUIArray[indexVal].Init(indexPlayer, isCanChouJiang);
             }
             else
             {
@@ -1814,6 +1821,19 @@ public class SSGameUICtrl : SSGameMono
             m_ChouJiangUIArray[indexVal].RemoveSelf();
             m_ChouJiangUIArray[indexVal] = null;
             //Resources.UnloadUnusedAssets();
+
+            SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(indexPlayer);
+            if (playerScoreManage != null)
+            {
+                //当删除玩家抽奖界面的同时重置距玩家还差多少分数.
+                playerScoreManage.OnRemovePlayerChouJiangPanel();
+            }
+
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                //删除玩家评级界面.
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(indexPlayer);
+            }
         }
     }
 }

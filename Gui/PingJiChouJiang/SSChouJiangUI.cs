@@ -5,6 +5,11 @@ public class SSChouJiangUI : MonoBehaviour
 {
     //抽奖环节：显示抽奖界面（15秒启动开奖倒计时，15秒后自动开奖），当玩家点击手柄射击键时，抽奖游戏开始，抽中或抽不中均提示玩家。
     /// <summary>
+    /// 逐渐显示的时间.
+    /// </summary>
+    [Range(0f, 10f)]
+    public float m_AlphaTime = 0.5f;
+    /// <summary>
     /// 15秒倒计时.
     /// </summary>
     public SSGameNumUI m_DaoJiShiNumUI;
@@ -37,6 +42,14 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     public GameObject m_XieXieCanYuUIObj;
     /// <summary>
+    /// 玩家获得分数没有达到抽奖时需要进行隐藏的对象.
+    /// </summary>
+    public GameObject[] m_HiddenArray;
+    /// <summary>
+    /// 不允许玩家进行抽经.
+    /// </summary>
+    public GameObject m_BuYunXuChouJiangObj;
+    /// <summary>
     /// 玩家索引信息.
     /// </summary>
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
@@ -44,30 +57,76 @@ public class SSChouJiangUI : MonoBehaviour
     /// 自动抽奖倒计时.
     /// </summary>
     int m_DaoJiShiVal = 10;
-    internal void Init(PlayerEnum indexPlayer)
+    internal void Init(PlayerEnum indexPlayer, bool isCanChouJiang)
     {
         m_IndexPlayer = indexPlayer;
+        CheckHiddenObjArray(isCanChouJiang);
+        InitPanelAlphaToMax();
         HiddeChouJiangZhanShiUI();
         InitJiangPinUI();
         SetActivePlayerChouJiangResult(false);
         StartCoroutine(PlayChouJiangDaoJiShi());
-        switch (m_IndexPlayer)
+
+        if (isCanChouJiang == true)
         {
-            case PlayerEnum.PlayerOne:
-                {
-                    InputEventCtrl.GetInstance().ClickDaoDanBtOneEvent += ClickDaoDanBtOneEvent;
-                }
-                break;
-            case PlayerEnum.PlayerTwo:
-                {
-                    InputEventCtrl.GetInstance().ClickDaoDanBtTwoEvent += ClickDaoDanBtTwoEvent;
-                }
-                break;
-            case PlayerEnum.PlayerThree:
-                {
-                    InputEventCtrl.GetInstance().ClickDaoDanBtThreeEvent += ClickDaoDanBtThreeEvent;
-                }
-                break;
+            //允许抽奖.
+            switch (m_IndexPlayer)
+            {
+                case PlayerEnum.PlayerOne:
+                    {
+                        InputEventCtrl.GetInstance().ClickDaoDanBtOneEvent += ClickDaoDanBtOneEvent;
+                    }
+                    break;
+                case PlayerEnum.PlayerTwo:
+                    {
+                        InputEventCtrl.GetInstance().ClickDaoDanBtTwoEvent += ClickDaoDanBtTwoEvent;
+                    }
+                    break;
+                case PlayerEnum.PlayerThree:
+                    {
+                        InputEventCtrl.GetInstance().ClickDaoDanBtThreeEvent += ClickDaoDanBtThreeEvent;
+                    }
+                    break;
+            }
+        }
+        SetActiveBuYunXuChouJiangObj(isCanChouJiang);
+    }
+
+    /// <summary>
+    /// 初始化逐渐显示界面功能.
+    /// </summary>
+    void InitPanelAlphaToMax()
+    {
+        UITexture uiTexture = gameObject.AddComponent<UITexture>();
+        uiTexture.alpha = 0f;
+        TweenAlpha tweenAlpha = gameObject.AddComponent<TweenAlpha>();
+        tweenAlpha.from = 0f;
+        tweenAlpha.to = 1f;
+        tweenAlpha.duration = m_AlphaTime;
+    }
+
+    /// <summary>
+    /// 设置是否激活不允许抽奖UI界面.
+    /// </summary>
+    void SetActiveBuYunXuChouJiangObj(bool isCanChouJiang)
+    {
+        if (m_BuYunXuChouJiangObj != null)
+        {
+            m_BuYunXuChouJiangObj.SetActive(isCanChouJiang);
+        }
+    }
+
+    /// <summary>
+    /// 检测是否隐藏对象.
+    /// </summary>
+    void CheckHiddenObjArray(bool isCanChouJiang)
+    {
+        for (int i = 0; i < m_HiddenArray.Length; i++)
+        {
+            if (m_HiddenArray[i] != null)
+            {
+                m_HiddenArray[i].SetActive(!isCanChouJiang);
+            }
         }
     }
 

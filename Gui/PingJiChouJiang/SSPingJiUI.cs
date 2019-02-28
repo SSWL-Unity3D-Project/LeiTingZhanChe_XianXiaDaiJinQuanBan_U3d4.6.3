@@ -3,7 +3,17 @@
 public class SSPingJiUI : MonoBehaviour
 {
     /// <summary>
+    /// 多长时间之后创建抽奖UI界面.
+    /// </summary>
+    [Range(1f, 30f)]
+    public float m_TimeCreateChouJiang = 2f;
+    /// <summary>
+    /// 是否创建了抽奖界面.
+    /// </summary>
+    bool IsCreateChouJiang = false;
+    /// <summary>
     /// 多长时间之后隐藏评级UI界面.
+    /// 当玩家获得分数没有达到抽奖分值时该时间起作用,否则该时间不起作用.
     /// </summary>
     [Range(1f, 30f)]
     public float m_TimeHidden = 6f;
@@ -16,6 +26,10 @@ public class SSPingJiUI : MonoBehaviour
     /// 分数滚动音效.
     /// </summary>
     public AudioSource m_FenShuAinAudio;
+    /// <summary>
+    /// 瓶机界面玩家头像UI.
+    /// </summary>
+    public UITexture m_PlayerHeadUI;
     /// <summary>
     /// 玩家分数滚动时长.
     /// </summary>
@@ -53,6 +67,7 @@ public class SSPingJiUI : MonoBehaviour
             return;
         }
 
+        IsCreateChouJiang = false;
         m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.D;
         if (XkGameCtrl.GetInstance().m_PingJiData != null)
         {
@@ -79,6 +94,7 @@ public class SSPingJiUI : MonoBehaviour
         {
             SSDebug.LogWarning("indexVal or m_PingJiImgArray was wrong");
         }
+        SetPlayerHeadImg();
     }
 
     /// <summary>
@@ -336,9 +352,32 @@ public class SSPingJiUI : MonoBehaviour
 
     void Update()
     {
+        if (Time.time - m_TimeStart >= m_TimeCreateChouJiang && IsCreateChouJiang == false)
+        {
+            IsCreateChouJiang = true;
+            //创建玩家抽奖界面.
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSPingJiData.PingJiLevel chouJiangPingJi = SSPingJiData.PingJiLevel.A;
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+                {
+                    chouJiangPingJi = XkGameCtrl.GetInstance().m_PingJiData.m_ChouJiangPingJi;
+                }
+                //是否可以抽奖.
+                bool isCanChouJiang = m_PlayerPingJiLevel < chouJiangPingJi ? false : true;
+                SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer, isCanChouJiang);
+            }
+        }
+
         if (Time.time - m_TimeStart >= m_TimeHidden && IsRemoveSelf == false)
         {
-            if (m_PlayerPingJiLevel < SSPingJiData.PingJiLevel.A)
+            SSPingJiData.PingJiLevel chouJiangPingJi = SSPingJiData.PingJiLevel.A;
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+            {
+                chouJiangPingJi = XkGameCtrl.GetInstance().m_PingJiData.m_ChouJiangPingJi;
+            }
+
+            if (m_PlayerPingJiLevel < chouJiangPingJi)
             {
                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
                 {
@@ -354,20 +393,52 @@ public class SSPingJiUI : MonoBehaviour
                 {
                     daoJiShiCom.StartPlayDaoJiShi();
                 }
-            }
-            else
-            {
-                //玩家评级达到抽奖水平,显示抽奖界面.
+
+                //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                //{
+                //    //删除玩家评级界面.
+                //    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
+                //}
+
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {
-                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer);
+                    //删除玩家游戏抽奖界面UI.
+                    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, 0f);
                 }
             }
+            //else
+            //{
+            //    //玩家评级达到抽奖水平,显示抽奖界面.
+            //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //    {
+            //        SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer);
+            //    }
+            //}
 
-            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            //{
+            //    //删除玩家评级界面.
+            //    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
+            //}
+        }
+    }
+
+    /// <summary>
+    /// 设置玩家微信头像.
+    /// </summary>
+    void SetPlayerHeadImg()
+    {
+        if (m_PlayerHeadUI != null)
+        {
+            Texture headImg = null;
+            if (XueKuangCtrl.GetInstance(m_IndexPlayer) != null && XueKuangCtrl.GetInstance(m_IndexPlayer).m_WeiXinHead != null)
             {
-                //删除玩家评级界面.
-                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
+                headImg = XueKuangCtrl.GetInstance(m_IndexPlayer).m_WeiXinHead.mainTexture;
+            }
+
+            if (headImg != null)
+            {
+                m_PlayerHeadUI.mainTexture = headImg;
             }
         }
     }

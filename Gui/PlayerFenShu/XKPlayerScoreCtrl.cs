@@ -3,6 +3,13 @@
 public class XKPlayerScoreCtrl : MonoBehaviour
 {
 	public PlayerEnum PlayerIndex;
+    /// <summary>
+    /// 距抽奖分数信息UI.
+    /// </summary>
+    public SSGameNumUI m_JuChouJiangScore;
+    /// <summary>
+    /// 原先玩家实际得分展示.
+    /// </summary>
 	public UISprite[] PlayerJF;
 	static XKPlayerScoreCtrl _InstanceP1;
 	static XKPlayerScoreCtrl _InstanceP2;
@@ -46,7 +53,7 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 			break;
 		}
 		ZuiGaoFenObj.SetActive(false);
-		SetScoreSprite();
+		//SetScoreSprite();
 
 		if (!XkGameCtrl.GetIsActivePlayer(PlayerIndex)) {
 			SetActivePlayerScore(false);
@@ -75,11 +82,12 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		}
 
 		XKPlayerScoreCtrl instanceVal = GetInstance(indexPlayer);
-		if (instanceVal == null) {
+		if (instanceVal == null)
+        {
 			return;
 		}
 		instanceVal.SetActivePlayerScore(true);
-        instanceVal.SetScoreSprite();
+        //instanceVal.SetScoreSprite();
     }
 	
 	public static void HiddenPlayerScore(PlayerEnum indexPlayer)
@@ -101,13 +109,31 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 
 	void SetActivePlayerScore(bool isActive)
 	{
-		if (!isActive) {
-			SetScoreSprite();
+		if (!isActive)
+        {
+			//SetScoreSprite();
 			ZuiGaoFenObj.SetActive(false);
 		}
 
 		if (isActive != gameObject.activeSelf) {
 			CheckPlayerZuiGaoFen(true);
+            if (isActive == true)
+            {
+                //显示玩家距抽奖还差多少分数.
+                SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(PlayerIndex);
+                if (playerScoreManage != null)
+                {
+                    playerScoreManage.OnDisplayPlayerScore();
+                }
+
+                //设置距抽奖还差的最少分值信息.
+                int score = 40000;
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+                {
+                    score = XkGameCtrl.GetInstance().m_PingJiData.GetChouJiangMinScore();
+                }
+                SetJuChouJiangScore(score);
+            }
 		}
 		OnEndMakeScoreToSmall();
 		gameObject.SetActive(isActive);
@@ -119,9 +145,36 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		if (instanceVal == null) {
 			return;
 		}
-		instanceVal.MakeScoreToBig();
+		//instanceVal.MakeScoreToBig();
 		CheckPlayerZuiGaoFen();
-	}
+
+
+        SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(indexPlayer);
+        if (playerScoreManage != null && playerScoreManage.IsOnPlayerFenShuZuGou == false)
+        {
+            //玩家有新获得积分.
+            int minChouJiangScore = 40000;
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+            {
+                minChouJiangScore = XkGameCtrl.GetInstance().m_PingJiData.GetChouJiangMinScore();
+            }
+
+            int playerScore = XkGameCtrl.GetPlayerJiFenValue(indexPlayer);
+            //还差多少分数.
+            int haiChaScoreVal = minChouJiangScore - playerScore;
+            if (haiChaScoreVal <= 0)
+            {
+                haiChaScoreVal = 0;
+            }
+
+            XKPlayerScoreCtrl playerScoreCom = GetInstance(indexPlayer);
+            if (playerScoreCom != null)
+            {
+                //设置还差多少分数.
+                playerScoreCom.SetJuChouJiangScore(haiChaScoreVal);
+            }
+        }
+    }
 
 	bool IsToBigScore;
 	float TimeLast;
@@ -326,4 +379,30 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 			DestroyObject(tweenScaleCom);
 		}
 	}
+    
+    /// <summary>
+    /// 设置距抽奖还差多少分.
+    /// </summary>
+    void SetJuChouJiangScore(int score)
+    {
+        SSDebug.LogWarning("SetJuChouJiangScore -> score == " + score + ", PlayerIndex == " + PlayerIndex);
+        if (m_JuChouJiangScore != null)
+        {
+            if (score <= 0)
+            {
+                //距离获得游戏抽奖还差0分.
+                m_JuChouJiangScore.ShowNumUI(0);
+                //玩家已经获得游戏抽奖机会.
+                SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(PlayerIndex);
+                if (playerScoreManage != null)
+                {
+                    playerScoreManage.OnPlayerFenShuZuGouChouJiang();
+                }
+            }
+            else
+            {
+                m_JuChouJiangScore.ShowNumUI(score);
+            }
+        }
+    }
 }

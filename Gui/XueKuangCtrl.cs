@@ -58,10 +58,38 @@ public class XueKuangCtrl : MonoBehaviour
 	public static XueKuangCtrl GetInstanceFour()
 	{
 		return _InstanceFour;
-	}
+    }
+    public static XueKuangCtrl GetInstance(PlayerEnum indexPlayer)
+    {
+        XueKuangCtrl xueKuangCom = null;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    xueKuangCom = _InstanceOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    xueKuangCom = _InstanceTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    xueKuangCom = _InstanceThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    xueKuangCom = _InstanceFour;
+                    break;
+                }
+        }
+        return xueKuangCom;
+    }
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
 		switch (PlayerSt) {
 		case PlayerEnum.PlayerOne:
