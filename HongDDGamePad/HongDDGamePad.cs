@@ -1161,9 +1161,36 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         return;
                     }
 
-                    //必须是收到开始按键按下消息才允许激活免费试玩游戏玩家.
-                    if (m_HongDDGamePadWXPay != null && val == PlayerShouBingFireBt.startGameBtDown.ToString())
+                    if (m_HongDDGamePadWXPay == null)
                     {
+                        return;
+                    }
+
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        if (loginPlayerDt.IsMianFeiTiYanPlayer == false)
+                        {
+                            //该玩家在登录后被标记为需要付费的玩家,这里认为玩家主动放弃支付.
+                            //发送踢人消息.
+                            SendWXPadPlayerCloseConnect(userId);
+                            //踢出玩家之后需要删除玩家登录数据信息.
+                            RemoveLoginGamePlayerData(userId);
+                            //删除轮询检测玩家账户的数据.
+                            RemoveLoopGetWXHddPayData(userId);
+                            return;
+                        }
+                    }
+
+                    //必须是收到开始按键按下消息才允许激活免费试玩游戏玩家.
+                    if (val == PlayerShouBingFireBt.startGameBtDown.ToString())
+                    {
+                        if (loginPlayerDt.IsMianFeiTiYanPlayer == false)
+                        {
+                            //该玩家在登陆后被标记为需要付费的玩家,所以这里不允许激活该玩家.
+                            return;
+                        }
+
                         //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
                         if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
                         {
@@ -1323,7 +1350,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                     //游戏结束倒计时没有播放时.
                                     OnPlayerGameDaoJiShiOver(indexPlayer);
                                 }
-                                SendWXPadPlayerPayTimeOut(userId);
+                                SendWXPadPlayerCloseConnect(userId);
                             }
                         }
                     }
@@ -1929,14 +1956,6 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 //如果玩游戏的玩家信息中有当前登陆的用户信息则不用进行任何操作.
                 return;
             }
-            else
-            {
-                //在正在进行游戏的玩家微信数据中没有找到该玩家信息.
-                //添加该玩家信息到登录游戏的玩家数据列表中.
-                GamePlayerData loginPlayerDt = new GamePlayerData();
-                loginPlayerDt.m_PlayerWeiXinData = weiXinDt;
-                AddLoginGamePlayerData(loginPlayerDt);
-            }
 
             bool isHaveEmptyJiWei = GetIsHaveEmptyJiWei();
             if (isHaveEmptyJiWei == false)
@@ -1945,6 +1964,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 //当前机位没有空余机位.
                 //游戏激活人数已满.
                 SendWXPadGamePlayerFull(weiXinDt.userId);
+                return;
             }
             else
             {
@@ -1952,6 +1972,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 //当前机位有空余机位.
                 if (m_HongDDGamePadWXPay != null)
                 {
+                    //是否为免费体验玩家.
+                    bool isMianFeiTiYanPlayer = false;
                     bool isSendDisplayFuFeiPanel = false;
                     //m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount = 1; //免费试玩次数.
                     if (m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount > 0)
@@ -1962,6 +1984,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             //给玩家添加一个微信游戏币.
                             //发送手柄显示开始按键的消息.
                             SendWXPadShowStartBt(weiXinDt.userId);
+                            isMianFeiTiYanPlayer = true;
 
                             //AddWeiXinGameCoinToPlayer((PlayerEnum)(indexPlayer + 1), m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
 
@@ -2011,6 +2034,15 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         //发送付费消息给手柄.
                         SendWXPadShowTopUpPanel(weiXinDt.userId);
                     }
+
+                    //在正在进行游戏的玩家微信数据中没有找到该玩家信息.
+                    //添加该玩家信息到登录游戏的玩家数据列表中.
+                    GamePlayerData loginPlayerDt = new GamePlayerData();
+                    //设置是否为免费体验玩家.
+                    loginPlayerDt.IsMianFeiTiYanPlayer = isMianFeiTiYanPlayer;
+                    loginPlayerDt.m_PlayerWeiXinData = weiXinDt;
+                    AddLoginGamePlayerData(loginPlayerDt);
+                    return;
                 }
             }
         }
@@ -2539,7 +2571,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     RemoveLoopGetWXHddPayData(userId);
 
                     //此处添加通知玩家支付超时,请稍后重新扫码的消息给服务器.
-                    SendWXPadPlayerPayTimeOut(userId);
+                    SendWXPadPlayerCloseConnect(userId);
                     //清除玩家的扣费数据.
                     RemovePlayerPayData(userId);
                     //删除玩家微信信息.
@@ -3359,9 +3391,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
-        /// 发送玩家支付超时,请稍后重新扫码的消息给服务器.
+        /// 发送玩家支付超时或主动放弃支付后请稍后重新扫码的消息给服务器.
         /// </summary>
-        void SendWXPadPlayerPayTimeOut(int userId)
+        void SendWXPadPlayerCloseConnect(int userId)
         {
             if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)

@@ -538,7 +538,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_show\"},\"_msg_name\":\"gamepad\"}";
 
-            SSDebug.LogWarning("NetSendWeiXinPadShowStartBt:: msg == " + msgToSend);
+            //SSDebug.LogWarning("NetSendWeiXinPadShowStartBt:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }
