@@ -149,11 +149,27 @@ public class SSPlayerScoreManage : MonoBehaviour
             SSUIRoot.GetInstance().m_GameUIManage.CreatePlayerChouJiangFenShuZuGouPanel(m_PlayerIndex);
         }
     }
+    
+    /// <summary>
+    /// 当删除玩家评级界面时.
+    /// </summary>
+    internal void OnRemovePlayerPingJiPanel()
+    {
+        ResetPlayerScoreInfo();
+    }
 
     /// <summary>
     /// 当删除玩家抽奖界面时.
     /// </summary>
     internal void OnRemovePlayerChouJiangPanel()
+    {
+        ResetPlayerScoreInfo();
+    }
+
+    /// <summary>
+    /// 重置信息.
+    /// </summary>
+    void ResetPlayerScoreInfo()
     {
         //隐藏恭喜获得抽奖资格.
         SetActiveGongXiHuoDe(false);

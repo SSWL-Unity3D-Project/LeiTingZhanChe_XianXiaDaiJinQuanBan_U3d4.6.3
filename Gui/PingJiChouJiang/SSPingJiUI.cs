@@ -609,6 +609,13 @@ public class SSPingJiUI : MonoBehaviour
                     SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
                 }
 
+                SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(m_IndexPlayer);
+                if (playerScoreManage != null)
+                {
+                    //当删除玩家评级界面的同时重置距玩家还差多少分数.
+                    playerScoreManage.OnRemovePlayerPingJiPanel();
+                }
+
                 //if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 //{
                 //    //删除玩家游戏抽奖界面UI.
