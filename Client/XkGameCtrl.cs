@@ -3804,55 +3804,67 @@ public class XkGameCtrl : SSGameMono
 		}
 	}
 
+    /// <summary>
+    /// 随机获取一个玩家.
+    /// </summary>
 	public GameObject GetRandAimPlayerObj()
 	{
 		if (XkGameCtrl.PlayerActiveNum <= 0) {
 			return null;
 		}
 
-		int count = 0;
-		GameObject playerObj = null;
-		int randVal = Random.Range(0, 100) % 4;
-		do {
-			switch (randVal) {
-			case 0:
-				if (XkGameCtrl.IsActivePlayerOne) {
-					playerObj = XKPlayerMoveCtrl.GetInstancePOne().GenZongDanAimPoint;
-				}
-				break;
-				
-			case 1:
-				if (XkGameCtrl.IsActivePlayerTwo) {
-					playerObj = XKPlayerMoveCtrl.GetInstancePTwo().GenZongDanAimPoint;
-				}
-				break;
-				
-			case 2:
-				if (XkGameCtrl.IsActivePlayerThree) {
-					playerObj = XKPlayerMoveCtrl.GetInstancePThree().GenZongDanAimPoint;
-				}
-				break;
-				
-			case 3:
-				if (XkGameCtrl.IsActivePlayerFour) {
-					playerObj = XKPlayerMoveCtrl.GetInstancePFour().GenZongDanAimPoint;
-				}
-				break;
-			}
-			
-			if (playerObj != null) {
-				break;
-			}
-			randVal = Random.Range(0, 100) % 4;
-			count++;
-			if (count > 8) {
-				break;
-			}
-		} while (playerObj == null);
+        GameObject playerObj = null;
+        for (int i = 0; i < 3; i++)
+        {
+            PlayerEnum playerIndex = (PlayerEnum)(i + 1);
+            if (GetIsActivePlayer(playerIndex) == true && GetIsDeathPlayer(playerIndex) == false)
+            {
+                if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null
+                    && XKPlayerMoveCtrl.GetInstance(playerIndex).GetPlayerIsSleep() == true)
+                {
+                    //优先瞄准激活游戏但是处于无游戏操作的玩家坦克.
+                    playerObj = XKPlayerMoveCtrl.GetInstance(playerIndex).GenZongDanAimPoint;
+                    break;
+                }
+            }
+        }
+
+        if (playerObj == null)
+        {
+            int count = 0;
+            int maxPlayer = 3;
+            int randVal = Random.Range(0, 100) % maxPlayer;
+            do
+            {
+                PlayerEnum playerIndex = (PlayerEnum)(randVal + 1);
+                if (GetIsActivePlayer(playerIndex) == true && GetIsDeathPlayer(playerIndex) == false)
+                {
+                    if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+                    {
+                        playerObj = XKPlayerMoveCtrl.GetInstance(playerIndex).GenZongDanAimPoint;
+                        break;
+                    }
+                }
+
+                if (playerObj != null)
+                {
+                    break;
+                }
+                randVal = Random.Range(0, 100) % maxPlayer;
+                count++;
+                if (count > 8)
+                {
+                    break;
+                }
+            } while (playerObj == null);
+        }
 		//Debug.Log("Unity:"+"GetRandAimPlayerObj -> player "+playerObj.name);
 		return playerObj;
 	}
 
+    /// <summary>
+    /// 获取血值最大的玩家.
+    /// </summary>
 	public GameObject GetMaxHealthPlayer()
 	{
 		GameObject playerObj = null;
@@ -3861,20 +3873,11 @@ public class XkGameCtrl : SSGameMono
 		healthList.Reverse();
 		for (int j = 0; j < 4; j++) {
 			if (XkGameCtrl.PlayerJiFenArray[0] == healthList[j]) {
-				switch (j) {
-				case 0:
-					playerObj = XKPlayerMoveCtrl.GetInstancePOne().GenZongDanAimPoint;
-					break;
-				case 1:
-					playerObj = XKPlayerMoveCtrl.GetInstancePTwo().GenZongDanAimPoint;
-					break;
-				case 2:
-					playerObj = XKPlayerMoveCtrl.GetInstancePThree().GenZongDanAimPoint;
-					break;
-				case 3:
-					playerObj = XKPlayerMoveCtrl.GetInstancePFour().GenZongDanAimPoint;
-					break;
-				}
+                PlayerEnum playerIndex = (PlayerEnum)(j + 1);
+                if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+                {
+                    playerObj = XKPlayerMoveCtrl.GetInstance(playerIndex).GenZongDanAimPoint;
+                }
 				break;
 			}
 		}
