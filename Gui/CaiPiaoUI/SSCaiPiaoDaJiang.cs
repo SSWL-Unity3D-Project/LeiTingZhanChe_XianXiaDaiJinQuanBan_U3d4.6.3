@@ -12,6 +12,11 @@ public class SSCaiPiaoDaJiang : SSGameMono
     public UITexture m_PlayerIndexUI;
     public Texture[] m_PlayerIndexUIArray = new Texture[3];
     /// <summary>
+    /// 玩家微信头像框.
+    /// </summary>
+    public UITexture m_HeadKuangUI;
+    public Texture[] m_HeadKuangUIArray = new Texture[3];
+    /// <summary>
     /// 代金券商户信息5个字.
     /// </summary>
     public UILabel m_DaiJinQuanShangHuInfo;
@@ -50,6 +55,16 @@ public class SSCaiPiaoDaJiang : SSGameMono
             if (headImg != null)
             {
                 m_PlayerIndexUI.mainTexture = headImg;
+            }
+        }
+
+        if (m_HeadKuangUI != null)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal >= 0 && indexVal < m_HeadKuangUIArray.Length && m_HeadKuangUIArray[indexVal] != null)
+            {
+                //玩家头像框.
+                m_HeadKuangUI.mainTexture = m_HeadKuangUIArray[indexVal];
             }
         }
     }
