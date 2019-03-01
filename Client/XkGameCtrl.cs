@@ -2471,6 +2471,13 @@ public class XkGameCtrl : SSGameMono
                 {
                     SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerOne);
                 }
+
+                PlayerXueTiaoCtrl playerXueTiaoCom = PlayerXueTiaoCtrl.GetInstance(PlayerEnum.PlayerOne);
+                if (playerXueTiaoCom != null)
+                {
+                    //显示玩家血条.
+                    playerXueTiaoCom.SetActivePlayerXuTiao(true);
+                }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerOne, isActive);
             if (_Instance.m_TriggerManage != null)
@@ -2531,6 +2538,13 @@ public class XkGameCtrl : SSGameMono
                 if (SSChouJiangTiShiManage.GetInstance() != null)
                 {
                     SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerTwo);
+                }
+
+                PlayerXueTiaoCtrl playerXueTiaoCom = PlayerXueTiaoCtrl.GetInstance(PlayerEnum.PlayerTwo);
+                if (playerXueTiaoCom != null)
+                {
+                    //显示玩家血条.
+                    playerXueTiaoCom.SetActivePlayerXuTiao(true);
                 }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerTwo, isActive);
@@ -2593,6 +2607,13 @@ public class XkGameCtrl : SSGameMono
                 {
                     SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerThree);
                 }
+
+                PlayerXueTiaoCtrl playerXueTiaoCom = PlayerXueTiaoCtrl.GetInstance(PlayerEnum.PlayerThree);
+                if (playerXueTiaoCom != null)
+                {
+                    //显示玩家血条.
+                    playerXueTiaoCom.SetActivePlayerXuTiao(true);
+                }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerThree, isActive);
             if (_Instance.m_TriggerManage != null)
@@ -2653,6 +2674,13 @@ public class XkGameCtrl : SSGameMono
                 if (SSChouJiangTiShiManage.GetInstance() != null)
                 {
                     SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerFour);
+                }
+
+                PlayerXueTiaoCtrl playerXueTiaoCom = PlayerXueTiaoCtrl.GetInstance(PlayerEnum.PlayerFour);
+                if (playerXueTiaoCom != null)
+                {
+                    //显示玩家血条.
+                    playerXueTiaoCom.SetActivePlayerXuTiao(true);
                 }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerFour, isActive);

@@ -80,6 +80,8 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
             m_MatNum.mainTexture = m_TouMingHead;
         }
 #endif
+
+        SetActivePlayerXuTiao(false);
     }
 
 #if OPEN_XUETIAO_GENSUI_BIAN_POS //打开血条跟随逻辑.
