@@ -1801,15 +1801,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             //AI坦克被激活.
             return true;
         }
-
-        if (XkGameCtrl.GetIsActivePlayer(PlayerIndex) == true && XkGameCtrl.GetIsDeathPlayer(PlayerIndex) == false)
+        
+        if (m_SSPlayerActionListen != null)
         {
-            //玩家激活状态才允许进入该函数.
-            if (m_SSPlayerActionListen != null)
-            {
-                return m_SSPlayerActionListen.GetIsPlayerSleep();
-            }
+            return m_SSPlayerActionListen.GetIsPlayerSleep();
         }
-        return true;
+        return false;
     }
 }
