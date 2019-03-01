@@ -33,28 +33,49 @@ public class SSChouJiangTiShi : MonoBehaviour
         twPos.PlayForward();
 
         EventDelegate.Add(twPos.onFinished, delegate {
-            StartPlayTweenAlpha();
+            StartCoroutine(StartPlayTweenAlpha());
         });
-
-        StartCoroutine(RemoveSelf());
+        m_TimeLast = Time.time;
     }
 
     /// <summary>
     /// 开始播放淡化效果.
     /// </summary>
-    void StartPlayTweenAlpha()
+    System.Collections.IEnumerator StartPlayTweenAlpha()
     {
+        yield return new WaitForSeconds(3f);
         TweenAlpha twAlp = gameObject.AddComponent<TweenAlpha>();
         twAlp.from = 1f;
         twAlp.to = 0f;
-        twAlp.duration = 3f;
+        twAlp.duration = 1f;
         twAlp.PlayForward();
     }
 
-     System.Collections.IEnumerator RemoveSelf()
+    void Update()
     {
-        float time = 3f + PiaoZiTime;
-        yield return new WaitForSeconds(time);
-        Destroy(gameObject);
+        UpdateRemoveSelf();
+    }
+
+    bool IsRemoveSelf = false;
+    float m_TimeLast = 0f;
+    void UpdateRemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            if (Time.time - m_TimeLast >= 4f + PiaoZiTime)
+            {
+                m_TimeLast = Time.time;
+                RemoveSelf();
+            }
+        }
+    }
+
+    void RemoveSelf()
+    {
+        if (IsRemoveSelf == false)
+        {
+            IsRemoveSelf = true;
+            Destroy(gameObject);
+        }
     }
 }

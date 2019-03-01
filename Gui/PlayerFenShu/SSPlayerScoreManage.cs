@@ -135,6 +135,12 @@ public class SSPlayerScoreManage : MonoBehaviour
         SetActiveHaiChaFenShuObj(false);
         //显示"恭喜玩家获得抽奖机会"
         SetActiveGongXiHuoDe(true);
+        
+        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+        {
+            //创建玩家分数足够游戏抽奖的界面.
+            SSUIRoot.GetInstance().m_GameUIManage.CreatePlayerChouJiangFenShuZuGouPanel(m_PlayerIndex);
+        }
     }
 
     /// <summary>

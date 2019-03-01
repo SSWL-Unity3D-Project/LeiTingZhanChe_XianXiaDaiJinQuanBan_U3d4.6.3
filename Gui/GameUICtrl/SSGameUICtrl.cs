@@ -1836,4 +1836,24 @@ public class SSGameUICtrl : SSGameMono
             }
         }
     }
+
+    /// <summary>
+    /// 创建玩家抽奖分数足够提示界面.
+    /// </summary>
+    internal void CreatePlayerChouJiangFenShuZuGouPanel(PlayerEnum playerIndex)
+    {
+        string prefabPath = "Prefabs/GUI/PingJiChouJiang/ChouJiangFenShuZuGou";
+        GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
+        if (gmDataPrefab != null)
+        {
+            Debug.LogWarning("Unity: CreatePlayerChouJiangFenShuZuGouPanel......................................................");
+            GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
+            SSChouJiangFenShuZuGou fenShuZuGou = obj.GetComponent<SSChouJiangFenShuZuGou>();
+            fenShuZuGou.Init(playerIndex);
+        }
+        else
+        {
+            UnityLogWarning("CreatePlayerChouJiangFenShuZuGouPanel -> gmDataPrefab was null! prefabPath == " + prefabPath);
+        }
+    }
 }
