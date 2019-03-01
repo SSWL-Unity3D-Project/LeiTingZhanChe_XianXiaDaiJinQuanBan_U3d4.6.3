@@ -3127,7 +3127,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
-        /// 发送显示微信游戏手柄开始.
+        /// 发送隐藏微信游戏手柄开始.
         /// </summary>
         void SendWXPadHiddenStartBt(int userId)
         {
@@ -3135,6 +3135,40 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
                 m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadHiddenStartBt(userId);
+            }
+        }
+
+        /// <summary>
+        /// 发送显示微信游戏手柄抽奖ui.
+        /// </summary>
+        internal void SendWXPadShowChouJiangUI(PlayerEnum playerIndex)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                GamePlayerData playerDt = FindGamePlayerData(playerIndex);
+                if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
+                {
+                    int userId = playerDt.m_PlayerWeiXinData.userId;
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadShowChouJiangUI(userId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 发送隐藏微信游戏手柄抽奖ui.
+        /// </summary>
+        internal void SendWXPadHiddenChouJiangUI(PlayerEnum playerIndex)
+        {
+            if (m_SSBoxPostNet != null && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                GamePlayerData playerDt = FindGamePlayerData(playerIndex);
+                if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
+                {
+                    int userId = playerDt.m_PlayerWeiXinData.userId;
+                    m_SSBoxPostNet.m_WebSocketSimpet.NetSendWeiXinPadHiddenChouJiangUI(userId);
+                }
             }
         }
 

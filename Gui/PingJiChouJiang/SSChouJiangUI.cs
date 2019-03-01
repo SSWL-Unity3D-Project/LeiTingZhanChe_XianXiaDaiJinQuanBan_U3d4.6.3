@@ -88,6 +88,12 @@ public class SSChouJiangUI : MonoBehaviour
                     }
                     break;
             }
+
+            if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+            {
+                //显示玩家微信手柄抽奖ui.
+                pcvr.GetInstance().m_HongDDGamePadInterface.SendWXPadShowChouJiangUI(m_IndexPlayer);
+            }
         }
         SetActiveBuYunXuChouJiangObj(isCanChouJiang);
     }
@@ -191,6 +197,12 @@ public class SSChouJiangUI : MonoBehaviour
                     InputEventCtrl.GetInstance().ClickDaoDanBtOneEvent -= ClickDaoDanBtThreeEvent;
                 }
                 break;
+        }
+
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            //隐藏玩家微信手柄抽奖ui.
+            pcvr.GetInstance().m_HongDDGamePadInterface.SendWXPadHiddenChouJiangUI(m_IndexPlayer);
         }
     }
 

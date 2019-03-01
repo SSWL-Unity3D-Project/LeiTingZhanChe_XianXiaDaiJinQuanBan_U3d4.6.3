@@ -298,6 +298,28 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.SendWXPadShowFangChenMiPanel(playerIndex);
             }
         }
+
+        /// <summary>
+        /// 发送显示微信游戏手柄抽奖ui.
+        /// </summary>
+        internal void SendWXPadShowChouJiangUI(PlayerEnum playerIndex)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendWXPadShowChouJiangUI(playerIndex);
+            }
+        }
+
+        /// <summary>
+        /// 发送隐藏微信游戏手柄抽奖ui.
+        /// </summary>
+        internal void SendWXPadHiddenChouJiangUI(PlayerEnum playerIndex)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendWXPadHiddenChouJiangUI(playerIndex);
+            }
+        }
         #endregion
     }
 }
