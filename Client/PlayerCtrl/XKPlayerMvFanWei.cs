@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XKPlayerMvFanWei : MonoBehaviour {
 	public PointState FanWeiState = PointState.Qian;

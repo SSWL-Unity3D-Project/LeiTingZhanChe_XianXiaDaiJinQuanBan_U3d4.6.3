@@ -31,6 +31,7 @@ public class SSChouJiangFenShuZuGou : MonoBehaviour
     /// </summary>
     void SetPlayerHeadImg(PlayerEnum playerIndex)
     {
+        m_TimeLast = Time.time;
         if (m_HeadUITexture != null)
         {
             Texture headImg = null;
