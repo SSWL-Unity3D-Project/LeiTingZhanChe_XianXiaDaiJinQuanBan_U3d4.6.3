@@ -117,7 +117,6 @@ public class SSBoxPostNet : MonoBehaviour
         //HttpSendGetWeiXinXiaoChengXuUrl();
         //获取服务器的时间信息
         //HttpSendGetServerTimeInfo();
-
         //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
     }
 
@@ -2182,13 +2181,13 @@ public class SSBoxPostNet : MonoBehaviour
             SSDebug.Log("Reload WX_XiaoChengXu_ErWeiMa....................................");
 #else
             //如果有二维码,则不再重复进行二维码下载.
-            //string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
-            ////Debug.Log("Unity: path ============================= " + path);
-            //if (File.Exists(path) == true)
-            //{
-            //    DelayReadWeiXinXiaoChengXuErWeiMa();
-            //    return;
-            //}
+            string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
+            //Debug.Log("Unity: path ============================= " + path);
+            if (File.Exists(path) == true)
+            {
+                DelayReadWeiXinXiaoChengXuErWeiMa();
+                return;
+            }
 #endif
         }
         else
