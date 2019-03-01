@@ -397,7 +397,7 @@ public class XKPlayerScoreCtrl : MonoBehaviour
     /// </summary>
     void SetJuChouJiangScore(int score)
     {
-        SSDebug.LogWarning("SetJuChouJiangScore -> score == " + score + ", PlayerIndex == " + PlayerIndex);
+        //SSDebug.LogWarning("SetJuChouJiangScore -> score == " + score + ", PlayerIndex == " + PlayerIndex);
         if (m_JuChouJiangScore != null)
         {
             if (score <= 0)

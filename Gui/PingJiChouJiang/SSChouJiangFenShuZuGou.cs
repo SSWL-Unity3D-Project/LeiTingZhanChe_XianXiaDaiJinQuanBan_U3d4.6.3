@@ -81,11 +81,15 @@ public class SSChouJiangFenShuZuGou : MonoBehaviour
         }
     }
 
-    void RemoveSelf()
+    internal void RemoveSelf()
     {
         if (IsRemoveSelf == false)
         {
             IsRemoveSelf = true;
+            if (SSUIRoot.GetInstance().m_GameUIManage != null)
+            {
+                SSUIRoot.GetInstance().m_GameUIManage.RemoveChouJiangFenShuZuGou(this);
+            }
             Destroy(gameObject);
         }
     }

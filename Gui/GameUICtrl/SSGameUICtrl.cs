@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SSGameUICtrl : SSGameMono
 {
@@ -650,6 +651,7 @@ public class SSGameUICtrl : SSGameMono
                 {
                     if (m_GameUICenter != null)
                     {
+                        RemoveAllChouJiangFenShuZuGou();
                         UnityLog("CreateCaiPiaoDaJiangPanel...");
                         GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                         m_CaiPiaoDaJiang = obj.GetComponent<SSCaiPiaoDaJiang>();
@@ -732,6 +734,7 @@ public class SSGameUICtrl : SSGameMono
                 {
                     if (m_GameUICenter != null)
                     {
+                        RemoveAllChouJiangFenShuZuGou();
                         UnityLog("CreatCaiPiaoXiaoJiangPanel...");
                         GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                         m_CaiPiaoXiaoJiang = obj.GetComponent<SSCaiPiaoDaJiang>();
@@ -1838,6 +1841,47 @@ public class SSGameUICtrl : SSGameMono
     }
 
     /// <summary>
+    /// 分数足够抽奖.
+    /// </summary>
+    List<SSChouJiangFenShuZuGou> m_ChouJiangFenShuZuGouList = new List<SSChouJiangFenShuZuGou>();
+    /// <summary>
+    /// 添加所有分数足够抽奖.
+    /// </summary>
+    void AddChouJiangFenShuZuGou(SSChouJiangFenShuZuGou fenShuZuGou)
+    {
+        if (fenShuZuGou != null && m_ChouJiangFenShuZuGouList.Contains(fenShuZuGou) == false)
+        {
+            m_ChouJiangFenShuZuGouList.Add(fenShuZuGou);
+        }
+    }
+
+    /// <summary>
+    /// 删除分数足够抽奖.
+    /// </summary>
+    internal void RemoveChouJiangFenShuZuGou(SSChouJiangFenShuZuGou fenShuZuGou)
+    {
+        if (fenShuZuGou != null && m_ChouJiangFenShuZuGouList.Contains(fenShuZuGou) == true)
+        {
+            m_ChouJiangFenShuZuGouList.Remove(fenShuZuGou);
+        }
+    }
+
+    /// <summary>
+    /// 删除所有分数足够抽奖.
+    /// </summary>
+    void RemoveAllChouJiangFenShuZuGou()
+    {
+        SSChouJiangFenShuZuGou[] fenShuZuGouArray = m_ChouJiangFenShuZuGouList.ToArray();
+        for (int i = 0; i < fenShuZuGouArray.Length; i++)
+        {
+            if (fenShuZuGouArray[i] != null)
+            {
+                fenShuZuGouArray[i].RemoveSelf();
+            }
+        }
+    }
+
+    /// <summary>
     /// 创建玩家抽奖分数足够提示界面.
     /// </summary>
     internal void CreatePlayerChouJiangFenShuZuGouPanel(PlayerEnum playerIndex)
@@ -1846,10 +1890,12 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
-            Debug.LogWarning("Unity: CreatePlayerChouJiangFenShuZuGouPanel......................................................");
+            RemoveAllChouJiangFenShuZuGou();
+            //Debug.LogWarning("Unity: CreatePlayerChouJiangFenShuZuGouPanel......................................................");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
             SSChouJiangFenShuZuGou fenShuZuGou = obj.GetComponent<SSChouJiangFenShuZuGou>();
             fenShuZuGou.Init(playerIndex);
+            AddChouJiangFenShuZuGou(fenShuZuGou);
         }
         else
         {
