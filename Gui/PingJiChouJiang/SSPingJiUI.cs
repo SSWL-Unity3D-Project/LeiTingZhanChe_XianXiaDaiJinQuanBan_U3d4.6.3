@@ -3,6 +3,11 @@
 public class SSPingJiUI : MonoBehaviour
 {
     /// <summary>
+    /// 逐渐隐藏的时间.
+    /// </summary>
+    [Range(0f, 10f)]
+    public float m_AlphaTime = 0.5f;
+    /// <summary>
     /// 多长时间之后创建抽奖UI界面.
     /// </summary>
     [Range(1f, 30f)]
@@ -12,12 +17,20 @@ public class SSPingJiUI : MonoBehaviour
     /// </summary>
     bool IsCreateChouJiang = false;
     /// <summary>
+    /// 玩家是否可以进入抽奖界面.
+    /// </summary>
+    bool IsPlayerCanChouJiang = true;
+    /// <summary>
     /// 多长时间之后隐藏评级UI界面.
     /// 当玩家获得分数没有达到抽奖分值时该时间起作用,否则该时间不起作用.
     /// </summary>
     [Range(1f, 30f)]
     public float m_TimeHidden = 6f;
     float m_TimeStart = 0f;
+    /// <summary>
+    /// 是否展示玩家分数滚动效果.
+    /// </summary>
+    public bool IsDisplayFenShu = false;
     /// <summary>
     /// 玩家游戏得分UI展示.
     /// </summary>
@@ -54,6 +67,110 @@ public class SSPingJiUI : MonoBehaviour
     /// 评分等级对应的图片资源.
     /// </summary>
     public Texture[] m_PingJiImgArray = new Texture[7];
+    /// <summary>
+    /// 玩家评级评语UI组件.
+    /// </summary>
+    public UITexture m_PingJiPingYuUI;
+    /// <summary>
+    /// 评分等级对应的评语图片资源.
+    /// </summary>
+    public Texture[] m_PingJiPingYuImgArray = new Texture[7];
+    /// <summary>
+    /// 距抽奖UI数据.
+    /// </summary>
+    [System.Serializable]
+    public class JuChouJiangData
+    {
+        /// <summary>
+        /// 恭喜进入抽奖.
+        /// </summary>
+        public GameObject gongXiJinRuChouJiangObj;
+        /// <summary>
+        /// 距抽奖总集.
+        /// </summary>
+        public GameObject juChouJiangObj;
+        /// <summary>
+        /// 距抽奖UI组件.
+        /// </summary>
+        public UITexture juChouJiangUI;
+        /// <summary>
+        /// 距抽奖UI图片资源.
+        /// </summary>
+        public Texture[] juChouJiangImgArray = new Texture[3];
+        /// <summary>
+        /// 还差分数控制.
+        /// </summary>
+        public SSGameNumUI fenShuNumUI;
+        /// <summary>
+        /// 还差分数图集信息.
+        /// </summary>
+        public UIAtlas[] fenShuAtlasArray = new UIAtlas[3];
+        /// <summary>
+        /// 设置是否显示距抽奖界面.
+        /// </summary>
+        internal void SetActiveJuChouJiang(PlayerEnum indexPlayer, bool isActive)
+        {
+            if (isActive == true)
+            {
+                int indexVal = (int)indexPlayer - 1;
+                if (juChouJiangUI != null)
+                {
+                    if (indexVal >= 0 && indexVal < juChouJiangImgArray.Length && juChouJiangImgArray[indexVal] != null)
+                    {
+                        //给不同玩家设置还差多少分UI.
+                        juChouJiangUI.mainTexture = juChouJiangImgArray[indexVal];
+                    }
+                }
+
+                if (fenShuNumUI != null)
+                {
+                    if (indexVal >= 0 && indexVal < fenShuAtlasArray.Length && fenShuAtlasArray[indexVal] != null)
+                    {
+                        for (int i = 0; i < fenShuNumUI.m_UISpriteArray.Length; i++)
+                        {
+                            if (fenShuNumUI.m_UISpriteArray[i] != null)
+                            {
+                                //给不同玩家设置还差多少分的数字UI图集.
+                                fenShuNumUI.m_UISpriteArray[i].atlas = fenShuAtlasArray[indexVal];
+                            }
+                        }
+                    }
+                    
+                    //玩家最多差40000分可以获得抽奖.
+                    int minChouJiangScore = 40000;
+                    if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+                    {
+                        minChouJiangScore = XkGameCtrl.GetInstance().m_PingJiData.GetChouJiangMinScore();
+                    }
+
+                    int playerScore = XkGameCtrl.GetPlayerJiFenValue(indexPlayer);
+                    //还差多少分数.
+                    int haiChaScoreVal = minChouJiangScore - playerScore;
+                    if (haiChaScoreVal <= 0)
+                    {
+                        haiChaScoreVal = 100;
+                    }
+                    fenShuNumUI.ShowNumUI(haiChaScoreVal);
+                }
+            }
+
+            if (juChouJiangObj != null)
+            {
+                //距抽奖还差多少分.
+                juChouJiangObj.SetActive(isActive);
+            }
+
+            if (gongXiJinRuChouJiangObj != null)
+            {
+                //恭喜进入抽奖.
+                gongXiJinRuChouJiangObj.SetActive(!isActive);
+            }
+        }
+    }
+    /// <summary>
+    /// 距离抽奖还差多少分数据.
+    /// </summary>
+    public JuChouJiangData m_JuChouJiangDt;
     PlayerEnum m_IndexPlayer = PlayerEnum.Null;
     SSPingJiData.PingJiLevel m_PlayerPingJiLevel = SSPingJiData.PingJiLevel.D;
     internal void Init(PlayerEnum indexPlayer, int fenShu)
@@ -78,6 +195,20 @@ public class SSPingJiUI : MonoBehaviour
             SSDebug.LogWarning("XkGameCtrl.GetInstance().m_PingJiData was null");
         }
 
+        //玩家还差多少分可以进行抽奖控制.
+        SSPingJiData.PingJiLevel chouJiangPingJi = SSPingJiData.PingJiLevel.A;
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+        {
+            chouJiangPingJi = XkGameCtrl.GetInstance().m_PingJiData.m_ChouJiangPingJi;
+        }
+        //是否可以抽奖.
+        bool isCanChouJiang = m_PlayerPingJiLevel < chouJiangPingJi ? false : true;
+        if (m_JuChouJiangDt != null)
+        {
+            m_JuChouJiangDt.SetActiveJuChouJiang(indexPlayer, !isCanChouJiang);
+        }
+
+        //玩家得分控制.
         if (fenShu.ToString().Length > m_FenShuNumUI.m_UISpriteArray.Length)
         {
             fenShu = (int)Mathf.Pow(10, fenShu.ToString().Length) - 1;
@@ -88,7 +219,18 @@ public class SSPingJiUI : MonoBehaviour
         int indexVal = (int)m_PlayerPingJiLevel;
         if (indexVal < m_PingJiImgArray.Length && m_PingJiImgArray[indexVal] != null)
         {
+            //评级信息.
             m_PingJiUI.mainTexture = m_PingJiImgArray[indexVal];
+        }
+        else
+        {
+            SSDebug.LogWarning("indexVal or m_PingJiImgArray was wrong");
+        }
+        
+        if (indexVal < m_PingJiPingYuImgArray.Length && m_PingJiPingYuImgArray[indexVal] != null)
+        {
+            //评级评语.
+            m_PingJiPingYuUI.mainTexture = m_PingJiPingYuImgArray[indexVal];
         }
         else
         {
@@ -344,14 +486,55 @@ public class SSPingJiUI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsEndFenShuAni == false)
+        if (IsEndFenShuAni == false && IsDisplayFenShu == true)
         {
             UpdatePlayerFenAni();
         }
     }
 
+    /// <summary>
+    /// 是否开始淡化评级界面.
+    /// </summary>
+    bool IsStartDanHuaPingJi = false;
+    float m_TimeDanHuaPingJi = 0f;
+    /// <summary>
+    /// 开始淡化隐藏评级界面.
+    /// </summary>
+    void StartDanHuaHiddenPingJiPanel()
+    {
+        if (IsStartDanHuaPingJi == true)
+        {
+            return;
+        }
+        IsStartDanHuaPingJi = true;
+        m_TimeDanHuaPingJi = Time.time;
+        UITexture uiTexture = gameObject.AddComponent<UITexture>();
+        uiTexture.alpha = 1f;
+        TweenAlpha tweenAlpha = gameObject.AddComponent<TweenAlpha>();
+        tweenAlpha.from = 1f;
+        tweenAlpha.to = 0f;
+        tweenAlpha.duration = m_AlphaTime;
+    }
+
+    /// <summary>
+    /// 检测淡化评级界面是否结束.
+    /// </summary>
+    void UpdateDanHuaPingJi()
+    {
+        if (IsStartDanHuaPingJi == false)
+        {
+            return;
+        }
+
+        if (Time.time - m_TimeDanHuaPingJi >= m_AlphaTime)
+        {
+            SetActive(false);
+        }
+    }
+
     void Update()
     {
+        UpdateDanHuaPingJi();
         if (Time.time - m_TimeStart >= m_TimeCreateChouJiang && IsCreateChouJiang == false)
         {
             IsCreateChouJiang = true;
@@ -363,14 +546,22 @@ public class SSPingJiUI : MonoBehaviour
                 {
                     chouJiangPingJi = XkGameCtrl.GetInstance().m_PingJiData.m_ChouJiangPingJi;
                 }
+                //淡化隐藏评级界面.
+                StartDanHuaHiddenPingJiPanel();
+
                 //是否可以抽奖.
-                bool isCanChouJiang = m_PlayerPingJiLevel < chouJiangPingJi ? false : true;
-                SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer, isCanChouJiang);
+                IsPlayerCanChouJiang = m_PlayerPingJiLevel < chouJiangPingJi ? false : true;
+                if (IsPlayerCanChouJiang == true)
+                {
+                    //允许抽奖时才可以展示抽奖界面.
+                    SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer, IsPlayerCanChouJiang);
+                }
             }
         }
 
-        if (Time.time - m_TimeStart >= m_TimeHidden && IsRemoveSelf == false)
+        if (Time.time - m_TimeStart >= m_TimeHidden && IsRemoveSelf == false && IsPlayerCanChouJiang == false)
         {
+            //玩家分数不足,无法进行抽奖.
             SSPingJiData.PingJiLevel chouJiangPingJi = SSPingJiData.PingJiLevel.A;
             if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
             {
@@ -394,17 +585,17 @@ public class SSPingJiUI : MonoBehaviour
                     daoJiShiCom.StartPlayDaoJiShi();
                 }
 
-                //if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                //{
-                //    //删除玩家评级界面.
-                //    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
-                //}
-
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {
-                    //删除玩家游戏抽奖界面UI.
-                    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, 0f);
+                    //删除玩家评级界面.
+                    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
                 }
+
+                //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                //{
+                //    //删除玩家游戏抽奖界面UI.
+                //    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, 0f);
+                //}
             }
             //else
             //{

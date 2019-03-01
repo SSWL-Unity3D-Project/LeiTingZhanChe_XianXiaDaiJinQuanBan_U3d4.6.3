@@ -162,7 +162,10 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
 			return;
 		}
 
-		XkGameCtrl.PlayerJiFenArray[indexPlayer] += fenShuValTmp;
+        if (XkGameCtrl.GetIsActivePlayer(indexVal) == true && XkGameCtrl.GetIsDeathPlayer(indexVal) == false)
+        {
+            XkGameCtrl.PlayerJiFenArray[indexPlayer] += fenShuValTmp;
+        }
 		XKPlayerScoreCtrl.ChangePlayerScore(indexVal);
 
 		XKPlayerFenShuMove fenShuMoveCom = GetXKPlayerFenShuMove(indexVal);

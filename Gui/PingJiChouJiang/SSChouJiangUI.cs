@@ -42,6 +42,10 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     public GameObject m_XieXieCanYuUIObj;
     /// <summary>
+    /// "找工作人员"UI.
+    /// </summary>
+    public GameObject m_ZhaoGongZuoRenYuanUIObj;
+    /// <summary>
     /// 玩家获得分数没有达到抽奖时需要进行隐藏的对象.
     /// </summary>
     public GameObject[] m_HiddenArray;
@@ -56,7 +60,8 @@ public class SSChouJiangUI : MonoBehaviour
     /// <summary>
     /// 自动抽奖倒计时.
     /// </summary>
-    int m_DaoJiShiVal = 10;
+    [Range(3, 20)]
+    public int m_DaoJiShiVal = 5;
     internal void Init(PlayerEnum indexPlayer, bool isCanChouJiang)
     {
         m_IndexPlayer = indexPlayer;
@@ -1285,6 +1290,19 @@ public class SSChouJiangUI : MonoBehaviour
             {
                 m_XieXieCanYuUIObj.SetActive(!isZhongJiang);
             }
+
+            if (m_PlayerJiangPin.jiangPinType == JiangPinState.XieXieCanYu
+                || m_PlayerJiangPin.jiangPinType == JiangPinState.ZaiWanYiJu)
+            {
+            }
+            else
+            {
+                if (m_ZhaoGongZuoRenYuanUIObj != null)
+                {
+                    //请找工作人员兑奖.
+                    m_ZhaoGongZuoRenYuanUIObj.SetActive(true);
+                }
+            }
         }
     }
 
@@ -1301,6 +1319,11 @@ public class SSChouJiangUI : MonoBehaviour
         if (m_XieXieCanYuUIObj != null)
         {
             m_XieXieCanYuUIObj.SetActive(false);
+        }
+
+        if (m_ZhaoGongZuoRenYuanUIObj != null)
+        {
+            m_ZhaoGongZuoRenYuanUIObj.SetActive(false);
         }
     }
     #endregion

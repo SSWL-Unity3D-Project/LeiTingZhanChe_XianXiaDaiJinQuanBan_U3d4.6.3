@@ -80,6 +80,11 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     [Range(0, 100)]
     public int m_ZaiWanYiJuGaiLv = 20;
+    /// <summary>
+    /// npc击爆之后掉落道具的冷却时间.
+    /// </summary>
+    [Range(0, 100)]
+    public float m_NpcDiaoDaoJuTimeLengQue = 60f;
     bool _IsDisplayBossDeathYanHua = false;
     /// <summary>
     /// 是否在显示Boss爆炸粒子和玩家得奖烟花.

@@ -114,9 +114,15 @@ public class XKNpcSpawnDaoJu : SSGameMono
     static float m_TimeLastCreatDaoJu = 0f;
 	public void SpawnAllDaoJu()
 	{
-        if (Time.time - m_TimeLastCreatDaoJu < 60f)
+        float timeLengQue = 60f;
+        if (XkGameCtrl.GetInstance() != null)
         {
-            //间隔时间小于60秒则不产生补给包.
+            timeLengQue = XkGameCtrl.GetInstance().m_NpcDiaoDaoJuTimeLengQue;
+        }
+
+        if (Time.time - m_TimeLastCreatDaoJu < timeLengQue)
+        {
+            //间隔时间小于x秒则不产生补给包.
             return;
         }
         m_TimeLastCreatDaoJu = Time.time;
