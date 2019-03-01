@@ -6,6 +6,9 @@ public class SSCaiPiaoDaJiang : SSGameMono
     /// 大奖数字信息控制组件.
     /// </summary>
     public SSGameNumUI m_GameNumUI;
+    /// <summary>
+    /// 玩家微信头像.
+    /// </summary>
     public UITexture m_PlayerIndexUI;
     public Texture[] m_PlayerIndexUIArray = new Texture[3];
     /// <summary>
@@ -19,13 +22,34 @@ public class SSCaiPiaoDaJiang : SSGameMono
             m_GameNumUI.ShowNumUI(num);
         }
         
-        int index = (int)indexPlayer - 1;
-        if (index >= 0 && index <= 2)
+        //int index = (int)indexPlayer - 1;
+        //if (index >= 0 && index <= 2)
+        //{
+        //    if (m_PlayerIndexUI != null && m_PlayerIndexUIArray.Length > index)
+        //    {
+        //        //设置中大奖玩家的UI索引信息.
+        //        m_PlayerIndexUI.mainTexture = m_PlayerIndexUIArray[index];
+        //    }
+        //}
+        SetPlayerHeadImg(indexPlayer);
+    }
+    
+    /// <summary>
+    /// 设置玩家微信头像.
+    /// </summary>
+    void SetPlayerHeadImg(PlayerEnum indexPlayer)
+    {
+        if (m_PlayerIndexUI != null)
         {
-            if (m_PlayerIndexUI != null && m_PlayerIndexUIArray.Length > index)
+            Texture headImg = null;
+            if (XueKuangCtrl.GetInstance(indexPlayer) != null && XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead != null)
             {
-                //设置中大奖玩家的UI索引信息.
-                m_PlayerIndexUI.mainTexture = m_PlayerIndexUIArray[index];
+                headImg = XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead.mainTexture;
+            }
+
+            if (headImg != null)
+            {
+                m_PlayerIndexUI.mainTexture = headImg;
             }
         }
     }
