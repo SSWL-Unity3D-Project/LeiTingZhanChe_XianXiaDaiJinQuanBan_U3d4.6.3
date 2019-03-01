@@ -546,13 +546,13 @@ public class SSPingJiUI : MonoBehaviour
                 {
                     chouJiangPingJi = XkGameCtrl.GetInstance().m_PingJiData.m_ChouJiangPingJi;
                 }
-                //淡化隐藏评级界面.
-                StartDanHuaHiddenPingJiPanel();
 
                 //是否可以抽奖.
                 IsPlayerCanChouJiang = m_PlayerPingJiLevel < chouJiangPingJi ? false : true;
                 if (IsPlayerCanChouJiang == true)
                 {
+                    //淡化隐藏评级界面.
+                    StartDanHuaHiddenPingJiPanel();
                     //允许抽奖时才可以展示抽奖界面.
                     SSUIRoot.GetInstance().m_GameUIManage.CreatPlayerChouJiangUI(m_IndexPlayer, IsPlayerCanChouJiang);
                 }
