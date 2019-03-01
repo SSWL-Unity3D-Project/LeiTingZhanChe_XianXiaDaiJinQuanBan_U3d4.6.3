@@ -551,6 +551,7 @@ public class XkGameCtrl : SSGameMono
             //IsCaiPiaoHuLuePlayerIndex = false;
 #endif
             SSDebug.Log("GameStart time ============ " + System.DateTime.Now.ToString());
+            SSDebug.Log("GameVersion ============ " + XKGameVersionCtrl.GameVersion);
             SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
             Application.runInBackground = true;
             InitCheckLoadingMovieScene();
@@ -2443,9 +2444,15 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null)
         {
+            //游戏场景中.
             if (isActive == true)
             {
+                //初始化玩家伤害数据.
                 _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerOne);
+                if (SSChouJiangTiShiManage.GetInstance() != null)
+                {
+                    SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerOne);
+                }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerOne, isActive);
             if (_Instance.m_TriggerManage != null)
@@ -2498,9 +2505,15 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null)
         {
+            //游戏场景中.
             if (isActive == true)
             {
+                //初始化玩家伤害数据.
                 _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerTwo);
+                if (SSChouJiangTiShiManage.GetInstance() != null)
+                {
+                    SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerTwo);
+                }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerTwo, isActive);
             if (_Instance.m_TriggerManage != null)
@@ -2553,9 +2566,15 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null)
         {
+            //游戏场景中.
             if (isActive == true)
             {
+                //初始化玩家伤害数据.
                 _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerThree);
+                if (SSChouJiangTiShiManage.GetInstance() != null)
+                {
+                    SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerThree);
+                }
             }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerThree, isActive);
             if (_Instance.m_TriggerManage != null)
@@ -2608,6 +2627,16 @@ public class XkGameCtrl : SSGameMono
 
 		if (_Instance != null)
         {
+            //游戏场景中.
+            if (isActive == true)
+            {
+                //初始化玩家伤害数据.
+                _Instance.InitPlayerDamageDtCur(PlayerEnum.PlayerFour);
+                if (SSChouJiangTiShiManage.GetInstance() != null)
+                {
+                    SSChouJiangTiShiManage.GetInstance().ShowChouJiangTiShi(PlayerEnum.PlayerFour);
+                }
+            }
             _Instance.InitGamePlayerInfo(PlayerEnum.PlayerFour, isActive);
             if (_Instance.m_TriggerManage != null)
             {
