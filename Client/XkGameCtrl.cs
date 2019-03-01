@@ -3690,6 +3690,7 @@ public class XkGameCtrl : SSGameMono
         if (GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
             //没有激活任何玩家.
+            valSub = 0f;
         }
         else
         {
