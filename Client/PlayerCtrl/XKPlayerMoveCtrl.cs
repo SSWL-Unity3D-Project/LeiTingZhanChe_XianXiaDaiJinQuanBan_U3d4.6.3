@@ -47,7 +47,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	bool IsWuDiState = true;
 	XKPlayerAutoFire FireScript;
 	XKPlayerTiaoBanCtrl PlayerTiaoBanScript;
-	static XKPlayerMoveCtrl _InstancePOne;
+    /// <summary>
+    /// 玩家操作游戏监听组件.
+    /// </summary>
+    SSPlayerActionListen m_SSPlayerActionListen;
+    static XKPlayerMoveCtrl _InstancePOne;
 	public static XKPlayerMoveCtrl GetInstancePOne()
 	{
 		return _InstancePOne;
@@ -71,7 +75,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		return _InstancePFour;
 	}
 
-	public static XKPlayerMoveCtrl GetXKPlayerMoveCom(PlayerEnum playerSt)
+	public static XKPlayerMoveCtrl GetInstance(PlayerEnum playerSt)
 	{
 		XKPlayerMoveCtrl playerScript = null;
 		switch (playerSt)
@@ -174,7 +178,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             m_PlayerAiMove = gameObject.AddComponent<XKPlayerAiMove>();
             m_PlayerAiMove.Init(this);
         }
-	}
+        InitPlayerActionListen();
+    }
 
 	void FixedUpdate()
     {
@@ -241,6 +246,11 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         if (FireScript != null)
         {
             FireScript.UpdatePaoTaRot();
+        }
+
+        if (Time.frameCount % 30 == 0)
+        {
+            UpdatePlayerAction();
         }
     }
 
@@ -635,7 +645,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public static void SetPlayerJiSuState(PlayerEnum playerSt)
 	{
-		XKPlayerMoveCtrl playerScript = GetXKPlayerMoveCom(playerSt);
+		XKPlayerMoveCtrl playerScript = GetInstance(playerSt);
 		if (playerScript == null) {
 			return;
 		}
@@ -677,7 +687,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 	{
 		XKPlayerMoveCtrl moveScript = null;
 		TKMoveState tkMvState = TKMoveState.U_FangXiangPan;
-		moveScript = GetXKPlayerMoveCom(playerSt);
+		moveScript = GetInstance(playerSt);
 		if (moveScript == null) {
 			return;
 		}
@@ -714,7 +724,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		TKMoveState tkMvState = TKMoveState.U_FangXiangPan;
 		for (int i = 1; i <= 4; i++) {
 			indexPlayer = (PlayerEnum)i;
-			playerScript = GetXKPlayerMoveCom(indexPlayer);
+			playerScript = GetInstance(indexPlayer);
 			if (playerScript == null) {
 				continue;
 			}
@@ -739,7 +749,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			PlayerEnum indexPlayer = PlayerEnum.Null;
 			for (int i = 1; i <= 4; i++) {
 				indexPlayer = (PlayerEnum)i;
-				playerScript = GetXKPlayerMoveCom(indexPlayer);
+				playerScript = GetInstance(indexPlayer);
 				if (playerScript == null) {
 					continue;
 				}
@@ -747,7 +757,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			}
 		}
 		else {
-			playerScript = GetXKPlayerMoveCom(playerSt);
+			playerScript = GetInstance(playerSt);
 			if (playerScript == null) {
 				return;
 			}
@@ -1697,7 +1707,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
     public static void ResetZhanCheDaiJinQuanCount(PlayerEnum indexPlayer)
     {
-        XKPlayerMoveCtrl playerCom = GetXKPlayerMoveCom(indexPlayer);
+        XKPlayerMoveCtrl playerCom = GetInstance(indexPlayer);
         if (playerCom != null)
         {
             playerCom.ResetZhanCheDaiJinQuanCount();
@@ -1734,5 +1744,72 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         {
             m_HuoYanDamageTX.SetActive(isActive);
         }
+    }
+    
+    /// <summary>
+    /// 初始化玩家操作游戏监听组件.
+    /// </summary>
+    void InitPlayerActionListen()
+    {
+        if (m_SSPlayerActionListen == null)
+        {
+            m_SSPlayerActionListen = gameObject.AddComponent<SSPlayerActionListen>();
+        }
+    }
+
+    /// <summary>
+    /// 当玩家有操作时.
+    /// </summary>
+    internal void OnPlayerAction()
+    {
+        if (m_SSPlayerActionListen != null)
+        {
+            m_SSPlayerActionListen.OnPlayerAction();
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家游戏操作状态.
+    /// </summary>
+    void UpdatePlayerAction()
+    {
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            if (XkGameCtrl.GetIsActivePlayer(PlayerIndex) == true && XkGameCtrl.GetIsDeathPlayer(PlayerIndex) == false)
+            {
+                //玩家激活状态才允许进入该函数.
+                if (m_SSPlayerActionListen != null)
+                {
+                    m_SSPlayerActionListen.UpdatePlayerAction();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 获取玩家是否处于无操作的休眠状态.
+    /// </summary>
+    internal bool GetPlayerIsSleep()
+    {
+        if (XkGameCtrl.GetInstance() == null)
+        {
+            return true;
+        }
+
+        if (XkGameCtrl.GetInstance().GetIsActiveAiPlayer() == true)
+        {
+            //AI坦克被激活.
+            return true;
+        }
+
+        if (XkGameCtrl.GetIsActivePlayer(PlayerIndex) == true && XkGameCtrl.GetIsDeathPlayer(PlayerIndex) == false)
+        {
+            //玩家激活状态才允许进入该函数.
+            if (m_SSPlayerActionListen != null)
+            {
+                return m_SSPlayerActionListen.GetIsPlayerSleep();
+            }
+        }
+        return true;
     }
 }

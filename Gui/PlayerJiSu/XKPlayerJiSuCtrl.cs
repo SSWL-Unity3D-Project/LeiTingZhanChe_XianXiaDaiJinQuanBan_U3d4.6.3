@@ -61,7 +61,7 @@ public class XKPlayerJiSuCtrl : MonoBehaviour
 			return;
 		}
 
-		Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal).PiaoFenPoint;
+		Transform playerTr = XKPlayerMoveCtrl.GetInstance(indexVal).PiaoFenPoint;
 //		playerTr = TestPlayerTr; //test
 		
 		Vector3 startPos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(playerTr.position);

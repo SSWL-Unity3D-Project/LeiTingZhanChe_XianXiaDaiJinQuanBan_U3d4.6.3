@@ -116,7 +116,7 @@ public class HuDunCtrl : MonoBehaviour {
     {
         IsCanResetHuDunTime = false;
         gameObject.SetActive(false);
-		XKPlayerMoveCtrl playerMoveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(PlayerSt);
+		XKPlayerMoveCtrl playerMoveScript = XKPlayerMoveCtrl.GetInstance(PlayerSt);
 		if (playerMoveScript == null) {
 			return;
 		}

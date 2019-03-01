@@ -784,7 +784,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             //SSDebug.LogWarning("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
 
             PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
-            XKPlayerMoveCtrl playerCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+            XKPlayerMoveCtrl playerCom = XKPlayerMoveCtrl.GetInstance(indexPlayer);
             if (playerCom != null)
             {
                 if (XkPlayerCtrl.GetInstanceFeiJi() != null)
@@ -1285,6 +1285,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         OnReceivePlayerPadBtInfo(PadBtState.DaoDan, playerDt.Index, pcvr.ButtonState.UP);
 #endif
                     }
+
+                    //玩家有操作手柄按键.
+                    InputEventCtrl.GetInstance().OnPlayerDoPadButton((PlayerEnum)(playerDt.Index + 1));
                 }
                 else
                 {
@@ -1592,6 +1595,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //    StartCoroutine(DelayResetPlayerShouBingDir(playerDt.Index));
                     //}
 
+                    //玩家有操作方向.
+                    InputEventCtrl.GetInstance().OnPlayerDoPadDirection((PlayerEnum)(playerDt.Index + 1));
                     switch (dirState)
                     {
                         case PlayerShouBingDir.DirLeft:

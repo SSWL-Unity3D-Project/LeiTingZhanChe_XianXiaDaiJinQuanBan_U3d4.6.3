@@ -830,6 +830,40 @@ public class InputEventCtrl : MonoBehaviour
 			break;
 		}
 	}
+
+    /// <summary>
+    /// 当玩家操控了手柄方向.
+    /// </summary>
+    internal void OnPlayerDoPadDirection(PlayerEnum playerIndex)
+    {
+        int indexVal = (int)playerIndex - 1;
+        if (indexVal < 0 || indexVal >= 4)
+        {
+            return;
+        }
+
+        if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+        {
+            XKPlayerMoveCtrl.GetInstance(playerIndex).OnPlayerAction();
+        }
+    }
+
+    /// <summary>
+    /// 当玩家操控了手柄按键.
+    /// </summary>
+    internal void OnPlayerDoPadButton(PlayerEnum playerIndex)
+    {
+        int indexVal = (int)playerIndex - 1;
+        if (indexVal < 0 || indexVal >= 4)
+        {
+            return;
+        }
+
+        if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+        {
+            XKPlayerMoveCtrl.GetInstance(playerIndex).OnPlayerAction();
+        }
+    }
     #endregion
 
     /// <summary>
@@ -987,6 +1021,7 @@ public class InputEventCtrl : MonoBehaviour
                     OnClickFangXiangLBt(1, pcvr.ButtonState.DOWN);
                     OnClickFangXiangLBt(2, pcvr.ButtonState.DOWN);
                 }
+                OnPlayerDoPadDirection(PlayerEnum.PlayerOne);
             }
 
             if (Input.GetKeyUp(KeyCode.A))
@@ -1017,6 +1052,7 @@ public class InputEventCtrl : MonoBehaviour
                     OnClickFangXiangRBt(1, pcvr.ButtonState.DOWN);
                     OnClickFangXiangRBt(2, pcvr.ButtonState.DOWN);
                 }
+                OnPlayerDoPadDirection(PlayerEnum.PlayerOne);
             }
 
             if (Input.GetKeyUp(KeyCode.D))
@@ -1047,6 +1083,7 @@ public class InputEventCtrl : MonoBehaviour
                     OnClickFangXiangUBt(1, pcvr.ButtonState.DOWN);
                     OnClickFangXiangUBt(2, pcvr.ButtonState.DOWN);
                 }
+                OnPlayerDoPadDirection(PlayerEnum.PlayerOne);
             }
 
             if (Input.GetKeyUp(KeyCode.W))
@@ -1077,6 +1114,7 @@ public class InputEventCtrl : MonoBehaviour
                     OnClickFangXiangDBt(1, pcvr.ButtonState.DOWN);
                     OnClickFangXiangDBt(2, pcvr.ButtonState.DOWN);
                 }
+                OnPlayerDoPadDirection(PlayerEnum.PlayerOne);
             }
 
             if (Input.GetKeyUp(KeyCode.S))
@@ -1099,6 +1137,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangLBtP2(pcvr.ButtonState.DOWN);
                 OnClickFangXiangLBt(1, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerTwo);
             }
 
             if (Input.GetKeyUp(KeyCode.F))
@@ -1111,6 +1150,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangRBtP2(pcvr.ButtonState.DOWN);
                 OnClickFangXiangRBt(1, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerTwo);
             }
 
             if (Input.GetKeyUp(KeyCode.H))
@@ -1123,6 +1163,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangUBtP2(pcvr.ButtonState.DOWN);
                 OnClickFangXiangUBt(1, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerTwo);
             }
 
             if (Input.GetKeyUp(KeyCode.T))
@@ -1135,6 +1176,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangDBtP2(pcvr.ButtonState.DOWN);
                 OnClickFangXiangDBt(1, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerTwo);
             }
 
             if (Input.GetKeyUp(KeyCode.G))
@@ -1148,6 +1190,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangLBtP3(pcvr.ButtonState.DOWN);
                 OnClickFangXiangLBt(2, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerThree);
             }
 
             if (Input.GetKeyUp(KeyCode.J))
@@ -1160,6 +1203,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangRBtP3(pcvr.ButtonState.DOWN);
                 OnClickFangXiangRBt(2, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerThree);
             }
 
             if (Input.GetKeyUp(KeyCode.L))
@@ -1172,6 +1216,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangUBtP3(pcvr.ButtonState.DOWN);
                 OnClickFangXiangUBt(2, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerThree);
             }
 
             if (Input.GetKeyUp(KeyCode.I))
@@ -1184,6 +1229,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangDBtP3(pcvr.ButtonState.DOWN);
                 OnClickFangXiangDBt(2, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerThree);
             }
 
             if (Input.GetKeyUp(KeyCode.K))
@@ -1197,6 +1243,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangLBtP4(pcvr.ButtonState.DOWN);
                 OnClickFangXiangLBt(3, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerFour);
             }
 
             if (Input.GetKeyUp(KeyCode.LeftArrow))
@@ -1209,6 +1256,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangRBtP4(pcvr.ButtonState.DOWN);
                 OnClickFangXiangRBt(3, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerFour);
             }
 
             if (Input.GetKeyUp(KeyCode.RightArrow))
@@ -1221,6 +1269,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangUBtP4(pcvr.ButtonState.DOWN);
                 OnClickFangXiangUBt(3, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerFour);
             }
 
             if (Input.GetKeyUp(KeyCode.UpArrow))
@@ -1233,6 +1282,7 @@ public class InputEventCtrl : MonoBehaviour
             {
                 //ClickFangXiangDBtP4(pcvr.ButtonState.DOWN);
                 OnClickFangXiangDBt(3, pcvr.ButtonState.DOWN);
+                OnPlayerDoPadDirection(PlayerEnum.PlayerFour);
             }
 
             if (Input.GetKeyUp(KeyCode.DownArrow))
@@ -1269,7 +1319,11 @@ public class InputEventCtrl : MonoBehaviour
             OnClickDaoDanBt(0, pcvr.ButtonState.UP);
             OnClickDaoDanBt(1, pcvr.ButtonState.UP);
             OnClickDaoDanBt(2, pcvr.ButtonState.UP);
-            OnClickDaoDanBt(3, pcvr.ButtonState.UP);
+            //OnClickDaoDanBt(3, pcvr.ButtonState.UP);
+            OnPlayerDoPadButton(PlayerEnum.PlayerOne);
+            OnPlayerDoPadButton(PlayerEnum.PlayerTwo);
+            OnPlayerDoPadButton(PlayerEnum.PlayerThree);
+            //OnPlayerDoPadButton(PlayerEnum.PlayerFour);
         }
 		
 		if (Input.GetKeyDown(KeyCode.Mouse0)) {
@@ -1280,21 +1334,33 @@ public class InputEventCtrl : MonoBehaviour
             OnClickDaoDanBt(0, pcvr.ButtonState.DOWN);
             OnClickDaoDanBt(1, pcvr.ButtonState.DOWN);
             OnClickDaoDanBt(2, pcvr.ButtonState.DOWN);
-            OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
+            //OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
+            OnPlayerDoPadButton(PlayerEnum.PlayerOne);
+            OnPlayerDoPadButton(PlayerEnum.PlayerTwo);
+            OnPlayerDoPadButton(PlayerEnum.PlayerThree);
+            //OnPlayerDoPadButton(PlayerEnum.PlayerFour);
         }
 
-		if (Input.GetKeyUp(KeyCode.Mouse1)) {
+        if (Input.GetKeyUp(KeyCode.Mouse1)) {
             OnClickDaoDanBt(0, pcvr.ButtonState.UP);
             OnClickDaoDanBt(1, pcvr.ButtonState.UP);
             OnClickDaoDanBt(2, pcvr.ButtonState.UP);
-            OnClickDaoDanBt(3, pcvr.ButtonState.UP);
+            //OnClickDaoDanBt(3, pcvr.ButtonState.UP);
+            OnPlayerDoPadButton(PlayerEnum.PlayerOne);
+            OnPlayerDoPadButton(PlayerEnum.PlayerTwo);
+            OnPlayerDoPadButton(PlayerEnum.PlayerThree);
+            //OnPlayerDoPadButton(PlayerEnum.PlayerFour);
         }
-		
-		if (Input.GetKeyDown(KeyCode.Mouse1)) {
+
+        if (Input.GetKeyDown(KeyCode.Mouse1)) {
             OnClickDaoDanBt(0, pcvr.ButtonState.DOWN);
             OnClickDaoDanBt(1, pcvr.ButtonState.DOWN);
             OnClickDaoDanBt(2, pcvr.ButtonState.DOWN);
-            OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
+            //OnClickDaoDanBt(3, pcvr.ButtonState.DOWN);
+            OnPlayerDoPadButton(PlayerEnum.PlayerOne);
+            OnPlayerDoPadButton(PlayerEnum.PlayerTwo);
+            OnPlayerDoPadButton(PlayerEnum.PlayerThree);
+            //OnPlayerDoPadButton(PlayerEnum.PlayerFour);
         }
 
         //test

@@ -422,7 +422,7 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 
 	bool CheckIsActivePlayer()
 	{
-        if (XKPlayerMoveCtrl.GetXKPlayerMoveCom(PlayerIndex).GetIsActive() == false)
+        if (XKPlayerMoveCtrl.GetInstance(PlayerIndex).GetIsActive() == false)
         {
             //玩家坦克已经隐藏.
             return false;
@@ -1812,9 +1812,9 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 		}
 
         bool isPlayAudio = false;
-        if (XKPlayerMoveCtrl.GetXKPlayerMoveCom(PlayerIndex) != null)
+        if (XKPlayerMoveCtrl.GetInstance(PlayerIndex) != null)
         {
-            isPlayAudio = XKPlayerMoveCtrl.GetXKPlayerMoveCom(PlayerIndex).GetIsActive();
+            isPlayAudio = XKPlayerMoveCtrl.GetInstance(PlayerIndex).GetIsActive();
         }
 
         if (isPlayAudio == true)

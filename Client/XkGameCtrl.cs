@@ -2248,7 +2248,7 @@ public class XkGameCtrl : SSGameMono
 		if (playerSt == PlayerEnum.Null) {
 			return;
 		}
-		XKPlayerMoveCtrl playerScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(playerSt);
+		XKPlayerMoveCtrl playerScript = XKPlayerMoveCtrl.GetInstance(playerSt);
 		playerScript.ActivePlayerWuDiState();
 	}
 
@@ -3181,7 +3181,7 @@ public class XkGameCtrl : SSGameMono
             return;
         }
         
-        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetInstance(indexPlayer);
         if (playerMoveCom != null)
         {
             //SSDebug.LogWarning("ActivePlayerAiTankToGame -> indexPlayer ============================= " + indexPlayer);
@@ -3223,7 +3223,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     public static void ClosePlayerAiTank(PlayerEnum indexVal)
     {
-        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal);
+        XKPlayerMoveCtrl playerMoveCom = XKPlayerMoveCtrl.GetInstance(indexVal);
         if (playerMoveCom != null)
         {
             playerMoveCom.HiddenGamePlayer(1);
@@ -3599,7 +3599,7 @@ public class XkGameCtrl : SSGameMono
 			}
 		}*/
 
-		XKPlayerMoveCtrl playerMoveCtrl = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal);
+		XKPlayerMoveCtrl playerMoveCtrl = XKPlayerMoveCtrl.GetInstance(indexVal);
 		if (playerMoveCtrl != null) {
 			//if (playerMoveCtrl.GetIsMoveToTiaoYueDian()) {
 			//	return;
@@ -3649,6 +3649,11 @@ public class XkGameCtrl : SSGameMono
         {
             int damageAdd = GetDamageAddToPlayer(indexVal);
             valSub += damageAdd;
+            if (playerMoveCtrl != null && playerMoveCtrl.GetPlayerIsSleep() == true)
+            {
+                //玩家处于休眠无操作状态,受到一次伤害时将玩家血量直接耗尽.
+                valSub = MaxPlayerHealth;
+            }
         }
 
         switch (indexVal) {

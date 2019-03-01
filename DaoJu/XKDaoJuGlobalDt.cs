@@ -138,49 +138,49 @@ public class XKDaoJuGlobalDt : MonoBehaviour
 	
 	public static void SetPlayerQianHouFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsQianHouFire(true);
 	}
 	
 	public static void SetPlayerChangChengFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsChangChengFire(true);
 	}
 
 	public static void SetPlayerJiQiangSanDanFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsJiQiangSanDanFire(true);
 	}
 
 	public static void SetPlayerQiangJiFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsQiangJiFire(true);
 	}
 
 	public static void SetPlayerIsPaiJiPaoFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsPaiJiPaoFire(true);
 	}
 
 	public static void SetPlayerIsSanDanZPFire(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		moveScript.SetIsSanDanZPFire(true);
     }
 
     public static void SetPlayerIsOpenChongJiBoZPFire(PlayerEnum indexPlayer)
     {
-        XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+        XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
         moveScript.SetIsOpenChongJiBoZPFire(true);
     }
 
     public static void SetPlayerIsHuoLiAllOpen(PlayerEnum indexPlayer, bool isFire = true)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		if (moveScript == null) {
 			return;
 		}
@@ -189,7 +189,7 @@ public class XKDaoJuGlobalDt : MonoBehaviour
 
 	public static bool GetPlayerIsHuoLiAllOpen(PlayerEnum indexPlayer)
 	{
-		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexPlayer);
+		XKPlayerMoveCtrl moveScript = XKPlayerMoveCtrl.GetInstance(indexPlayer);
 		if (moveScript == null) {
 			return false;
 		}

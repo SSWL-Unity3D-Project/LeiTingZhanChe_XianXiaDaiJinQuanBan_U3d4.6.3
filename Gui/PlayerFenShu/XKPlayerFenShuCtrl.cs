@@ -169,7 +169,7 @@ public class XKPlayerFenShuCtrl : MonoBehaviour
 		if (fenShuMoveCom == null) {
 			return;
 		}
-		Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal).PiaoFenPoint;
+		Transform playerTr = XKPlayerMoveCtrl.GetInstance(indexVal).PiaoFenPoint;
 //		playerTr = TestPlayerTr; //test
 
 		Vector3 startPos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(playerTr.position);

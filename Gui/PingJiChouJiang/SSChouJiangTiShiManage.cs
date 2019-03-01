@@ -43,7 +43,7 @@ public class SSChouJiangTiShiManage : SSGameMono
         {
             return;
         }
-        Transform playerTr = XKPlayerMoveCtrl.GetXKPlayerMoveCom(indexVal).PiaoFenPoint;
+        Transform playerTr = XKPlayerMoveCtrl.GetInstance(indexVal).PiaoFenPoint;
         Vector3 startPos = XkGameCtrl.GetInstance().GetWorldObjToScreenPos(playerTr.position);
         tiShiCom.ShowChouJiangTiShi(startPos);
     }
