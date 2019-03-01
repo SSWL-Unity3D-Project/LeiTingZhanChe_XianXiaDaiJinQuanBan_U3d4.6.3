@@ -120,6 +120,7 @@ public class SSPingJiUI : MonoBehaviour
         {
             if (isActive == true)
             {
+                //玩家分数不够抽奖资格.
                 int indexVal = (int)indexPlayer - 1;
                 if (juChouJiangUI != null)
                 {

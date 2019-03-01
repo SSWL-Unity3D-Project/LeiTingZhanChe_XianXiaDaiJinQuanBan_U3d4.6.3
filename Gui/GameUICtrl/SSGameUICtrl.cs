@@ -1688,7 +1688,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatPlayerPingJiUI.............................indexPlayer == " + indexPlayer);
+                SSDebug.LogWarning("Unity: CreatPlayerPingJiUI......indexPlayer == " + indexPlayer + ", fenShuNum == " + fenShuNum);
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_PingJiUIArray[indexVal] = obj.GetComponent<SSPingJiUI>();
                 m_PingJiUIArray[indexVal].Init(indexPlayer, fenShuNum);
