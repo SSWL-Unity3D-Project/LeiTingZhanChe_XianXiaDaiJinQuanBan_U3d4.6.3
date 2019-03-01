@@ -10,6 +10,14 @@ public class SSChouJiangFenShuZuGou : MonoBehaviour
     /// </summary>
     public UITexture m_HeadUITexture;
     /// <summary>
+    /// 头像框UI组件.
+    /// </summary>
+    public UITexture headKuangUI;
+    /// <summary>
+    /// 头像框UI图片资源.
+    /// </summary>
+    public Texture[] headKuangImgArray = new Texture[3];
+    /// <summary>
     /// 初始化.
     /// </summary>
     internal void Init(PlayerEnum playerIndex)
@@ -34,6 +42,16 @@ public class SSChouJiangFenShuZuGou : MonoBehaviour
             if (headImg != null)
             {
                 m_HeadUITexture.mainTexture = headImg;
+            }
+        }
+
+        if (headKuangUI != null)
+        {
+            int indexVal = (int)playerIndex - 1;
+            if (indexVal >= 0 && indexVal < headKuangImgArray.Length && headKuangImgArray[indexVal] != null)
+            {
+                //玩家头像框.
+                headKuangUI.mainTexture = headKuangImgArray[indexVal];
             }
         }
     }

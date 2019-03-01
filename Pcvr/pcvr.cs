@@ -24,11 +24,11 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 创建红点点微信虚拟游戏手柄消息接口组件.
     /// </summary>
-    void CreatHongDDGanePadInterface()
+    internal void CreatHongDDGanePadInterface()
     {
-        m_HongDDGamePadInterface = gameObject.AddComponent<HongDDGamePadInterface>();
-        if (m_HongDDGamePadInterface != null)
+        if (m_HongDDGamePadInterface == null)
         {
+            m_HongDDGamePadInterface = gameObject.AddComponent<HongDDGamePadInterface>();
             m_HongDDGamePadInterface.CreatHongDDGanePad();
         }
     }
@@ -61,7 +61,7 @@ public class pcvr : MonoBehaviour
             {
                 MyCOMDevice.GetInstance();
             }
-            Instance.CreatHongDDGanePadInterface();
+            //Instance.CreatHongDDGanePadInterface();
         }
         return Instance;
     }

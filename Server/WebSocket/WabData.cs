@@ -130,7 +130,7 @@ public class WabData
     /// </summary>  
     void OnClosed(WebSocket ws, UInt16 code, string message)
     {
-        Debug.Log("Unity:"+string.Format("-WebSocket closed! Code: {0} Message: {1}\n", code, message));
+        SSDebug.LogWarning(string.Format("-WebSocket closed! Code: {0} Message: {1}\n", code, message));
         _webSocket = null;
         //if (m_WebSocketSimpet != null && Application.isPlaying)
         //{

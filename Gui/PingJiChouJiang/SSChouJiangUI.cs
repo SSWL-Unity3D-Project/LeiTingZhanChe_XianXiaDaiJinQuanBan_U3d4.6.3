@@ -898,6 +898,12 @@ public class SSChouJiangUI : MonoBehaviour
             }
         }
 
+        if (XKPlayerMoveCtrl.GetInstance(m_IndexPlayer) != null && XKPlayerMoveCtrl.GetInstance(m_IndexPlayer).GetPlayerIsSleep() == true)
+        {
+            //游戏无操作进入休眠的玩家不允许给出奖品.
+            indexJiangPin = -1;
+        }
+
         if (indexJiangPin == -1)
         {
             //谢谢参与.

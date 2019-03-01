@@ -867,6 +867,11 @@ public class XkGameCtrl : SSGameMono
             }
             InitChouJiangData();
 
+            if (pcvr.GetInstance() != null)
+            {
+                //创建红点点微信虚拟游戏手柄消息接口组件.
+                pcvr.GetInstance().CreatHongDDGanePadInterface();
+            }
 #if DRAW_DEBUG_CAIPIAO_INFO
             //测试代金券信息.
             if (m_GameVersion == GameVersion.CeShiBan)
@@ -1201,6 +1206,14 @@ public class XkGameCtrl : SSGameMono
 
     void Update()
     {
+        //if (Input.GetKeyUp(KeyCode.P))
+        //{
+        //    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        //    {
+        //        //关闭WebSocket
+        //        pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
+        //    }
+        //}
 #if DRAW_GAME_INFO
         if (!pcvr.bIsHardWare)
         {
@@ -1261,45 +1274,45 @@ public class XkGameCtrl : SSGameMono
 
         //if (!pcvr.bIsHardWare)
         //{
-            //if (Input.GetKeyUp(KeyCode.P))
-            //{
-            //    OpenAllAiPlayerTank();
-            //    //AudioBeiJingCtrl.StopGameBeiJingAudio();
-            //}
-
-            //if (Input.GetKeyUp(KeyCode.L))
-            //{
-            //    CloseAllAiPlayer();
-            //}
-            //if (IsCartoonShootTest)
-            //{
-            //    if (Input.GetKeyUp(KeyCode.N))
-            //    {
-            //        if (!XkGameCtrl.IsGameOnQuit && (Application.loadedLevel + 1) < Application.levelCount)
-            //        {
-            //            System.GC.Collect();
-            //            Application.LoadLevel((Application.loadedLevel + 1));
-            //        }
-            //    }
-            //}
-
-            //if (Input.GetKeyUp(KeyCode.P))
-            //{
-            //    float bloodVal = 5000f;
-            //    SubGamePlayerHealth(PlayerEnum.PlayerOne, bloodVal, true);
-            //    SubGamePlayerHealth(PlayerEnum.PlayerTwo, bloodVal, true);
-            //    SubGamePlayerHealth(PlayerEnum.PlayerThree, bloodVal, true);
-            //    SubGamePlayerHealth(PlayerEnum.PlayerFour, bloodVal, true);
-                //XKPlayerCamera.GetInstanceFeiJi().HandlePlayerCameraShake();
-                //JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
-                //XKDaoJuGlobalDt.SetTimeFenShuBeiLv(PlayerEnum.PlayerOne);
-                //ActivePlayerToGame(PlayerEnum.PlayerOne, true);
-                //XKGameStageCtrl.GetInstance().MoveIntoStageUI();
-                //XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
-                //BossRemoveAllNpcAmmo();
-                //			}
+        //if (Input.GetKeyUp(KeyCode.P))
+        //{
+        //    OpenAllAiPlayerTank();
+        //    //AudioBeiJingCtrl.StopGameBeiJingAudio();
         //}
-		CheckNpcTranFromList();
+
+        //if (Input.GetKeyUp(KeyCode.L))
+        //{
+        //    CloseAllAiPlayer();
+        //}
+        //if (IsCartoonShootTest)
+        //{
+        //    if (Input.GetKeyUp(KeyCode.N))
+        //    {
+        //        if (!XkGameCtrl.IsGameOnQuit && (Application.loadedLevel + 1) < Application.levelCount)
+        //        {
+        //            System.GC.Collect();
+        //            Application.LoadLevel((Application.loadedLevel + 1));
+        //        }
+        //    }
+        //}
+
+        //if (Input.GetKeyUp(KeyCode.P))
+        //{
+        //    float bloodVal = 5000f;
+        //    SubGamePlayerHealth(PlayerEnum.PlayerOne, bloodVal, true);
+        //    SubGamePlayerHealth(PlayerEnum.PlayerTwo, bloodVal, true);
+        //    SubGamePlayerHealth(PlayerEnum.PlayerThree, bloodVal, true);
+        //    SubGamePlayerHealth(PlayerEnum.PlayerFour, bloodVal, true);
+        //XKPlayerCamera.GetInstanceFeiJi().HandlePlayerCameraShake();
+        //JiFenJieMianCtrl.GetInstance().ActiveJiFenJieMian();
+        //XKDaoJuGlobalDt.SetTimeFenShuBeiLv(PlayerEnum.PlayerOne);
+        //ActivePlayerToGame(PlayerEnum.PlayerOne, true);
+        //XKGameStageCtrl.GetInstance().MoveIntoStageUI();
+        //XKBossLXCtrl.GetInstance().StartPlayBossLaiXi();
+        //BossRemoveAllNpcAmmo();
+        //			}
+        //}
+        CheckNpcTranFromList();
 #if USE_CHECK_LOAD_MOVIE_SCENE
         CheckLoadingMovieScene();
 #endif

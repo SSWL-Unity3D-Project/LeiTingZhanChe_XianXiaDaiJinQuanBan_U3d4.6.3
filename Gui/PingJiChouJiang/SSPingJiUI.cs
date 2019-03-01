@@ -106,6 +106,14 @@ public class SSPingJiUI : MonoBehaviour
         /// </summary>
         public UIAtlas[] fenShuAtlasArray = new UIAtlas[3];
         /// <summary>
+        /// 头像框UI组件.
+        /// </summary>
+        public UITexture headKuangUI;
+        /// <summary>
+        /// 头像框UI图片资源.
+        /// </summary>
+        public Texture[] headKuangImgArray = new Texture[3];
+        /// <summary>
         /// 设置是否显示距抽奖界面.
         /// </summary>
         internal void SetActiveJuChouJiang(PlayerEnum indexPlayer, bool isActive)
@@ -164,6 +172,16 @@ public class SSPingJiUI : MonoBehaviour
             {
                 //恭喜进入抽奖.
                 gongXiJinRuChouJiangObj.SetActive(!isActive);
+            }
+
+            if (headKuangUI != null)
+            {
+                int indexVal = (int)indexPlayer - 1;
+                if (indexVal >= 0 && indexVal < headKuangImgArray.Length && headKuangImgArray[indexVal] != null)
+                {
+                    //玩家头像框.
+                    headKuangUI.mainTexture = headKuangImgArray[indexVal];
+                }
             }
         }
     }

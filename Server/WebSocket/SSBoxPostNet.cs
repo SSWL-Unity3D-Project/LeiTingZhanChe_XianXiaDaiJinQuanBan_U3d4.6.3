@@ -28,7 +28,9 @@ public class SSBoxPostNet : MonoBehaviour
     /// 游戏手柄枚举,红点点游戏码.
     /// </summary>
     internal GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
-
+    /// <summary>
+    /// 初始化.
+    /// </summary>
     public void Init()
     {
         InitHddBoxLoginData();

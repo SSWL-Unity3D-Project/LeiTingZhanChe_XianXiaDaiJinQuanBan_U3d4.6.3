@@ -887,8 +887,11 @@ public class XKGlobalData
             m_MianFeiShiWanCount = val;
         }
 
-        //更新游戏免费试玩信息.
-        pcvr.GetInstance().m_HongDDGamePadInterface.UpdateMianFeiCountInfo(m_MianFeiShiWanCount);
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            //更新游戏免费试玩信息.
+            pcvr.GetInstance().m_HongDDGamePadInterface.UpdateMianFeiCountInfo(m_MianFeiShiWanCount);
+        }
     }
 
     /// <summary>
