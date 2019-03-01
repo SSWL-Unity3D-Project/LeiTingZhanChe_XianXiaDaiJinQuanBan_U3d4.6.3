@@ -23,7 +23,10 @@ public class SSPlayerScoreManage : MonoBehaviour
     /// 恭喜获得抽奖资格UI对象.
     /// </summary>
     public GameObject m_GongXiHuoDeObj;
-
+    /// <summary>
+    /// 玩家原来控制分数组件.
+    /// </summary>
+    public XKPlayerScoreCtrl m_PlayerScoreCom;
     /// <summary>
     /// 各个玩家的分数管理组件.
     /// </summary>
@@ -46,6 +49,10 @@ public class SSPlayerScoreManage : MonoBehaviour
     // Use this for initialization
     void Init()
     {
+        if (m_PlayerScoreCom != null)
+        {
+            m_PlayerScoreCom.Init();
+        }
         InitInstance();
         //隐藏恭喜获得抽奖资格.
         SetActiveGongXiHuoDe(false);

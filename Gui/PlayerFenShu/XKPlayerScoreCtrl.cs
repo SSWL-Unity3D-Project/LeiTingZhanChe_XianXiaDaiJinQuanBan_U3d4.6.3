@@ -35,10 +35,22 @@ public class XKPlayerScoreCtrl : MonoBehaviour
 		return instanceVal;
 	}
 
-	// Use this for initialization
-	void Start()
+    private void Start()
+    {
+        Init();
+    }
+
+    bool IsInit = false;
+    // Use this for initialization
+    internal void Init()
 	{
-		switch (PlayerIndex) {
+        if (IsInit == true)
+        {
+            return;
+        }
+        IsInit = true;
+
+        switch (PlayerIndex) {
 		case PlayerEnum.PlayerOne:
 			_InstanceP1 = this;
 			break;
