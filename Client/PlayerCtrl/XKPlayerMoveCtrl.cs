@@ -116,10 +116,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 			dongGanScript.SetPlayerIndex(PlayerIndex);
 		}
 
-		PlayerXueTiaoCtrl playerXueTiaoScript = GetComponentInChildren<PlayerXueTiaoCtrl>();
+		PlayerXueTiaoCtrl playerXueTiaoScript = gameObject.GetComponentInChildren<PlayerXueTiaoCtrl>();
 		if (playerXueTiaoScript != null) {
-			playerXueTiaoScript.SetPlayerIndex(PlayerIndex);
-		}
+            playerXueTiaoScript.Init();
+        }
 
 		DeathExplodPrefab = XKPlayerGlobalDt.GetInstance().DeathExplodPrefab;
 		if (GenZongDanAimPoint == null) {
@@ -1183,7 +1183,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public void HiddenGamePlayer(int key = 0)
 	{
-		//Debug.Log("Unity:"+"HiddenGamePlayer -> key "+key);
+		//SSDebug.LogWarning("Unity:"+"HiddenGamePlayer -> key " + key + ", playerIndex == " + PlayerIndex);
 		if (!gameObject.activeSelf)
         {
 			return;

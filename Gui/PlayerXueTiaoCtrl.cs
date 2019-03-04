@@ -67,7 +67,26 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		CameraTran = Camera.main != null ? Camera.main.transform : null;
+        Init();
+    }
+
+    bool IsInit = false;
+    internal void Init()
+    {
+        if (IsInit == true)
+        {
+            return;
+        }
+        IsInit = true;
+
+        XKPlayerMoveCtrl playerMoveCom = gameObject.GetComponentInParent<XKPlayerMoveCtrl>();
+        if (playerMoveCom != null)
+        {
+            PlayerSt = playerMoveCom.PlayerIndex;
+        }
+        //SSDebug.LogWarning("PlayerXueTiao init................ PlayerSt ==== " + PlayerSt);
+
+        CameraTran = Camera.main != null ? Camera.main.transform : null;
 #if !USE_PLAYER_WX_HEAD
         if (m_PlayerNumImg != null && m_MatNum != null)
         {
@@ -82,8 +101,9 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 #endif
 
         SetActivePlayerXuTiao(false);
+        SetPlayerIndex(PlayerSt);
     }
-
+    
 #if OPEN_XUETIAO_GENSUI_BIAN_POS //打开血条跟随逻辑.
     // Update is called once per frame
     void Update()
@@ -289,7 +309,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
 			break;
 		}
 
-        //Debug.Log("Unity: SetPlayerIndex -> isActiveXT === " + isActiveXT + ", playerIndex ==== " + playerIndex);
+        //SSDebug.LogWarning("Unity: SetPlayerIndex -> playerIndex ==== " + playerIndex);
 		NengLianTran = transform;
 		OffsetXT = NengLianTran.localPosition;
 		NengLianParentTr = NengLianTran.parent;

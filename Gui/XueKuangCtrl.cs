@@ -90,27 +90,28 @@ public class XueKuangCtrl : MonoBehaviour
 
     // Use this for initialization
     void Start()
-	{
-		switch (PlayerSt) {
-		case PlayerEnum.PlayerOne:
-			_InstanceOne = this;
-			break;
-			
-		case PlayerEnum.PlayerTwo:
-			_InstanceTwo = this;
-			break;
-			
-		case PlayerEnum.PlayerThree:
-			_InstanceThree = this;
-			break;
-			
-		case PlayerEnum.PlayerFour:
-			_InstanceFour = this;
-			break;
-		}
+    {
+        switch (PlayerSt)
+        {
+            case PlayerEnum.PlayerOne:
+                _InstanceOne = this;
+                break;
+
+            case PlayerEnum.PlayerTwo:
+                _InstanceTwo = this;
+                break;
+
+            case PlayerEnum.PlayerThree:
+                _InstanceThree = this;
+                break;
+
+            case PlayerEnum.PlayerFour:
+                _InstanceFour = this;
+                break;
+        }
 
         bool isActive = XkGameCtrl.GetIsActivePlayer(PlayerSt);
-		HandleXueKuangNum(isActive);
+        HandleXueKuangNum(isActive);
         m_WeiXinHead.mainTexture = m_TouMingHead;
     }
 
