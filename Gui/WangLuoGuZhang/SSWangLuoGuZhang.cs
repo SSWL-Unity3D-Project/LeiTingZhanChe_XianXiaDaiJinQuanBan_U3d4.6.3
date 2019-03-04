@@ -18,7 +18,7 @@ public class SSWangLuoGuZhang : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        if (Time.time - m_LastTimeVal >= 60f)
+        if (Time.time - m_LastTimeVal >= 180f)
         {
             m_LastTimeVal = Time.time;
             if (DaoJiShiCtrl.GetInstanceOne().IsPlayDaoJishi == true

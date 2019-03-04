@@ -363,11 +363,12 @@ public class SSBoxPostNet : MonoBehaviour
 
         if (postData.error != null)
         {
-            SSDebug.Log("PostError: " + postData.error + ", url == " + _url + ", cmd == " + cmd);
+            SSDebug.LogWarning("PostError: " + postData.error + ", url == " + _url + ", cmd == " + cmd);
             //网络故障,请检查网络并重启游戏.
             if (SSUIRoot.GetInstance().m_GameUIManage != null)
             {
-                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI( SSGameUICtrl.WangLuoGuZhang.Post );
+                //SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI( SSGameUICtrl.WangLuoGuZhang.Post );
+                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
             }
         }
         else
@@ -383,7 +384,7 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
                             m_BoxLoginDt.token = jd["data"]["token"].ToString();
-                            Debug.Log("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
+                            SSDebug.LogWarning("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
                             //ConnectWebSocketServer();
                             StartCoroutine(DelayConnectWebSocketServer());
 
@@ -2518,14 +2519,11 @@ public class SSBoxPostNet : MonoBehaviour
             return;
         }
 
-        if (m_BoxLoginData != null)
-        {
-            GameConfigUrlData configUrl = new GameConfigUrlData(this, m_BoxLoginData.m_Address);
-            int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
-            string url = configUrl.GetUrl(m_GamePadState, screenId);
-            SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
-            StartCoroutine(SendGet(url, PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER));
-        }
+        GameConfigUrlData configUrl = new GameConfigUrlData(this, m_BoxLoginData.m_Address);
+        int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
+        string url = configUrl.GetUrl(m_GamePadState, screenId);
+        SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
+        StartCoroutine(SendGet(url, PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER));
     }
 
     /// <summary>

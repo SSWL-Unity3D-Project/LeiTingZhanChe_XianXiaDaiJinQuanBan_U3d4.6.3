@@ -25,6 +25,7 @@ public class WebSocketSimpet : MonoBehaviour
         m_SSBoxPostNet = postNet;
         IsInit = true;
         m_TimeLastXinTiao = Time.time;
+        m_TimeSendXinTiaoMsg = Time.time;
     }
 
     void Update()
@@ -46,30 +47,38 @@ public class WebSocketSimpet : MonoBehaviour
         {
             if (m_SSBoxPostNet != null)
             {
-                m_SSBoxPostNet.LoopGetGameConfigInfoFromHddServer();
-            }
-        }
-
-        if (Time.time - m_TimeLastXinTiao >= 10f)
-        {
-            m_TimeLastXinTiao = Time.time;
-            NetSendWebSocketXinTiaoMsg();
-        }
-
-        if (IsCheckXinTiaoMsg)
-        {
-            if (Time.time - m_TimeSendXinTiaoMsg > 30f)
-            {
-                IsCheckXinTiaoMsg = false;
-                Debug.Log("Unity:"+"XinTiao Check TimeOut!");
-                if (m_SSBoxPostNet != null)
+                if (_wabData != null && _wabData.WebSocket != null)
                 {
-                    m_SSBoxPostNet.HttpSendPostLoginBox();
+                    if (_wabData.WebSocket.IsOpen == true)
+                    {
+                        //网络正常时才允许访问后台配置数据.
+                        m_SSBoxPostNet.LoopGetGameConfigInfoFromHddServer();
+                    }
                 }
+            }
 
-                //网络故障,请检查网络并重启游戏.
+            if (Time.time - m_TimeLastXinTiao >= 20f)
+            {
+                //发送一次心跳消息给服务器.
+                m_TimeLastXinTiao = Time.time;
+                NetSendWebSocketXinTiaoMsg();
+            }
+
+            if (Time.time - m_TimeSendXinTiaoMsg > 60f)
+            {
+                m_TimeSendXinTiaoMsg = Time.time;
+                //SSDebug.LogWarning("XinTiao Check TimeOut...........................");
+                //if (m_SSBoxPostNet != null)
+                //{
+                //    //重置心跳消息标记.
+                //    IsCheckXinTiaoMsg = false;
+                //    //重新登录游戏盒子并且重新连接游戏服务器.
+                //    m_SSBoxPostNet.HttpSendPostLoginBox();
+                //}
+
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {
+                    //网络故障,请检查网络并重启游戏.
                     SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
                 }
             }
@@ -78,8 +87,8 @@ public class WebSocketSimpet : MonoBehaviour
 
     void OnDestroy()
     {
-        Debug.Log("Unity:"+"OnDestroy...");
-        if (_wabData != null && _wabData.WebSocket != null)
+        Debug.Log("Unity:" + "OnDestroy...");
+        if (_wabData != null && _wabData.WebSocket != null && _wabData.WebSocket.IsOpen == true)
         {
             _wabData.WebSocket.Close();
         }
@@ -128,11 +137,13 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     public void CloseWebSocket()
     {
-        if (_wabData != null)
+        if (_wabData != null
+            && _wabData.WebSocket != null
+            && _wabData.WebSocket.IsOpen == true)
         {
             if (IsClosedWebSocket == false)
             {
-                SSDebug.Log("CloseWebSocket...");
+                SSDebug.LogWarning("CloseWebSocket.......................................");
                 IsClosedWebSocket = true;
                 _wabData.CloseSocket();
             }
@@ -156,26 +167,48 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //是否需要重新打开游戏盒子.
+        bool isRestartOpenGameBox = false;
+        if (_wabData != null && _wabData.WebSocket != null)
         {
-            if (IsCheckXinTiaoMsg)
+            if (_wabData.WebSocket.IsOpen == true)
             {
+                //网络正常.
+                //心跳消息发送.
+                IsCheckXinTiaoMsg = true;
+                m_TimeSendXinTiaoMsg = Time.time;
+                string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+                string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
+                // Send message to the server.
+                _wabData.WebSocket.Send(msgToSend);
+#if UNITY_EDITOR
+                SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
+#endif
                 return;
             }
-            IsCheckXinTiaoMsg = true;
-            m_TimeSendXinTiaoMsg = Time.time;
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
-            // Send message to the server.
-            _wabData.WebSocket.Send(msgToSend);
-#if UNITY_EDITOR
-            //Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend);
-#endif
+            else
+            {
+                isRestartOpenGameBox = true;
+            }
         }
         else
         {
-            Debug.Log("Unity:"+"NetSendWebSocketXinTiaoMsg -> Restart game box! time == " + Time.time.ToString("f2"));
-            m_SSBoxPostNet.HttpSendPostLoginBox();
+            isRestartOpenGameBox = true;
+        }
+
+        if (isRestartOpenGameBox == true)
+        {
+            //需要重新打开游戏盒子.
+            //心跳消息检测失败.
+            SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> Restart game box! time == " + Time.time.ToString("f2"));
+            SSDebug.LogWarning("XinTiao Check TimeOut...........................");
+            if (m_SSBoxPostNet != null)
+            {
+                //重置心跳消息标记.
+                IsCheckXinTiaoMsg = false;
+                //重新登录游戏盒子并且重新连接游戏服务器.
+                m_SSBoxPostNet.HttpSendPostLoginBox();
+            }
         }
     }
 
@@ -360,12 +393,13 @@ public class WebSocketSimpet : MonoBehaviour
     {
         //SSDebug.LogError("test ---- OnMessageReceived -> message == " + message);
         //Debug.LogWarning("OnMessageReceived -> message == " + message);
-        if (IsCheckXinTiaoMsg)
+        if (IsCheckXinTiaoMsg == true)
         {
+            //心跳消息检测.
             if (message == m_XinTiaoReturnMsg)
             {
 #if UNITY_EDITOR
-                //Debug.Log("Unity:"+"XinTiao Check Success!");
+                SSDebug.LogWarning("XinTiao Check Success!" + ", time == " + Time.time.ToString("f2"));
 #endif
                 IsCheckXinTiaoMsg = false;
                 //删除网络故障,请检查网络并重启游戏.
