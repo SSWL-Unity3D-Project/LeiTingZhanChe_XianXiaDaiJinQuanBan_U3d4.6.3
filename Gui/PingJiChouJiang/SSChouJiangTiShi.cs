@@ -43,7 +43,7 @@ public class SSChouJiangTiShi : MonoBehaviour
     /// </summary>
     System.Collections.IEnumerator StartPlayTweenAlpha()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(m_TingLiuTime);
         TweenAlpha twAlp = gameObject.AddComponent<TweenAlpha>();
         twAlp.from = 1f;
         twAlp.to = 0f;
@@ -58,11 +58,15 @@ public class SSChouJiangTiShi : MonoBehaviour
 
     bool IsRemoveSelf = false;
     float m_TimeLast = 0f;
+    /// <summary>
+    /// 停留展示时间.
+    /// </summary>
+    public float m_TingLiuTime = 3f;
     void UpdateRemoveSelf()
     {
         if (IsRemoveSelf == false)
         {
-            if (Time.time - m_TimeLast >= 4f + PiaoZiTime)
+            if (Time.time - m_TimeLast >= 1f + m_TingLiuTime + PiaoZiTime)
             {
                 m_TimeLast = Time.time;
                 RemoveSelf();

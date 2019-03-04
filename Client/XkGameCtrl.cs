@@ -4246,7 +4246,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     public void SetGameCameraIsMoveing(bool isMoveing, NpcJiFenEnum state)
     {
-        Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
+        //Debug.Log("Unity:SetGameCameraIsMoveing -> **************** isMoveing == " + isMoveing + ", state == " + state);
         if (state == NpcJiFenEnum.Boss)
         {
             if (isMoveing == true)

@@ -1590,7 +1590,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatDaiJinQuanNpcXueTiaoUI......................................................");
+                //Debug.Log("Unity: CreatDaiJinQuanNpcXueTiaoUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITop);
                 m_DaiJinQuanNpcXueTiaoUI = obj.GetComponent<SSDaiJinQuanXuanTiao>();
                 m_DaiJinQuanNpcXueTiaoUI.Init(maxFillAmount);

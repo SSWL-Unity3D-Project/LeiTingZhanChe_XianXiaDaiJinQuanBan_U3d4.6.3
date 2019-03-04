@@ -253,7 +253,7 @@ public class SpawnNpcManage : MonoBehaviour
                 isCreate = true;
                 //更新时间记录信息.
                 timeLastLoop = Time.time;
-                SSDebug.Log("GetIsCanCreateNpc................ isCreate == " + isCreate + ", time == " + Time.time.ToString("f2"));
+                //SSDebug.Log("GetIsCanCreateNpc................ isCreate == " + isCreate + ", time == " + Time.time.ToString("f2"));
             }
             return isCreate;
         }
