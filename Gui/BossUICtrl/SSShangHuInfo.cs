@@ -180,7 +180,7 @@ public class SSShangHuInfo : MonoBehaviour
         for (int i = 0; i < m_ShangHuDtZhanChe01.Length; i++)
         {
             m_ShangHuDtZhanChe01[i].IndexShangHu = i;
-            SSDebug.Log("Init -> ShangHuMing[" + i + "] ===== " + m_ShangHuDtZhanChe01[i].ShangHuJiangPinName);
+            //SSDebug.Log("Init -> ShangHuMing[" + i + "] ===== " + m_ShangHuDtZhanChe01[i].ShangHuJiangPinName);
         }
         InitReadConfig();
     }

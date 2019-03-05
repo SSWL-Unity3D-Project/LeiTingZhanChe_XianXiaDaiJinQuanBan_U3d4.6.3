@@ -100,8 +100,8 @@ namespace Assets.XKGame.Script.Server.GamePayManage
                             config.ShangHuEnum = (ShangHuInfo)Convert.ToInt32(key);
                             config.ShangHuId = xe.GetAttribute("ShangHuId");
                             config.ShangHuName = xe.GetAttribute("ShangHuName");
-                            UnityLog("ShangHuEnum == " + key + ", ShangHuId == " + config.ShangHuId
-                                + ", ShangHuName == " + config.ShangHuName);
+                            //UnityLog("ShangHuEnum == " + key + ", ShangHuId == " + config.ShangHuId
+                            //    + ", ShangHuName == " + config.ShangHuName);
                             break;
                         }
                     }

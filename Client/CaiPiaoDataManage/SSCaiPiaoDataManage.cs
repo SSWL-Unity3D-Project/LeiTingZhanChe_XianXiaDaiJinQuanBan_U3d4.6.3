@@ -1693,7 +1693,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             UnityLogWarning("ClearPlayerCaiPiaoData -> index was wrong! index ==== " + index);
             return;
         }
-        UnityLog("ClearPlayerCaiPiaoData -> indexPlayer ======= " + indexPlayer);
+        //UnityLog("ClearPlayerCaiPiaoData -> indexPlayer ======= " + indexPlayer);
         //清理玩家彩票数据.
         m_PcvrPrintCaiPiaoData[index].ClearCaiPiaoData();
         //清理玩家pcvr彩票数据.

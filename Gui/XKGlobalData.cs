@@ -986,10 +986,10 @@ public class XKGlobalData
             val = 0.3f;
         }
         JPBossBaoJiangLv = val;
-        SSDebug.Log("InitCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
-        SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
-        SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
-        SSDebug.Log("InitCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
+        //SSDebug.Log("InitCaiChiBaoJiangLv -> SuiJiDaoJuBaoJiangLv ============== " + SuiJiDaoJuBaoJiangLv);
+        //SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_01 ============== " + ZhanCheBaoJiangLv_01);
+        //SSDebug.Log("InitCaiChiBaoJiangLv -> ZhanCheBaoJiangLv_02 ============== " + ZhanCheBaoJiangLv_02);
+        //SSDebug.Log("InitCaiChiBaoJiangLv -> JPBossBaoJiangLv ============== " + JPBossBaoJiangLv);
     }
 
     /// <summary>
@@ -1228,7 +1228,7 @@ public class XKGlobalData
         {
             m_DaiJinQuanQiXian = qiXian;
         }
-        SSDebug.Log("SetHddDaiJinQuanYouXiaoQiDt -> startDay ============ " + startDay + ", qiXian ========== " + qiXian);
+        //SSDebug.Log("SetHddDaiJinQuanYouXiaoQiDt -> startDay ============ " + startDay + ", qiXian ========== " + qiXian);
     }
 
     internal int GetHddDaiJinQuanStartDay()
@@ -1300,7 +1300,7 @@ public class XKGlobalData
             }
             GameCoinToMoney = val;
         }
-        SSDebug.Log("InitGameCoinToMoney -> GameCoinToMoney =========== " + GameCoinToMoney);
+        //SSDebug.Log("InitGameCoinToMoney -> GameCoinToMoney =========== " + GameCoinToMoney);
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ public class SSUIRoot : SSGameMono
         {
             GameObject obj = new GameObject("_SSUIRoot");
             _Instance = obj.AddComponent<SSUIRoot>();
-            Debug.Log("creat UIRoot**************");
+            //Debug.Log("creat UIRoot**************");
         }
         return _Instance;
     }

@@ -143,7 +143,7 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     void SetZhanCheCaiPiao(int val)
     {
-        UnityEngine.Debug.Log("Unity: SetZhanCheCaiPiao -> val ================ " + val);
+        //UnityEngine.Debug.Log("Unity: SetZhanCheCaiPiao -> val ================ " + val);
         ZhanCheCaiPiaoVal = val;
     }
 
@@ -156,7 +156,7 @@ public class SSGameYuZhiCaiPiaoData
         int subVal = (int)(GetOldYuZhiCaiPiaoVal() * ZhanCheCaiPiaoBiLi * ZhanCheQuChuBiLi);
         if (ZhanCheCaiPiaoVal >= subVal)
         {
-            UnityEngine.Debug.Log("SubZhanCheCaiPiaoVal -> subVal ============ " + subVal);
+            //UnityEngine.Debug.Log("SubZhanCheCaiPiaoVal -> subVal ============ " + subVal);
             //对预制彩池进行数据更新.
             SubYuZhiCaiPiao(subVal);
             SetZhanCheCaiPiao(ZhanCheCaiPiaoVal - subVal);

@@ -968,7 +968,7 @@ public class XkGameCtrl : SSGameMono
 			return;
 		}
 
-		Debug.Log("Unity:"+"ChangeAudioListParent -> GameJiTaiSt "+GameJiTaiSt);
+		//Debug.Log("Unity:"+"ChangeAudioListParent -> GameJiTaiSt "+GameJiTaiSt);
 		switch (GameJiTaiSt) {
 		case GameJiTaiType.FeiJiJiTai:
 			if (XkPlayerCtrl.GetInstanceFeiJi() != null) {

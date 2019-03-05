@@ -122,8 +122,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         {
                             if (xe.Name == elementName && countNum > indexVal)
                             {
-                                SSDebug.Log("WriteGamePlayerData -> userId == " + m_FreePlayGamePlayerDataList[indexVal].UserId
-                                    + ", timeVal == " + m_FreePlayGamePlayerDataList[indexVal].TimeVal.ToString("G"));
+                                //SSDebug.Log("WriteGamePlayerData -> userId == " + m_FreePlayGamePlayerDataList[indexVal].UserId
+                                //    + ", timeVal == " + m_FreePlayGamePlayerDataList[indexVal].TimeVal.ToString("G"));
                                 xe.SetAttribute(attribute1, m_FreePlayGamePlayerDataList[indexVal].UserId.ToString());
                                 xe.SetAttribute(attribute2, m_FreePlayGamePlayerDataList[indexVal].TimeVal.ToString("G"));
                                 indexVal++;
@@ -402,7 +402,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         public void SToC_ReceiveGameConfigInfo(int args)
         {
-            SSDebug.Log("SToC_ReceiveGameConfigInfo -> args == " + args);
+            //SSDebug.Log("SToC_ReceiveGameConfigInfo -> args == " + args);
             m_GameConfigData.MianFeiShiWanCount = UnityEngine.Mathf.Clamp(args, 0, 1);
         }
 

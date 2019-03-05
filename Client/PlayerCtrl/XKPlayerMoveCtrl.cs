@@ -1247,7 +1247,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
 	public void ResetIsWuDiState()
 	{
-		Debug.Log("Unity:"+"ResetIsWuDiState -> playerIndex "+PlayerIndex);
+		//Debug.Log("Unity:"+"ResetIsWuDiState -> playerIndex "+PlayerIndex);
 		IsWuDiState = false;
 		WuDiTXObj.SetActive(false);
 		gameObject.layer = LayerMask.NameToLayer("Player");

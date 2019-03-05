@@ -134,7 +134,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     {
                         m_HongDDGamePadWXPay.Init();
                         //向服务器请求游戏的后台配置信息.
-                        m_HongDDGamePadWXPay.CToS_RequestGameConfigInfo("");
+                        //m_HongDDGamePadWXPay.CToS_RequestGameConfigInfo("");
                     }
                 }
             }

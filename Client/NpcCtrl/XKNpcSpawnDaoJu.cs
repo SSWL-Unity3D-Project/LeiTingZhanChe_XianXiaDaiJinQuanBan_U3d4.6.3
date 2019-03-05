@@ -8,8 +8,22 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// </summary>
     public bool IsCreatSuiJiDaoJu = false;
     public bool IsSpawnDJ = true;
+    /// <summary>
+    /// 掉落道具的预制列表.
+    /// </summary>
 	public GameObject[] DaoJuArray;
+    /// <summary>
+    /// 掉落道具的概率.
+    /// </summary>
 	public int[] DaoJuGaiLv;
+    /// <summary>
+    /// 大血包数据.
+    /// </summary>
+    public class BigXueBaoData
+    {
+        public GameObject DaoJuArray;
+        public int DaoJuGaiLv;
+    }
 
     /// <summary>
     /// 创建随机道具.
