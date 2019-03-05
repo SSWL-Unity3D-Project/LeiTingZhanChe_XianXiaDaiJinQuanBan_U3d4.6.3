@@ -310,7 +310,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
             //冲击波子弹不用运动,只需要检测一次范围伤害.
             if (m_AmmmoData != null && autoFireCom != null)
             {
-                m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
+                m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao, autoFireCom.PlayerIndex);
             }
             CheckPlayerAmmoForwardHitNpc();
             //StartCoroutine(DelayRemoveChongJiBoAmmo());
@@ -396,7 +396,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 case PlayerAmmoType.SanDanAmmo:
                 case PlayerAmmoType.ChongJiBoAmmo:
                     {
-                        m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao);
+                        m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao, autoFireCom.PlayerIndex);
                         break;
                     }
                 case PlayerAmmoType.PuTongAmmo:
@@ -404,7 +404,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                         if (autoFireCom.IsQianHouFire == true)
                         {
                             //小飞机发射的子弹.
-                            m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateJiQiang);
+                            m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateJiQiang, autoFireCom.PlayerIndex);
                         }
                         break;
                     }
