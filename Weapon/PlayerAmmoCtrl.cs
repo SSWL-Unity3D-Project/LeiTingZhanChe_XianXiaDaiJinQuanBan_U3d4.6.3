@@ -445,8 +445,18 @@ public class PlayerAmmoCtrl : MonoBehaviour
 					PaiJiPaoTiShi = (GameObject)Instantiate(PaiJiPaoTiShiPrefab, firePos, Quaternion.identity);
 					if (XkGameCtrl.NpcAmmoArray != null) {
 						PaiJiPaoTiShi.transform.parent = XkGameCtrl.NpcAmmoArray;
-					}
-				}
+                    }
+                    
+                    if (PaiJiPaoTiShi != null)
+                    {
+                        //迫击炮子弹提示.
+                        SSPlayerAmmoTiShiData ammoTiShiDt = PaiJiPaoTiShi.GetComponent<SSPlayerAmmoTiShiData>();
+                        if (ammoTiShiDt != null)
+                        {
+                            ammoTiShiDt.InitPlayerAmmo(PlayerState);
+                        }
+                    }
+                }
 
 				float disMV = Vector3.Distance(firePos , posArray[0]);
 				lobTime = disMV / MvSpeed;

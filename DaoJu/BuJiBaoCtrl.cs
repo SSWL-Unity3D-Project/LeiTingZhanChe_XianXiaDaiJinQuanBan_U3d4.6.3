@@ -346,7 +346,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
                             //大医疗包.
                             isMoveDaoJu = false;
                             XkGameCtrl.AddPlayerHealth(playerSt, XKDaoJuGlobalDt.GetInstance().BigYiLiaoBaoXueLiang);
-                            XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
+                            //XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
                             break;
                         }
 				case BuJiBaoType.ShuangBeiFenShuDJ:
