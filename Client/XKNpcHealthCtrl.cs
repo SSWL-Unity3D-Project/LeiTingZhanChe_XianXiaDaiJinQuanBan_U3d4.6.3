@@ -979,7 +979,7 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
         if (NpcScript != null && NpcScript.IsCaiPiaoZhanChe == false)
         {
-            daoJuScript.SpawnAllDaoJu();
+            daoJuScript.SpawnAllDaoJu(index);
         }
     }
 

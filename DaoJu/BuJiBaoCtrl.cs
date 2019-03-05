@@ -522,6 +522,11 @@ public class BuJiBaoCtrl : MonoBehaviour {
 	public void SetIsSpawnDaoJu()
 	{
 		IsSpawnDaoJu = true;
+        if (BuJiBao == BuJiBaoType.BigYiLiaoBaoDJ || BuJiBao == BuJiBaoType.YiLiaoBaoDJ)
+        {
+            //动态产生的医疗包道具关闭其磁力开关。
+            IsOpenCiLi = false;
+        }
 	}
 
 	void CheckPlayerDistance()
