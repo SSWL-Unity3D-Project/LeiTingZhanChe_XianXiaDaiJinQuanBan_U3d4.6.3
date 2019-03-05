@@ -202,7 +202,6 @@ public class XKNpcSpawnDaoJu : SSGameMono
             CheckDaoJuSpawnPointList();
 
             int randVal = 0;
-            int max = DaoJuArray.Length;
             Transform trEndPoint = null;
             randVal = Random.Range(0, 10000) % 100;
             if (randVal >= m_BigXueBaoDt.GaiLv)
