@@ -23,6 +23,7 @@ public enum BuJiBaoType
 	ZhuPaoSanDanDJ,			//主炮散弹道具.
 	HuoLiAllOpenDJ,			//主炮和机枪火力全开道具.
     ChongJiBoDJ,            //主炮冲击波道具.
+    BigYiLiaoBaoDJ,         //大医疗包道具.
 }
 
 public enum PlayerEnum
@@ -337,6 +338,14 @@ public class BuJiBaoCtrl : MonoBehaviour {
                         {
                             isMoveDaoJu = false;
                             XkGameCtrl.AddPlayerHealth(playerSt, XKDaoJuGlobalDt.GetInstance().YiLiaoBaoXueLiangVal);
+                            XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
+                            break;
+                        }
+				case BuJiBaoType.BigYiLiaoBaoDJ:
+                        {
+                            //大医疗包.
+                            isMoveDaoJu = false;
+                            XkGameCtrl.AddPlayerHealth(playerSt, XKDaoJuGlobalDt.GetInstance().BigYiLiaoBaoXueLiang);
                             XKPlayerJiJiuBaoCtrl.GetInstance().ShowPlayerJiJiuBao(playerSt);
                             break;
                         }

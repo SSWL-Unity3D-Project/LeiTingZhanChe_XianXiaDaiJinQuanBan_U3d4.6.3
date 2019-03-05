@@ -18,11 +18,16 @@ public class XKDaoJuGlobalDt : MonoBehaviour
 	/**
 	 * 医疗包道具配置信息.
 	 */
-	[Range(1f, 10000f)]public float YiLiaoBaoXueLiangVal = 100f;
-	/**
+	[Range(1f, 100000f)]public float YiLiaoBaoXueLiangVal = 100f;
+    /**
+	 * 大医疗包道具配置信息.
+	 */
+    [Range(1f, 100000f)]
+    public float BigYiLiaoBaoXueLiang = 100f;
+    /**
 	 * 双倍分数配置信息.
 	 */
-	[Range(1f, 100f)]public float TimeShuangBeiVal = 10f;
+    [Range(1f, 100f)]public float TimeShuangBeiVal = 10f;
 	/**
 	 * 长程机枪配置信息.
 	 * 长程机枪子弹.
