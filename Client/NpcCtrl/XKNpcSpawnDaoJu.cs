@@ -15,15 +15,29 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// <summary>
     /// 掉落道具的概率.
     /// </summary>
-	public int[] DaoJuGaiLv;
+    [Range(0, 100)]
+    public int[] DaoJuGaiLv;
     /// <summary>
     /// 大血包数据.
     /// </summary>
+    [System.Serializable]
     public class BigXueBaoData
     {
-        public GameObject DaoJuArray;
-        public int DaoJuGaiLv;
+        /// <summary>
+        /// 血包预制.
+        /// </summary>
+        public GameObject XueBaoPrefab;
+        /// <summary>
+        /// 掉落概率.
+        /// </summary>
+        [Range(0, 100)]
+        public int GaiLv = 0;
     }
+    /// <summary>
+    /// 大血包道具数据.
+    /// 如果产生了大血包道具就不再产生其它道具.
+    /// </summary>
+    public BigXueBaoData m_BigXueBaoDt;
 
     /// <summary>
     /// 创建随机道具.
@@ -141,10 +155,19 @@ public class XKNpcSpawnDaoJu : SSGameMono
         }
         m_TimeLastCreatDaoJu = Time.time;
 
-        if (!IsSpawnDJ) {
+        if (!IsSpawnDJ)
+        {
 			return;
 		}
-		PointList = new List<Transform>();
+
+        bool isCreateBigXueBao = CreateBigXueBaoDaoJu();
+        if (isCreateBigXueBao == true)
+        {
+            //如果产生了大血包道具就不再产生其它道具.
+            return;
+        }
+
+        PointList = new List<Transform>();
 		CheckDaoJuSpawnPointList();
 
 		int randVal = 0;
@@ -166,6 +189,49 @@ public class XKNpcSpawnDaoJu : SSGameMono
 			buJiScript.MoveDaoJuToPoint(trEndPoint);
 		}
 	}
+
+    /// <summary>
+    /// 创建大血包道具.
+    /// </summary>
+    bool CreateBigXueBaoDaoJu()
+    {
+        bool isCreate = false;
+        if (m_BigXueBaoDt != null && m_BigXueBaoDt.XueBaoPrefab != null)
+        {
+            PointList = new List<Transform>();
+            CheckDaoJuSpawnPointList();
+
+            int randVal = 0;
+            int max = DaoJuArray.Length;
+            Transform trEndPoint = null;
+            randVal = Random.Range(0, 10000) % 100;
+            if (randVal >= m_BigXueBaoDt.GaiLv)
+            {
+                //没有随机上.
+            }
+            else
+            {
+                trEndPoint = GetDaoJuSpawnPoint(0);
+                if (trEndPoint == null)
+                {
+                    //没有找到道具落点.
+                }
+                else
+                {
+                    //产生道具.
+                    GameObject daoJuObj = (GameObject)Instantiate(m_BigXueBaoDt.XueBaoPrefab, transform.position, transform.rotation);
+                    BuJiBaoCtrl buJiScript = daoJuObj.GetComponent<BuJiBaoCtrl>();
+                    if (buJiScript != null)
+                    {
+                        isCreate = true;
+                        buJiScript.SetIsSpawnDaoJu();
+                        buJiScript.MoveDaoJuToPoint(trEndPoint);
+                    }
+                }
+            }
+        }
+        return isCreate;
+    }
 
 	List<Transform> PointList;
 	Transform GetDaoJuSpawnPoint(int indexVal)
