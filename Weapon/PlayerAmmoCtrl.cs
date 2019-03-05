@@ -397,7 +397,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 case PlayerAmmoType.ChongJiBoAmmo:
                 case PlayerAmmoType.DaoDanAmmo:
                     {
-                        m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao, autoFireCom.PlayerIndex);
+                        if (AmmoType == PlayerAmmoType.DaoDanAmmo)
+                        {
+                            //普通导弹子弹.
+                            m_AmmmoData.SetActiveAmmoCore(0, autoFireCom.PlayerIndex);
+                        }
+                        else
+                        {
+                            //其它特殊导弹.
+                            m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao, autoFireCom.PlayerIndex);
+                        }
                         break;
                     }
                 case PlayerAmmoType.PuTongAmmo:
