@@ -1160,7 +1160,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
     {
         if (m_CameraMoveAni != null)
         {
-            Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
+            //Debug.Log("Unity: SetCameraMoveAni *************************** isMove === " + isMove);
             if (isMove != IsCameraPosWeiDong)
             {
                 if (isMove == true)

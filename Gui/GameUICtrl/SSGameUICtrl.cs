@@ -145,7 +145,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
-            UnityLog("CreatZhanCheBossCaiPiaoZhuanPan -> init...");
+            //UnityLog("CreatZhanCheBossCaiPiaoZhuanPan -> init...");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
             m_CaiPiaoZhanCheBossUI = obj.GetComponent<SSCaiPiaoZhanCheBossUI>();
             if (m_CaiPiaoZhanCheBossUI != null)
@@ -243,7 +243,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/NpcPiaoFen/NpcPiaoFenCtrl");
         if (gmDataPrefab != null)
         {
-            UnityLog("CreatNpcPiaoFenUICom...");
+            //UnityLog("CreatNpcPiaoFenUICom...");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUIBottomLeft);
             m_NpcPiaoFenCom = obj.GetComponent<SSNpcPiaoFenCtrl>();
             if (m_NpcPiaoFenCom != null)
@@ -293,7 +293,7 @@ public class SSGameUICtrl : SSGameMono
             {
                 if (m_PlayerUIParent[index] != null)
                 {
-                    UnityLog("CreatCaiPiaoBuZuPanel...");
+                    //UnityLog("CreatCaiPiaoBuZuPanel...");
                     GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[index]);
                     m_CaiPiaoBuZuArray[index] = obj.GetComponent<SSCaiPiaoBuZu>();
                     m_CaiPiaoBuZuArray[index].Init(indexPlayer);
@@ -325,7 +325,7 @@ public class SSGameUICtrl : SSGameMono
 
         if (m_CaiPiaoBuZuArray[index] != null)
         {
-            UnityLog("RemoveCaiPiaoBuZuPanel -> index ==== " + index);
+            //UnityLog("RemoveCaiPiaoBuZuPanel -> index ==== " + index);
             m_CaiPiaoBuZuArray[index].RemoveSelf();
             SetActiveZhengZaiChuPiaoUI(indexPlayer, true);
 
@@ -392,7 +392,7 @@ public class SSGameUICtrl : SSGameMono
             {
                 if (m_PlayerUIParent[index] != null)
                 {
-                    UnityLog("CreatCaiPiaoInfoPanel -> indexPlayer ======== " + indexPlayer);
+                    //UnityLog("CreatCaiPiaoInfoPanel -> indexPlayer ======== " + indexPlayer);
                     GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[index]);
                     m_CaiPiaoInfoArray[index] = obj.GetComponent<SSGameNumUI>();
                     SetActiveZhengZaiChuPiaoUI(indexPlayer, true);
@@ -429,7 +429,7 @@ public class SSGameUICtrl : SSGameMono
 
         if (m_CaiPiaoInfoArray[index] != null)
         {
-            UnityLog("RemoveCaiPiaoInfoPanel -> index ==== " + index);
+            //UnityLog("RemoveCaiPiaoInfoPanel -> index ==== " + index);
             RemovePlayerCaiPiaoChengJiu(indexPlayer);
             //Destroy(m_CaiPiaoInfoArray[index].gameObject);
 
@@ -652,7 +652,7 @@ public class SSGameUICtrl : SSGameMono
                     if (m_GameUICenter != null)
                     {
                         RemoveAllChouJiangFenShuZuGou();
-                        UnityLog("CreateCaiPiaoDaJiangPanel...");
+                        //UnityLog("CreateCaiPiaoDaJiangPanel...");
                         GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                         m_CaiPiaoDaJiang = obj.GetComponent<SSCaiPiaoDaJiang>();
                         if (m_CaiPiaoDaJiang != null)
@@ -690,7 +690,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_CaiPiaoDaJiang != null)
         {
-            UnityLog("RemoveCaiPiaoDaJiangPanel...");
+            //UnityLog("RemoveCaiPiaoDaJiangPanel...");
             Destroy(m_CaiPiaoDaJiang.gameObject);
         }
     }
@@ -735,7 +735,7 @@ public class SSGameUICtrl : SSGameMono
                     if (m_GameUICenter != null)
                     {
                         RemoveAllChouJiangFenShuZuGou();
-                        UnityLog("CreatCaiPiaoXiaoJiangPanel...");
+                        //UnityLog("CreatCaiPiaoXiaoJiangPanel...");
                         GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                         m_CaiPiaoXiaoJiang = obj.GetComponent<SSCaiPiaoDaJiang>();
                         if (m_CaiPiaoXiaoJiang != null)
@@ -786,7 +786,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/CaiPiaoUI/PlayerCaiPiaoChengJiu");
             if (gmDataPrefab != null)
             {
-                UnityLog("CreatePlayerCaiPiaoChengJiu -> indexVal ==== " + indexVal);
+                //UnityLog("CreatePlayerCaiPiaoChengJiu -> indexVal ==== " + indexVal);
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_PlayerCaiPiaoChengJiuArray[indexVal] = obj.GetComponent<SSPlayerCaiPiaoChengJiu>();
                 if (m_PlayerCaiPiaoChengJiuArray[indexVal] != null)
@@ -850,7 +850,7 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     internal void CreatDanMuTextUI()
     {
-        Debug.Log("Unity: CreatDanMuTextUI...");
+        //Debug.Log("Unity: CreatDanMuTextUI...");
         if (m_DanMuTextUI == null)
         {
             GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/DanMuTextUI/DanMuTextUI");
@@ -872,7 +872,7 @@ public class SSGameUICtrl : SSGameMono
 
     internal void RemoveDanMuTextUI()
     {
-        Debug.Log("Unity: RemoveDanMuTextUI...");
+        //Debug.Log("Unity: RemoveDanMuTextUI...");
         if (m_DanMuTextUI != null)
         {
             m_DanMuTextUI.RemoveSelf();
@@ -944,7 +944,7 @@ public class SSGameUICtrl : SSGameMono
                 //准备加载网络重连关卡.
                 return;
             }
-            UnityLog("RemoveWangLuoGuZhangUI...");
+            UnityLog("RemoveWangLuoGuZhangUI..." + ", TimeNow == " + System.DateTime.Now.ToString());
             Destroy(m_WangLuoGuZhangUI);
             m_WangLuoGuZhangUI = null;
             Resources.UnloadUnusedAssets();
@@ -972,7 +972,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatFuWuQiWeiHuUI.................................");
+                //Debug.Log("Unity: CreatFuWuQiWeiHuUI.................................");
                 m_FuWuQiWeiHuUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 if (ErWeiMaUI.GetInstance() != null)
                 {
@@ -993,7 +993,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_FuWuQiWeiHuUI != null)
         {
-            UnityLog("RemoveFuWuQiWeiHuUI...");
+            //UnityLog("RemoveFuWuQiWeiHuUI...");
             if (ErWeiMaUI.GetInstance() != null)
             {
                 ErWeiMaUI.GetInstance().SetActive(true);
@@ -1017,7 +1017,7 @@ public class SSGameUICtrl : SSGameMono
             return;
         }
 
-        Debug.Log("Unity: CreatPlayerDaiJinQuanUI...");
+        //Debug.Log("Unity: CreatPlayerDaiJinQuanUI...");
         int index = (int)indexPlayer - 1;
         if (index >= 0 && index <= 2)
         {
@@ -1041,7 +1041,7 @@ public class SSGameUICtrl : SSGameMono
     /// </summary>
     internal void RemovePlayerDaiJinQunUI(PlayerEnum indexPlayer)
     {
-        Debug.Log("Unity: RemovePlayerDaiJinQunUI...");
+        //Debug.Log("Unity: RemovePlayerDaiJinQunUI...");
         int index = (int)indexPlayer - 1;
         if (index >= 0 && index <= 2)
         {
@@ -1066,7 +1066,7 @@ public class SSGameUICtrl : SSGameMono
         }
         IsCreatGameScreenIdUI = true;
 
-        UnityLog("CreatGameScreenIdUI...");
+        //UnityLog("CreatGameScreenIdUI...");
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/ScreenIdUI/ScreenId");
         if (gmDataPrefab != null)
         {
@@ -1114,7 +1114,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
-            UnityLog("CreateCompanyLogo...");
+            //UnityLog("CreateCompanyLogo...");
             Instantiate(gmDataPrefab, m_GameUICenter);
         }
     }
@@ -1135,7 +1135,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatBossLaiXiUI......................................................");
+                //Debug.Log("Unity: CreatBossLaiXiUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_BossLaiXiUI = obj.GetComponent<XKBossLXCtrl>();
                 m_BossLaiXiUI.StartPlayBossLaiXi(type, daiJinQuanType);
@@ -1154,7 +1154,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_BossLaiXiUI != null)
         {
-            UnityLog("RemoveBossLaiXiUI...");
+            //UnityLog("RemoveBossLaiXiUI...");
             m_BossLaiXiUI.RemoveSelf();
             m_BossLaiXiUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1177,7 +1177,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                SSDebug.Log("Unity: CreatBaoJiTiShiUI......................................................");
+                //SSDebug.Log("Unity: CreatBaoJiTiShiUI......................................................");
                 m_BaoJiTiShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUITopLeft);
             }
             else
@@ -1202,7 +1202,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatCeShiUI......................................................");
+                //Debug.Log("Unity: CreatCeShiUI......................................................");
                 m_CeShiUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
             }
             else
@@ -1219,7 +1219,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_CeShiUI != null)
         {
-            UnityLog("RemoveCeShiUI...");
+            //UnityLog("RemoveCeShiUI...");
             Destroy(m_CeShiUI);
             m_CeShiUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1241,7 +1241,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatTotalJiFenJieMianUI......................................................");
+                //Debug.Log("Unity: CreatTotalJiFenJieMianUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_TotalJiFenJieMianUI = obj.GetComponent<JiFenJieMianCtrl>();
                 m_TotalJiFenJieMianUI.Init();
@@ -1260,7 +1260,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_TotalJiFenJieMianUI != null)
         {
-            UnityLog("RemoveTotalJiFenJieMianUI...");
+            //UnityLog("RemoveTotalJiFenJieMianUI...");
             m_TotalJiFenJieMianUI.RemoveSelf();
             m_TotalJiFenJieMianUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1282,7 +1282,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatXuanYaLuDuanUI......................................................");
+                //Debug.Log("Unity: CreatXuanYaLuDuanUI......................................................");
                 m_XuanYaLuDuanUI = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
             }
             else
@@ -1299,7 +1299,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_XuanYaLuDuanUI != null)
         {
-            UnityLog("RemoveXuanYaLuDuanUI...");
+            //UnityLog("RemoveXuanYaLuDuanUI...");
             Destroy(m_XuanYaLuDuanUI);
             m_XuanYaLuDuanUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1321,7 +1321,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatGameTimeUI......................................................");
+                //Debug.Log("Unity: CreatGameTimeUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_GameTimeUI = obj.GetComponent<GameTimeCtrl>();
                 m_GameTimeUI.Init();
@@ -1340,7 +1340,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_GameTimeUI != null)
         {
-            UnityLog("RemoveGameTimeUI...");
+            //UnityLog("RemoveGameTimeUI...");
             m_GameTimeUI.RemoveSelf();
             m_GameTimeUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1362,7 +1362,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatTotalGameOverUI......................................................");
+                //Debug.Log("Unity: CreatTotalGameOverUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_TotalGameOverUI = obj.GetComponent<GameOverCtrl>();
                 m_TotalGameOverUI.Init();
@@ -1381,7 +1381,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_TotalGameOverUI != null)
         {
-            UnityLog("RemoveTotalGameOverUI...");
+            //UnityLog("RemoveTotalGameOverUI...");
             m_TotalGameOverUI.RemoveSelf();
             m_TotalGameOverUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1403,7 +1403,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatQuanBuTongGuanUI......................................................");
+                //Debug.Log("Unity: CreatQuanBuTongGuanUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_QuanBuTongGuanUI = obj.GetComponent<QuanBuTongGuanCtrl>();
                 m_QuanBuTongGuanUI.Init();
@@ -1422,7 +1422,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_QuanBuTongGuanUI != null)
         {
-            UnityLog("RemoveQuanBuTongGuanUI...");
+            //UnityLog("RemoveQuanBuTongGuanUI...");
             m_QuanBuTongGuanUI.RemoveSelf();
             m_QuanBuTongGuanUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1444,7 +1444,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatGameStageUI......................................................");
+                //Debug.Log("Unity: CreatGameStageUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_GameStageUI = obj.GetComponent<XKGameStageCtrl>();
                 m_GameStageUI.Init();
@@ -1463,7 +1463,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_GameStageUI != null)
         {
-            UnityLog("RemoveGameStageUI...");
+            //UnityLog("RemoveGameStageUI...");
             m_GameStageUI.RemoveSelf();
             m_GameStageUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1485,7 +1485,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatBossXueTiaoUI......................................................");
+                //Debug.Log("Unity: CreatBossXueTiaoUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUICenter);
                 m_BossXueTiaoUI = obj.GetComponent<SSBossXueTiaoManage>();
                 m_BossXueTiaoUI.Init();
@@ -1526,7 +1526,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatGameStartTimeUI......................................................");
+                //Debug.Log("Unity: CreatGameStartTimeUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameStartUICenter);
                 m_GameStartTimeUI = obj.GetComponent<GameStartTimeCtrl>();
                 m_GameStartTimeUI.Init();
@@ -1545,7 +1545,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_GameStartTimeUI != null)
         {
-            UnityLog("RemoveGameStartTimeUI...");
+            //UnityLog("RemoveGameStartTimeUI...");
             m_GameStartTimeUI.RemoveSelf();
             m_GameStartTimeUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1561,7 +1561,7 @@ public class SSGameUICtrl : SSGameMono
         GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
         if (gmDataPrefab != null)
         {
-            Debug.Log("Unity: CreatErWeiMaUI......................................................");
+            //Debug.Log("Unity: CreatErWeiMaUI......................................................");
             GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_GameUITopRight);
             ErWeiMaUI erWeiMaCom = obj.GetComponent<ErWeiMaUI>();
             if (erWeiMaCom != null)
@@ -1616,7 +1616,7 @@ public class SSGameUICtrl : SSGameMono
     {
         if (m_DaiJinQuanNpcXueTiaoUI != null)
         {
-            UnityLog("RemoveDaiJinQuanNpcXueTiaoUI...");
+            //UnityLog("RemoveDaiJinQuanNpcXueTiaoUI...");
             m_DaiJinQuanNpcXueTiaoUI.RemoveSelf();
             m_DaiJinQuanNpcXueTiaoUI = null;
             //Resources.UnloadUnusedAssets();
@@ -1691,7 +1691,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                SSDebug.LogWarning("Unity: CreatPlayerPingJiUI......indexPlayer == " + indexPlayer + ", fenShuNum == " + fenShuNum);
+                //SSDebug.LogWarning("Unity: CreatPlayerPingJiUI......indexPlayer == " + indexPlayer + ", fenShuNum == " + fenShuNum);
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_PingJiUIArray[indexVal] = obj.GetComponent<SSPingJiUI>();
                 m_PingJiUIArray[indexVal].Init(indexPlayer, fenShuNum);
@@ -1748,7 +1748,7 @@ public class SSGameUICtrl : SSGameMono
 
         if (m_PingJiUIArray[indexVal] != null)
         {
-            UnityLog("RemovePlayerPingJiUI -> indexPlayer ============ " + indexPlayer);
+            //UnityLog("RemovePlayerPingJiUI -> indexPlayer ============ " + indexPlayer);
             m_PingJiUIArray[indexVal].RemoveSelf();
             m_PingJiUIArray[indexVal] = null;
             //Resources.UnloadUnusedAssets();
@@ -1777,7 +1777,7 @@ public class SSGameUICtrl : SSGameMono
             GameObject gmDataPrefab = (GameObject)Resources.Load(prefabPath);
             if (gmDataPrefab != null)
             {
-                Debug.Log("Unity: CreatPlayerChouJiangUI......................................................");
+                //Debug.Log("Unity: CreatPlayerChouJiangUI......................................................");
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_PlayerUIParent[indexVal]);
                 m_ChouJiangUIArray[indexVal] = obj.GetComponent<SSChouJiangUI>();
                 m_ChouJiangUIArray[indexVal].Init(indexPlayer, isCanChouJiang);
@@ -1820,7 +1820,7 @@ public class SSGameUICtrl : SSGameMono
 
         if (m_ChouJiangUIArray[indexVal] != null)
         {
-            UnityLog("RemovePlayerChouJiangUI -> indexPlayer ============ " + indexPlayer);
+            //UnityLog("RemovePlayerChouJiangUI -> indexPlayer ============ " + indexPlayer);
             m_ChouJiangUIArray[indexVal].RemoveSelf();
             m_ChouJiangUIArray[indexVal] = null;
             //Resources.UnloadUnusedAssets();

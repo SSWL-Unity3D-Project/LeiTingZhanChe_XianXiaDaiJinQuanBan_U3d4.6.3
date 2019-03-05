@@ -156,7 +156,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
             }
             m_CurrentTotalHealthDt = m_NoBaoJiangHealthDt[indexVal];
         }
-        SSDebug.Log("GetTotalHealData -> m_CurentTotalHealthDt == " + m_CurrentTotalHealthDt.ToString());
+        //SSDebug.Log("GetTotalHealData -> m_CurentTotalHealthDt == " + m_CurrentTotalHealthDt.ToString());
     }
     #endregion
 
