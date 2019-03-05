@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// 动态下载玩家微信头像的控制脚本.
@@ -7,155 +8,96 @@ using System.Collections;
 public class AsyncImageDownload : MonoBehaviour
 {
     /// <summary>
-    /// 玩家座次枚举
+    /// 玩家微信头像数据.
     /// </summary>
-    public enum PlayerSeats
-    {
-        SELF_PLAYER,
-        UP_PLAYER,
-        OPPOSITE_PLAYER,
-        DOWN_PLAYER,
-    }
-    /// <summary>
-    /// 男玩家的默认微信头像资源.
-    /// </summary>
-    public Sprite[] PlayerBoySp;
-    /// <summary>
-    /// 女玩家的默认微信头像资源.
-    /// </summary>
-    public Sprite[] PlayerGirlSp;
-    public struct PlayerWXDt
+    public class PlayerWXDt
     {
         /// <summary>
         /// 游戏中4个玩家的微信头像资源.
         /// </summary>
-        public Sprite PlayerWXHead;
-        /// <summary>
-        /// 玩家ID信息.
-        /// </summary>
-        public int UserID;
+        public Texture2D playerWXHead;
         /// <summary>
         /// 玩家微信头像的Url.
         /// </summary>
-        public string Url;
+        public string url;
+        public PlayerWXDt(string url, Texture2D playerWXHead)
+        {
+            this.url = url;
+            this.playerWXHead = playerWXHead;
+        }
     }
     /// <summary>
-    /// PlayerWXDtAy[0] -> 玩家自己的信息.
-    /// PlayerWXDtAy[1] -> 玩家上家的信息.
-    /// PlayerWXDtAy[2] -> 玩家对家的信息.
-    /// PlayerWXDtAy[3] -> 玩家下家的信息.
+    /// 玩家微信头像数据列表.
     /// </summary>
-    public PlayerWXDt[] PlayerWXDtAy = new PlayerWXDt[4];
+    List<PlayerWXDt> PlayerWXList = new List<PlayerWXDt>();
     /// <summary>
-    /// 获取玩家微信头像.
+    /// 查找玩家微信数据.
     /// </summary>
-    //public Sprite GetPlayerWXHeadImg(int playerId)
-    //{
-    //    Sprite headImg = null;
-    //    for (int i = 0; i < PlayerWXDtAy.Length; i++)
-    //    {
-    //        if (playerId == PlayerWXDtAy[i].UserID)
-    //        {
-    //            headImg = PlayerWXDtAy[i].PlayerWXHead;
-    //            break;
-    //        }
-    //    }
-
-    //    if (headImg == null)
-    //    {
-    //        headImg = PlayerBoySp[0];
-    //    }
-    //    return headImg;
-    //}
-    /// <summary>
-    /// 设置游戏中4个玩家的微信头像信息.
-    /// </summary>
-    // public void SetAsyncImage(PlayerSeats playerSeat, int userID, PlayerData.PlayerSexEnum playerSex, string url, ImageBase image)
-    // {
-    //     //开始下载图片前，将UITexture的主图片设置为占位图.
-    //     int indexVal = (int)playerSeat;
-    //     if (PlayerWXDtAy[indexVal].PlayerWXHead != null
-    //         && PlayerWXDtAy[indexVal].Url == url
-    //         && PlayerWXDtAy[indexVal].UserID == userID) {
-    //         if (image.sprite != PlayerWXDtAy[indexVal].PlayerWXHead) {
-    //             image.sprite = PlayerWXDtAy[indexVal].PlayerWXHead;
-    //         }
-    //         return;
-    //     }
-
-    //     if (url == "") {
-    //         switch (playerSex) {
-    //             case PlayerData.PlayerSexEnum.BOY:
-    //                 if (PlayerBoySp.Length != 0) {
-    //                     image.sprite = PlayerBoySp[Random.Range(0, 100) % PlayerBoySp.Length];
-    //                 }
-    //                 break;
-    //             case PlayerData.PlayerSexEnum.GIRL:
-    //                 if (PlayerGirlSp.Length != 0) {
-    //                     image.sprite = PlayerGirlSp[Random.Range(0, 100) % PlayerGirlSp.Length];
-    //                 }
-    //                 break;
-    //	case PlayerData.PlayerSexEnum.SEXNULL:
-    //		if (PlayerBoySp.Length != 0)
-    //		{
-    //			image.sprite = PlayerGirlSp[Random.Range(0, 100) % PlayerGirlSp.Length];
-    //		}
-    //		break;
-    //}
-    //     }
-    //     else {
-    //         StartCoroutine(DownloadImage(indexVal, userID, url, image));
-    //     }
-    // }
+    PlayerWXDt FindPlayerWXDt(string url)
+    {
+        PlayerWXDt playerDt = PlayerWXList.Find((dt) => {
+            return dt.url.Equals(url);
+        });
+        return playerDt;
+    }
 
     /// <summary>
-    /// 根据url信息下载图片信息.
+    /// 添加玩家微信数据.
     /// </summary>
-    //public void LoadingUrlImage(string url, UITexture image)
-    //{
-    //    if (url == "")
-    //    {
-    //        PlayerData.PlayerSexEnum playerSex = (PlayerData.PlayerSexEnum)(Random.Range(0, 100) % 3);
-    //        switch (playerSex)
-    //        {
-    //            case PlayerData.PlayerSexEnum.BOY:
-    //                if (PlayerBoySp.Length != 0)
-    //                {
-    //                    image.sprite = PlayerBoySp[Random.Range(0, 100) % PlayerBoySp.Length];
-    //                }
-    //                break;
-    //            case PlayerData.PlayerSexEnum.GIRL:
-    //                if (PlayerGirlSp.Length != 0)
-    //                {
-    //                    image.sprite = PlayerGirlSp[Random.Range(0, 100) % PlayerGirlSp.Length];
-    //                }
-    //                break;
-    //            case PlayerData.PlayerSexEnum.SEXNULL:
-    //                if (PlayerBoySp.Length != 0)
-    //                {
-    //                    image.sprite = PlayerGirlSp[Random.Range(0, 100) % PlayerGirlSp.Length];
-    //                }
-    //                break;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        StartCoroutine(DownloadImage(-1, -1, url, image));
-    //    }
-    //}
+    void AddPlayerWXDt(PlayerWXDt playerDt)
+    {
+        if (playerDt != null && FindPlayerWXDt(playerDt.url) == null)
+        {
+            //SSDebug.LogWarning("AddPlayerWXDt -> headUrl == " + playerDt.url);
+            PlayerWXList.Add(playerDt);
+        }
 
+        if (PlayerWXList != null && PlayerWXList.Count > 6)
+        {
+            //当玩家微信头像数据个数缓存大于一定数值后,清理第一条数据.
+            RemovePlayerWXDt(0);
+        }
+    }
 
+    /// <summary>
+    /// 删除玩家微信数据按照索引信息.
+    /// </summary>
+    internal void RemovePlayerWXDt(int indexVal)
+    {
+        if (indexVal >= 0 && indexVal < PlayerWXList.Count)
+        {
+            if (PlayerWXList != null)
+            {
+                PlayerWXList.RemoveAt(indexVal);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 下载玩家微信头像.
+    /// </summary>
     public void LoadPlayerHeadImg(string url, UITexture image)
     {
         if (url != null && url != "" && url.Length > 5)
         {
-            Debug.Log("Unity: url == " + url);
-            StartCoroutine(DownloadImage(url, image));
+            //SSDebug.LogWarning("LoadPlayerHeadImg::UITexture -> url == " + url);
+            PlayerWXDt playerDt = FindPlayerWXDt(url);
+            if (playerDt != null)
+            {
+                //找到玩家微信数据.
+                image.mainTexture = playerDt.playerWXHead;
+                //SSDebug.LogWarning("LoadPlayerHeadImg::UITexture -> find headImg from list");
+            }
+            else
+            {
+                //没有找到玩家微信数据.
+                StartCoroutine(DownloadImage(url, image));
+            }
         }
     }
+
     /// <summary>
-    /// (indexVal 小于 0 或 indexVal 大于 3)时,不去对PlayerWXDtAy进行操作.
-    /// indexVal = [0, 3].
+    /// 下载玩家微信头像.
     /// </summary>
     IEnumerator DownloadImage(string url, UITexture image)
     {
@@ -203,41 +145,38 @@ public class AsyncImageDownload : MonoBehaviour
 
         if (tex2d != null && image != null)
         {
-            Debug.Log("Unity: DownloadImage...");
+            //Debug.Log("Unity: DownloadImage...");
             image.mainTexture = tex2d;
+            //添加玩家微信数据.
+            AddPlayerWXDt(new PlayerWXDt(url, tex2d));
         }
-        //if (tex2d == null)
-        //{
-        //    tex2d = (Texture2D)Resources.Load("Image/UserDetailsInfo/Photo");
-        //}
-
-        //Sprite m_sprite = Sprite.Create(tex2d, new Rect(0, 0, tex2d.width, tex2d.height), new Vector2(0, 0));
-        //if (image != null)
-        //{
-        //    image.sprite = m_sprite;
-        //}
-
-        //if (indexVal > -1 && indexVal < 4)
-        //{
-        //    PlayerWXDtAy[indexVal].PlayerWXHead = m_sprite;
-        //    PlayerWXDtAy[indexVal].UserID = userID;
-        //    PlayerWXDtAy[indexVal].Url = url;
-        //}
     }
-
-
-
+    
+    /// <summary>
+    /// 下载玩家微信头像.
+    /// </summary>
     public void LoadPlayerHeadImg(string url, Material image)
     {
         if (url != null && url != "" && url.Length > 5)
         {
-            Debug.Log("Unity: url == " + url);
-            StartCoroutine(DownloadImage(url, image));
+            //SSDebug.LogWarning("LoadPlayerHeadImg::Material -> url == " + url);
+            PlayerWXDt playerDt = FindPlayerWXDt(url);
+            if (playerDt != null)
+            {
+                //找到玩家微信数据.
+                image.mainTexture = playerDt.playerWXHead;
+                //SSDebug.LogWarning("LoadPlayerHeadImg::Material -> find headImg from list");
+            }
+            else
+            {
+                //没有找到玩家微信数据.
+                StartCoroutine(DownloadImage(url, image));
+            }
         }
     }
+
     /// <summary>
-    /// (indexVal 小于 0 或 indexVal 大于 3)时,不去对PlayerWXDtAy进行操作.
-    /// indexVal = [0, 3].
+    /// 下载玩家微信头像.
     /// </summary>
     IEnumerator DownloadImage(string url, Material image)
     {
@@ -285,64 +224,10 @@ public class AsyncImageDownload : MonoBehaviour
 
         if (tex2d != null && image != null)
         {
-            Debug.Log("Unity: DownloadImage...");
+            //Debug.Log("Unity: DownloadImage...");
             image.mainTexture = tex2d;
+            //添加玩家微信数据.
+            AddPlayerWXDt(new PlayerWXDt(url, tex2d));
         }
-        //if (tex2d == null)
-        //{
-        //    tex2d = (Texture2D)Resources.Load("Image/UserDetailsInfo/Photo");
-        //}
-
-        //Sprite m_sprite = Sprite.Create(tex2d, new Rect(0, 0, tex2d.width, tex2d.height), new Vector2(0, 0));
-        //if (image != null)
-        //{
-        //    image.sprite = m_sprite;
-        //}
-
-        //if (indexVal > -1 && indexVal < 4)
-        //{
-        //    PlayerWXDtAy[indexVal].PlayerWXHead = m_sprite;
-        //    PlayerWXDtAy[indexVal].UserID = userID;
-        //    PlayerWXDtAy[indexVal].Url = url;
-        //}
     }
-
-    //  IEnumerator DownloadImage(int indexVal, int userID, string url, ImageBase image)
-    //  {
-    //Texture2D tex2d = null;
-    ////Debug.Log("Unity:"+"downloading new image:" + url.GetHashCode());//url转换HD5作为名字.
-    //WWW www = null;
-    //try
-    //{
-    //	www = new WWW(url);
-    //}
-    //catch (System.Exception)
-    //{
-    //}
-    //yield return www;
-    //try
-    //{
-    //	tex2d = www.texture;
-    //}
-    //catch (System.Exception)
-    //{
-    //}
-    //if (tex2d==null)
-    //{
-    //	tex2d = (Texture2D)Resources.Load("Image/UserDetailsInfo/Photo");
-    //}
-
-    //Sprite m_sprite = Sprite.Create(tex2d, new Rect(0, 0, tex2d.width, tex2d.height), new Vector2(0, 0));
-    //      if (image != null)
-    //      {
-    //          image.sprite = m_sprite;
-    //      }
-
-    //      if (indexVal > -1 && indexVal < 4)
-    //      {
-    //          PlayerWXDtAy[indexVal].PlayerWXHead = m_sprite;
-    //          PlayerWXDtAy[indexVal].UserID = userID;
-    //          PlayerWXDtAy[indexVal].Url = url;
-    //      }
-    //  }
 }
