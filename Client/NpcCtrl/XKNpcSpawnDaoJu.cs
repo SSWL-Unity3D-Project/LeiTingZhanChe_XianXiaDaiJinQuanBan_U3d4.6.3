@@ -140,7 +140,7 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// 产生道具的时间记录信息.
     /// </summary>
     static float m_TimeLastCreatDaoJu = 0f;
-	public void SpawnAllDaoJu()
+	public void SpawnAllDaoJu(PlayerEnum playerIndex)
 	{
         float timeLengQue = 60f;
         if (XkGameCtrl.GetInstance() != null)
@@ -160,7 +160,7 @@ public class XKNpcSpawnDaoJu : SSGameMono
 			return;
 		}
 
-        bool isCreateBigXueBao = CreateBigXueBaoDaoJu();
+        bool isCreateBigXueBao = CreateBigXueBaoDaoJu(playerIndex);
         if (isCreateBigXueBao == true)
         {
             //如果产生了大血包道具就不再产生其它道具.
@@ -175,12 +175,33 @@ public class XKNpcSpawnDaoJu : SSGameMono
 		Transform trEndPoint = null;
 		for(int i = 0; i < max; i++) {
 			randVal = Random.Range(0, 10000) % 100;
-			if (randVal >= DaoJuGaiLv[i]) {
+			if (DaoJuGaiLv.Length > i && randVal >= DaoJuGaiLv[i]) {
 				continue;
 			}
 
-			trEndPoint = GetDaoJuSpawnPoint(i);
-			if (trEndPoint == null) {
+            if (DaoJuArray[i] == null)
+            {
+                continue;
+            }
+
+            trEndPoint = null;
+            BuJiBaoCtrl buJiBaoCom = DaoJuArray[i].GetComponent<BuJiBaoCtrl>();
+            if (buJiBaoCom != null && buJiBaoCom.BuJiBao == BuJiBaoType.BigYiLiaoBaoDJ || buJiBaoCom.BuJiBao == BuJiBaoType.YiLiaoBaoDJ)
+            {
+                //医疗包道具.
+                if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+                {
+                    trEndPoint = XKPlayerMoveCtrl.GetInstance(playerIndex).transform;
+                }
+            }
+
+            if (trEndPoint == null)
+            {
+                trEndPoint = GetDaoJuSpawnPoint(i);
+            }
+
+			if (trEndPoint == null)
+            {
 				continue;
 			}
 			GameObject daoJuObj = (GameObject)Instantiate(DaoJuArray[i], transform.position, transform.rotation);
@@ -193,16 +214,12 @@ public class XKNpcSpawnDaoJu : SSGameMono
     /// <summary>
     /// 创建大血包道具.
     /// </summary>
-    bool CreateBigXueBaoDaoJu()
+    bool CreateBigXueBaoDaoJu(PlayerEnum playerIndex)
     {
         bool isCreate = false;
         if (m_BigXueBaoDt != null && m_BigXueBaoDt.XueBaoPrefab != null)
         {
-            PointList = new List<Transform>();
-            CheckDaoJuSpawnPointList();
-
             int randVal = 0;
-            Transform trEndPoint = null;
             randVal = Random.Range(0, 10000) % 100;
             if (randVal >= m_BigXueBaoDt.GaiLv)
             {
@@ -210,7 +227,15 @@ public class XKNpcSpawnDaoJu : SSGameMono
             }
             else
             {
-                trEndPoint = GetDaoJuSpawnPoint(0);
+                Transform trEndPoint = null;
+                //PointList = new List<Transform>();
+                //CheckDaoJuSpawnPointList();
+                //trEndPoint = GetDaoJuSpawnPoint(0);
+                if (XKPlayerMoveCtrl.GetInstance(playerIndex) != null)
+                {
+                    trEndPoint = XKPlayerMoveCtrl.GetInstance(playerIndex).transform;
+                }
+
                 if (trEndPoint == null)
                 {
                     //没有找到道具落点.
