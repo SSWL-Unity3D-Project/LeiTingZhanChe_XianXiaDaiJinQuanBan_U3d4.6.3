@@ -27,8 +27,18 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 //	[Range(0, 100)] public int MaxAmmoHurtLiZi = 0;
 	public GameObject[] HiddenNpcObjArray; //npc死亡时需要立刻隐藏的对象.
 //	public GameObject HurtLiZiObj; //飞机npc的受伤粒子.
+    /// <summary>
+    /// 死亡爆炸粒子.
+    /// </summary>
 	public GameObject DeathExplode;
+    /// <summary>
+    /// 死亡爆炸产生点.
+    /// </summary>
 	public Transform DeathExplodePoint;
+    /// <summary>
+    /// 玩家子弹爆炸粒子产生点数组.
+    /// </summary>
+    public Transform[] AmmoLiZiPointArray;
 	[Range(0.1f, 100f)] public float YouTongDamageDis = 10f;
 	public bool IsYouTongNpc;
 	public bool IsAutoRemoveNpc = true;
@@ -1239,5 +1249,54 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 获取距离子弹最近的爆炸粒子产生点.
+    /// </summary>
+    public Transform GetAmmoLiZiMinDisSpawnPoint(Transform ammoTr)
+    {
+        if (ammoTr == null)
+        {
+            return null;
+        }
+
+        Transform point = null;
+        float disMax = 10000f;
+        float dis = 0f;
+        Vector3 posA = Vector3.zero;
+        Vector3 posB = Vector3.zero;
+        if (DeathExplodePoint != null)
+        {
+            posA = ammoTr.position;
+            posB = DeathExplodePoint.position;
+            posA.y = posB.y = 0f;
+            dis = Vector3.Distance(posA, posB);
+            if (dis < disMax)
+            {
+                disMax = dis;
+                point = DeathExplodePoint;
+            }
+        }
+
+        if (AmmoLiZiPointArray.Length > 0)
+        {
+            for (int i = 0; i < AmmoLiZiPointArray.Length; i++)
+            {
+                if (AmmoLiZiPointArray[i] != null)
+                {
+                    posA = ammoTr.position;
+                    posB = AmmoLiZiPointArray[i].position;
+                    posA.y = posB.y = 0f;
+                    dis = Vector3.Distance(posA, posB);
+                    if (dis < disMax)
+                    {
+                        disMax = dis;
+                        point = AmmoLiZiPointArray[i];
+                    }
+                }
+            }
+        }
+        return point;
     }
 }

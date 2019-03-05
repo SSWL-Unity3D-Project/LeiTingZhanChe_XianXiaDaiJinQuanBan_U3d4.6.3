@@ -10,7 +10,8 @@ public class PlayerAmmoCtrl : MonoBehaviour
     /// 子弹数据信息.
     /// </summary>
     public SSPlayerAmmoData m_AmmmoData;
-    [Range(0, 100)]public int AmmoIndex = 0;
+    [Range(0, 100)]
+    public int AmmoIndex = 0;
 	public PlayerAmmoType AmmoType = PlayerAmmoType.PuTongAmmo;
 	/**
 	 * 迫击炮的内核.
@@ -20,7 +21,10 @@ public class PlayerAmmoCtrl : MonoBehaviour
 	 * 迫击炮的提示特效.
 	 */
 	public GameObject PaiJiPaoTiShiPrefab;
-	public GameObject AmmoExplode;
+    /// <summary>
+    /// 子弹爆炸粒子预制.
+    /// </summary>
+    public GameObject AmmoExplode;
 	[Range(1, 1000)] public int DamageNpc = 1;
 	[Range(1f, 4000f)] public float MvSpeed = 50f;
 	const float MvSpeedMax = 500f;
@@ -591,11 +595,16 @@ public class PlayerAmmoCtrl : MonoBehaviour
 
         Vector3 pos = AmmoTran.position;
         Quaternion rot = AmmoTran.rotation;
-        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo && healthScript != null && healthScript.DeathExplodePoint != null)
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo && healthScript != null)
         {
-            //冲击波子弹.
-            pos = healthScript.DeathExplodePoint.position;
-            rot = healthScript.DeathExplodePoint.rotation;
+            //获取距离冲击波子弹最近的爆炸产生点.
+            Transform tr = healthScript.GetAmmoLiZiMinDisSpawnPoint(transform);
+            if (tr != null)
+            {
+                //冲击波子弹.
+                pos = tr.position;
+                rot = tr.rotation;
+            }
         }
 		GameObject obj = (GameObject)Instantiate(objParticle, pos, rot);
 		Transform tran = obj.transform;
@@ -839,11 +848,11 @@ public class PlayerAmmoCtrl : MonoBehaviour
     }
 	void DaleyHiddenPlayerAmmo()
     {
-        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
-        {
+        //if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
+        //{
             //SSDebug.LogWarning("**** TestChongJiBoCount ============== " + TestChongJiBoCount + ", AmmoActive == " + gameObject.activeInHierarchy);
             //SSDebug.LogWarning("**** TestChongJiBoAmmo AmmoActive == " + gameObject.activeInHierarchy);
-        }
+        //}
         gameObject.SetActive(false);
     }
 
