@@ -395,6 +395,7 @@ public class PlayerAmmoCtrl : MonoBehaviour
                 case PlayerAmmoType.ChuanTouAmmo:
                 case PlayerAmmoType.SanDanAmmo:
                 case PlayerAmmoType.ChongJiBoAmmo:
+                case PlayerAmmoType.DaoDanAmmo:
                     {
                         m_AmmmoData.SetActiveAmmoCore(autoFireCom.CountAmmoStateZhuPao, autoFireCom.PlayerIndex);
                         break;
