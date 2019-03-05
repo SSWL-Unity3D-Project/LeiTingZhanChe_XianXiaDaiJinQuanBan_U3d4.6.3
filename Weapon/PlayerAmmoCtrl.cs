@@ -2,7 +2,6 @@
 #define USE_SPHERE_HIT
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 
 public class PlayerAmmoCtrl : MonoBehaviour
 {
