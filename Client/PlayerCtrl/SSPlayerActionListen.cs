@@ -11,6 +11,15 @@ public class SSPlayerActionListen : MonoBehaviour
     /// 玩家是否处于休眠无操作状态.
     /// </summary>
     bool IsPlayerSleep = false;
+    internal void Init()
+    {
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            m_MinSleepTime = XkGameCtrl.GetInstance().m_PlayerNoActionMinTime;
+            //SSDebug.LogWarning("m_MinSleepTime =================== " + m_MinSleepTime);
+        }
+    }
+
     internal void SetIsPlayerSleep(bool isPlayerSleep)
     {
         IsPlayerSleep = isPlayerSleep;

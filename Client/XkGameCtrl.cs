@@ -85,6 +85,11 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     [Range(0, 100)]
     public float m_NpcDiaoDaoJuTimeLengQue = 60f;
+    /// <summary>
+    /// 主角没有操作的最少冷却时间.
+    /// </summary>
+    [Range(0, 600)]
+    public float m_PlayerNoActionMinTime = 15f;
     bool _IsDisplayBossDeathYanHua = false;
     /// <summary>
     /// 是否在显示Boss爆炸粒子和玩家得奖烟花.

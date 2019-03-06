@@ -1754,6 +1754,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         if (m_SSPlayerActionListen == null)
         {
             m_SSPlayerActionListen = gameObject.AddComponent<SSPlayerActionListen>();
+            m_SSPlayerActionListen.Init();
         }
     }
 
