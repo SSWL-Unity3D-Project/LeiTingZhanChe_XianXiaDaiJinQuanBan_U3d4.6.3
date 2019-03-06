@@ -614,15 +614,23 @@ public class PlayerAmmoCtrl : MonoBehaviour
 
         Vector3 pos = AmmoTran.position;
         Quaternion rot = AmmoTran.rotation;
-        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo && healthScript != null)
+        if (AmmoType == PlayerAmmoType.ChongJiBoAmmo)
         {
-            //获取距离冲击波子弹最近的爆炸产生点.
-            Transform tr = healthScript.GetAmmoLiZiMinDisSpawnPoint(transform);
-            if (tr != null)
+            if (healthScript != null)
             {
-                //冲击波子弹.
-                pos = tr.position;
-                rot = tr.rotation;
+                //获取距离冲击波子弹最近的爆炸产生点.
+                Transform tr = healthScript.GetAmmoLiZiMinDisSpawnPoint(transform);
+                if (tr != null)
+                {
+                    //冲击波子弹.
+                    pos = tr.position;
+                    rot = tr.rotation;
+                }
+            }
+            else
+            {
+                //冲击波子弹没有击中npc时不产生自爆粒子.
+                return;
             }
         }
 		GameObject obj = (GameObject)Instantiate(objParticle, pos, rot);

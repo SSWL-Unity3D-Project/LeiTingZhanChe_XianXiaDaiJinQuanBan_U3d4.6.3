@@ -279,11 +279,14 @@ public class XkGameCtrl : SSGameMono
         }
     }
 
+    /// <summary>
+    /// 获取给玩家增加的伤害数值.
+    /// </summary>
     int GetDamageAddToPlayer(PlayerEnum indexPlayer)
     {
         int damageVal = 0;
         int indexVal = (int)indexPlayer - 1;
-        if (indexVal > -1 && indexVal < 3)
+        if (indexVal > -1 && indexVal < m_PlayerDamageDtCur.Length)
         {
             if (Time.time - m_PlayerDamageDtCur[indexVal].TimeLast > m_PlayerDamageDtCur[indexVal].TimeVal)
             {
