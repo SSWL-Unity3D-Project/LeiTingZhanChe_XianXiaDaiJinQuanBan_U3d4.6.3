@@ -464,6 +464,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
             internal void SetIsMianFeiTiYanPlayer(bool isMianFeiTiYan)
             {
                 IsMianFeiTiYanPlayer = isMianFeiTiYan;
+                SSDebug.LogWarning("SetIsMianFeiTiYanPlayer -> isMianFeiTiYan =========================== " + isMianFeiTiYan
+                    + ", Index ==== " + Index);
             }
             /// <summary>
             /// 是否在获取微信玩家的红点点游戏账户数据.
@@ -646,8 +648,26 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return;
             }
 
+            //是否可以继续免费玩游戏.
+            bool isCanMianFeiPlayGame = false;
+            if (XKGlobalData.GetInstance() != null)
+            {
+                isCanMianFeiPlayGame = XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(indexPlayer);
+                //if (isCanMianFeiPlayGame == true)
+                //{
+                    //XKGlobalData.GetInstance().SubMianFeiNum(indexPlayer);
+                //}
+            }
+
+            if (isCanMianFeiPlayGame == true)
+            {
+                //玩家可以继续免费玩游戏,因为玩家的首次免费次数还没有用完.
+                //所以不用对玩家进行扣费.
+                return;
+            }
+
             SSDebug.Log("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
-            //SSDebug.LogWarning("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
+            SSDebug.LogWarning("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
             GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
             if (playerDt != null)
             {
@@ -665,6 +685,30 @@ namespace Assets.XKGame.Script.HongDDGamePad
 
             //设置玩家结束游戏的时间.
             //SetPlayerEndGameTime(indexPlayer);
+        }
+
+        /// <summary>
+        /// 获取玩家是否为付费激活游戏用户.
+        /// </summary>
+        internal bool GetPlayerIsFuFeiActiveGame(PlayerEnum indexPlayer)
+        {
+            bool isFuFeiPlayer = false;
+            int index = (int)indexPlayer - 1;
+            if (index < 0 || index >= m_IndexPlayerActiveGameState.Length)
+            {
+                return isFuFeiPlayer;
+            }
+
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            if (playerDt != null)
+            {
+                if (playerDt.m_PlayerWeiXinData != null)
+                {
+                    isFuFeiPlayer = !playerDt.IsMianFeiTiYanPlayer;
+                }
+            }
+            SSDebug.LogWarning("GetPlayerIsFuFeiActiveGame -> indexPlayer =============================== " + indexPlayer + ", isFuFeiPlayer == " + isFuFeiPlayer);
+            return isFuFeiPlayer;
         }
 
         /// <summary>
@@ -814,8 +858,19 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         }
                         else
                         {
-                            //强制将玩家状态修改为付费玩家.
-                            playerDt.SetIsMianFeiTiYanPlayer(false);
+                            //是否可以继续免费玩游戏.
+                            bool isCanMianFeiPlayGame = false;
+                            if (XKGlobalData.GetInstance() != null)
+                            {
+                                isCanMianFeiPlayGame = XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(indexPlayer);
+                            }
+
+                            if (isCanMianFeiPlayGame == false)
+                            {
+                                //玩家不可以进行免费玩游戏.
+                                //强制将玩家状态修改为付费玩家.
+                                playerDt.SetIsMianFeiTiYanPlayer(false);
+                            }
                         }
 
                         if (m_HongDDGamePadWXPay != null)
@@ -1203,6 +1258,12 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 //SSDebug.LogWarning("******************** playerEnum ==================== " + playerEnum);
                                 int indexPlayer = (int)playerEnum - 1;
                                 AddWeiXinGameCoinToPlayer(playerEnum, m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
+
+                                if (XKGlobalData.GetInstance() != null)
+                                {
+                                    //设置玩家免费次数.
+                                    XKGlobalData.GetInstance().SetMianFeiNum(playerEnum, m_HongDDGamePadWXPay.m_GameConfigData.MianFeiShiWanCount);
+                                }
 
                                 //SSDebug.LogWarning("******************** activePlayer ==================== " + playerEnum);
                                 //在登录玩家列表中找到了该玩家的信息.
@@ -2297,6 +2358,69 @@ namespace Assets.XKGame.Script.HongDDGamePad
             //m_PlayerHeadUrl[indexVal] = playerDt.m_PlayerWeiXinData.headUrl;
             InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
         }
+        
+        /// <summary>
+        /// 发送玩家首次免费游戏登录信息给服务器.
+        /// </summary>
+        internal void SendPlayerShouCiMianFeiInfoToServer(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_IndexPlayerActiveGameState.Length)
+            {
+                return;
+            }
+            SSDebug.LogWarning("SendPlayerShouCiMianFeiInfoToServer -> indexPlayer ============================ " + indexPlayer);
+            //该玩家可以免费试玩游戏.
+            //给玩家添加一个微信游戏币.
+            //AddWeiXinGameCoinToPlayer(indexPlayer, 1);
+
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                //该玩家可以继续免费试玩游戏.
+                //免费体验游戏的玩家.
+                playerDt.SetIsMianFeiTiYanPlayer(true);
+
+                //记录玩家登陆游戏的信息.
+                if (m_SSBoxPostNet != null)
+                {
+                    //继续免费试玩游戏.
+                    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, SSBoxPostNet.FuFeiState.ShouCiMianFei);
+                }
+                SetPlayerHeadUrl(indexVal, playerDt.m_PlayerWeiXinData.headUrl);
+            }
+            SetGmWXloginDtIsActiveGame(indexVal, true);
+            //InputEventCtrl.GetInstance().OnClickGameStartBt(indexVal);
+        }
+
+        /// <summary>
+        /// 发送玩家付费激活游戏登录信息给服务器.
+        /// </summary>
+        internal void SendPlayerFuFeiActiveGameInfoToServer(PlayerEnum indexPlayer)
+        {
+            int indexVal = (int)indexPlayer - 1;
+            if (indexVal < 0 || indexVal >= m_IndexPlayerActiveGameState.Length)
+            {
+                return;
+            }
+            SSDebug.LogWarning("SendPlayerFuFeiActiveGameInfoToServer -> indexPlayer ============================ " + indexPlayer);
+
+            GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
+            if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                //付费激活游戏的玩家.
+                playerDt.SetIsMianFeiTiYanPlayer(false);
+
+                //记录玩家登陆游戏的信息.
+                if (m_SSBoxPostNet != null)
+                {
+                    //付费激活游戏的玩家.
+                    m_SSBoxPostNet.HttpSendPostUserLoginInfo(playerDt.m_PlayerWeiXinData.userId, playerDt.m_PlayerWeiXinData.userName, SSBoxPostNet.FuFeiState.FuFei);
+                }
+                SetPlayerHeadUrl(indexVal, playerDt.m_PlayerWeiXinData.headUrl);
+            }
+            SetGmWXloginDtIsActiveGame(indexVal, true);
+        }
 
         /// <summary>
         /// 添加微信玩家游戏币.
@@ -2626,7 +2750,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
 
             Debug.Log("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
-            //SSDebug.LogWarning("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
+            SSDebug.LogWarning("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
             if (money < m_GameCoinToMoney)
             {
                 //玩家红点点游戏平台的金额不足,应该去进行充值.
@@ -2930,6 +3054,67 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_PlayerPayDataList.Remove(payData);
             }
         }
+        
+        /// <summary>
+        ///  玩家账户扣费数据列表.
+        /// </summary>
+        List<PlayerPayData> m_PlayerPayDataUpdateList = new List<PlayerPayData>();
+        /// <summary>
+        /// 查找玩家账户扣费数据.
+        /// </summary>
+        PlayerPayData FindUpdatePlayerPayData(int userId)
+        {
+            if (m_PlayerPayDataUpdateList == null)
+            {
+                return null;
+            }
+
+            PlayerPayData payData = m_PlayerPayDataUpdateList.Find((dt) => {
+                return dt.userId.Equals(userId);
+            });
+            return payData;
+        }
+
+        /// <summary>
+        /// 查找玩家账户扣费数据.
+        /// </summary>
+        PlayerPayData FindUpdatePlayerPayData()
+        {
+            if (m_PlayerPayDataUpdateList == null)
+            {
+                return null;
+            }
+
+            if (m_PlayerPayDataUpdateList.Count > 0)
+            {
+                return m_PlayerPayDataUpdateList[0];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 添加玩家账户扣费数据.
+        /// </summary>
+        void AddUpdatePlayerPayData(int userId)
+        {
+            PlayerPayData payData = FindUpdatePlayerPayData(userId);
+            if (payData == null && m_PlayerPayDataUpdateList != null)
+            {
+                m_PlayerPayDataUpdateList.Add(new PlayerPayData(userId));
+            }
+        }
+
+        /// <summary>
+        /// 删除玩家账户扣费数据.
+        /// </summary>
+        void RemoveUpdatePlayerPayData(int userId)
+        {
+            PlayerPayData payData = FindUpdatePlayerPayData(userId);
+            if (payData != null && m_PlayerPayDataUpdateList != null)
+            {
+                m_PlayerPayDataUpdateList.Remove(payData);
+            }
+        }
 
         /// <summary>
         /// 收到扣费回传消息.
@@ -2960,7 +3145,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             if (payData.GetDeductionCount() < 5)
                             {
                                 payData.AddDeductionCount();
-                                StartCoroutine(DelaySubWXPlayerHddPayData(userId));
+                                //StartCoroutine(DelayRestartSubWXPlayerHddPayData(userId));
+                                AddUpdatePlayerPayData(userId);
                             }
                             else
                             {
@@ -2973,7 +3159,29 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
 
-        IEnumerator DelaySubWXPlayerHddPayData(int userId)
+        private void Update()
+        {
+            UpdateSubPlayerMoneyFailedUser();
+        }
+
+        /// <summary>
+        /// 更新查询减去玩家账户失败的数据.
+        /// </summary>
+        void UpdateSubPlayerMoneyFailedUser()
+        {
+            PlayerPayData payDt = FindUpdatePlayerPayData();
+            if (payDt != null)
+            {
+                //延迟重新扣除账户信息.
+                StartCoroutine(DelayRestartSubWXPlayerHddPayData(payDt.userId));
+                RemoveUpdatePlayerPayData(payDt.userId);
+            }
+        }
+
+        /// <summary>
+        /// 延迟重新扣除账户信息.
+        /// </summary>
+        IEnumerator DelayRestartSubWXPlayerHddPayData(int userId)
         {
             yield return new WaitForSeconds(1f);
             SubWXPlayerHddPayData(userId);

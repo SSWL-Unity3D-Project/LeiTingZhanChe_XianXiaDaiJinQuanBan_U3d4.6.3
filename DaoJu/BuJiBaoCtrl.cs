@@ -596,10 +596,19 @@ public class BuJiBaoCtrl : MonoBehaviour {
         //SSDebug.LogWarning("MoveDaoJuToHeightPos -> daoJuName ================== " + name);
         SetBuJiBaoRigbody(true);
         Vector3 endPos = transform.position;
-        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_XueBaoDaoJuData != null)
+        if (XKPlayerCamera.GetInstanceFeiJi() != null && XKPlayerCamera.GetInstanceFeiJi().m_XuBaoDaoJuPoint != null)
         {
-            //使血包道具向上运动.
-            endPos += new Vector3(0f, XkGameCtrl.GetInstance().m_XueBaoDaoJuData.m_XueBaoFlyHeight, 0f);
+            //在游戏镜头上找到血包道具飞向的点.
+            endPos = XKPlayerCamera.GetInstanceFeiJi().m_XuBaoDaoJuPoint.position;
+        }
+        else
+        {
+            //在游戏镜头上没有找到血包道具飞向的点.
+            if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_XueBaoDaoJuData != null)
+            {
+                //使血包道具向上运动.
+                endPos += new Vector3(0f, XkGameCtrl.GetInstance().m_XueBaoDaoJuData.m_XueBaoFlyHeight, 0f);
+            }
         }
 
         Vector3[] path = new Vector3[2];
@@ -721,9 +730,11 @@ public class BuJiBaoCtrl : MonoBehaviour {
 			if (Vector3.Distance(posA, posB) > XKDaoJuGlobalDt.GetInstance().CiLiDaoJuDis) {
 				continue;
 			}
-			//Debug.Log("Unity:"+"player "+XKPlayerGlobalDt.PlayerMoveList[i].name);
+            //Debug.Log("Unity:"+"player "+XKPlayerGlobalDt.PlayerMoveList[i].name);
 
-			AimPlayerTr = XKPlayerGlobalDt.PlayerMoveList[i].transform;
+            //设置玩家枚举.
+            m_PlayerIndex = (PlayerEnum)(i + 1);
+            AimPlayerTr = XKPlayerGlobalDt.PlayerMoveList[i].transform;
 			SetBuJiBaoRigbody(true);
             SetRigbodyUseGravity(false);
 
@@ -753,6 +764,17 @@ public class BuJiBaoCtrl : MonoBehaviour {
         {
 			return;
 		}
+
+        if (XkGameCtrl.GetIsDeathPlayer(m_PlayerIndex) == true)
+        {
+            if (IsDeath == false)
+            {
+                IsDeath = true;
+                //当血包或其它道具飞向玩家的过程中如果玩家GG了则关闭道具飞向玩家的逻辑并且将其删除。
+                DestroyNetObj(gameObject);
+            }
+            return;
+        }
 
 		Vector3 dirVal = AimPlayerTr.position - DaoJuTr.position;
 		dirVal = dirVal.normalized * XKDaoJuGlobalDt.GetInstance().CiLiDaoJuSpeed * Time.deltaTime;

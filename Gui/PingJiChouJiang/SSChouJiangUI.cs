@@ -634,18 +634,44 @@ public class SSChouJiangUI : MonoBehaviour
         return isZhongJiang;
     }
 
+    //static int TestMianFeiZaiWanYiJuCount = 0;
     /// <summary>
     /// 检测玩家可以得到什么奖品.
     /// </summary>
     void CheckPlayerJiangPinData()
     {
+        int indexJiangPin = -1;
+        if (XKPlayerMoveCtrl.GetInstance(m_IndexPlayer) != null && XKPlayerMoveCtrl.GetInstance(m_IndexPlayer).GetPlayerIsSleep() == true)
+        {
+            //游戏无操作进入休眠的玩家不允许给出奖品.
+            //谢谢参与奖品.
+            indexJiangPin = GetJiangPinIndexValue(JiangPinState.XieXieCanYu);
+
+            //indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
+            //indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3); //test.
+            //if (XKGlobalData.GetInstance() != null) //test
+            //{
+            //    if (false == XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(m_IndexPlayer) && TestMianFeiZaiWanYiJuCount == 0)
+            //    {
+            //        TestMianFeiZaiWanYiJuCount = 1;
+            //        indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
+            //    }
+            //} //test
+            if (indexJiangPin < 0 || indexJiangPin >= m_ChouJiangDtArray.Length)
+            {
+                indexJiangPin = 0;
+            }
+            m_PlayerJiangPin = m_ChouJiangDtArray[indexJiangPin];
+            SSDebug.Log("CheckPlayerJiangPinData -> player into sleep state,  m_PlayerJiangPin ================================== " + m_PlayerJiangPin.ToString());
+            return;
+        }
+
         //此处添加玩家获得什么奖品的代码.
         //当前还有战车Boss奖品没有发出的情况下,游戏画面有战车Boss时,如果该战车Boss属于不能被击爆的类型,那么此时玩家有机会随机到战车Boss奖品上.
         //当前还有战车Boss奖品没有发出的情况下,游戏画面也没有战车Boss时,那么此时玩家有机会随机到战车Boss奖品上.
         //当前还有奖品4-随机道具奖品没有发出的情况下,那么此时玩家有机会随机到奖品4上.
         //当前机位如果还没有获得免费继续游戏奖品的情况下,那么此时玩家有机会随机到免费继续游戏奖品.
         //当前玩家不能获取任何奖品的情况下,那么此时玩家只能在谢谢参与奖品里随机一个了.
-        int indexJiangPin = -1;
         //是否击爆(是否已经出奖).
         bool isHaveJiBao = false;
         //bool isZhongJiang = true;
@@ -871,6 +897,22 @@ public class SSChouJiangUI : MonoBehaviour
                 }
             }
 
+            //是否可以继续进行免费游戏.
+            bool isCanMianFeiPlayGame = false;
+            if (XKGlobalData.GetInstance() != null)
+            {
+                isCanMianFeiPlayGame = XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(m_IndexPlayer);
+            }
+
+            //玩家币值是否足够.
+            bool isPlayerCoinEnough = XKGlobalData.GetPlayerCoinIsEnough(m_IndexPlayer);
+            if (isCanMianFeiPlayGame == true || isPlayerCoinEnough == true)
+            {
+                //玩家可以继续进行免费游戏时不允许给该玩家在抽奖环节发放"免费再玩一局"奖品.
+                //当玩家现有币值大于启动游戏的币值时不允许给该玩家在抽奖环节发放"免费再玩一局"奖品.
+                isCanZaiWanYiJu = false;
+            }
+
             //if (isZhongJiang == true && isCanZaiWanYiJu == true)
             if (isCanZaiWanYiJu == true)
             {
@@ -898,12 +940,6 @@ public class SSChouJiangUI : MonoBehaviour
             }
         }
 
-        if (XKPlayerMoveCtrl.GetInstance(m_IndexPlayer) != null && XKPlayerMoveCtrl.GetInstance(m_IndexPlayer).GetPlayerIsSleep() == true)
-        {
-            //游戏无操作进入休眠的玩家不允许给出奖品.
-            indexJiangPin = -1;
-        }
-
         if (indexJiangPin == -1)
         {
             //谢谢参与.
@@ -912,6 +948,13 @@ public class SSChouJiangUI : MonoBehaviour
 
         //indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
         //indexJiangPin = GetJiangPinIndexValue(JiangPinState.JiangPin3); //test.
+        //if (XKGlobalData.GetInstance() != null) //test
+        //{
+        //    if (false == XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(m_IndexPlayer))
+        //    {
+        //        indexJiangPin = GetJiangPinIndexValue(JiangPinState.ZaiWanYiJu); //test.
+        //    }
+        //} //test
         if (indexJiangPin < 0 || indexJiangPin >= m_ChouJiangDtArray.Length)
         {
             indexJiangPin = 0;
@@ -1185,13 +1228,105 @@ public class SSChouJiangUI : MonoBehaviour
                     case JiangPinState.JiangPin3:
                     case JiangPinState.JiangPin4:
                         {
-                            //设置玩家状态信息.
-                            XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
-                            //展示游戏倒计时界面.
-                            DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
-                            if (daoJiShiCom != null)
+                            //玩家币值是否足够.
+                            bool isPlayerCoinEnough = XKGlobalData.GetPlayerCoinIsEnough(m_IndexPlayer);
+                            if (isPlayerCoinEnough == true)
                             {
-                                daoJiShiCom.StartPlayDaoJiShi();
+                                //玩家币值充足.
+                                bool isCanXuMing = true;
+                                if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                                {
+                                    //当前机位是否可以续命.
+                                    isCanXuMing = XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(m_IndexPlayer);
+                                }
+
+                                if (isCanXuMing == true)
+                                {
+                                    //玩家可以续命.
+                                    if (XkGameCtrl.GetIsActivePlayer(m_IndexPlayer) == true)
+                                    {
+                                        //玩家首次GG之后,没有设置信息.
+                                        //设置玩家状态信息.
+                                        XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
+                                    }
+
+                                    //是否可以继续进行免费游戏.
+                                    bool isCanMianFeiPlayGame = false;
+                                    if (XKGlobalData.GetInstance() != null)
+                                    {
+                                        isCanMianFeiPlayGame = XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(m_IndexPlayer);
+                                    }
+
+                                    if (isCanMianFeiPlayGame == false)
+                                    {
+                                        //玩家不可以继续进行免费游戏.
+                                        //玩家币值充足,需要对微信用户进行扣费.
+                                        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                        {
+                                            //此时需要对微信付费玩家进行红点点账户扣费.
+                                            pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(m_IndexPlayer);
+                                        }
+
+                                        //玩家付费激活游戏.
+                                        if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                        {
+                                            //发送玩家付费激活游戏的登录信息给服务器.
+                                            pcvr.GetInstance().m_HongDDGamePadInterface.SendPlayerFuFeiActiveGameInfoToServer(m_IndexPlayer);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //玩家可以继续进行免费游戏.
+                                        if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                        {
+                                            //发送玩家首次免费游戏登录信息给服务器.
+                                            pcvr.GetInstance().m_HongDDGamePadInterface.SendPlayerShouCiMianFeiInfoToServer(m_IndexPlayer);
+                                        }
+                                        //减少玩家免费次数.
+                                        XKGlobalData.GetInstance().SubMianFeiNum(m_IndexPlayer);
+                                    }
+
+                                    //当前机位续命一次.
+                                    if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                                    {
+                                        XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(m_IndexPlayer);
+                                    }
+                                }
+                                else
+                                {
+                                    //玩家续命次数已经用完.
+                                    //设置玩家状态信息.
+                                    XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
+                                    //展示游戏倒计时界面.
+                                    DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
+                                    if (daoJiShiCom != null)
+                                    {
+                                        daoJiShiCom.StartPlayDaoJiShi();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //玩家币值不足,需要对微信用户进行扣费.
+                                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                {
+                                    if (pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerIsFuFeiActiveGame(m_IndexPlayer) == true)
+                                    {
+                                        //付费激活游戏的玩家.
+                                        //此时需要对微信付费玩家进行红点点账户扣费.
+                                        pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(m_IndexPlayer);
+                                    }
+                                }
+
+                                //玩家币值不足.
+                                //设置玩家状态信息.
+                                XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
+                                //展示游戏倒计时界面.
+                                DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
+                                if (daoJiShiCom != null)
+                                {
+                                    daoJiShiCom.StartPlayDaoJiShi();
+                                }
                             }
                             break;
                         }

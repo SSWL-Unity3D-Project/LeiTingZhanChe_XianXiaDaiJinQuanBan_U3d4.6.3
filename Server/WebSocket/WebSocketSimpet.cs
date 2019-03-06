@@ -184,6 +184,10 @@ public class WebSocketSimpet : MonoBehaviour
 #if UNITY_EDITOR
                 SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
 #endif
+                if (XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg == true)
+                {
+                    SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
+                }
                 return;
             }
             else
@@ -401,6 +405,10 @@ public class WebSocketSimpet : MonoBehaviour
 #if UNITY_EDITOR
                 SSDebug.LogWarning("XinTiao Check Success!" + ", time == " + Time.time.ToString("f2"));
 #endif
+                if (XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg == true)
+                {
+                    SSDebug.LogWarning("XinTiao Check Success!" + ", time == " + Time.time.ToString("f2"));
+                }
                 IsCheckXinTiaoMsg = false;
                 //删除网络故障,请检查网络并重启游戏.
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)

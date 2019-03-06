@@ -81,7 +81,8 @@ public class SSGameUICtrl : SSGameMono
                 }
                 else
                 {
-                    pcvr.GetInstance().m_HongDDGamePadInterface.GetGameHddScreenNum();
+                    //获取游戏屏幕码信息.
+                    //pcvr.GetInstance().m_HongDDGamePadInterface.GetGameHddScreenNum();
                 }
             }
         }
@@ -1697,11 +1698,11 @@ public class SSGameUICtrl : SSGameMono
                 m_PingJiUIArray[indexVal].Init(indexPlayer, fenShuNum);
                 StartCoroutine(DelayShowPlayerPingJiUI(indexPlayer));
 
-                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
-                {
-                    //此时需要对微信付费玩家进行红点点账户扣费.
-                    pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(indexPlayer);
-                }
+                //if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                //{
+                //    //此时需要对微信付费玩家进行红点点账户扣费.
+                //    pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(indexPlayer);
+                //}
 
                 SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(indexPlayer);
                 if (playerScoreManage != null)

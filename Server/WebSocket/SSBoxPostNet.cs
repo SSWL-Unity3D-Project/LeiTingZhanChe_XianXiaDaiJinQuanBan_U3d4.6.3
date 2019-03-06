@@ -727,7 +727,8 @@ public class SSBoxPostNet : MonoBehaviour
                                 //SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
                                 gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
                             }
-                            gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
+                            //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
+                            gameConfigDt.MianFeiShiWanCount = mod == "0" ? 3 : 0; //运营模式(0 可以免费试玩3次， 其它为不允许免费试玩)
                             gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
                             gameConfigDt.UpdataAllServerConfigData();
 

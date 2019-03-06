@@ -325,7 +325,66 @@ public class XKGlobalData
         InitMianFeiShiWanCount();
         InitGameCoinToMoney();
         InitSSGameXuMingData();
+        InitPlayerMianFeiData();
     }
+
+    #region 玩家免费进行游戏的数据管理
+    SSPlayerMianFeiData m_SSPlayerMianFeiData;
+    /// <summary>
+    /// 初始化玩家免费进行游戏的数据信息.
+    /// </summary>
+    void InitPlayerMianFeiData()
+    {
+        if (m_SSPlayerMianFeiData == null)
+        {
+            m_SSPlayerMianFeiData = new SSPlayerMianFeiData();
+            m_SSPlayerMianFeiData.Init();
+        }
+    }
+
+    /// <summary>
+    /// 当玩家以首次免费形式激活游戏时进入此函数.
+    /// 设置玩家免费次数.
+    /// </summary>
+    internal void SetMianFeiNum(PlayerEnum playerIndex, int mianFeiNum)
+    {
+        if (m_SSPlayerMianFeiData == null)
+        {
+            return;
+        }
+        m_SSPlayerMianFeiData.SetMianFeiNum(playerIndex, mianFeiNum);
+    }
+
+    /// <summary>
+    /// 是否测试心跳消息.
+    /// </summary>
+    internal bool IsDebugSocketXiTaoMsg = false;
+    
+    /// <summary>
+    /// 减少玩家免费次数.
+    /// </summary>
+    internal void SubMianFeiNum(PlayerEnum playerIndex)
+    {
+        if (m_SSPlayerMianFeiData == null)
+        {
+            return;
+        }
+        m_SSPlayerMianFeiData.SubMianFeiNum(playerIndex);
+    }
+
+    /// <summary>
+    /// 当对玩家进行账户扣费时调用此函数进行判断.
+    /// 设置玩家免费次数.
+    /// </summary>
+    internal bool GetIsCanMianFeiPlayGame(PlayerEnum playerIndex)
+    {
+        if (m_SSPlayerMianFeiData == null)
+        {
+            return false;
+        }
+        return m_SSPlayerMianFeiData.GetIsCanMianFeiPlayGame(playerIndex);
+    }
+    #endregion
 
     #region 游戏玩家续命次数信息
     /// <summary>
@@ -880,7 +939,8 @@ public class XKGlobalData
         else
         {
             int val = Convert.ToInt32(info);
-            if (val < 0 || val > 1)
+            //if (val < 0 || val > 1)
+            if (val < 0 || val > 3) //免费次数不允许超过3次.
             {
                 val = 0;
             }

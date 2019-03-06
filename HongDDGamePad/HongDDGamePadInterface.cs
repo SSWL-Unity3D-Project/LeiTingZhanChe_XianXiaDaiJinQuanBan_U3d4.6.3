@@ -100,6 +100,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
         }
 
         /// <summary>
+        /// 获取玩家是否为付费激活游戏用户.
+        /// </summary>
+        internal bool GetPlayerIsFuFeiActiveGame(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                return m_HongDDGamePadCom.GetPlayerIsFuFeiActiveGame(indexPlayer);
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 设置玩家结束游戏时间.
         /// </summary>
         internal void SetPlayerEndGameTime(PlayerEnum indexPlayer)
@@ -164,6 +176,28 @@ namespace Assets.XKGame.Script.HongDDGamePad
             if (m_HongDDGamePadCom != null)
             {
                 m_HongDDGamePadCom.MakePlayerMianFeiZaiWanYiJu(indexPlayer);
+            }
+        }
+
+        /// <summary>
+        /// 发送玩家首次免费游戏登录信息给服务器.
+        /// </summary>
+        internal void SendPlayerShouCiMianFeiInfoToServer(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendPlayerShouCiMianFeiInfoToServer(indexPlayer);
+            }
+        }
+
+        /// <summary>
+        /// 发送玩家付费激活游戏登录信息给服务器.
+        /// </summary>
+        internal void SendPlayerFuFeiActiveGameInfoToServer(PlayerEnum indexPlayer)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.SendPlayerFuFeiActiveGameInfoToServer(indexPlayer);
             }
         }
 

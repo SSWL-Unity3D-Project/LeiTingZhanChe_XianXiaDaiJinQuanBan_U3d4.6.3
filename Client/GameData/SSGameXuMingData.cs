@@ -74,7 +74,7 @@ public class SSGameXuMingData
     }
 
     /// <summary>
-    /// 获取是否可以续命.
+    /// 添加续命次数.
     /// </summary>
     internal void AddXuMingCount(PlayerEnum indexPlayer)
     {

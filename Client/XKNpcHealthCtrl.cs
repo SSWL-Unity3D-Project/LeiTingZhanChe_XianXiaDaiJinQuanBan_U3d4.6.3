@@ -971,6 +971,12 @@ public class XKNpcHealthCtrl : MonoBehaviour {
 
 	void CheckSpawnDaoJuCom(PlayerEnum index)
 	{
+        if (XkGameCtrl.GetInstance().GetIsActiveAiPlayer() == true)
+        {
+            //Ai坦克被激活时,npc被击爆后不允许产生道具.
+            return;
+        }
+
 		XKNpcSpawnDaoJu daoJuScript = GetComponent<XKNpcSpawnDaoJu>();
 		if (daoJuScript == null) {
 			return;

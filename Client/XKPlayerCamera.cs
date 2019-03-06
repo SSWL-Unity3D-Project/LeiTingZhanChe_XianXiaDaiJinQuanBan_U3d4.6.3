@@ -4,6 +4,10 @@ using System.Collections.Generic;
 public class XKPlayerCamera : MonoBehaviour
 {
     /// <summary>
+    /// 血包道具产生之后飞向的点.
+    /// </summary>
+    public Transform m_XuBaoDaoJuPoint;
+    /// <summary>
     /// 玩家1彩票移动的终点.
     /// </summary>
     public Transform m_CaiPiaoEndTrP1;

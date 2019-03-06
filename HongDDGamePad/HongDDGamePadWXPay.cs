@@ -402,8 +402,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         public void SToC_ReceiveGameConfigInfo(int args)
         {
-            //SSDebug.Log("SToC_ReceiveGameConfigInfo -> args == " + args);
-            m_GameConfigData.MianFeiShiWanCount = UnityEngine.Mathf.Clamp(args, 0, 1);
+            SSDebug.LogWarning("SToC_ReceiveGameConfigInfo -> args ================ " + args);
+            //m_GameConfigData.MianFeiShiWanCount = Mathf.Clamp(args, 0, 1);
+            m_GameConfigData.MianFeiShiWanCount = Mathf.Clamp(args, 0, 3); //最多3次免费机会.
         }
 
         /// <summary>

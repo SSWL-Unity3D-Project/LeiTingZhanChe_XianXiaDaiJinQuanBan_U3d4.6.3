@@ -1235,13 +1235,21 @@ public class XkGameCtrl : SSGameMono
 
     void Update()
     {
+#if !UNITY_EDITOR
+        if (Input.GetKeyUp(KeyCode.P))
+        {
+            //测试webSocket心跳消息.
+            XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg = !XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg;
+        }
+#endif
+
         //if (Input.GetKeyUp(KeyCode.P))
         //{
-        //    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
-        //    {
-        //        //关闭WebSocket
-        //        pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
-        //    }
+            //if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+            //{
+            //    //关闭WebSocket
+            //    pcvr.GetInstance().m_HongDDGamePadInterface.CloseWebSocket();
+            //}
         //}
 #if DRAW_GAME_INFO
         if (!pcvr.bIsHardWare)
@@ -2356,6 +2364,9 @@ public class XkGameCtrl : SSGameMono
         }
     }
 
+    /// <summary>
+    /// 获取玩家是否GG了.
+    /// </summary>
     public static bool GetIsDeathPlayer(PlayerEnum indexPlayer)
     {
         bool isDeathPlayer = false;
@@ -2387,7 +2398,11 @@ public class XkGameCtrl : SSGameMono
                 isCanXuMing = XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(indexPlayer);
             }
 
-            if (isCanXuMing && XKGlobalData.GetPlayerCoinIsEnough(indexPlayer) == true)
+            //当币值足够时是否允许直接激活玩家并且不展示评级界面.
+            bool isCanActivePlayerOnCoinEnough = false;
+            if (isCanXuMing == true
+                && isCanActivePlayerOnCoinEnough == true
+                && XKGlobalData.GetPlayerCoinIsEnough(indexPlayer) == true)
             {
                 if (GetIsActivePlayer(indexPlayer) == true)
                 {

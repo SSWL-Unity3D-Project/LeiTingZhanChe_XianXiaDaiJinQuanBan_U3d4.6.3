@@ -589,32 +589,132 @@ public class SSPingJiUI : MonoBehaviour
 
             if (m_PlayerPingJiLevel < chouJiangPingJi)
             {
-                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                //玩家分数不足,无法进行抽奖.
+                //玩家币值是否足够.
+                bool isPlayerCoinEnough = XKGlobalData.GetPlayerCoinIsEnough(m_IndexPlayer);
+                if (isPlayerCoinEnough == true)
                 {
-                    //此时需要对微信玩家进行的游戏时长信息发送给红点点服务器.
-                    pcvr.GetInstance().m_HongDDGamePadInterface.SetPlayerEndGameTime(m_IndexPlayer);
-                }
+                    //玩家币值充足.
+                    bool isCanXuMing = true;
+                    if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                    {
+                        //当前机位是否可以续命.
+                        isCanXuMing = XKGlobalData.GetInstance().m_SSGameXuMingData.GetIsCanXuMing(m_IndexPlayer);
+                    }
 
-                //设置玩家状态信息.
-                XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
-                //玩家评级过低,显示倒计时界面.
-                DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
-                if (daoJiShiCom != null)
-                {
-                    daoJiShiCom.StartPlayDaoJiShi();
-                }
+                    if (isCanXuMing == true)
+                    {
+                        //玩家可以续命.
+                        if (XkGameCtrl.GetIsActivePlayer(m_IndexPlayer) == true)
+                        {
+                            //玩家首次GG之后,没有设置信息.
+                            //设置玩家状态信息.
+                            XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
+                        }
 
-                if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                {
-                    //删除玩家评级界面.
-                    SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
-                }
+                        //是否可以继续进行免费游戏.
+                        bool isCanMianFeiPlayGame = false;
+                        if (XKGlobalData.GetInstance() != null)
+                        {
+                            isCanMianFeiPlayGame = XKGlobalData.GetInstance().GetIsCanMianFeiPlayGame(m_IndexPlayer);
+                        }
 
-                SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(m_IndexPlayer);
-                if (playerScoreManage != null)
+                        if (isCanMianFeiPlayGame == false)
+                        {
+                            //玩家不可以继续进行免费游戏.
+                            //玩家币值充足,需要对微信用户进行扣费.
+                            if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                            {
+                                //此时需要对微信付费玩家进行红点点账户扣费.
+                                pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(m_IndexPlayer);
+                            }
+
+                            //玩家付费激活游戏.
+                            if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                            {
+                                //发送玩家付费激活游戏的登录信息给服务器.
+                                pcvr.GetInstance().m_HongDDGamePadInterface.SendPlayerFuFeiActiveGameInfoToServer(m_IndexPlayer);
+                            }
+                        }
+                        else
+                        {
+                            //玩家可以继续进行免费游戏.
+                            if (pcvr.GetInstance() != null && pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                            {
+                                //发送玩家首次免费游戏登录信息给服务器.
+                                pcvr.GetInstance().m_HongDDGamePadInterface.SendPlayerShouCiMianFeiInfoToServer(m_IndexPlayer);
+                            }
+                            //减少玩家免费次数.
+                            XKGlobalData.GetInstance().SubMianFeiNum(m_IndexPlayer);
+                        }
+
+                        //当前机位续命一次.
+                        if (XKGlobalData.GetInstance().m_SSGameXuMingData != null)
+                        {
+                            XKGlobalData.GetInstance().m_SSGameXuMingData.AddXuMingCount(m_IndexPlayer);
+                        }
+                    }
+
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        //此时需要对微信玩家进行的游戏时长信息发送给红点点服务器.
+                        pcvr.GetInstance().m_HongDDGamePadInterface.SetPlayerEndGameTime(m_IndexPlayer);
+                    }
+
+                    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                    {
+                        //删除玩家评级界面.
+                        SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
+                    }
+
+                    SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(m_IndexPlayer);
+                    if (playerScoreManage != null)
+                    {
+                        //当删除玩家评级界面的同时重置距玩家还差多少分数.
+                        playerScoreManage.OnRemovePlayerPingJiPanel();
+                    }
+                }
+                else
                 {
-                    //当删除玩家评级界面的同时重置距玩家还差多少分数.
-                    playerScoreManage.OnRemovePlayerPingJiPanel();
+                    //玩家币值不足.
+                    //玩家币值不足,需要对微信用户进行扣费.
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        if (pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerIsFuFeiActiveGame(m_IndexPlayer) == true)
+                        {
+                            //付费激活游戏的玩家.
+                            //此时需要对微信付费玩家进行红点点账户扣费.
+                            pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(m_IndexPlayer);
+                        }
+                    }
+
+                    if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                    {
+                        //此时需要对微信玩家进行的游戏时长信息发送给红点点服务器.
+                        pcvr.GetInstance().m_HongDDGamePadInterface.SetPlayerEndGameTime(m_IndexPlayer);
+                    }
+
+                    //设置玩家状态信息.
+                    XkGameCtrl.SetActivePlayer(m_IndexPlayer, false);
+                    //玩家评级过低,显示倒计时界面.
+                    DaoJiShiCtrl daoJiShiCom = DaoJiShiCtrl.GetInstance(m_IndexPlayer);
+                    if (daoJiShiCom != null)
+                    {
+                        daoJiShiCom.StartPlayDaoJiShi();
+                    }
+
+                    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                    {
+                        //删除玩家评级界面.
+                        SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerPingJiUI(m_IndexPlayer);
+                    }
+
+                    SSPlayerScoreManage playerScoreManage = SSPlayerScoreManage.GetInstance(m_IndexPlayer);
+                    if (playerScoreManage != null)
+                    {
+                        //当删除玩家评级界面的同时重置距玩家还差多少分数.
+                        playerScoreManage.OnRemovePlayerPingJiPanel();
+                    }
                 }
 
                 //if (SSUIRoot.GetInstance().m_GameUIManage != null)
