@@ -181,7 +181,7 @@ public class SSDaiJinQuanXuanTiao : MonoBehaviour
     float m_TimeLastDaoJiShi = 0f;
     internal void InitTimeInfo(int timeVal)
     {
-        SSDebug.Log("InitTimeInfo -> timeVal ============================== " + timeVal);
+        //SSDebug.Log("InitTimeInfo -> timeVal ============================== " + timeVal);
         m_DaoJiShiVal = timeVal;
         m_TimeLastDaoJiShi = Time.time;
         ShowTimeNum(m_DaoJiShiVal);

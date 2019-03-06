@@ -52,10 +52,16 @@ public class BuJiBaoCtrl : MonoBehaviour {
 	bool IsDeath;
 	bool IsDelayDestroy;
 	bool IsSpawnDaoJu;
-	bool IsMoveOverDaoJuByItween;
+    /// <summary>
+    /// 道具是否按照ITween运动结束.
+    /// </summary>
+	bool IsMoveOverDaoJuByItween = false;
 	float TimeCheckDis;
 	Transform AimPlayerTr;
 	Transform DaoJuTr;
+    /// <summary>
+    /// 道具是否运动到玩家身边.
+    /// </summary>
 	bool IsMoveOverDaoJuToPlayer;
 	BoxCollider BoxCol;
     Rigidbody m_Rigibody;
@@ -80,12 +86,12 @@ public class BuJiBaoCtrl : MonoBehaviour {
 
         if (XkGameCtrl.GetInstance().m_GamePlayerAiData.IsActiveAiPlayer == true)
         {
-            //没有玩家激活游戏时.
+            //没有玩家激活游戏时不去进行判断.
             if (Time.frameCount % 10 == 0)
             {
                 if (m_Rigibody != null && m_Rigibody.isKinematic == false)
                 {
-                    m_Rigibody.isKinematic = true;
+                    SetBuJiBaoRigbody(true);
                 }
 
                 if (BoxCol != null && BoxCol.isTrigger == false)
@@ -97,25 +103,35 @@ public class BuJiBaoCtrl : MonoBehaviour {
         }
         else
         {
-            if (Time.frameCount % 10 == 0)
+            if (!IsMoveOverDaoJuByItween && IsSpawnDaoJu)
             {
-                if (BoxCol != null && BoxCol.isTrigger == true)
+                //击爆npc掉落下的道具在以ITween运动没有结束之前不进行检测.
+                return;
+            }
+            else
+            {
+                if (Time.frameCount % 10 == 0)
                 {
-                    BoxCol.isTrigger = false;
-                }
+                    if (BoxCol != null && BoxCol.isTrigger == true)
+                    {
+                        BoxCol.isTrigger = false;
+                    }
 
-                if (m_Rigibody != null && m_Rigibody.isKinematic == true)
-                {
-                    m_Rigibody.isKinematic = false;
+                    if (m_Rigibody != null && m_Rigibody.isKinematic == true)
+                    {
+                        SetBuJiBaoRigbody(false);
+                    }
                 }
             }
         }
 
-        if (IsHiddenDaoJuTr) {
+        if (IsHiddenDaoJuTr)
+        {
 			return;
 		}
 
-		if (!IsOpenCiLi) {
+		if (!IsOpenCiLi)
+        {
 			return;
 		}
 		CheckPlayerDistance();
@@ -127,17 +143,25 @@ public class BuJiBaoCtrl : MonoBehaviour {
 	static Transform CamTr;
 	void CheckCameraDis()
 	{
-		if (Time.time - TimeLastCamDis < 1f) {
+		if (Time.time - TimeLastCamDis < 1f)
+        {
 			return;
 		}
 		TimeLastCamDis = Time.time;
 
-		if (CamTr == null) {
+		if (CamTr == null)
+        {
 			CamTr = Camera.main == null ? null : Camera.main.transform;
 			return;
-		}
+        }
 
-		bool isHiddenDaoJu = false;
+        if (!IsMoveOverDaoJuByItween && IsSpawnDaoJu)
+        {
+            //击爆npc掉落下的道具在以ITween运动没有结束之前不进行检测.
+            return;
+        }
+
+        bool isHiddenDaoJu = false;
 		Vector3 posA = DaoJuTr.position;
 		Vector3 posB = CamTr.position;
 		posA.y = posB.y = 0f;
@@ -152,8 +176,11 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		}
 
 		IsHiddenDaoJuTr = isHiddenDaoJu;
-		Transform childTr = DaoJuTr.GetChild(0);
-		childTr.gameObject.SetActive(!isHiddenDaoJu);
+        if (DaoJuTr.childCount >= 0)
+        {
+            Transform childTr = DaoJuTr.GetChild(0);
+            childTr.gameObject.SetActive(!isHiddenDaoJu);
+        }
 	}
 
     /// <summary>
@@ -432,7 +459,7 @@ public class BuJiBaoCtrl : MonoBehaviour {
     {
         if (rigidbody != null)
         {
-            rigidbody.isKinematic = true;
+            SetBuJiBaoRigbody(true);
         }
         transform.position = new Vector3(-10000f, -10000f, -10000f);
         yield return new WaitForSeconds(60f * 10f);
@@ -440,8 +467,8 @@ public class BuJiBaoCtrl : MonoBehaviour {
         transform.position = m_DaoJuPosOld;
         if (rigidbody != null)
         {
-            rigidbody.isKinematic = false;
-            rigidbody.useGravity = true;
+            SetBuJiBaoRigbody(false);
+            SetRigbodyUseGravity(true);
         }
 
         if (BoxCol != null)
@@ -473,93 +500,221 @@ public class BuJiBaoCtrl : MonoBehaviour {
 		}
 	}
 
+    void SetRigbodyUseGravity(bool isUseGravity)
+    {
+        if (rigidbody == null)
+        {
+            return;
+        }
+        rigidbody.useGravity = isUseGravity;
+        //if (IsSpawnDaoJu == true)
+        //{
+        //    SSDebug.LogWarning("SetRigbodyUseGravity -> daoJuName ================== " + name + ", isUseGravity == " + isUseGravity);
+        //}
+    }
+
 	void SetBuJiBaoRigbody(bool isKine)
 	{
 		if (rigidbody == null) {
 			return;
 		}
 		rigidbody.isKinematic = isKine;
-	}
+        //if (IsSpawnDaoJu == true)
+        //{
+        //    SSDebug.LogWarning("SetBuJiBaoRigbody -> daoJuName ================== " + name + ", isKine == " + isKine);
+        //}
+    }
 
 	public void MoveDaoJuToPoint(Transform trEndPoint)
 	{
-		SetBuJiBaoRigbody(true);
-		Vector3 endPos = trEndPoint.position;
-		Vector3 startPos = trEndPoint.position + Vector3.up * 2f;
-		Vector3 hitForward = Vector3.down;
-		//Vector3 startPos = trEndPoint.position - trEndPoint.forward * 2f; //test.
-		//Vector3 hitForward = trEndPoint.forward; //test.
-		RaycastHit hit;
-		if (Physics.Raycast(startPos, hitForward, out hit, 50f, XkGameCtrl.GetInstance().LandLayer)) {
-			endPos = hit.point + Vector3.up * 0.5f;
-		}
-
-		Vector3 posA = trEndPoint.position;
-		Vector3 posB = transform.position;
-		posA.y = posB.y = 0f;
-		float paoDanMVDis = Vector3.Distance(posA, posB);
-		float lobHeight = BuJiBaoGDKey * paoDanMVDis + 0.5f;
-		float lobTime = DaoJuFlyTime;
-		iTween.MoveBy(DaoJuCore, iTween.Hash("y", lobHeight,
-		                                    "time", lobTime * 0.5f,
-		                                    "easeType", iTween.EaseType.easeOutQuad));
-		iTween.MoveBy(DaoJuCore, iTween.Hash("y", -lobHeight,
-		                                    "time", lobTime * 0.5f,
-		                                    "delay", lobTime * 0.5f,
-		                                    "easeType", iTween.EaseType.easeInCubic));
-		iTween.MoveTo(gameObject, iTween.Hash("position", endPos,
-		                                   "time", lobTime,
-		                                   "easeType", iTween.EaseType.linear,
-		                                   "oncomplete", "MoveDaoJuOnCompelteITween"));
+        if (BuJiBao == BuJiBaoType.BigYiLiaoBaoDJ || BuJiBao == BuJiBaoType.YiLiaoBaoDJ)
+        {
+            //使血包道具向上运动.
+            MoveDaoJuToHeightPos();
+        }
+        else
+        {
+            //道具以抛物线的方式运动到一个点.
+            MoveDaoJuToPointByPaoWuXian(trEndPoint);
+        }
 	}
 
-	void MoveDaoJuOnCompelteITween()
-	{
-		IsMoveOverDaoJuByItween = true;
-		SetBuJiBaoRigbody(false);
-	}
-	
-	public void SetIsSpawnDaoJu()
+    /// <summary>
+    /// 使道具以抛物线的方式运动到一个点.
+    /// </summary>
+    void MoveDaoJuToPointByPaoWuXian(Transform trEndPoint)
+    {
+        if (trEndPoint == null)
+        {
+            return;
+        }
+        SetBuJiBaoRigbody(true);
+        Vector3 endPos = trEndPoint.position;
+        Vector3 startPos = trEndPoint.position + Vector3.up * 2f;
+        Vector3 hitForward = Vector3.down;
+        //Vector3 startPos = trEndPoint.position - trEndPoint.forward * 2f; //test.
+        //Vector3 hitForward = trEndPoint.forward; //test.
+        RaycastHit hit;
+        if (Physics.Raycast(startPos, hitForward, out hit, 50f, XkGameCtrl.GetInstance().LandLayer))
+        {
+            endPos = hit.point + Vector3.up * 0.5f;
+        }
+
+        Vector3 posA = trEndPoint.position;
+        Vector3 posB = transform.position;
+        posA.y = posB.y = 0f;
+        float paoDanMVDis = Vector3.Distance(posA, posB);
+        float lobHeight = BuJiBaoGDKey * paoDanMVDis + 0.5f;
+        float lobTime = DaoJuFlyTime;
+        iTween.MoveBy(DaoJuCore, iTween.Hash("y", lobHeight,
+                                            "time", lobTime * 0.5f,
+                                            "easeType", iTween.EaseType.easeOutQuad));
+        iTween.MoveBy(DaoJuCore, iTween.Hash("y", -lobHeight,
+                                            "time", lobTime * 0.5f,
+                                            "delay", lobTime * 0.5f,
+                                            "easeType", iTween.EaseType.easeInCubic));
+        iTween.MoveTo(gameObject, iTween.Hash("position", endPos,
+                                           "time", lobTime,
+                                           "easeType", iTween.EaseType.linear,
+                                           "oncomplete", "OnEndMoveDaoJuToPointByPaoWuXian"));
+    }
+    
+    /// <summary>
+    /// 当道具以抛物线形式运动结束.
+    /// </summary>
+    void OnEndMoveDaoJuToPointByPaoWuXian()
+    {
+        IsMoveOverDaoJuByItween = true;
+        SetBuJiBaoRigbody(false);
+    }
+
+    /// <summary>
+    /// 使血包道具向上运动.
+    /// </summary>
+    void MoveDaoJuToHeightPos()
+    {
+        //SSDebug.LogWarning("MoveDaoJuToHeightPos -> daoJuName ================== " + name);
+        SetBuJiBaoRigbody(true);
+        Vector3 endPos = transform.position;
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_XueBaoDaoJuData != null)
+        {
+            //使血包道具向上运动.
+            endPos += new Vector3(0f, XkGameCtrl.GetInstance().m_XueBaoDaoJuData.m_XueBaoFlyHeight, 0f);
+        }
+
+        Vector3[] path = new Vector3[2];
+        path[0] = transform.position;
+        path[1] = endPos;
+        iTween.MoveTo(gameObject, iTween.Hash("path", path,
+                                          "time", DaoJuFlyTime,
+                                          "orienttopath", false,
+                                          "easeType", iTween.EaseType.linear,
+                                          "oncomplete", "OnEndMoveDaoJuToHeightPos"));
+    }
+
+    /// <summary>
+    /// 当道具向上运动结束.
+    /// </summary>
+    void OnEndMoveDaoJuToHeightPos()
+    {
+        StartCoroutine(DelayCloseMoveDaoJuToHeightPosByITween());
+    }
+
+    /// <summary>
+    /// 延迟关闭道具向上运动的状态.
+    /// </summary>
+    IEnumerator DelayCloseMoveDaoJuToHeightPosByITween()
+    {
+        float time = 1f;
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_XueBaoDaoJuData != null)
+        {
+            //血包道具在空中停留的时间.
+            time = XkGameCtrl.GetInstance().m_XueBaoDaoJuData.m_XueBaoTingLiuTime;
+        }
+        yield return new WaitForSeconds(time);
+
+        IsMoveOverDaoJuByItween = true;
+        SetBuJiBaoRigbody(false);
+    }
+
+    PlayerEnum m_PlayerIndex = PlayerEnum.Null;
+    public void SetIsSpawnDaoJu(PlayerEnum indexPlayer)
 	{
 		IsSpawnDaoJu = true;
         if (BuJiBao == BuJiBaoType.BigYiLiaoBaoDJ || BuJiBao == BuJiBaoType.YiLiaoBaoDJ)
         {
-            //动态产生的医疗包道具关闭其磁力开关。
-            IsOpenCiLi = false;
+            //动态产生的医疗包道具关闭其磁力开关.
+            //IsOpenCiLi = false;
+            m_PlayerIndex = indexPlayer;
+            OpenXueBaoDaoJuMoveToPlayer(indexPlayer);
         }
-	}
+    }
 
 	void CheckPlayerDistance()
 	{
-		if (Time.realtimeSinceStartup - TimeCheckDis < 0.2f) {
+		if (Time.realtimeSinceStartup - TimeCheckDis < 0.2f)
+        {
 			return;
 		}
 		TimeCheckDis = Time.realtimeSinceStartup;
 
-		if (!IsMoveOverDaoJuByItween && IsSpawnDaoJu) {
+		if (!IsMoveOverDaoJuByItween && IsSpawnDaoJu)
+        {
 			return;
 		}
 
-		if (AimPlayerTr != null) {
+		if (AimPlayerTr != null)
+        {
 			return;
 		}
 
-		Transform playerTr = null;
+        if (IsSpawnDaoJu == true && IsMoveOverDaoJuByItween == false)
+        {
+            //击爆npc掉落的道具按照Itween没有运动结束时不允许进行检测.
+            return;
+        }
+        
+        if (IsSpawnDaoJu == true)
+        {
+            //击爆npc掉落的道具.
+            if (BuJiBao == BuJiBaoType.BigYiLiaoBaoDJ || BuJiBao == BuJiBaoType.YiLiaoBaoDJ)
+            {
+                //动态产生的医疗包道具直接飞向玩家.
+                if (XKPlayerMoveCtrl.GetInstance(m_PlayerIndex) != null)
+                {
+                    AimPlayerTr = XKPlayerMoveCtrl.GetInstance(m_PlayerIndex).transform;
+                    SetBuJiBaoRigbody(true);
+                    SetRigbodyUseGravity(false);
+
+                    if (BoxCol != null)
+                    {
+                        BoxCol.enabled = false;
+                    }
+                    return;
+                }
+            }
+        }
+
+        Transform playerTr = null;
 		Vector3 posA = Vector3.zero;
 		Vector3 posB = DaoJuTr.position;
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++)
+        {
             if (XKPlayerGlobalDt.PlayerMoveList == null && XKPlayerGlobalDt.PlayerMoveList.Count <= i)
             {
                 break;
             }
 
-			if (XKPlayerGlobalDt.PlayerMoveList == null || XKPlayerGlobalDt.PlayerMoveList[i] == null) {
+			if (XKPlayerGlobalDt.PlayerMoveList == null || XKPlayerGlobalDt.PlayerMoveList[i] == null)
+            {
 				continue;
 			}
 
-			if (XKPlayerGlobalDt.PlayerMoveList[i].GetIsDeathPlayer()) {
+			if (XKPlayerGlobalDt.PlayerMoveList[i].GetIsDeathPlayer())
+            {
 				continue;
 			}
+
 			playerTr = XKPlayerGlobalDt.PlayerMoveList[i].transform;
 			posA = playerTr.position;
 			posA.y = posB.y = 0f;
@@ -570,33 +725,45 @@ public class BuJiBaoCtrl : MonoBehaviour {
 
 			AimPlayerTr = XKPlayerGlobalDt.PlayerMoveList[i].transform;
 			SetBuJiBaoRigbody(true);
-			if (rigidbody != null) {
-				rigidbody.useGravity = false;
-			}
+            SetRigbodyUseGravity(false);
 
 			if (BoxCol != null) {
 				BoxCol.enabled = false;
 			}
+            break;
 		}
 	}
 
+    void OpenXueBaoDaoJuMoveToPlayer(PlayerEnum indexPlayer)
+    {
+        if (XKPlayerMoveCtrl.GetInstance(indexPlayer) != null)
+        {
+            AimPlayerTr = XKPlayerMoveCtrl.GetInstance(indexPlayer).transform;
+        }
+    }
+
 	void MoveDaoJuToPlayer()
 	{
-		if (IsMoveOverDaoJuToPlayer) {
+		if (IsMoveOverDaoJuToPlayer)
+        {
 			return;
 		}
 
-		if (AimPlayerTr == null) {
+		if (AimPlayerTr == null)
+        {
 			return;
 		}
+
 		Vector3 dirVal = AimPlayerTr.position - DaoJuTr.position;
 		dirVal = dirVal.normalized * XKDaoJuGlobalDt.GetInstance().CiLiDaoJuSpeed * Time.deltaTime;
-		DaoJuTr.Translate(dirVal, Space.World);
-		if (Vector3.Distance(AimPlayerTr.position, DaoJuTr.position) <= 0.5f) {
+        DaoJuTr.Translate(dirVal, Space.World);
+        if (Vector3.Distance(AimPlayerTr.position, DaoJuTr.position) <= 0.5f)
+        {
 			//Debug.Log("Unity:"+"MoveDaoJuToPlayer...");
 			IsMoveOverDaoJuToPlayer = true;
 			XKPlayerMoveCtrl script = AimPlayerTr.GetComponent<XKPlayerMoveCtrl>();
-			if (script == null) {
+			if (script == null)
+            {
 				return;
 			}
 			RemoveBuJiBao(script.PlayerIndex);

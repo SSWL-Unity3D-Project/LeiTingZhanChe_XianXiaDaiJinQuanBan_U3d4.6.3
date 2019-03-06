@@ -115,7 +115,7 @@ public class XKNpcSpawnDaoJu : SSGameMono
                 if (buJiBao != null)
                 {
                     buJiBao.IsCaiPiaoDaoJu = true;
-                    buJiBao.SetIsSpawnDaoJu();
+                    buJiBao.SetIsSpawnDaoJu(indexPlayer);
                     buJiBao.DelayRemoveSelf(indexPlayer);
                 }
 
@@ -204,10 +204,11 @@ public class XKNpcSpawnDaoJu : SSGameMono
             {
 				continue;
 			}
-			GameObject daoJuObj = (GameObject)Instantiate(DaoJuArray[i], transform.position, transform.rotation);
+
+            GameObject daoJuObj = (GameObject)Instantiate(DaoJuArray[i], transform.position, transform.rotation);
 			BuJiBaoCtrl buJiScript = daoJuObj.GetComponent<BuJiBaoCtrl>();
-			buJiScript.SetIsSpawnDaoJu();
-			buJiScript.MoveDaoJuToPoint(trEndPoint);
+			buJiScript.SetIsSpawnDaoJu(playerIndex);
+            buJiScript.MoveDaoJuToPoint(trEndPoint);
 		}
 	}
 
@@ -248,7 +249,8 @@ public class XKNpcSpawnDaoJu : SSGameMono
                     if (buJiScript != null)
                     {
                         isCreate = true;
-                        buJiScript.SetIsSpawnDaoJu();
+                        buJiScript.SetIsSpawnDaoJu(playerIndex);
+                        //血包道具自动吸附到玩家位置.
                         buJiScript.MoveDaoJuToPoint(trEndPoint);
                     }
                 }

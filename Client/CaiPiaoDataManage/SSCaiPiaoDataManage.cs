@@ -494,12 +494,12 @@ public class SSCaiPiaoDataManage : SSGameMono
             //}
             SuiJiDaoJuDeCai += suiJiDaoJuDeCaiFenPei;
             JPBossDeCai += (JPBossChuPiaoLv * coinStart);
-            Debug.Log("Unity: FenPeiDeCaiVal -> coinStart == " + coinStart
-                + ", ZhanCheDeCai_20 == " + ZhanCheDeCai_01
-                + ", ZhanCheDeCai_50 == " + ZhanCheDeCai_02
-                + ", SuiJiDaoJuDeCai == " + SuiJiDaoJuDeCai
-                + ", JPBossDeCai == " + JPBossDeCai
-                + ", isPlayerXuBi ==== " + isPlayerXuBi);
+            //Debug.Log("Unity: FenPeiDeCaiVal -> coinStart == " + coinStart
+            //    + ", ZhanCheDeCai_20 == " + ZhanCheDeCai_01
+            //    + ", ZhanCheDeCai_50 == " + ZhanCheDeCai_02
+            //    + ", SuiJiDaoJuDeCai == " + SuiJiDaoJuDeCai
+            //    + ", JPBossDeCai == " + JPBossDeCai
+            //    + ", isPlayerXuBi ==== " + isPlayerXuBi);
         }
 
         /// <summary>
@@ -1082,7 +1082,7 @@ public class SSCaiPiaoDataManage : SSGameMono
 
             deCaiVal = (int)(coinStart * xuBiChuPiaoLvTmp * zhengChangChuPiaoLvTmp);
             ZhengChangDeCai += deCaiVal;
-            Debug.Log("Unity: AddPlayerZhengChangDeCai -> ZhengChangDeCai ==== " + ZhengChangDeCai + ", indexPlayer == " + IndexPlayer);
+            //Debug.Log("Unity: AddPlayerZhengChangDeCai -> ZhengChangDeCai ==== " + ZhengChangDeCai + ", indexPlayer == " + IndexPlayer);
             
             if (XkGameCtrl.GetInstance().m_PlayerJiChuCaiPiaoData != null)
             {

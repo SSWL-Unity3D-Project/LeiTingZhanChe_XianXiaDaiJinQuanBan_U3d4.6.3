@@ -939,11 +939,11 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                             XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SubGameDeCaiValByDeCaiState(playerSt, deCaiType,
                                 SSCaiPiaoDataManage.SuiJiDaoJuState.BaoXiang, NpcScript.m_DaiJinQuanState);
                         }
-                        else
-                        {
+                        //else
+                        //{
                             //被Ai坦克击爆的代金券npc不允许出彩.
-                            SSDebug.Log("The DaiJinQuan was killed by AiTank");
-                        }
+                            //SSDebug.Log("The DaiJinQuan was killed by AiTank");
+                        //}
                     }
                 }
                 else

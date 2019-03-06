@@ -90,6 +90,27 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     [Range(0, 600)]
     public float m_PlayerNoActionMinTime = 15f;
+    /// <summary>
+    /// 血包道具数据.
+    /// </summary>
+    [System.Serializable]
+    public class XueBaoDaoJuData
+    {
+        /// <summary>
+        /// 血包道具向上飞的高度.
+        /// </summary>
+        [Range(1, 600)]
+        public float m_XueBaoFlyHeight = 5f;
+        /// <summary>
+        /// 血包道具在空中停留的时间.
+        /// </summary>
+        [Range(1, 600)]
+        public float m_XueBaoTingLiuTime = 1f;
+    }
+    /// <summary>
+    /// 血包道具的配置参数.
+    /// </summary>
+    public XueBaoDaoJuData m_XueBaoDaoJuData;
     bool _IsDisplayBossDeathYanHua = false;
     /// <summary>
     /// 是否在显示Boss爆炸粒子和玩家得奖烟花.

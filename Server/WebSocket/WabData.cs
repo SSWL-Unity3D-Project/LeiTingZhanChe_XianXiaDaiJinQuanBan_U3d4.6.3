@@ -190,9 +190,10 @@ public class WabData
         if (ws.InternalRequest.Response != null)
             errorMsg = string.Format("Status Code from Server: {0} and Message: {1}", ws.InternalRequest.Response.StatusCode, ws.InternalRequest.Response.Message);
 
-        SSDebug.LogWarning("WabData::OnError -> " + string.Format("-An error occured: {0}", ex != null ? ex.Message : "Unknown Error " + errorMsg)
+        SSDebug.LogWarning("WebData::OnError -> " + string.Format("-An error occured: {0}", ex != null ? ex.Message : "Unknown Error " + errorMsg)
             + ", time == " + Time.time.ToString("f2"));
 
+        //Unity: WebData::OnError-> - An error occured: Unknown Error Status Code from Server: 101 and Message: , time == 567.88
         if (ex != null)
         {
             switch (ex.Message)
