@@ -105,8 +105,9 @@ public class XKGlobalData
 
         if (GameNeedCoin < coinCur)
         {
-            fuHuoCiShu = (coinCur - GameNeedCoin) / GameNeedCoin;
+            fuHuoCiShu = coinCur / GameNeedCoin;
         }
+        //SSDebug.LogWarning("GetPlayerFuHuoCiShuInfo -> indexPlayer == " + indexPlayer + ", fuHuoCiShu == " + fuHuoCiShu);
         return fuHuoCiShu;
     }
 
