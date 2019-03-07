@@ -3,6 +3,51 @@
 public class SSChouJiangTiShi : MonoBehaviour
 {
     /// <summary>
+    /// 抽奖提示数据.
+    /// </summary>
+    [System.Serializable]
+    public class ChouJiangTiShiData
+    {
+        /// <summary>
+        /// 复活X图片.
+        /// </summary>
+        public GameObject fuHuoImg;
+        /// <summary>
+        /// 复活数字控制.
+        /// </summary>
+        public SSGameNumUI fuHuoNumUi;
+        /// <summary>
+        /// 任务卡图片.
+        /// </summary>
+        public GameObject renWuKaImg;
+        internal void ShowFuHuoInfo(PlayerEnum indexPlayer)
+        {
+            int fuHuoCiShu = XKGlobalData.GetPlayerFuHuoCiShuInfo(indexPlayer);
+            bool isActiveFuHuoImg = fuHuoCiShu > 0 ? true : false;
+            if (fuHuoImg != null)
+            {
+                fuHuoImg.SetActive(isActiveFuHuoImg);
+            }
+
+            if (renWuKaImg != null)
+            {
+                renWuKaImg.SetActive(!isActiveFuHuoImg);
+            }
+
+            if (isActiveFuHuoImg == true)
+            {
+                if (fuHuoNumUi != null)
+                {
+                    fuHuoNumUi.ShowNumUI(fuHuoCiShu);
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// 抽奖提示数据.
+    /// </summary>
+    public ChouJiangTiShiData m_ChouJiangTiShiDt;
+    /// <summary>
     /// 位移时间.
     /// </summary>
     [Range(0.1f, 10f)]
@@ -19,8 +64,13 @@ public class SSChouJiangTiShi : MonoBehaviour
     /// <summary>
     /// 显示抽奖提示.
     /// </summary>
-    public void ShowChouJiangTiShi(Vector3 startPos)
+    public void ShowChouJiangTiShi(PlayerEnum indexPlayer, Vector3 startPos)
     {
+        if (m_ChouJiangTiShiDt != null)
+        {
+            m_ChouJiangTiShiDt.ShowFuHuoInfo(indexPlayer);
+        }
+
         startPos.y += XKDaoJuGlobalDt.GetInstance().DaoJuMaoZiPY;
         transform.localPosition = startPos;
         transform.localEulerAngles = Vector3.zero;

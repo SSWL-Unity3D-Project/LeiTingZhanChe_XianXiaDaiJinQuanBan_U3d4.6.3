@@ -72,6 +72,44 @@ public class XKGlobalData
         return coinCur >= GameNeedCoin ? true : false;
     }
 
+    /// <summary>
+    /// 获取玩家复活次数信息.
+    /// </summary>
+    public static int GetPlayerFuHuoCiShuInfo(PlayerEnum indexPlayer)
+    {
+        int fuHuoCiShu = 0;
+        int coinCur = -1;
+        switch (indexPlayer)
+        {
+            case PlayerEnum.PlayerOne:
+                {
+                    coinCur = CoinPlayerOne;
+                    break;
+                }
+            case PlayerEnum.PlayerTwo:
+                {
+                    coinCur = CoinPlayerTwo;
+                    break;
+                }
+            case PlayerEnum.PlayerThree:
+                {
+                    coinCur = CoinPlayerThree;
+                    break;
+                }
+            case PlayerEnum.PlayerFour:
+                {
+                    coinCur = CoinPlayerFour;
+                    break;
+                }
+        }
+
+        if (GameNeedCoin < coinCur)
+        {
+            fuHuoCiShu = (coinCur - GameNeedCoin) / GameNeedCoin;
+        }
+        return fuHuoCiShu;
+    }
+
     static int _CoinPlayerOne = 0;
     public static int CoinPlayerOne
     {
