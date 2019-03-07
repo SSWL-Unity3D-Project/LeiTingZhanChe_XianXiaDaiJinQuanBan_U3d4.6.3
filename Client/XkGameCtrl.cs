@@ -586,7 +586,7 @@ public class XkGameCtrl : SSGameMono
 #endif
             SSDebug.Log("GameStart time ============ " + System.DateTime.Now.ToString());
             SSDebug.Log("GameVersion ============ " + XKGameVersionCtrl.GameVersion);
-            SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
+            //SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
             Application.runInBackground = true;
             InitCheckLoadingMovieScene();
 
@@ -2383,7 +2383,7 @@ public class XkGameCtrl : SSGameMono
     /// </summary>
     public static void OnHealthOverPlayer(PlayerEnum indexPlayer)
     {
-        SSDebug.Log("OnHealthOverPlayer.................... indexPlayer ==== " + indexPlayer);
+        //SSDebug.Log("OnHealthOverPlayer.................... indexPlayer ==== " + indexPlayer);
         //CheckPlayerActiveNum();
         SetIsDeathPlayer(indexPlayer, true);
         XKPlayerMoveCtrl.ResetZhanCheDaiJinQuanCount(indexPlayer);
@@ -2472,7 +2472,7 @@ public class XkGameCtrl : SSGameMono
 
     public static void SetActivePlayerOne(bool isActive)
 	{
-        Debug.Log("Unity: SetActivePlayerOne -> isActive ======== " + isActive);
+        //Debug.Log("Unity: SetActivePlayerOne -> isActive ======== " + isActive);
 		IsActivePlayerOne = isActive;
 		//pcvr.OpenAllPlayerFangXiangPanPower(PlayerEnum.PlayerOne);
 		CheckPlayerActiveNum(PlayerEnum.PlayerOne);

@@ -1691,7 +1691,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     internal void AddZhanCheDaiJinQuanCount()
     {
         m_ZhanCheDaiJinQuanCount++;
-        SSDebug.Log(PlayerIndex + "::AddZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
+        //SSDebug.Log(PlayerIndex + "::AddZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
     }
     
     internal int GetZhanCheDaiJinQuanCount()
@@ -1702,7 +1702,7 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     internal void ResetZhanCheDaiJinQuanCount()
     {
         m_ZhanCheDaiJinQuanCount = 0;
-        SSDebug.Log(PlayerIndex + "::ResetZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
+        //SSDebug.Log(PlayerIndex + "::ResetZhanCheDaiJinQuanCount -> m_ZhanCheDaiJinQuanCount ============= " + m_ZhanCheDaiJinQuanCount);
     }
 
     public static void ResetZhanCheDaiJinQuanCount(PlayerEnum indexPlayer)

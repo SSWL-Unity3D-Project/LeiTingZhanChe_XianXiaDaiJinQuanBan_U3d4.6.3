@@ -464,8 +464,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
             internal void SetIsMianFeiTiYanPlayer(bool isMianFeiTiYan)
             {
                 IsMianFeiTiYanPlayer = isMianFeiTiYan;
-                SSDebug.LogWarning("SetIsMianFeiTiYanPlayer -> isMianFeiTiYan =========================== " + isMianFeiTiYan
-                    + ", Index ==== " + Index);
+                //SSDebug.LogWarning("SetIsMianFeiTiYanPlayer -> isMianFeiTiYan =========================== " + isMianFeiTiYan
+                //    + ", Index ==== " + Index);
             }
             /// <summary>
             /// 是否在获取微信玩家的红点点游戏账户数据.
@@ -666,8 +666,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return;
             }
 
-            SSDebug.Log("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
-            SSDebug.LogWarning("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
+            //SSDebug.Log("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
+            //SSDebug.LogWarning("OnNeedSubPlayerMoney -> indexPlayer =============================== " + indexPlayer);
             GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
             if (playerDt != null)
             {
@@ -707,7 +707,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     isFuFeiPlayer = !playerDt.IsMianFeiTiYanPlayer;
                 }
             }
-            SSDebug.LogWarning("GetPlayerIsFuFeiActiveGame -> indexPlayer =============================== " + indexPlayer + ", isFuFeiPlayer == " + isFuFeiPlayer);
+            //SSDebug.LogWarning("GetPlayerIsFuFeiActiveGame -> indexPlayer =============================== " + indexPlayer + ", isFuFeiPlayer == " + isFuFeiPlayer);
             return isFuFeiPlayer;
         }
 
@@ -824,7 +824,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)
         {
             PlayerActiveState activeEnum = (PlayerActiveState)activeState;
-            SSDebug.Log("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
+            //SSDebug.Log("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
             //SSDebug.LogWarning("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
 
             PlayerEnum indexPlayer = (PlayerEnum)(index + 1);
@@ -959,7 +959,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                     //软件版本测试用,模拟微信手柄登陆.
                     SetGmWXloginDtGamePadType(index, GamePadType.Null);
                     SetGmWXloginDtIsLoginWX(index, true);
-                    Debug.Log("Unity: SetIndexPlayerActiveGameState -> index == " + index);
+                    //Debug.Log("Unity: SetIndexPlayerActiveGameState -> index == " + index);
                 }
                 //设置玩家开始游戏的时间.
                 SetPlayerStartGameTime(indexPlayer);
@@ -2369,7 +2369,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 return;
             }
-            SSDebug.LogWarning("SendPlayerShouCiMianFeiInfoToServer -> indexPlayer ============================ " + indexPlayer);
+            //SSDebug.LogWarning("SendPlayerShouCiMianFeiInfoToServer -> indexPlayer ============================ " + indexPlayer);
             //该玩家可以免费试玩游戏.
             //给玩家添加一个微信游戏币.
             //AddWeiXinGameCoinToPlayer(indexPlayer, 1);
@@ -2403,7 +2403,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             {
                 return;
             }
-            SSDebug.LogWarning("SendPlayerFuFeiActiveGameInfoToServer -> indexPlayer ============================ " + indexPlayer);
+            //SSDebug.LogWarning("SendPlayerFuFeiActiveGameInfoToServer -> indexPlayer ============================ " + indexPlayer);
 
             GamePlayerData playerDt = FindGamePlayerData(indexPlayer);
             if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
@@ -2749,8 +2749,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 return;
             }
 
-            Debug.Log("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
-            SSDebug.LogWarning("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
+            //Debug.Log("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
+            //SSDebug.LogWarning("OnReceivedWXPlayerHddPayData -> userId == " + userId + ", money == " + money + ", time == " + Time.time);
             if (money < m_GameCoinToMoney)
             {
                 //玩家红点点游戏平台的金额不足,应该去进行充值.

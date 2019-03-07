@@ -198,7 +198,7 @@ public class SSGameYuZhiCaiPiaoData
     /// </summary>
     void SetJPBossCaiPiao(int val)
     {
-        UnityEngine.Debug.Log("Unity: SetJPBossCaiPiao -> val ================ " + val);
+        //UnityEngine.Debug.Log("Unity: SetJPBossCaiPiao -> val ================ " + val);
         JPBossCaiPiaoVal = val;
     }
 
@@ -211,7 +211,7 @@ public class SSGameYuZhiCaiPiaoData
         int subVal = (int)(GetOldYuZhiCaiPiaoVal() * JPBossCaiPiaoBiLi * JPBossQuChuBiLi);
         if (JPBossCaiPiaoVal >= subVal)
         {
-            UnityEngine.Debug.Log("SubJPBossCaiPiaoVal -> subVal ============ " + subVal);
+            //UnityEngine.Debug.Log("SubJPBossCaiPiaoVal -> subVal ============ " + subVal);
             //对预制彩池进行数据更新.
             SubYuZhiCaiPiao(subVal);
             SetJPBossCaiPiao(JPBossCaiPiaoVal - subVal);

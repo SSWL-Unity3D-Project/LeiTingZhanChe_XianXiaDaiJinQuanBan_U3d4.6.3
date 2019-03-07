@@ -26,7 +26,7 @@ public class SSPlayerMianFeiData
             if (mianFeiXuMingNum > 0)
             {
                 mianFeiXuMingNum--;
-                SSDebug.LogWarning("SubMianFeiNum -> mianFeiNum ========================================== " + mianFeiXuMingNum);
+                //SSDebug.LogWarning("SubMianFeiNum -> mianFeiNum ========================================== " + mianFeiXuMingNum);
             }
         }
 
@@ -78,7 +78,7 @@ public class SSPlayerMianFeiData
                 {
                     mianFeiNum = 0;
                 }
-                SSDebug.LogWarning("SetMianFeiNum -> mianFeiNum == " + mianFeiNum + ", playerIndex == " + playerIndex);
+                //SSDebug.LogWarning("SetMianFeiNum -> mianFeiNum == " + mianFeiNum + ", playerIndex == " + playerIndex);
                 m_PlayerMianFeiData[indexVal].SetMianFeiNum(mianFeiNum);
             }
         }
@@ -99,7 +99,7 @@ public class SSPlayerMianFeiData
         {
             if (m_PlayerMianFeiData[indexVal] != null)
             {
-                SSDebug.LogWarning("SubMianFeiNum -> playerIndex ========================================== " + playerIndex);
+                //SSDebug.LogWarning("SubMianFeiNum -> playerIndex ========================================== " + playerIndex);
                 m_PlayerMianFeiData[indexVal].SubMianFeiNum();
             }
         }
@@ -125,7 +125,7 @@ public class SSPlayerMianFeiData
                 isCanPlay = m_PlayerMianFeiData[indexVal].GetIsCanMianFeiPlayGame();
             }
         }
-        SSDebug.LogWarning("GetIsCanMianFeiPlayGame -> playerIndex == " + playerIndex + ", isCanPlay == " + isCanPlay);
+        //SSDebug.LogWarning("GetIsCanMianFeiPlayGame -> playerIndex == " + playerIndex + ", isCanPlay == " + isCanPlay);
         return isCanPlay;
     }
 }

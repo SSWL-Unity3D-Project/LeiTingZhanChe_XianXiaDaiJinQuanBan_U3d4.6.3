@@ -70,7 +70,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                             valueStr2 = xe.GetAttribute(attribute2);
                             if (valueStr1 != null && valueStr1 != "" && valueStr2 != null && valueStr2 != "")
                             {
-                                SSDebug.Log("ReadGamePlayerData -> userId == " + valueStr1 + ", timeVal == " + valueStr2);
+                                //SSDebug.Log("ReadGamePlayerData -> userId == " + valueStr1 + ", timeVal == " + valueStr2);
                                 AddFreePlayGamePlayerInfo(System.Convert.ToInt32(valueStr1), System.Convert.ToDateTime(valueStr2));
                             }
                         }
@@ -402,7 +402,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         public void SToC_ReceiveGameConfigInfo(int args)
         {
-            SSDebug.LogWarning("SToC_ReceiveGameConfigInfo -> args ================ " + args);
+            //SSDebug.LogWarning("SToC_ReceiveGameConfigInfo -> args ================ " + args);
             //m_GameConfigData.MianFeiShiWanCount = Mathf.Clamp(args, 0, 1);
             m_GameConfigData.MianFeiShiWanCount = Mathf.Clamp(args, 0, 3); //最多3次免费机会.
         }

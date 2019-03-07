@@ -3,11 +3,7 @@
 public class XKGameVersionCtrl : MonoBehaviour
 {
     UILabel VersionLB;
-    /// <summary>
-    /// 修改内容:
-    /// 1.处理抽奖时会有透支放奖的bug.
-    /// </summary>
-    static string _GameVersion = "Version: 20190305.01";
+    static string _GameVersion = "Version: 20190307.01";
     public static string GameVersion
     {
         get

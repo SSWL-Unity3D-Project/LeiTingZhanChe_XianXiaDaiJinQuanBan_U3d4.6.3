@@ -454,7 +454,7 @@ public class SSBoxPostNet : MonoBehaviour
         }
         else
         {
-            Debug.Log("Unity:" + cmd + " -> GetData: " + getData.text);
+            //Debug.Log("Unity:" + cmd + " -> GetData: " + getData.text);
             switch (cmd)
             {
                 case PostCmd.GET_GAME_PAY_TIME:
@@ -463,7 +463,7 @@ public class SSBoxPostNet : MonoBehaviour
                         if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
                         {
                             //发送支付倒计时信息成功.
-                            SSDebug.Log("Send GAME_PAY_TIME to HddServer Success.");
+                            //SSDebug.Log("Send GAME_PAY_TIME to HddServer Success.");
                         }
                         else
                         {
@@ -1873,7 +1873,7 @@ public class SSBoxPostNet : MonoBehaviour
         //POST方法.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/client/memberLogin";
         //http://game.hdiandian.com/wxbackstage/client/memberLogin
-        SSDebug.Log("HttpSendPostUserLoginInfo -> url == " + url);
+        //SSDebug.Log("HttpSendPostUserLoginInfo -> url == " + url);
         
         PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, fuFeiStata);
         //"{\"gameCode\":1,\"screenCode\":10155,\"memberId\":94180}" //发送的消息.
@@ -2147,7 +2147,7 @@ public class SSBoxPostNet : MonoBehaviour
         //读取微信小程序二维码.
         if (ErWeiMaUI.GetInstance() != null)
         {
-            Debug.Log("Unity: Reading WeiXinXiaoChengXu ErWeiMa......");
+            //Debug.Log("Unity: Reading WeiXinXiaoChengXu ErWeiMa......");
             ErWeiMaUI.GetInstance().ReloadGameWXPadXiaoChengXuErWeiMa();
         }
         else
@@ -2214,10 +2214,10 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     void HttpSendGetServerTimeInfo()
     {
-        Debug.Log("Unity:" + "HttpSendGetServerTimeInfo...");
+        //Debug.Log("Unity:" + "HttpSendGetServerTimeInfo...");
         //GET方法.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/data/now";
-        Debug.Log("HttpSendGetServerTimeInfo -> url ==== " + url);
+        //Debug.Log("HttpSendGetServerTimeInfo -> url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.ServerTimeGet));
     }
 
@@ -2234,7 +2234,7 @@ public class SSBoxPostNet : MonoBehaviour
 
         //GET方法.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/memberAccount/info/" + userId.ToString();
-        Debug.Log("HttpSendGetPlayerPayData -> url ==== " + url);
+        //Debug.Log("HttpSendGetPlayerPayData -> url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.GET_HDD_PLAYER_PAY_DATA, userId));
     }
 
@@ -2418,7 +2418,7 @@ public class SSBoxPostNet : MonoBehaviour
             erWeiMaUI.mainTexture = texture;
             //保存图片.
             pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg = texture;
-            SSDebug.Log("ReloadWeiXinXiaoChengXuErWeiMa.....................................");
+            //SSDebug.Log("ReloadWeiXinXiaoChengXuErWeiMa.....................................");
             if (ErWeiMaUI.GetInstance() != null)
             {
                 ErWeiMaUI.GetInstance().SetActive(true);
