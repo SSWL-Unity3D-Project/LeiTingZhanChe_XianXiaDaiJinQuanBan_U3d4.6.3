@@ -1275,11 +1275,6 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
             }
             TimeLast = Time.time;
 
-            if (PlayerComList.Count <= 0)
-            {
-                return;
-            }
-
             if (GenZongDanPrefab == null)
             {
                 return;
@@ -1292,8 +1287,15 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                 return;
             }
 
-            int randVal = Random.Range(0, 100) % PlayerComList.Count;
-            XKPlayerMoveCtrl playerCom = PlayerComList[randVal];
+            int randVal = 0;
+            XKPlayerMoveCtrl playerCom = null;
+            if (PlayerComList.Count > 0)
+            {
+                randVal = Random.Range(0, 100) % PlayerComList.Count;
+                playerCom = PlayerComList[randVal];
+            }
+            //playerCom = XKPlayerMoveCtrl.GetInstance(PlayerEnum.PlayerOne); //test.
+
             if (playerCom == null)
             {
                 return;
@@ -1310,6 +1312,7 @@ PlayerAudio[6] -> 主角飞机/坦克行驶音效.
                 max = 1;
             }
 
+            //max = 1; //test
             if (max == 0)
             {
                 return;

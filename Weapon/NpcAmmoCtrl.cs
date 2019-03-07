@@ -681,21 +681,28 @@ public class NpcAmmoCtrl : MonoBehaviour {
         {
             return;
         }
+        //SSDebug.LogWarning("SetGenZongDanAimTarget -> *** TestGenZongDanNum ================== " + TestGenZongDanNum);
 
-        if (TargetObject != null || playerCom == null)
+        if (TargetObject != null || playerCom == null) //跟踪弹的跟踪对象已经存在时不再更新.
+        //if (playerCom == null) //强制刷新跟踪弹的跟踪对象.
         {
             return;
         }
         IsOnlyHitTarget = true;
         TargetObject = playerCom.GenZongDanAimPoint;
     }
-
+    
+    //static int TestGenZongDanNum = 0;
+    /// <summary>
+    /// 设置跟踪弹信息.
+    /// </summary>
 	void SetGenZongDanInfo()
 	{
 		if (AmmoType != PlayerAmmoType.GenZongAmmo)
         {
 			return;
-		}
+        }
+        //SSDebug.LogWarning("SetGenZongDanInfo -> TestGenZongDanNum ================== " + TestGenZongDanNum);
 
         if (TargetObject != null)
         {

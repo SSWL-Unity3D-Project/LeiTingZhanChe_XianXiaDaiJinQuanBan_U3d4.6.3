@@ -822,7 +822,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         internal void SetIndexPlayerActiveGameState(int index, byte activeState)
         {
-            PlayerActiveState activeEnum = (PlayerActiveState)activeState;
+            //PlayerActiveState activeEnum = (PlayerActiveState)activeState;
             //SSDebug.Log("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
             //SSDebug.LogWarning("SetIndexPlayerActiveGameState -> index ======= " + index + ", activeState ======= " + activeEnum);
 
