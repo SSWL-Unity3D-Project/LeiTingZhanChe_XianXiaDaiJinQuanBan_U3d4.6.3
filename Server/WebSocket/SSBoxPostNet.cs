@@ -2523,7 +2523,7 @@ public class SSBoxPostNet : MonoBehaviour
         GameConfigUrlData configUrl = new GameConfigUrlData(this, m_BoxLoginData.m_Address);
         int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
         string url = configUrl.GetUrl(m_GamePadState, screenId);
-        SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
+        //SSDebug.Log("GetGameConfigInfoFromHddServer -> url ==== " + url);
         StartCoroutine(SendGet(url, PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER));
     }
 

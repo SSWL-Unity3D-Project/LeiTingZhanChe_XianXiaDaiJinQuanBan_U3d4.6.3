@@ -538,8 +538,8 @@ public class XKCannonCtrl : MonoBehaviour {
 		int count = countMax;
 		do {
 			if (IsDeathNpc || GameOverCtrl.IsShowGameOver) {
-				Debug.Log("Unity:"+this.name+" -> IsDeathNpc "+IsDeathNpc
-				          +", IsShowGameOver "+GameOverCtrl.IsShowGameOver);
+				//Debug.Log("Unity:"+this.name+" -> IsDeathNpc "+IsDeathNpc
+				//          +", IsShowGameOver "+GameOverCtrl.IsShowGameOver);
 				yield break;
 			}
 
