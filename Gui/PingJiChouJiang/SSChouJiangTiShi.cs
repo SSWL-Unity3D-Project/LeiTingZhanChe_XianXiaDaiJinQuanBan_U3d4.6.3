@@ -38,7 +38,7 @@ public class SSChouJiangTiShi : MonoBehaviour
             {
                 if (fuHuoNumUi != null)
                 {
-                    fuHuoNumUi.ShowNumUI(fuHuoCiShu);
+                    fuHuoNumUi.ShowNumUI(fuHuoCiShu % 10);
                 }
             }
         }
