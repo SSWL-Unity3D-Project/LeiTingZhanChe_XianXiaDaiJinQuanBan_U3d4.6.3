@@ -1220,24 +1220,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         return;
                     }
 
-                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
-                        || val == PlayerShouBingFireBt.fireYDown.ToString())
-                    {
-                        if (loginPlayerDt.IsMianFeiTiYanPlayer == false)
-                        {
-                            //该玩家在登录后被标记为需要付费的玩家,这里认为玩家主动放弃支付.
-                            //发送踢人消息.
-                            SendWXPadPlayerCloseConnect(userId);
-                            //踢出玩家之后需要删除玩家登录数据信息.
-                            RemoveLoginGamePlayerData(userId);
-                            //删除轮询检测玩家账户的数据.
-                            RemoveLoopGetWXHddPayData(userId);
-                            return;
-                        }
-                    }
-
                     //必须是收到开始按键按下消息才允许激活免费试玩游戏玩家.
                     if (val == PlayerShouBingFireBt.startGameBtDown.ToString())
+                    //if (val == PlayerShouBingFireBt.startGameBtDown.ToString() //test
+                    //    || val == PlayerShouBingFireBt.fireBDown.ToString()   //test
+                    //    || val == PlayerShouBingFireBt.fireYDown.ToString()) //test
                     {
                         if (loginPlayerDt.IsMianFeiTiYanPlayer == false)
                         {
@@ -1293,6 +1280,22 @@ namespace Assets.XKGame.Script.HongDDGamePad
                                 SendWXPadHiddenStartBt(userId);
                                 return;
                             }
+                        }
+                    }
+                    
+                    if (val == PlayerShouBingFireBt.fireBDown.ToString()
+                        || val == PlayerShouBingFireBt.fireYDown.ToString())
+                    {
+                        if (loginPlayerDt.IsMianFeiTiYanPlayer == false)
+                        {
+                            //该玩家在登录后被标记为需要付费的玩家,这里认为玩家主动放弃支付.
+                            //发送踢人消息.
+                            SendWXPadPlayerCloseConnect(userId);
+                            //踢出玩家之后需要删除玩家登录数据信息.
+                            RemoveLoginGamePlayerData(userId);
+                            //删除轮询检测玩家账户的数据.
+                            RemoveLoopGetWXHddPayData(userId);
+                            return;
                         }
                     }
                 }
