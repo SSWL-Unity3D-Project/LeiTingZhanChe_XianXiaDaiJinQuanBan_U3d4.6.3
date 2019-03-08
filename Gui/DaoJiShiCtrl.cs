@@ -241,13 +241,19 @@ public class DaoJiShiCtrl : MonoBehaviour
 
     IEnumerator DelayShowPlayerDaoJiShi()
     {
+        if (ContinueGameObj.activeInHierarchy == true)
+        {
+            yield break;
+        }
+
         //float timeVal = XKPlayerGlobalDt.GetInstance().m_DaoJiShiDelayShowPlayerDead;
         //yield return new WaitForSeconds(timeVal);
-        yield return new WaitForSeconds(0f);
+        yield return new WaitForSeconds(0.5f);
         //DaoJiShiObj.SetActive(true);
         DaoJiShiSprite.enabled = true;
         ContinueGameObj.SetActive(true);
         ShowDaoJiShiInfo();
+        yield break;
     }
 
     public void StopDaoJiShi()
