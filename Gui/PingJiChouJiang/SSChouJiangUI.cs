@@ -1104,8 +1104,19 @@ public class SSChouJiangUI : MonoBehaviour
         SetActivePlayerChouJiangResult(true);
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
-            //删除玩家游戏抽奖界面UI.
-            SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, m_TimeHiddenChouJiangResult);
+            if (m_PlayerJiangPin.jiangPinType == JiangPinState.XieXieCanYu
+                || m_PlayerJiangPin.jiangPinType == JiangPinState.ZaiWanYiJu)
+            {
+                //谢谢参与和再玩一局.
+                //删除玩家游戏抽奖界面UI.
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, m_TimeHiddenMeiZhongJiangResult);
+            }
+            else
+            {
+                //其它中奖结果.
+                //删除玩家游戏抽奖界面UI.
+                SSUIRoot.GetInstance().m_GameUIManage.RemovePlayerChouJiangUI(m_IndexPlayer, m_TimeHiddenChouJiangResult);
+            }
         }
     }
 
@@ -1351,6 +1362,11 @@ public class SSChouJiangUI : MonoBehaviour
     /// </summary>
     [Range(1f, 30f)]
     public float m_TimeHiddenChouJiangResult = 3f;
+    /// <summary>
+    /// 多长时间之后隐藏没有中奖玩家的抽奖结果.
+    /// </summary>
+    [Range(1f, 30f)]
+    public float m_TimeHiddenMeiZhongJiangResult = 3f;
     /// <summary>
     /// 抽奖结果UI对象.
     /// </summary>
