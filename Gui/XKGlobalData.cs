@@ -103,7 +103,7 @@ public class XKGlobalData
                 }
         }
 
-        if (GameNeedCoin < coinCur)
+        if (GameNeedCoin <= coinCur)
         {
             fuHuoCiShu = coinCur / GameNeedCoin;
         }
