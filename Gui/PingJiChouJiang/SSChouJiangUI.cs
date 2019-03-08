@@ -1102,6 +1102,7 @@ public class SSChouJiangUI : MonoBehaviour
         //分发玩家的游戏奖品.
         DistributionPlayerJiangPin();
         SetActivePlayerChouJiangResult(true);
+        PlayChouJiangResultAudio();
         if (SSUIRoot.GetInstance().m_GameUIManage != null)
         {
             if (m_PlayerJiangPin.jiangPinType == JiangPinState.XieXieCanYu
@@ -1147,6 +1148,7 @@ public class SSChouJiangUI : MonoBehaviour
 
         if (audioClip != null)
         {
+            //SSDebug.LogWarning("PlayChouJiangResultAudio***************************************************");
             m_ResultAdioSource.clip = audioClip;
             m_ResultAdioSource.Play();
         }
