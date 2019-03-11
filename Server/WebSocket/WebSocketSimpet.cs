@@ -1,5 +1,6 @@
 ﻿using LitJson;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class WebSocketSimpet : MonoBehaviour
@@ -75,6 +76,7 @@ public class WebSocketSimpet : MonoBehaviour
                 //    //重新登录游戏盒子并且重新连接游戏服务器.
                 //    m_SSBoxPostNet.HttpSendPostLoginBox();
                 //}
+                OnTimeOutReceiveXinTiaoMsg();
 
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {
@@ -86,19 +88,72 @@ public class WebSocketSimpet : MonoBehaviour
     }
 
     /// <summary>
+    /// 当心跳消息超时后关闭webSocket.
+    /// </summary>
+    void OnXinTiaoMsgTimeOutCloseWebScoket()
+    {
+        if (_wabData != null
+            && _wabData.WebSocket != null
+            && _wabData.WebSocket.IsOpen == true)
+        {
+            SSDebug.LogWarning("OnXinTiaoMsgTimeOutCloseWebScoket::CloseWebSocket.......................................");
+            _wabData.CloseSocket();
+        }
+    }
+
+    /// <summary>
+    /// 当接收心跳消息超时.
+    /// </summary>
+    void OnTimeOutReceiveXinTiaoMsg()
+    {
+        if (m_SSBoxPostNet != null && IsDelaySendPostLoginBox == false)
+        {
+            SSDebug.LogWarning("OnTimeOutReceiveXinTiaoMsg ........ time == " + Time.time.ToString("f2"));
+            //重置心跳消息标记.
+            IsCheckXinTiaoMsg = false;
+            m_TimeLastXinTiao = Time.time;
+            OnXinTiaoMsgTimeOutCloseWebScoket();
+            StartCoroutine(DelaySendPostLoginBox());
+        }
+    }
+
+    /// <summary>
     /// 当心跳消息检测超时来自网络故障UI提示.
     /// </summary>
     internal void OnXiTiaoMsgTimeOutFromWangLuoGuZhang()
     {
-        if (m_SSBoxPostNet != null)
+        if (m_SSBoxPostNet != null && IsDelaySendPostLoginBox == false)
         {
             SSDebug.LogWarning("OnXiTiaoMsgTimeOutFromWangLuoGuZhang ........ time == " + Time.time.ToString("f2"));
             //重置心跳消息标记.
             IsCheckXinTiaoMsg = false;
             m_TimeSendXinTiaoMsg = Time.time;
-            //重新登录游戏盒子并且重新连接游戏服务器.
-            m_SSBoxPostNet.HttpSendPostLoginBox();
+            m_TimeLastXinTiao = Time.time;
+            OnXinTiaoMsgTimeOutCloseWebScoket();
+            StartCoroutine(DelaySendPostLoginBox());
         }
+    }
+
+    /// <summary>
+    /// 是否推迟发送登陆信息.
+    /// </summary>
+    bool IsDelaySendPostLoginBox = false;
+    /// <summary>
+    /// 延迟重新登录游戏盒子.
+    /// </summary>
+    IEnumerator DelaySendPostLoginBox()
+    {
+        if (IsDelaySendPostLoginBox == true)
+        {
+            yield break;
+        }
+        IsDelaySendPostLoginBox = true;
+        yield return new WaitForSeconds(1f);
+
+        IsDelaySendPostLoginBox = false;
+        //重新登录游戏盒子并且重新连接游戏服务器.
+        m_SSBoxPostNet.HttpSendPostLoginBox();
+        yield break;
     }
 
     void OnDestroy()

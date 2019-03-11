@@ -1057,7 +1057,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public void HttpSendPostLoginBox()
     {
-        Debug.Log("Unity:"+"HttpSendPostLoginBox...");
+        Debug.Log("Unity:"+ "HttpSendPostLoginBox... time == " + Time.time.ToString("f2"));
         //POST方法.
         WWWForm form = new WWWForm();
         form.AddField("boxNumber", m_BoxLoginData.boxNumber);
