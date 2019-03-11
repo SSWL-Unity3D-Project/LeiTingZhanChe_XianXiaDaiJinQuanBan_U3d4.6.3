@@ -13,6 +13,46 @@ public class XKPlayerMoveCtrl : MonoBehaviour
     public PlayerEnum PlayerIndex = PlayerEnum.PlayerOne;
 	TKMoveState TKMoveSt = TKMoveState.YaoGanBan;
     /// <summary>
+    /// 复活次数数据信息.
+    /// </summary>
+    [System.Serializable]
+    public class FuHuoCiShuData
+    {
+        /// <summary>
+        /// 复活3dUI信息.
+        /// </summary>
+        public GameObject fuHuoInfo;
+        /// <summary>
+        /// 复活次数数字信息.
+        /// </summary>
+        public TextMesh textMeshFuHuoCiShu;
+        internal void SetPlayerFuHuoInfo(PlayerEnum indexPlayer)
+        {
+            int fuHuoNum = XKGlobalData.GetPlayerFuHuoCiShuInfo(indexPlayer);
+            if (fuHuoInfo != null)
+            {
+                fuHuoInfo.SetActive(fuHuoNum <= 0 ? false : true);
+            }
+            //SSDebug.LogWarning("SetPlayerFuHuoInfo -> indexPlayer ==== " + indexPlayer + ", fuHuoNum =================== " + fuHuoNum);
+
+            if (fuHuoNum > 0)
+            {
+                if (textMeshFuHuoCiShu != null)
+                {
+                    if (fuHuoNum > 10)
+                    {
+                        fuHuoNum = fuHuoNum % 10;
+                    }
+                    textMeshFuHuoCiShu.text = fuHuoNum.ToString();
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// 复活次数数据信息.
+    /// </summary>
+    public FuHuoCiShuData m_FuHuoCiShuData;
+    /// <summary>
     /// 玩家受到JPBoss火焰伤害时的特效.
     /// </summary>
     public GameObject m_HuoYanDamageTX;
@@ -179,6 +219,18 @@ public class XKPlayerMoveCtrl : MonoBehaviour
             m_PlayerAiMove.Init(this);
         }
         InitPlayerActionListen();
+        SetPlayerFuHuoCiShuInfo();
+    }
+
+    /// <summary>
+    /// 设置玩家复活次数信息.
+    /// </summary>
+    void SetPlayerFuHuoCiShuInfo()
+    {
+        if (m_FuHuoCiShuData != null)
+        {
+            m_FuHuoCiShuData.SetPlayerFuHuoInfo(PlayerIndex);
+        }
     }
 
 	void FixedUpdate()
@@ -1179,7 +1231,8 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		}
 		IsDeathPlayer = false;
 		gameObject.SetActive(true);
-	}
+        SetPlayerFuHuoCiShuInfo();
+    }
 
 	public void HiddenGamePlayer(int key = 0)
 	{

@@ -18,7 +18,7 @@ public class SSWangLuoGuZhang : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        if (Time.time - m_LastTimeVal >= 180f)
+        if (Time.time - m_LastTimeVal >= 150f)
         {
             m_LastTimeVal = Time.time;
             if (DaoJiShiCtrl.GetInstanceOne().IsPlayDaoJishi == true
@@ -78,7 +78,12 @@ public class SSWangLuoGuZhang : MonoBehaviour
             }
         } while (true);
         yield return new WaitForSeconds(0.2f);
-
+        
+        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+        {
+            //重启websocket.
+            pcvr.GetInstance().m_HongDDGamePadInterface.OnXiTiaoMsgTimeOutFromWangLuoGuZhang();
+        }
         XkGameCtrl.IsLoadingLevel = false;
         XkGameCtrl.GetInstance().LoadingReconnectServerGameScene();
     }

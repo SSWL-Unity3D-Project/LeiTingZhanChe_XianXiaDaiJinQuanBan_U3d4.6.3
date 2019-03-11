@@ -310,7 +310,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_HongDDGamePadCom.GetGameHddScreenNum();
             }
         }
-        
+
+        /// <summary>
+        /// 当心跳消息检测超时来自网络故障UI提示.
+        /// </summary>
+        internal void OnXiTiaoMsgTimeOutFromWangLuoGuZhang()
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnXiTiaoMsgTimeOutFromWangLuoGuZhang();
+            }
+        }
+
         /// <summary>
         /// 删除玩家微信数据信息.
         /// </summary>

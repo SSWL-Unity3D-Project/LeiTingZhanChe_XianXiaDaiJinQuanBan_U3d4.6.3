@@ -64,7 +64,7 @@ public class WebSocketSimpet : MonoBehaviour
                 NetSendWebSocketXinTiaoMsg();
             }
 
-            if (Time.time - m_TimeSendXinTiaoMsg > 60f)
+            if (Time.time - m_TimeSendXinTiaoMsg > 30f)
             {
                 m_TimeSendXinTiaoMsg = Time.time;
                 //SSDebug.LogWarning("XinTiao Check TimeOut...........................");
@@ -82,6 +82,22 @@ public class WebSocketSimpet : MonoBehaviour
                     SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 当心跳消息检测超时来自网络故障UI提示.
+    /// </summary>
+    internal void OnXiTiaoMsgTimeOutFromWangLuoGuZhang()
+    {
+        if (m_SSBoxPostNet != null)
+        {
+            SSDebug.LogWarning("OnXiTiaoMsgTimeOutFromWangLuoGuZhang ........ time == " + Time.time.ToString("f2"));
+            //重置心跳消息标记.
+            IsCheckXinTiaoMsg = false;
+            m_TimeSendXinTiaoMsg = Time.time;
+            //重新登录游戏盒子并且重新连接游戏服务器.
+            m_SSBoxPostNet.HttpSendPostLoginBox();
         }
     }
 
@@ -175,8 +191,11 @@ public class WebSocketSimpet : MonoBehaviour
             {
                 //网络正常.
                 //心跳消息发送.
+                if (IsCheckXinTiaoMsg == false)
+                {
+                    m_TimeSendXinTiaoMsg = Time.time;
+                }
                 IsCheckXinTiaoMsg = true;
-                m_TimeSendXinTiaoMsg = Time.time;
                 string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
                 string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
                 // Send message to the server.
@@ -210,6 +229,7 @@ public class WebSocketSimpet : MonoBehaviour
             {
                 //重置心跳消息标记.
                 IsCheckXinTiaoMsg = false;
+                m_TimeSendXinTiaoMsg = Time.time;
                 //重新登录游戏盒子并且重新连接游戏服务器.
                 m_SSBoxPostNet.HttpSendPostLoginBox();
             }
@@ -410,6 +430,7 @@ public class WebSocketSimpet : MonoBehaviour
                     SSDebug.LogWarning("XinTiao Check Success!" + ", time == " + Time.time.ToString("f2"));
                 }
                 IsCheckXinTiaoMsg = false;
+                m_TimeSendXinTiaoMsg = Time.time;
                 //删除网络故障,请检查网络并重启游戏.
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
                 {

@@ -3381,6 +3381,19 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_SSBoxPostNet.HttpSendGetGameScreenId();
             }
         }
+
+        /// <summary>
+        /// 当心跳消息检测超时来自网络故障UI提示.
+        /// </summary>
+        internal void OnXiTiaoMsgTimeOutFromWangLuoGuZhang()
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                m_SSBoxPostNet.m_WebSocketSimpet.OnXiTiaoMsgTimeOutFromWangLuoGuZhang();
+            }
+        }
         #endregion
 
         //private void Update()
