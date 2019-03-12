@@ -1118,11 +1118,12 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public void HttpSendPostHddSubPlayerMoney(int userId, int account)
     {
-        Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
-        Debug.Log("Unity: memberId == " + userId + ", account == " + account);
+        //Debug.Log("Unity:" + "HttpSendPostHddSubPlayerMoney...");
+        //Debug.Log("Unity: memberId == " + userId + ", account == " + account);
         //消费用户余额的url.
         string url = m_BoxLoginData.m_Address + "/wxbackstage/memberAccount/spend";
-        Debug.Log("Unity: url == " + url);
+        //Debug.Log("Unity: url == " + url);
+        //SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney -> userId == " + userId + ", account == " + account);
         
         PostDataHddSubPlayerMoney postDt = new PostDataHddSubPlayerMoney(userId, account);
         //"{\"memberId\":93124,\"account\":100}" //发送的消息.
@@ -1172,7 +1173,7 @@ public class SSBoxPostNet : MonoBehaviour
                 string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
                 //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
                 //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
-                SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> msg == " + msg);
+                //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> msg == " + msg);
 
                 JsonData jd = JsonMapper.ToObject(msg);
                 if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
@@ -1183,7 +1184,7 @@ public class SSBoxPostNet : MonoBehaviour
                 else
                 {
                     //红点点支付平台扣费失败.
-                    SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+                    //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
                     OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
                 }
             }

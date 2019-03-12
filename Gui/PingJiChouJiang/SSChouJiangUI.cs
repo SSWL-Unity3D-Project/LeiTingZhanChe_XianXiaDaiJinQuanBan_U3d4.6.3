@@ -1352,6 +1352,16 @@ public class SSChouJiangUI : MonoBehaviour
                         }
                     case JiangPinState.ZaiWanYiJu:
                         {
+                            if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                            {
+                                if (pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerIsFuFeiActiveGame(m_IndexPlayer) == true)
+                                {
+                                    //付费激活游戏的玩家.
+                                    //此时需要对微信付费玩家进行红点点账户扣费.
+                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnNeedSubPlayerMoney(m_IndexPlayer);
+                                }
+                            }
+
                             //免费再玩一局奖品.
                             //此处添加让玩家可以再次进行游戏的代码.
                             if (XkGameCtrl.GetInstance() != null)
