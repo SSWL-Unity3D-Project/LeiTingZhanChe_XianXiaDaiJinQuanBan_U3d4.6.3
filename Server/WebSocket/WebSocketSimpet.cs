@@ -700,7 +700,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_show\"},\"_msg_name\":\"gamepad\"}";
 
-            SSDebug.LogWarning("NetSendWeiXinPadShowChouJiangUI:: msg == " + msgToSend);
+            //SSDebug.LogWarning("NetSendWeiXinPadShowChouJiangUI:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }
@@ -723,7 +723,7 @@ public class WebSocketSimpet : MonoBehaviour
             string msgToSend = boxNumber + "," + boxNumber + "," + userId
                 + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_hide\"},\"_msg_name\":\"gamepad\"}";
 
-            SSDebug.LogWarning("NetSendWeiXinPadHiddenChouJiangUI:: msg == " + msgToSend);
+            //SSDebug.LogWarning("NetSendWeiXinPadHiddenChouJiangUI:: msg == " + msgToSend);
             _wabData.WebSocket.Send(msgToSend);
         }
     }

@@ -257,6 +257,13 @@ public class SSChouJiangUI : MonoBehaviour
             InitPlayChouJiangAnimation();
             RemoveClickDaoDanBtEvent();
             HiddenTiShiObj();
+
+            if (XKPlayerAutoFire.GetInstanceAutoFire(m_IndexPlayer) != null)
+            {
+                //如果是倒计时结束后自动进行抽奖时设置玩家为打开手柄抽奖界面开关.
+                //避免玩家手机在黑屏状态下接收不到消息而无法隐藏抽奖界面的问题产生.
+                XKPlayerAutoFire.GetInstanceAutoFire(m_IndexPlayer).SetIsOpenChouJiang(true);
+            }
         }
     }
 

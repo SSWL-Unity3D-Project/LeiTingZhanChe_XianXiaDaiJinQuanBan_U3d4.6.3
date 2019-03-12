@@ -243,7 +243,11 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 	XKPlayerMoveCtrl PlayerMoveScript;
 	const int JI_QIANG_INDEX = 0;
 	const int ZHU_PAO_INDEX = 1;
-	static XKPlayerAutoFire _InstanceOne;
+    /// <summary>
+    /// 是否打开抽奖界面.
+    /// </summary>
+    bool IsOpenChouJiang = false;
+    static XKPlayerAutoFire _InstanceOne;
 	static XKPlayerAutoFire _InstanceTwo;
 	static XKPlayerAutoFire _InstanceThree;
 	static XKPlayerAutoFire _InstanceFour;
@@ -415,7 +419,15 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
 //		CheckPSTriggerAutoFire();
 	}
 
-	GameObject SpawnPlayerAmmo(GameObject ammoPrefab, Vector3 ammoPos, Quaternion ammoRot)
+    /// <summary>
+    /// 设置是否打开抽奖开关.
+    /// </summary>
+    internal void SetIsOpenChouJiang(bool isOpen)
+    {
+        IsOpenChouJiang = isOpen;
+    }
+
+    GameObject SpawnPlayerAmmo(GameObject ammoPrefab, Vector3 ammoPos, Quaternion ammoRot)
 	{
 		return (GameObject)Instantiate(ammoPrefab, ammoPos, ammoRot);
 	}
@@ -1610,6 +1622,17 @@ PlayerFireAudio[9] -> 主角主炮火力全开音效.
             //{
             //    ClickFireBtEvent(pcvr.ButtonState.UP);
             //}
+
+            if (IsOpenChouJiang == true)
+            {
+                //关闭手柄抽奖界面.
+                SetIsOpenChouJiang(false);
+                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                {
+                    //隐藏玩家微信手柄抽奖ui.
+                    pcvr.GetInstance().m_HongDDGamePadInterface.SendWXPadHiddenChouJiangUI(PlayerIndex);
+                }
+            }
         }
 		else
         {
