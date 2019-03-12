@@ -1198,8 +1198,8 @@ public class XkGameCtrl : SSGameMono
         IsLoadingLevel = false;
         LoadingRestartGameScene();
     }
-
-	float m_TimeLastErWeiMa = 0f;
+    
+    float m_TimeLastErWeiMa = 0f;
 	bool IsCheckGameUIErWeiMa = true;
     void CheckGameUIErWeiMaActive()
     {

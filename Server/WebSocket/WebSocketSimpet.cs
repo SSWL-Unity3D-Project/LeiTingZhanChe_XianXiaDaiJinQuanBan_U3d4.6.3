@@ -34,6 +34,7 @@ public class WebSocketSimpet : MonoBehaviour
         if (Application.isLoadingLevel)
         {
             m_TimeLastXinTiao = Time.time;
+            m_TimeSendXinTiaoMsg = Time.time;
             return;
         }
 
@@ -65,17 +66,11 @@ public class WebSocketSimpet : MonoBehaviour
                 NetSendWebSocketXinTiaoMsg();
             }
 
-            if (Time.time - m_TimeSendXinTiaoMsg > 30f)
+            if (Time.time - m_TimeSendXinTiaoMsg > 5f && IsCheckXinTiaoMsg == true)
             {
+                //当发送心跳消息给服务端超出一定时间没有收到成功反馈后进入这里.
                 m_TimeSendXinTiaoMsg = Time.time;
-                //SSDebug.LogWarning("XinTiao Check TimeOut...........................");
-                //if (m_SSBoxPostNet != null)
-                //{
-                //    //重置心跳消息标记.
-                //    IsCheckXinTiaoMsg = false;
-                //    //重新登录游戏盒子并且重新连接游戏服务器.
-                //    m_SSBoxPostNet.HttpSendPostLoginBox();
-                //}
+                //接收心跳消息超时.
                 OnTimeOutReceiveXinTiaoMsg();
 
                 if (SSUIRoot.GetInstance().m_GameUIManage != null)
@@ -156,14 +151,15 @@ public class WebSocketSimpet : MonoBehaviour
         yield break;
     }
 
-    void OnDestroy()
-    {
-        Debug.Log("Unity:" + "OnDestroy...");
-        if (_wabData != null && _wabData.WebSocket != null && _wabData.WebSocket.IsOpen == true)
-        {
-            _wabData.WebSocket.Close();
-        }
-    }
+    //void OnDestroy()
+    //{
+    //    SSDebug.LogWarning("WebSocketSimpet::OnDestroy............");
+    //    if (_wabData != null && _wabData.WebSocket != null && _wabData.WebSocket.IsOpen == true)
+    //    {
+    //        SSDebug.LogWarning("WebSocketSimpet::WebSocket.Close............");
+    //        _wabData.WebSocket.Close();
+    //    }
+    //}
 
     /// <summary>
     /// 打开WebSocket.
