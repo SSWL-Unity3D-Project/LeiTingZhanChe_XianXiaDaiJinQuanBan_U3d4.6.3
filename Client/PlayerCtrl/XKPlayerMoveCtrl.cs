@@ -25,7 +25,15 @@ public class XKPlayerMoveCtrl : MonoBehaviour
         /// <summary>
         /// 复活次数数字信息.
         /// </summary>
-        public TextMesh textMeshFuHuoCiShu;
+        //TextMesh textMeshFuHuoCiShu;
+        /// <summary>
+        /// 复活次数材质球.
+        /// </summary>
+        public Material matFuHuoCiShu;
+        /// <summary>
+        /// 数字为0-9.
+        /// </summary>
+        public Texture2D[] numArray = new Texture2D[10];
         internal void SetPlayerFuHuoInfo(PlayerEnum indexPlayer)
         {
             int fuHuoNum = XKGlobalData.GetPlayerFuHuoCiShuInfo(indexPlayer);
@@ -37,13 +45,28 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 
             if (fuHuoNum > 0)
             {
-                if (textMeshFuHuoCiShu != null)
+                //if (textMeshFuHuoCiShu != null)
+                //{
+                //    //设置玩家复活次数信息.
+                //    if (fuHuoNum >= 10)
+                //    {
+                //        fuHuoNum = fuHuoNum % 10;
+                //    }
+                //    textMeshFuHuoCiShu.text = fuHuoNum.ToString();
+                //}
+
+                if (matFuHuoCiShu != null)
                 {
-                    if (fuHuoNum > 10)
+                    //设置玩家复活次数信息.
+                    if (fuHuoNum >= 10)
                     {
                         fuHuoNum = fuHuoNum % 10;
                     }
-                    textMeshFuHuoCiShu.text = fuHuoNum.ToString();
+
+                    if (numArray.Length > fuHuoNum && numArray[fuHuoNum] != null)
+                    {
+                        matFuHuoCiShu.mainTexture = numArray[fuHuoNum];
+                    }
                 }
             }
         }
