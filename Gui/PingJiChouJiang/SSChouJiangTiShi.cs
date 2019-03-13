@@ -61,19 +61,9 @@ public class SSChouJiangTiShi : MonoBehaviour
         /// </summary>
         void ShowPlayerWxHeadInfo(PlayerEnum indexPlayer)
         {
-
-            if (m_PlayerHeadUI != null)
+            if (XkGameCtrl.GetInstance() != null && m_PlayerHeadUI != null)
             {
-                Texture headImg = null;
-                if (XueKuangCtrl.GetInstance(indexPlayer) != null && XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead != null)
-                {
-                    headImg = XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead.mainTexture;
-                }
-
-                if (headImg != null)
-                {
-                    m_PlayerHeadUI.mainTexture = headImg;
-                }
+                XkGameCtrl.GetInstance().LoadPlayerWxHeadImg(indexPlayer, m_PlayerHeadUI);
             }
 
             if (m_HeadKuangUI != null)

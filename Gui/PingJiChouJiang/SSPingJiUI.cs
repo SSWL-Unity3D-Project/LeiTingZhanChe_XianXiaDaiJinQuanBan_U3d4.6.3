@@ -745,18 +745,9 @@ public class SSPingJiUI : MonoBehaviour
     /// </summary>
     void SetPlayerHeadImg()
     {
-        if (m_PlayerHeadUI != null)
+        if (XkGameCtrl.GetInstance() != null && m_PlayerHeadUI != null)
         {
-            Texture headImg = null;
-            if (XueKuangCtrl.GetInstance(m_IndexPlayer) != null && XueKuangCtrl.GetInstance(m_IndexPlayer).m_WeiXinHead != null)
-            {
-                headImg = XueKuangCtrl.GetInstance(m_IndexPlayer).m_WeiXinHead.mainTexture;
-            }
-
-            if (headImg != null)
-            {
-                m_PlayerHeadUI.mainTexture = headImg;
-            }
+            XkGameCtrl.GetInstance().LoadPlayerWxHeadImg(m_IndexPlayer, m_PlayerHeadUI);
         }
     }
 }

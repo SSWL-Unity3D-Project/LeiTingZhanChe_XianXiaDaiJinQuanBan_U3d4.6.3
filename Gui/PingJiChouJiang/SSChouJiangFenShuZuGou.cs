@@ -32,18 +32,9 @@ public class SSChouJiangFenShuZuGou : MonoBehaviour
     void SetPlayerHeadImg(PlayerEnum playerIndex)
     {
         m_TimeLast = Time.time;
-        if (m_HeadUITexture != null)
+        if (XkGameCtrl.GetInstance() != null && m_HeadUITexture != null)
         {
-            Texture headImg = null;
-            if (XueKuangCtrl.GetInstance(playerIndex) != null && XueKuangCtrl.GetInstance(playerIndex).m_WeiXinHead != null)
-            {
-                headImg = XueKuangCtrl.GetInstance(playerIndex).m_WeiXinHead.mainTexture;
-            }
-
-            if (headImg != null)
-            {
-                m_HeadUITexture.mainTexture = headImg;
-            }
+            XkGameCtrl.GetInstance().LoadPlayerWxHeadImg(playerIndex, m_HeadUITexture);
         }
 
         if (headKuangUI != null)

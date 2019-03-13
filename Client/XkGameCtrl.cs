@@ -4438,6 +4438,23 @@ public class XkGameCtrl : SSGameMono
     }
 
     /// <summary>
+    /// 加载玩家微信头像.
+    /// </summary>
+    internal void LoadPlayerWxHeadImg(PlayerEnum indexPlayer, UITexture headUI)
+    {
+        if (headUI != null)
+        {
+            if (pcvr.GetInstance().m_HongDDGamePadInterface != null && m_AsyImage != null)
+            {
+                //玩家微信头像.
+                int indexUrl = (int)indexPlayer - 1;
+                string url = pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerHeadUrl(indexUrl);
+                m_AsyImage.LoadPlayerHeadImg(url, headUI);
+            }
+        }
+    }
+
+    /// <summary>
     /// 获取当前是否激活了AI坦克.
     /// </summary>
     internal bool GetIsActiveAiPlayer()

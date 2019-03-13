@@ -44,18 +44,9 @@ public class SSCaiPiaoDaJiang : SSGameMono
     /// </summary>
     void SetPlayerHeadImg(PlayerEnum indexPlayer)
     {
-        if (m_PlayerIndexUI != null)
+        if (XkGameCtrl.GetInstance() != null && m_PlayerIndexUI != null)
         {
-            Texture headImg = null;
-            if (XueKuangCtrl.GetInstance(indexPlayer) != null && XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead != null)
-            {
-                headImg = XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead.mainTexture;
-            }
-
-            if (headImg != null)
-            {
-                m_PlayerIndexUI.mainTexture = headImg;
-            }
+            XkGameCtrl.GetInstance().LoadPlayerWxHeadImg(indexPlayer, m_PlayerIndexUI);
         }
 
         if (m_HeadKuangUI != null)
