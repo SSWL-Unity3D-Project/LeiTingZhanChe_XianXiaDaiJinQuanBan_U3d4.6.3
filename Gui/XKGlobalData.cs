@@ -38,7 +38,7 @@ public class XKGlobalData
         }
         return path;
     }
-    internal SSGameLogoData.GameLogo m_GameLogo = SSGameLogoData.GameLogo.HaiDiLao;
+    internal SSGameLogoData.GameLogo m_GameLogo { get { return SSGameLogoData.m_GameLogo; } }
 
     /// <summary>
     /// 获取玩家当前币值是否足够.

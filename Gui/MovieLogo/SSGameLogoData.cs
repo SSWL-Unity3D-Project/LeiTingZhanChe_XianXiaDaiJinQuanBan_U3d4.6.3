@@ -14,7 +14,6 @@ public class SSGameLogoData : MonoBehaviour
         /// </summary>
         HDL_CaiPinQuan = 1,
     }
-    public GameDaiJinQuanMode m_DaiJinQuanMode = GameDaiJinQuanMode.HDL_CaiPinQuan;
     /// <summary>
     /// 游戏代金券模式.
     /// </summary>
@@ -23,19 +22,16 @@ public class SSGameLogoData : MonoBehaviour
     public enum GameLogo
     {
         /// <summary>
-        /// 默认Logo
+        /// 默认为公司Logo
         /// </summary>
         Default = 0,
         /// <summary>
-        /// 海底捞火锅
+        /// 海底捞火锅Logo
         /// </summary>
         HaiDiLao = 1,
     }
-    public GameLogo m_GameLogo = GameLogo.Default;
-
-    private void Awake()
-    {
-        m_GameDaiJinQuanMode = m_DaiJinQuanMode;
-        XKGlobalData.GetInstance().m_GameLogo = m_GameLogo;
-    }
+    /// <summary>
+    /// 游戏Logo枚举.
+    /// </summary>
+    public static GameLogo m_GameLogo = GameLogo.Default;
 }
