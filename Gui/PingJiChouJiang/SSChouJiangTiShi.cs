@@ -20,6 +20,18 @@ public class SSChouJiangTiShi : MonoBehaviour
         /// 任务卡图片.
         /// </summary>
         public GameObject renWuKaImg;
+        /// <summary>
+        /// 玩家微信头像.
+        /// </summary>
+        public UITexture m_PlayerHeadUI;
+        /// <summary>
+        /// 玩家微信头像框.
+        /// </summary>
+        public UITexture m_HeadKuangUI;
+        /// <summary>
+        /// 各个机位的头像框.
+        /// </summary>
+        public Texture[] m_HeadKuangUIArray = new Texture[3];
         internal void ShowFuHuoInfo(PlayerEnum indexPlayer)
         {
             int fuHuoCiShu = XKGlobalData.GetPlayerFuHuoCiShuInfo(indexPlayer);
@@ -39,6 +51,38 @@ public class SSChouJiangTiShi : MonoBehaviour
                 if (fuHuoNumUi != null)
                 {
                     fuHuoNumUi.ShowNumUI(fuHuoCiShu % 10);
+                }
+            }
+            ShowPlayerWxHeadInfo(indexPlayer);
+        }
+
+        /// <summary>
+        /// 展示玩家微信头像信息.
+        /// </summary>
+        void ShowPlayerWxHeadInfo(PlayerEnum indexPlayer)
+        {
+
+            if (m_PlayerHeadUI != null)
+            {
+                Texture headImg = null;
+                if (XueKuangCtrl.GetInstance(indexPlayer) != null && XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead != null)
+                {
+                    headImg = XueKuangCtrl.GetInstance(indexPlayer).m_WeiXinHead.mainTexture;
+                }
+
+                if (headImg != null)
+                {
+                    m_PlayerHeadUI.mainTexture = headImg;
+                }
+            }
+
+            if (m_HeadKuangUI != null)
+            {
+                int indexVal = (int)indexPlayer - 1;
+                if (indexVal >= 0 && indexVal < m_HeadKuangUIArray.Length && m_HeadKuangUIArray[indexVal] != null)
+                {
+                    //玩家头像框.
+                    m_HeadKuangUI.mainTexture = m_HeadKuangUIArray[indexVal];
                 }
             }
         }
