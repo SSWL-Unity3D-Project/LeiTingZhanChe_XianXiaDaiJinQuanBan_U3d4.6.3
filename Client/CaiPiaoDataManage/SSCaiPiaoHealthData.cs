@@ -121,6 +121,7 @@ public class SSCaiPiaoHealthData : MonoBehaviour
             }
         }
 
+        //isCaiChiZuGou = false; //test
         //SSDebug.LogWarning("isDaiJinQuanBaoJiang == " + isDaiJinQuanBaoJiang + ", randVal == " + randVal + ", baoJiangLv == " + baoJiangLv);
         if (isCaiChiZuGou == true && isDaiJinQuanBaoJiang == true)
         {

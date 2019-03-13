@@ -554,13 +554,17 @@ public class XKNpcHealthCtrl : MonoBehaviour {
     /// </summary>
     float TimeSanDanDamage = 0f;
     /// <summary>
-    /// 不允许被击爆的代金券npc血值是否降到10%
+    /// 不允许被击爆的代金券npc血值是否降到阶段02.
     /// </summary>
-    bool IsBloodTo_10 = false;
+    bool IsBloodToStage02 = false;
     /// <summary>
-    /// 血值降到10%之后的时间记录.
+    /// 不允许被击爆的代金券npc血值是否降到阶段01.
     /// </summary>
-    float m_TimeLastBloodTo_10 = 0f;
+    bool IsBloodToStage01 = false;
+    /// <summary>
+    /// 血值降到某阶段之后的时间记录.
+    /// </summary>
+    float m_TimeLastBloodToStage = 0f;
     /// <summary>
     /// npc的血值信息记录.
     /// </summary>
@@ -726,37 +730,69 @@ public class XKNpcHealthCtrl : MonoBehaviour {
                         isCanJiBao = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_CurrentTotalHealthDt.IsCanJiBao;
                     }
                 }
-
+                
                 if (isCanJiBao == false)
                 {
                     //不允许被玩家击爆的代金券npc.
-                    if (IsBloodTo_10 == false)
+                    if (IsBloodToStage02 == false)
                     {
-                        if (bloodAmount <= 0.12f)
+                        if (bloodAmount <= 0.24f)
                         {
                             //强制保留一定的血量.
-                            m_BloodAmoutValue = bloodAmount = 0.12f;
-                            IsBloodTo_10 = true;
-                            m_TimeLastBloodTo_10 = Time.time;
+                            m_BloodAmoutValue = bloodAmount = 0.24f;
+                            IsBloodToStage02 = true;
+                            m_TimeLastBloodToStage = Time.time;
                             PuTongAmmoCount = puTongAmmoNum - 1;
                         }
                     }
-                    else
+                    else if (IsBloodToStage01 == false)
                     {
-                        float minBloodAmount = 0.03f; //最小极限血值.
+                        float minBloodAmount = 0.12f; //最小极限血值.
                         if (m_BloodAmoutValue > minBloodAmount)
                         {
-                            //血值已经降到15%
+                            //血值已经降到最低阶段.
                             float dTimeVal = 0.4f;
                             if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
                             {
                                 dTimeVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TimeNoDead;
                             }
 
-                            if (Time.time - m_TimeLastBloodTo_10 >= dTimeVal)
+                            if (Time.time - m_TimeLastBloodToStage >= dTimeVal)
                             {
                                 //每次间隔一定时间减少一定血值.
-                                m_TimeLastBloodTo_10 = Time.time;
+                                m_TimeLastBloodToStage = Time.time;
+                                float subBloodAmount = 0.02f; //每次减少的血值.
+                                if (m_BloodAmoutValue > minBloodAmount)
+                                {
+                                    m_BloodAmoutValue -= subBloodAmount;
+                                    if (m_BloodAmoutValue < minBloodAmount)
+                                    {
+                                        //强制保护的血值信息.
+                                        m_BloodAmoutValue = minBloodAmount;
+                                        IsBloodToStage01 = true;
+                                    }
+                                }
+                            }
+                        }
+                        bloodAmount = m_BloodAmoutValue;
+                        PuTongAmmoCount = puTongAmmoNum - 1; //强制保留一定的血值.
+                    }
+                    else
+                    {
+                        float minBloodAmount = 0.03f; //最小极限血值.
+                        if (m_BloodAmoutValue > minBloodAmount)
+                        {
+                            //血值已经降到最低阶段.
+                            float dTimeVal = 0.4f;
+                            if (XkGameCtrl.GetInstance().m_CaiPiaoHealthDt != null)
+                            {
+                                dTimeVal = XkGameCtrl.GetInstance().m_CaiPiaoHealthDt.m_TimeNoDead;
+                            }
+
+                            if (Time.time - m_TimeLastBloodToStage >= dTimeVal)
+                            {
+                                //每次间隔一定时间减少一定血值.
+                                m_TimeLastBloodToStage = Time.time;
                                 float subBloodAmount = 0.01f; //每次减少的血值.
                                 if (m_BloodAmoutValue > minBloodAmount)
                                 {
@@ -1041,7 +1077,8 @@ public class XKNpcHealthCtrl : MonoBehaviour {
     {
         TimeLastVal = Time.time;
         IsHitFanWeiHou = false;
-        IsBloodTo_10 = false;
+        IsBloodToStage02 = false;
+        IsBloodToStage01 = false;
         CheckNpcRigidbody();
 		XkGameCtrl.GetInstance().AddNpcTranToList(transform);
 		if (BoxColCom != null) {
