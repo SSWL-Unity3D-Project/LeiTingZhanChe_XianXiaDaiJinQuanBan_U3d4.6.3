@@ -1,6 +1,4 @@
-﻿#define USE_TEST_HDD_SERVER //使用红点点测试服务器.
-//#define USE_OLD_GET_HDD_GAME_CONFIG //使用旧版本后台数据管理接口.
-//#define TEST_DAI_JIN_QUAN //测试代金券.
+﻿//#define TEST_DAI_JIN_QUAN //测试代金券.
 using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.Server.WebSocket;
 using LitJson;
@@ -22,7 +20,6 @@ public class SSBoxPostNet : MonoBehaviour
     {
         Default = 0,                //默认手柄.
         LeiTingZhanChe = 1,         //雷霆战车手柄.
-        //LeiTingZhanChe = 99,         //雷霆战车手柄无重连测试.
     }
     /// <summary>
     /// 游戏手柄枚举,红点点游戏码.
@@ -35,36 +32,8 @@ public class SSBoxPostNet : MonoBehaviour
     {
         InitHddBoxLoginData();
 
-#if !USE_TEST_HDD_SERVER
-        //设置红点点正式服务器版本信息.
-        XKGameVersionCtrl.SetReleaseGameVersion();
-#else
-        //设置游戏为红点点测试服务器版本信息.
-        XKGameVersionCtrl.SetTestGameVersion();
-#endif
         string boxNum = "000000000000";
 #if UNITY_STANDALONE_WIN
-
-        //try
-        //{
-        //    NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
-        //    foreach (NetworkInterface ni in nis)
-        //    {
-        //        string macTest = ni.GetPhysicalAddress().ToString();
-        //        SSDebug.Log("macTest == " + macTest);
-        //        string description = ni.Description;
-        //        SSDebug.Log("description == " + description);
-        //        string name = ni.Name;
-        //        SSDebug.Log("name == " + name);
-        //        string id = ni.Id;
-        //        SSDebug.Log("id == " + id);
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    SSDebug.LogWarning("Mac get error! ex == " + ex);
-        //}
-
         try
         {
             bool isFindLocalAreaConnection = false;
@@ -297,11 +266,6 @@ public class SSBoxPostNet : MonoBehaviour
             _HAED_WX_XiaoChengXu_Url = address; //微信小程序地址修改.
         }
     }
-    //#if USE_TEST_HDD_SERVER
-    //    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
-    //#else
-    //    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
-    //#endif
 
     public BoxLoginData m_BoxLoginData = null;
     /// <summary>
@@ -309,11 +273,19 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     void InitHddBoxLoginData()
     {
-#if USE_TEST_HDD_SERVER
-        m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
-#else
-        m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
-#endif
+        switch(XKGlobalData.m_GameVersionHddServer)
+        {
+            case SSGameLogoData.GameVersionHddServer.CeShiBan:
+                {
+                    m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //雷霆战车游戏测试号.
+                    break;
+                }
+            case SSGameLogoData.GameVersionHddServer.ZhengShiBan:
+                {
+                    m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
+                    break;
+                }
+        }
     }
 
     public enum GamePayPlatform
@@ -474,8 +446,6 @@ public class SSBoxPostNet : MonoBehaviour
                     }
                 case PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER:
                     {
-#if USE_OLD_GET_HDD_GAME_CONFIG
-#else
                         //从红点点服务器获取游戏的配置信息.
                         //{"code":0,"message":"成功",
                         //"data":{"setting":
@@ -519,7 +489,7 @@ public class SSBoxPostNet : MonoBehaviour
 
                             string payMoney = jd_Data["payItem"]["money"].ToString();
                             //SSDebug.Log("payItems.money ============ " + payMoney);
-                            
+
                             int startTime = 0;
                             int endTime = 7;
                             if (XKGlobalData.GetInstance() != null)
@@ -680,7 +650,7 @@ public class SSBoxPostNet : MonoBehaviour
                                         }
                                 }
                             }
-                            
+
                             if (isFindJPBossPrizeInfo == true)
                             {
                                 gameConfigDt.JPBossDaiJinQuan = Convert.ToInt32(jpBossMoney); //jpBoss代金券面额
@@ -903,7 +873,6 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             SSDebug.LogWarning("GET_GAME_CONFIG_FROM_HDD_SERVER -> get gameConfig info was failed!");
                         }
-#endif
                         break;
                     }
                 case PostCmd.GET_HDD_GAME_SCREEN_ID:
@@ -1354,21 +1323,6 @@ public class SSBoxPostNet : MonoBehaviour
         //account单位是人民币元.
         //worth单位是人民币分.
         int worth = account * 100; //单位从元转换为分.
-
-        //int suiJiDaoJuDaiJinQuan = 10;
-        //int zhanCheDaiJinQuan_01 = 5;
-        //int zhanCheDaiJinQuan_02 = 20;
-        //int jpBossDaiJinQuan = 200;
-        //if (XkPlayerCtrl.GetInstanceFeiJi() != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
-        //{
-        //suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
-        //zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
-        //zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
-        //jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
-        //}
 #if TEST_DAI_JIN_QUAN
         //测试代金券.
         if (account == suiJiDaoJuDaiJinQuan)
@@ -1515,21 +1469,6 @@ public class SSBoxPostNet : MonoBehaviour
         //account单位是人民币元.
         //worth单位是人民币分.
         int worth = account * 100; //单位从元转换为分.
-
-        //int suiJiDaoJuDaiJinQuan = 10;
-        //int zhanCheDaiJinQuan_01 = 5;
-        //int zhanCheDaiJinQuan_02 = 20;
-        //int jpBossDaiJinQuan = 200;
-        //if (XkPlayerCtrl.GetInstanceFeiJi() != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null
-        //    && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData != null)
-        //{
-            //suiJiDaoJuDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.SuiJiDaoJuDaiJinQuan;
-            //zhanCheDaiJinQuan_01 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_01;
-            //zhanCheDaiJinQuan_02 = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.ZhanCheDaiJinQuan_02;
-            //jpBossDaiJinQuan = (int)XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.m_GameCaiPiaoData.JPBossDaiJinQuan;
-        //}
 #if TEST_DAI_JIN_QUAN
         //测试代金券.
         if (account == suiJiDaoJuDaiJinQuan)
@@ -2514,11 +2453,7 @@ public class SSBoxPostNet : MonoBehaviour
         /// <summary>
         /// 获取游戏配置信息的地址.
         /// </summary>
-#if USE_OLD_GET_HDD_GAME_CONFIG
-        public string m_Url = "/xcx_backstage/thunderTank/getPrizeList?"; //旧版本.
-#else
         public string m_Url = "/xcx_backstage/game_back/get/setting_info?"; //新版本.
-#endif
         /// <summary>
         /// 红点点游戏手柄代码.
         /// </summary>
@@ -2542,9 +2477,6 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     void GetGameConfigInfoFromHddServer()
     {
-//#if !USE_TEST_HDD_SERVER
-//        return; //test.
-//#endif
         if (m_BoxLoginData == null)
         {
             SSDebug.LogWarning("GetGameConfigInfoFromHddServer -> m_BoxLoginData was null");

@@ -8,6 +8,10 @@ using System.Collections.Generic;
 
 public class XKGlobalData
 {
+    /// <summary>
+    /// 游戏红点点服务器版本控制接口.
+    /// </summary>
+    public static SSGameLogoData.GameVersionHddServer m_GameVersionHddServer = SSGameLogoData.GameVersionHddServer.CeShiBan;
     public class GameLogoData
     {
         internal SSGameLogoData.GameLogo gameLogo = SSGameLogoData.GameLogo.Default;
