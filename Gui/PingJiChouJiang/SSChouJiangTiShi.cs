@@ -9,6 +9,11 @@ public class SSChouJiangTiShi : MonoBehaviour
     public class ChouJiangTiShiData
     {
         /// <summary>
+        /// 抽奖分数数字UI控制组件.
+        /// 单位为万(1, 9).
+        /// </summary>
+        public SSGameNumUI m_FenShuNumUI;
+        /// <summary>
         /// 复活X图片.
         /// </summary>
         public GameObject fuHuoImg;
@@ -54,6 +59,7 @@ public class SSChouJiangTiShi : MonoBehaviour
                 }
             }
             ShowPlayerWxHeadInfo(indexPlayer);
+            ShowChouJiangFenShuMin();
         }
 
         /// <summary>
@@ -74,6 +80,28 @@ public class SSChouJiangTiShi : MonoBehaviour
                     //玩家头像框.
                     m_HeadKuangUI.mainTexture = m_HeadKuangUIArray[indexVal];
                 }
+            }
+        }
+
+        /// <summary>
+        /// 展示抽奖分数最小值.
+        /// </summary>
+        void ShowChouJiangFenShuMin()
+        {
+            if (m_FenShuNumUI != null)
+            {
+                int minChouJiangScore = 40000;
+                if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().m_PingJiData != null)
+                {
+                    minChouJiangScore = XkGameCtrl.GetInstance().m_PingJiData.GetChouJiangMinScore();
+                }
+
+                int minFenShu = minChouJiangScore / 10000;
+                if (minFenShu <= 0 || minFenShu > 9)
+                {
+                    minFenShu = Mathf.Clamp(minFenShu, 1, 9);
+                }
+                m_FenShuNumUI.ShowNumUI(minFenShu);
             }
         }
     }
