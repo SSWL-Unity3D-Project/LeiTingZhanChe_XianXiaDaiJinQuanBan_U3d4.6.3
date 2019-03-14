@@ -1908,7 +1908,7 @@ public class SSBoxPostNet : MonoBehaviour
         StartCoroutine(DelayRemovePlayerLoginData(userId));
 
         //游戏对照码.
-        int gameCode = (int)m_GamePadState;
+        int gameCode = (int)m_GamePadState; //游戏码.
         int screenCode = Convert.ToInt32(m_BoxLoginData.screenId);
         int memberId = userId;
         //POST方法.
@@ -2531,17 +2531,7 @@ public class SSBoxPostNet : MonoBehaviour
 
         public string GetUrl(GamePadState padState, int screenCode)
         {
-            int gameCode = 0;
-            switch(padState)
-            {
-                case GamePadState.LeiTingZhanChe:
-                    {
-                        gameCode = HDDGameCode;
-                        break;
-                    }
-            }
-            string urlStr = m_HeadUrl + m_Url + "screenCode=" + screenCode + "&gameCode=" + gameCode;
-            return urlStr;
+            return m_HeadUrl + m_Url + "screenCode=" + screenCode + "&gameCode=" + HDDGameCode;
         }
     }
 
@@ -2585,7 +2575,7 @@ public class SSBoxPostNet : MonoBehaviour
 
         if (m_BoxLoginData != null)
         {
-            int gameCode = (int)m_GamePadState;
+            int gameCode = (int)m_GamePadState; //游戏码.
             string url = m_BoxLoginData.m_Address + "/wxbackstage/client/client_pay_count_down"
                 + "?gameCode=" + gameCode + "&userId=" + userId + "&countDown=" + countDown;
             SSDebug.Log("SendGamePayTimeInfoToHddServer -> url ==== " + url);

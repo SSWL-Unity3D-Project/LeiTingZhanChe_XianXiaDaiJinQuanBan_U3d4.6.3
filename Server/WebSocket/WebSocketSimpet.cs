@@ -287,56 +287,56 @@ public class WebSocketSimpet : MonoBehaviour
         }
     }
 
-    bool IsInitGameWeiXinShouBingData = false;
+    //bool IsInitGameWeiXinShouBingData = false;
     /// <summary>
     /// 初始化游戏微信手柄资源数据.
     /// </summary>
-    public void NetInitGameWeiXinShouBingData()
-    {
-        if (m_SSBoxPostNet == null)
-        {
-            return;
-        }
+    //public void NetInitGameWeiXinShouBingData()
+    //{
+    //    if (m_SSBoxPostNet == null)
+    //    {
+    //        return;
+    //    }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
+    //    if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+    //    {
 
-            if (IsInitGameWeiXinShouBingData)
-            {
-                return;
-            }
-            IsInitGameWeiXinShouBingData = true;
+    //        if (IsInitGameWeiXinShouBingData)
+    //        {
+    //            return;
+    //        }
+    //        IsInitGameWeiXinShouBingData = true;
 
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            string msgToSend = boxNumber + "," + boxNumber + ",0,";
-            //m_GamePadState = GamePadState.Default; //test.
-            switch (m_SSBoxPostNet.m_GamePadState)
-            {
-                case SSBoxPostNet.GamePadState.LeiTingZhanChe:
-                    {
-                        msgToSend += "{\"_msg_name\":\"initGamepad\","
-                            + "\"_msg_object_str\":{\"backgroundImage\":\"bg_ltzj.png\","
-                            + "\"loadGroup\":\"ltzj\","
-                            + "\"buttonStyle\":["
-                            + "{\"name\":\"direction\",\"image\":\"ball_ltzj.png\"},"
-                            + "{\"name\":\"directionBg\",\"image\":\"circle_ltzj.png\"},"
-                            + "{\"name\":\"fireA\",\"image\":\"a_ltzj.png\"},"
-                            + "{\"name\":\"fireB\",\"image\":\"b_ltzj.png\"}"
-                            + "]}}";
-                        break;
-                    }
-                default:
-                    {
-                        msgToSend += "{\"_msg_name\":\"initGamepad\",\"_msg_object_str\":{\"loadGroup\":\"default\"}}";
-                        break;
-                    }
-            }
+    //        string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+    //        string msgToSend = boxNumber + "," + boxNumber + ",0,";
+    //        //m_GamePadState = GamePadState.Default; //test.
+    //        switch (m_SSBoxPostNet.m_GamePadState)
+    //        {
+    //            case SSBoxPostNet.GamePadState.LeiTingZhanChe:
+    //                {
+    //                    msgToSend += "{\"_msg_name\":\"initGamepad\","
+    //                        + "\"_msg_object_str\":{\"backgroundImage\":\"bg_ltzj.png\","
+    //                        + "\"loadGroup\":\"ltzj\","
+    //                        + "\"buttonStyle\":["
+    //                        + "{\"name\":\"direction\",\"image\":\"ball_ltzj.png\"},"
+    //                        + "{\"name\":\"directionBg\",\"image\":\"circle_ltzj.png\"},"
+    //                        + "{\"name\":\"fireA\",\"image\":\"a_ltzj.png\"},"
+    //                        + "{\"name\":\"fireB\",\"image\":\"b_ltzj.png\"}"
+    //                        + "]}}";
+    //                    break;
+    //                }
+    //            default:
+    //                {
+    //                    msgToSend += "{\"_msg_name\":\"initGamepad\",\"_msg_object_str\":{\"loadGroup\":\"default\"}}";
+    //                    break;
+    //                }
+    //        }
 
-            Debug.Log("InitGameWeiXinShouBingData:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
-            Debug.Log("InitGameWeiXinShouBingData:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
-    }
+    //        Debug.Log("InitGameWeiXinShouBingData:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
+    //        Debug.Log("InitGameWeiXinShouBingData:: msg == " + msgToSend);
+    //        _wabData.WebSocket.Send(msgToSend);
+    //    }
+    //}
 
     /// <summary>
     /// 当用户余额消费完毕后，需要进行充值，客户端需要发送.
