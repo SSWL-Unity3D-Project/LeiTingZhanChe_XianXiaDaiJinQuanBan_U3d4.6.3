@@ -31,7 +31,15 @@ public class SSGameLogoData : MonoBehaviour
         HaiDiLao = 1,
     }
     /// <summary>
+    /// 游戏展示的Logo图片数据.
+    /// </summary>
+    public GameLogo m_GameLogoInfo = GameLogo.HaiDiLao;
+    /// <summary>
     /// 游戏Logo枚举.
     /// </summary>
     public static GameLogo m_GameLogo = GameLogo.Default;
+    private void Awake()
+    {
+        m_GameLogo = m_GameLogoInfo;
+    }
 }
