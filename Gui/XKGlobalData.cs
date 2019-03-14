@@ -367,6 +367,69 @@ public class XKGlobalData
         InitPlayerMianFeiData();
     }
 
+    #region 游戏数据配置信息
+    internal SSGameConfigData m_SSGameConfigData;
+    /// <summary>
+    /// 初始化游戏配置信息.
+    /// </summary>
+    void InitSSGameConfigData()
+    {
+        if (m_SSGameConfigData == null)
+        {
+            m_SSGameConfigData = new SSGameConfigData();
+        }
+
+        if (m_SSGameConfigData != null)
+        {
+            m_SSGameConfigData.Init();
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家最大血值.
+    /// </summary>
+    internal void UpdataPlayerHealthMax(int playerHealthMax)
+    {
+        if (m_SSGameConfigData != null)
+        {
+            m_SSGameConfigData.UpdataPlayerHealthMax(playerHealthMax);
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家评级分数信息.
+    /// </summary>
+    internal void UpdataPingJiFenShu(int pingJi_sss, int pingJi_ss, int pingJi_s, int pingJi_a, int pingJi_b, int pingJi_c, int pingJi_d)
+    {
+        if (m_SSGameConfigData != null)
+        {
+            m_SSGameConfigData.UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
+        }
+    }
+
+    /// <summary>
+    /// 更新玩家再玩一局游戏奖品的概率信息.
+    /// </summary>
+    internal void UpdataZaiWanYiJuGaiLv(int zaiWanYiJuGaiLv)
+    {
+        if (m_SSGameConfigData != null)
+        {
+            m_SSGameConfigData.UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
+        }
+    }
+    
+    /// <summary>
+    /// 更新游戏血包道具掉落的间隔时间信息.
+    /// </summary>
+    internal void UpdataXueBaoJianGeTime(int xueBaoJianGeTime)
+    {
+        if (m_SSGameConfigData != null)
+        {
+            m_SSGameConfigData.UpdataXueBaoJianGeTime(xueBaoJianGeTime);
+        }
+    }
+    #endregion
+
     #region 玩家免费进行游戏的数据管理
     SSPlayerMianFeiData m_SSPlayerMianFeiData;
     /// <summary>

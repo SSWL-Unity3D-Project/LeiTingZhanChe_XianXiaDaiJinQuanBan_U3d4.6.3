@@ -21,7 +21,7 @@ public class SSPingJiData : MonoBehaviour
     /// </summary>
     public PingJiLevel m_ChouJiangPingJi = PingJiLevel.A;
 
-    private void Start()
+    private void Awake()
     {
         if (XkGameCtrl.GetInstance() != null)
         {
@@ -41,6 +41,19 @@ public class SSPingJiData : MonoBehaviour
             score = m_PingJiFenShuArray[indexVal];
         }
         return score;
+    }
+
+    /// <summary>
+    /// 更新评级分数信息.
+    /// </summary>
+    internal void UpdataPingJiFenShuInfo(int[] pingJiFenShuArray)
+    {
+        m_PingJiFenShuArray = pingJiFenShuArray;
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            int chouJiangFenShu = GetChouJiangMinScore();
+            XkGameCtrl.GetInstance().ShowChouJiangFenShu3D(chouJiangFenShu);
+        }
     }
 
     internal PingJiLevel GetPlayerPingJiLevel(int fenShuVal)

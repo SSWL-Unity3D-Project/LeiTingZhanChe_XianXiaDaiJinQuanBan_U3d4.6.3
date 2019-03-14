@@ -190,6 +190,14 @@ public class SSChouJiangData : MonoBehaviour
     }
 
     /// <summary>
+    /// 更新再玩一局游戏奖品的概率.
+    /// </summary>
+    internal void UpdateZaiWanYiJuJiangPinGaiLv(int zaiWanYiJuGaiLv)
+    {
+        SetZaiWanYiJuJiangPinDtMaxPlayer(zaiWanYiJuGaiLv);
+    }
+
+    /// <summary>
     /// 设置再玩一局游戏奖品的最大人数.
     /// </summary>
     void SetZaiWanYiJuJiangPinDtMaxPlayer(int gaiLv)

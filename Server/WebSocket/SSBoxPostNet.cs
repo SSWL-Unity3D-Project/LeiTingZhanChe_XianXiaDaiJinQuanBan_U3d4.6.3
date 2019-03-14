@@ -729,6 +729,20 @@ public class SSBoxPostNet : MonoBehaviour
                             }
                             //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
                             gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
+
+                            int mianFeiFuHuoCiShu = 0; //免费复活次数.
+                            int mianFeiShiWanCount = 0; //免费试玩次数.
+                            if (mod == "0")
+                            {
+                                //首次免费.
+                                mianFeiShiWanCount = 1 + mianFeiFuHuoCiShu;
+                            }
+                            else
+                            {
+                                //首次付费.
+                                mianFeiShiWanCount = 0;
+                            }
+                            //gameConfigDt.MianFeiShiWanCount = mianFeiShiWanCount;
                             gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
                             gameConfigDt.UpdataAllServerConfigData();
 
@@ -857,6 +871,32 @@ public class SSBoxPostNet : MonoBehaviour
                                     //更新游戏随机道具奖品4代金券数据信息.
                                     shangHuInfoDt.UpdateSuiJiDaoJuShangHuInfo(infoArray);
                                 }
+                            }
+
+                            if (XKGlobalData.GetInstance() != null)
+                            {
+                                //更新游戏配置数据.
+                                //更新玩家最大血值.
+                                //int playerHealthMax = 45000;
+                                //XKGlobalData.GetInstance().UpdataPlayerHealthMax(playerHealthMax);
+
+                                //更新玩家评级分数信息.
+                                //int pingJi_sss = 200000;
+                                //int pingJi_ss = 120000;
+                                //int pingJi_s = 80000;
+                                //int pingJi_a = 40000;
+                                //int pingJi_b = 20000;
+                                //int pingJi_c = 10000;
+                                //int pingJi_d = 0;
+                                //XKGlobalData.GetInstance().UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
+
+                                //更新玩家再玩一局游戏奖品的概率信息.
+                                //int zaiWanYiJuGaiLv = 10;
+                                //XKGlobalData.GetInstance().UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
+
+                                //更新游戏血包道具掉落的间隔时间信息.
+                                //int xueBaoJianGeTime = 30; //秒.
+                                //XKGlobalData.GetInstance().UpdataXueBaoJianGeTime(xueBaoJianGeTime);
                             }
                         }
                         else

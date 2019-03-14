@@ -936,7 +936,27 @@ public class XkGameCtrl : SSGameMono
         if (m_SSChouJiangDt == null)
         {
             m_SSChouJiangDt = gameObject.AddComponent<SSChouJiangData>();
+        }
+
+        if (m_SSChouJiangDt != null)
+        {
             m_SSChouJiangDt.Init(m_ZaiWanYiJuGaiLv);
+        }
+    }
+
+    /// <summary>
+    /// 更新再玩一局游戏奖品的概率.
+    /// </summary>
+    internal void UpdateZaiWanYiJuGaiLv(int zaiWanYiJuGaiLv)
+    {
+        m_ZaiWanYiJuGaiLv = zaiWanYiJuGaiLv;
+        if (m_SSChouJiangDt != null)
+        {
+            m_SSChouJiangDt.UpdateZaiWanYiJuJiangPinGaiLv(zaiWanYiJuGaiLv);
+        }
+        else
+        {
+            InitChouJiangData();
         }
     }
 
@@ -4465,6 +4485,63 @@ public class XkGameCtrl : SSGameMono
         }
         return true;
     }
+
+    /// <summary>
+    /// 更新游戏评级分数信息.
+    /// </summary>
+    internal void UpdateGamePingJiFenShuInfo(int[] pingJiFenShuArray)
+    {
+        if (m_PingJiData != null)
+        {
+            m_PingJiData.UpdataPingJiFenShuInfo(pingJiFenShuArray);
+        }
+    }
+
+    #region 游戏场景抽奖分数管理.
+    /// <summary>
+    /// 游戏场景抽奖分数管理组件.
+    /// </summary>
+    public SSChouJiangFenShu3DManage m_SSChouJiangFenShu3DManage;
+    /// <summary>
+    /// 添加抽奖分数.
+    /// </summary>
+    internal void AddChouJiangFenShu3D(SSChouJiangFenShu3D chouJiangFenShuCom)
+    {
+        if (m_SSChouJiangFenShu3DManage != null && chouJiangFenShuCom != null)
+        {
+            m_SSChouJiangFenShu3DManage.AddChouJiangFenShu(chouJiangFenShuCom);
+
+            int chouJiangFenShu = 40000;
+            if (m_PingJiData != null)
+            {
+                chouJiangFenShu = m_PingJiData.GetChouJiangMinScore();
+            }
+
+            int minFenShu = chouJiangFenShu / 10000;
+            if (minFenShu <= 0 || minFenShu > 9)
+            {
+                minFenShu = Mathf.Clamp(minFenShu, 1, 9);
+            }
+            chouJiangFenShuCom.ShowNum(minFenShu);
+        }
+    }
+
+    /// <summary>
+    /// 显示抽奖分数.
+    /// </summary>
+    internal void ShowChouJiangFenShu3D(int chouJiangFenShu)
+    {
+        if (m_SSChouJiangFenShu3DManage != null)
+        {
+            int minFenShu = chouJiangFenShu / 10000;
+            if (minFenShu <= 0 || minFenShu > 9)
+            {
+                minFenShu = Mathf.Clamp(minFenShu, 1, 9);
+            }
+            m_SSChouJiangFenShu3DManage.ShowNum(minFenShu);
+        }
+    }
+    #endregion
 
     /// <summary>
     /// 释放游戏游离资源.
