@@ -633,6 +633,27 @@ public class WebSocketSimpet : MonoBehaviour
     //}
     #endregion
 
+    #region 发送游戏信息给邮箱
+    /// <summary>
+    /// 发送游戏信息到邮箱.
+    /// </summary>
+    public void SendGameInfoToEmail()
+    {
+        if (m_SSBoxPostNet == null || m_SSBoxPostNet.m_BoxLoginData == null)
+        {
+            return;
+        }
+
+        string msg = "OpenGameTime: " + DateTime.Now.ToString()
+            + ", GameVersion: " + XKGameVersionCtrl.GameVersion
+            + ", GameScreenId: " + m_SSBoxPostNet.m_BoxLoginData.screenId
+            + ", GameBoxNumber: " + m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //SSDebug.LogWarning("SendGameInfoToEmail -> msg == " + msg);
+        XKGame.Script.GameEmail.SSGameEmail gameEmail = new XKGame.Script.GameEmail.SSGameEmail();
+        gameEmail.SendGameEmail(msg);
+    }
+    #endregion
+
     #region 手柄免费开始游戏按键的显示与隐藏控制
     /// <summary>
     /// 手柄免费开始游戏按键的显示.

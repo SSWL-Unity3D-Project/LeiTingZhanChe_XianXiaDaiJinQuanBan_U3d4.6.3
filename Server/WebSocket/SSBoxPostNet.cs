@@ -30,6 +30,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public void Init()
     {
+        InitGameVersionInfo();
         InitHddBoxLoginData();
 
         string boxNum = "000000000000";
@@ -87,6 +88,25 @@ public class SSBoxPostNet : MonoBehaviour
         //获取服务器的时间信息
         //HttpSendGetServerTimeInfo();
         //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
+    }
+
+    void InitGameVersionInfo()
+    {
+        switch (XKGlobalData.m_GameVersionHddServer)
+        {
+            case SSGameLogoData.GameVersionHddServer.CeShiBan:
+                {
+                    //设置游戏为红点点测试服务器版本信息.
+                    XKGameVersionCtrl.SetTestGameVersion();
+                    break;
+                }
+            case SSGameLogoData.GameVersionHddServer.ZhengShiBan:
+                {
+                    //设置红点点正式服务器版本信息.
+                    XKGameVersionCtrl.SetReleaseGameVersion();
+                    break;
+                }
+        }
     }
 
     /// <summary>
