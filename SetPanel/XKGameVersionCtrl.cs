@@ -3,7 +3,7 @@
 public class XKGameVersionCtrl : MonoBehaviour
 {
     UILabel VersionLB;
-    static string _GameVersion = "Version: 20190315.01";
+    static string _GameVersion = "Version: 20190318.01";
     public static string GameVersion
     {
         get
@@ -50,7 +50,7 @@ public class XKGameVersionCtrl : MonoBehaviour
         if (IsSetGameVersion == false)
         {
             IsSetGameVersion = true;
-            _GameVersion += "_Test"; //红点点测试服务器版本.
+            _GameVersion += "_" + SSGameLogoData.m_GameVersionState + "_Test"; //红点点测试服务器版本.
         }
     }
 
@@ -63,7 +63,7 @@ public class XKGameVersionCtrl : MonoBehaviour
         if (IsSetGameVersion == false)
         {
             IsSetGameVersion = true;
-            _GameVersion += "_Release"; //红点点正式服务器版本.
+            _GameVersion += "_" + SSGameLogoData.m_GameVersionState + "_Release"; //红点点正式服务器版本.
         }
     }
 

@@ -309,7 +309,7 @@ namespace XKGame.Script.GameEmail
                     //string fromMailAddress = "mingmingruyuedlut@163.com";
                     string toMailAddress = "shenyongqiang2008@126.com";
                     string fromMailAddress = "shenyongqiang2008@163.com";
-                    string subjectInfo = "LeiTingZhanChe_HDL sending e_mail";
+                    string subjectInfo = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState + " sending e_mail";
                     string bodyInfo = m_Msg;
                     string mailUsername = "shenyongqiang2008";
                     double num = Math.Pow(2, 10) + Math.Pow(2, 9) + Math.Pow(2, 8) + Math.Pow(2, 7) + 66;

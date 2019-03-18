@@ -54,6 +54,23 @@ public class SSGameLogoData : MonoBehaviour
     /// 游戏红点点服务器版本控制接口.
     /// </summary>
     public GameVersionHddServer m_GameVersionHddServer = GameVersionHddServer.CeShiBan;
+
+    public enum GameVersionState
+    {
+        /// <summary>
+        /// 海底捞版本游戏.
+        /// </summary>
+        HaiDiLao = 0,
+        /// <summary>
+        /// KTV智能桌面版本游戏.
+        /// </summary>
+        KTV = 1,
+    }
+    /// <summary>
+    /// 游戏版本状态.
+    /// </summary>
+    public static GameVersionState m_GameVersionState = GameVersionState.HaiDiLao;
+
     private void Awake()
     {
         m_GameLogo = m_GameLogoInfo;
