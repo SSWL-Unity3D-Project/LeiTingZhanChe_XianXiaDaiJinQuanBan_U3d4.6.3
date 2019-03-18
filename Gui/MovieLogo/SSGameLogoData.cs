@@ -69,11 +69,16 @@ public class SSGameLogoData : MonoBehaviour
     /// <summary>
     /// 游戏版本状态.
     /// </summary>
+    public GameVersionState m_GameVersionType = GameVersionState.HaiDiLao;
+    /// <summary>
+    /// 游戏版本状态.
+    /// </summary>
     public static GameVersionState m_GameVersionState = GameVersionState.HaiDiLao;
 
     private void Awake()
     {
         m_GameLogo = m_GameLogoInfo;
+        m_GameVersionState = m_GameVersionType;
         XKGlobalData.m_GameVersionHddServer = m_GameVersionHddServer;
         switch (m_GameVersionHddServer)
         {
