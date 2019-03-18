@@ -117,7 +117,7 @@ namespace XKGame.Script.GameEmail
                 }
                 catch (Exception ex)
                 {
-                    SSDebug.LogWarning(ex.ToString());
+                    SSDebug.LogWarning("MyEmail::Send -> ex == " + ex.ToString());
                 }
             }
         }
@@ -323,7 +323,7 @@ namespace XKGame.Script.GameEmail
                 }
                 catch (Exception ex)
                 {
-                    SSDebug.LogWarning(ex.ToString());
+                    SSDebug.LogWarning("ThreadSendOpenGameMsgToEmail -> ex == " + ex.ToString());
                 }
             }
         }
