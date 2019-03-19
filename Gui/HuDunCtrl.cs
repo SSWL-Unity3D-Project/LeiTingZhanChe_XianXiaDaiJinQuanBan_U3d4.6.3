@@ -93,7 +93,7 @@ public class HuDunCtrl : MonoBehaviour {
 	{
         //HuDunTime = timeVal;
         IsCanResetHuDunTime = true;
-        HuDunTime = 60f;
+        HuDunTime = 30f;
         TimeStart = Time.time;
 		HuDunSprite.fillAmount = 1f;
 		HuDunSprite.enabled = true;
