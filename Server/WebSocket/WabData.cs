@@ -127,11 +127,11 @@ public class WabData
         //    m_WebSocketSimpet.NetInitGameWeiXinShouBingData();
         //}
 
-        if (m_WebSocketSimpet != null)
-        {
-            //发送游戏信息到邮箱.
-            m_WebSocketSimpet.SendGameInfoToEmail();
-        }
+        //if (m_WebSocketSimpet != null)
+        //{
+        //    //发送游戏信息到邮箱.
+        //    m_WebSocketSimpet.SendGameInfoToEmail();
+        //}
     }
 
     /// <summary>
