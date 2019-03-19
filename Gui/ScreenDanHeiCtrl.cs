@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ScreenDanHeiCtrl : MonoBehaviour {
+public class ScreenDanHeiCtrl : MonoBehaviour
+{
 	public GameObject StartCameraObj;
 	public Camera GameUiCamera;
 	GameObject ScreenDanHeiObj;
@@ -46,11 +46,18 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 	void HiddeScreenDanHeiObj()
 	{
 		ScreenDanHeiObj.SetActive(false);
-	}
+        IsHiddeScreenDanHeiObj = true;
+        IsOpenHiddeScreenDanHeiObj = false;
+    }
 
 	public void CloseStartCartoon()
 	{
-		CancelInvoke("HiddeScreenDanHeiObj");
+        IsOpenHiddeScreenDanHeiObj = false;
+        IsHiddeScreenDanHeiObj = true;
+        if (IsInvoking("HiddeScreenDanHeiObj") == true)
+        {
+            CancelInvoke("HiddeScreenDanHeiObj");
+        }
 		//TiaoGuoBtCtrl.GetInstanceCartoon().HiddenTiaoGuoBt();
 		ScreenDanHeiObj.SetActive(false);
 		if (DanHeiTweenAlpha != null) {
@@ -80,7 +87,11 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 		});
 		DanHeiTweenAlpha.enabled = true;
 		DanHeiTweenAlpha.PlayForward();
-		switch (key) {
+
+        IsOpenHiddeScreenDanHeiObj = true;
+        IsHiddeScreenDanHeiObj = false;
+        m_LastTimeHiddeScreenDanHei = Time.time;
+        switch (key) {
 		case 1:
 			if (XkPlayerCtrl.GetInstanceFeiJi() != null) {
 				XkPlayerCtrl.GetInstanceFeiJi().HandlePlayerHiddenArray();
@@ -93,7 +104,51 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 		}
 	}
 
-	public bool GetScreenDanHeiObjActive()
+    float m_LastTimeHiddeScreenDanHei = 0;
+    bool IsHiddeScreenDanHeiObj = false;
+    bool IsOpenHiddeScreenDanHeiObj = false;
+    /// <summary>
+    /// 更新隐藏屏幕淡黑特效.
+    /// </summary>
+    void UpdataHiddeScreenDanHeiObj()
+    {
+        if (IsHiddeScreenDanHeiObj == true)
+        {
+            return;
+        }
+
+        if (Time.time - m_LastTimeHiddeScreenDanHei >= 5f)
+        {
+            m_LastTimeHiddeScreenDanHei = Time.time;
+            IsHiddeScreenDanHeiObj = true;
+            IsOpenHiddeScreenDanHeiObj = false;
+            if (IsInvoking("HiddeScreenDanHeiObj") == true)
+            {
+                CancelInvoke("HiddeScreenDanHeiObj");
+            }
+            HiddeScreenDanHeiObj();
+        }
+    }
+
+    private void Update()
+    {
+        if (IsHiddeScreenDanHeiObj == false && IsHiddeScreenDanHeiObj == true)
+        {
+            UpdataHiddeScreenDanHeiObj();
+        }
+
+        if (IsSreenAlphaToMin == false && IsOpenSreenAlphaToMin == true)
+        {
+            UpdataSreenAlphaToMin();
+        }
+
+        if (IsSreenAlphaToMax == false && IsOpenSreenAlphaToMax == true)
+        {
+            UpdataSreenAlphaToMax();
+        }
+    }
+
+    public bool GetScreenDanHeiObjActive()
 	{
 		return ScreenDanHeiObj.activeSelf;
 	}
@@ -117,10 +172,42 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 		});
 		DanHeiTweenAlpha.enabled = true;
 		DanHeiTweenAlpha.PlayForward();
-	}
 
-	void OnSreenAlphaToMax()
+        m_LastTimeSreenAlphaToMax = Time.time;
+        IsSreenAlphaToMax = false;
+        IsOpenSreenAlphaToMax = true;
+    }
+
+    float m_LastTimeSreenAlphaToMax = 0;
+    bool IsSreenAlphaToMax = false;
+    bool IsOpenSreenAlphaToMax = false;
+    /// <summary>
+    /// 更新显示游戏画面.
+    /// </summary>
+    void UpdataSreenAlphaToMax()
+    {
+        if (IsSreenAlphaToMax == true)
+        {
+            return;
+        }
+
+        if (Time.time - m_LastTimeSreenAlphaToMax >= 5f)
+        {
+            m_LastTimeSreenAlphaToMax = Time.time;
+            IsSreenAlphaToMax = true;
+            IsOpenSreenAlphaToMax = false;
+            if (IsInvoking("OnSreenAlphaToMax") == true)
+            {
+                CancelInvoke("OnSreenAlphaToMax");
+            }
+            OnSreenAlphaToMax();
+        }
+    }
+
+    void OnSreenAlphaToMax()
 	{
+        IsOpenSreenAlphaToMax = false;
+        IsSreenAlphaToMax = true;
 //		GameMode modeVal = XkGameCtrl.GameModeVal;
 //		Debug.Log("Unity:"+"OnSreenAlphaToMax -> GameMode "+modeVal);
 
@@ -168,11 +255,14 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 		DanHeiTweenAlpha.enabled = true;
 		DanHeiTweenAlpha.PlayForward();
 
+        IsSreenAlphaToMin = false;
+        IsOpenSreenAlphaToMin = true;
+        m_LastTimeSreenAlphaToMin = Time.time;
 //		if (isClearCartoonNpc) {
 //			XkGameCtrl.ClearCartoonSpawnNpc();
 //		}
-		
-		if (Network.peerType != NetworkPeerType.Server) {
+
+        if (Network.peerType != NetworkPeerType.Server) {
 			IsStartGame = true;
 		}
 		Time.timeScale = 1.0f;
@@ -209,8 +299,34 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 //			break;
 //		}
 	}
+    
+    float m_LastTimeSreenAlphaToMin = 0;
+    bool IsSreenAlphaToMin = false;
+    bool IsOpenSreenAlphaToMin = false;
+    /// <summary>
+    /// 更新显示游戏画面.
+    /// </summary>
+    void UpdataSreenAlphaToMin()
+    {
+        if (IsSreenAlphaToMin == true)
+        {
+            return;
+        }
 
-	public void AddStartMovePlayerCount()
+        if (Time.time - m_LastTimeSreenAlphaToMin >= 5f)
+        {
+            m_LastTimeSreenAlphaToMin = Time.time;
+            IsSreenAlphaToMin = true;
+            IsOpenSreenAlphaToMin = false;
+            if (IsInvoking("OnSreenAlphaToMin") == true)
+            {
+                CancelInvoke("OnSreenAlphaToMin");
+            }
+            OnSreenAlphaToMin();
+        }
+    }
+
+    public void AddStartMovePlayerCount()
 	{
 		StartMovePlayerCount++;
 //		Debug.Log("Unity:"+"AddStartMovePlayerCount -> StartMovePlayerCount "+StartMovePlayerCount
@@ -251,7 +367,9 @@ public class ScreenDanHeiCtrl : MonoBehaviour {
 				XKPlayerCamera.GetInstanceTanKe().SetEnableCamera(false);
 			}
 		}
-	}
+        IsSreenAlphaToMin = true;
+        IsOpenSreenAlphaToMin = false;
+    }
 
 	/// <summary>
 	/// Actives the game UI camera.
