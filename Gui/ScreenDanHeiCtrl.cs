@@ -132,7 +132,7 @@ public class ScreenDanHeiCtrl : MonoBehaviour
 
     private void Update()
     {
-        if (IsHiddeScreenDanHeiObj == false && IsHiddeScreenDanHeiObj == true)
+        if (IsHiddeScreenDanHeiObj == false && IsOpenHiddeScreenDanHeiObj == true)
         {
             UpdataHiddeScreenDanHeiObj();
         }
