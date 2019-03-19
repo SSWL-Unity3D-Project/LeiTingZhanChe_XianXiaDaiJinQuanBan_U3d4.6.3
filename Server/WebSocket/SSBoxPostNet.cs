@@ -498,7 +498,7 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             string jsonDataInfo = jd["data"].ToJson();
                             JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
-                            //SSDebug.Log("data ============ " + jsonDataInfo);
+                            //SSDebug.LogWarning("data ============ " + jsonDataInfo);
                             string totalReturnRate = jd_Data["setting"]["totalReturnRate"].ToString(); //总返奖率，单位：%
                             string superRewardMoney = jd_Data["setting"]["superPrizeBusinessMoney"].ToString(); //超级JP大奖商户支付金额
                             string mod = jd_Data["setting"]["mod"].ToString(); //运营模式
@@ -718,21 +718,26 @@ public class SSBoxPostNet : MonoBehaviour
                                 gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
                             }
                             //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
-                            gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
+                            //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
 
                             int mianFeiFuHuoCiShu = 0; //免费复活次数.
+                            if (jd_Data["setting"].Keys.Contains("firstFreeResurrection") == true)
+                            {
+                                mianFeiFuHuoCiShu = Convert.ToInt32(jd_Data["setting"]["firstFreeResurrection"].ToString());
+                            }
+
                             int mianFeiShiWanCount = 0; //免费试玩次数.
                             if (mod == "0")
                             {
                                 //首次免费.
-                                mianFeiShiWanCount = 1 + mianFeiFuHuoCiShu;
+                                mianFeiShiWanCount = 1 + mianFeiFuHuoCiShu; //首次免费加免费复活次数等于免费试玩次数.
                             }
                             else
                             {
                                 //首次付费.
                                 mianFeiShiWanCount = 0;
                             }
-                            //gameConfigDt.MianFeiShiWanCount = mianFeiShiWanCount;
+                            gameConfigDt.MianFeiShiWanCount = mianFeiShiWanCount;
                             gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
                             gameConfigDt.UpdataAllServerConfigData();
 
@@ -867,26 +872,66 @@ public class SSBoxPostNet : MonoBehaviour
                             {
                                 //更新游戏配置数据.
                                 //更新玩家最大血值.
-                                //int playerHealthMax = 45000;
-                                //XKGlobalData.GetInstance().UpdataPlayerHealthMax(playerHealthMax);
+                                int playerHealthMax = 45000;
+                                if (jd_Data["setting"].Keys.Contains("playerHp") == true)
+                                {
+                                    playerHealthMax = Convert.ToInt32(jd_Data["setting"]["playerHp"].ToString());
+                                }
+                                XKGlobalData.GetInstance().UpdataPlayerHealthMax(playerHealthMax);
 
                                 //更新玩家评级分数信息.
-                                //int pingJi_sss = 200000;
-                                //int pingJi_ss = 120000;
-                                //int pingJi_s = 80000;
-                                //int pingJi_a = 40000;
-                                //int pingJi_b = 20000;
-                                //int pingJi_c = 10000;
-                                //int pingJi_d = 0;
-                                //XKGlobalData.GetInstance().UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
+                                int pingJi_sss = 200000;
+                                if (jd_Data["setting"].Keys.Contains("sss") == true)
+                                {
+                                    pingJi_sss = Convert.ToInt32(jd_Data["setting"]["sss"].ToString());
+                                }
+                                int pingJi_ss = 120000;
+                                if (jd_Data["setting"].Keys.Contains("ss") == true)
+                                {
+                                    pingJi_ss = Convert.ToInt32(jd_Data["setting"]["ss"].ToString());
+                                }
+                                int pingJi_s = 80000;
+                                if (jd_Data["setting"].Keys.Contains("s") == true)
+                                {
+                                    pingJi_s = Convert.ToInt32(jd_Data["setting"]["s"].ToString());
+                                }
+                                int pingJi_a = 40000;
+                                if (jd_Data["setting"].Keys.Contains("a") == true)
+                                {
+                                    pingJi_a = Convert.ToInt32(jd_Data["setting"]["a"].ToString());
+                                }
+                                int pingJi_b = 20000;
+                                if (jd_Data["setting"].Keys.Contains("b") == true)
+                                {
+                                    pingJi_b = Convert.ToInt32(jd_Data["setting"]["b"].ToString());
+                                }
+                                int pingJi_c = 10000;
+                                if (jd_Data["setting"].Keys.Contains("c") == true)
+                                {
+                                    pingJi_c = Convert.ToInt32(jd_Data["setting"]["c"].ToString());
+                                }
+                                int pingJi_d = 0;
+                                if (jd_Data["setting"].Keys.Contains("d") == true)
+                                {
+                                    pingJi_d = Convert.ToInt32(jd_Data["setting"]["d"].ToString());
+                                }
+                                XKGlobalData.GetInstance().UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
 
                                 //更新玩家再玩一局游戏奖品的概率信息.
-                                //int zaiWanYiJuGaiLv = 10;
-                                //XKGlobalData.GetInstance().UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
+                                int zaiWanYiJuGaiLv = 10;
+                                if (jd_Data["setting"].Keys.Contains("playAgain") == true)
+                                {
+                                    zaiWanYiJuGaiLv = Convert.ToInt32(jd_Data["setting"]["playAgain"].ToString());
+                                }
+                                XKGlobalData.GetInstance().UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
 
                                 //更新游戏血包道具掉落的间隔时间信息.
-                                //int xueBaoJianGeTime = 30; //秒.
-                                //XKGlobalData.GetInstance().UpdataXueBaoJianGeTime(xueBaoJianGeTime);
+                                int xueBaoJianGeTime = 30; //秒.
+                                if (jd_Data["setting"].Keys.Contains("getHpInterval") == true)
+                                {
+                                    xueBaoJianGeTime = Convert.ToInt32(jd_Data["setting"]["getHpInterval"].ToString());
+                                }
+                                XKGlobalData.GetInstance().UpdataXueBaoJianGeTime(xueBaoJianGeTime);
                             }
                         }
                         else
@@ -2342,10 +2387,10 @@ public class SSBoxPostNet : MonoBehaviour
 
             ms = new MemoryStream(buffer);
             byte[] buffurPic = ms.ToArray();
-            Debug.Log("Unity: buffurPic.length ==================== " + buffurPic.Length);
+            //Debug.Log("Unity: buffurPic.length ==================== " + buffurPic.Length);
 
             string path = m_BoxLoginData.WX_XiaoChengXu_ErWeiMa_Path;
-            Debug.Log("Unity: path ==== " + path);
+            //Debug.Log("Unity: path ==== " + path);
             File.WriteAllBytes(path, buffurPic);
         }
         finally
