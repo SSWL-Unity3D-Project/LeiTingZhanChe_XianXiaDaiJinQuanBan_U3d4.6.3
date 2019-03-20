@@ -77,6 +77,7 @@ public class SSGameLogoData : MonoBehaviour
 
     private void Awake()
     {
+        Screen.showCursor = false;
         m_GameLogo = m_GameLogoInfo;
         m_GameVersionState = m_GameVersionType;
         XKGlobalData.m_GameVersionHddServer = m_GameVersionHddServer;

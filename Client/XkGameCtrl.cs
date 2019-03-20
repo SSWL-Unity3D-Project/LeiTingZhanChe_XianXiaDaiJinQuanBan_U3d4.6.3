@@ -588,6 +588,7 @@ public class XkGameCtrl : SSGameMono
             SSDebug.Log("GameVersion ============ " + XKGameVersionCtrl.GameVersion);
             //SSDebug.Log("deviceUniqueIdentifier ===== " + SystemInfo.deviceUniqueIdentifier);
             Application.runInBackground = true;
+            Screen.showCursor = false;
             InitCheckLoadingMovieScene();
 
             XKGlobalData.GetInstance();
