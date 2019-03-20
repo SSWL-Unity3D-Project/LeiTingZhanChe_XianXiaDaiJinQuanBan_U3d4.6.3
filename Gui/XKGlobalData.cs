@@ -369,6 +369,7 @@ public class XKGlobalData
         InitGameCoinToMoney();
         InitSSGameXuMingData();
         InitPlayerMianFeiData();
+        InitSSGameConfigData();
     }
 
     #region 游戏数据配置信息

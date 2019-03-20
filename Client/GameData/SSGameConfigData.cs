@@ -71,6 +71,12 @@ public class SSGameConfigData
             WriteToFileXml(m_FileName, "playerHealthMax", info);
         }
         m_PlayerHealthMax = Convert.ToInt32(info);
+
+        if (XkGameCtrl.GetInstance().PlayerXueLiangMax != m_PlayerHealthMax)
+        {
+            //更新血量最大值.
+            XkGameCtrl.GetInstance().PlayerXueLiangMax = m_PlayerHealthMax;
+        }
     }
 
     /// <summary>
@@ -82,8 +88,18 @@ public class SSGameConfigData
         {
             playerHealthMax = 0;
         }
-        m_PlayerHealthMax = playerHealthMax;
-        WriteToFileXml(m_FileName, "playerHealthMax", playerHealthMax.ToString());
+
+        if (XkGameCtrl.GetInstance().PlayerXueLiangMax != playerHealthMax)
+        {
+            //更新血量最大值.
+            XkGameCtrl.GetInstance().PlayerXueLiangMax = playerHealthMax;
+        }
+
+        if (m_PlayerHealthMax != playerHealthMax)
+        {
+            m_PlayerHealthMax = playerHealthMax;
+            WriteToFileXml(m_FileName, "playerHealthMax", playerHealthMax.ToString());
+        }
     }
 
     /// <summary>
@@ -216,6 +232,12 @@ public class SSGameConfigData
             WriteToFileXml(m_FileName, "PingJi_D", info_d);
         }
         m_PingJi_D = Convert.ToInt32(info_d);
+
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            int[] fenShuArray = GetGamePingJiFenShuArray();
+            XkGameCtrl.GetInstance().UpdateGamePingJiFenShuInfo(fenShuArray);
+        }
     }
 
     /// <summary>
@@ -296,6 +318,11 @@ public class SSGameConfigData
             WriteToFileXml(m_FileName, "ZaiWanYiJuGaiLv", info);
         }
         m_ZaiWanYiJuGaiLv = Convert.ToInt32(info);
+
+        if (XkGameCtrl.GetInstance() != null)
+        {
+            XkGameCtrl.GetInstance().UpdateZaiWanYiJuGaiLv(m_ZaiWanYiJuGaiLv);
+        }
     }
 
     /// <summary>
