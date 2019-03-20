@@ -484,6 +484,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         GamePlayerData FindLoginGamePlayerData(int userId)
         {
+            if (m_LoginGamePlayerData == null)
+            {
+                return null;
+            }
+
             GamePlayerData playerDt = m_LoginGamePlayerData.Find((dt) => {
                 return dt.m_PlayerWeiXinData.userId.Equals(userId);
             });
@@ -495,9 +500,18 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         void AddLoginGamePlayerData(GamePlayerData playerDt)
         {
-            if (playerDt != null && m_LoginGamePlayerData != null && m_LoginGamePlayerData.Contains(playerDt) == false)
+            if (m_LoginGamePlayerData == null)
             {
-                m_LoginGamePlayerData.Add(playerDt);
+                return;
+            }
+
+            if (playerDt != null && playerDt.m_PlayerWeiXinData != null)
+            {
+                if (FindLoginGamePlayerData(playerDt.m_PlayerWeiXinData.userId) == null)
+                {
+                    //按照玩家userId没有找到玩家信息时才允许添加玩家数据信息.
+                    m_LoginGamePlayerData.Add(playerDt);
+                }
             }
         }
 
@@ -1967,13 +1981,24 @@ namespace Assets.XKGame.Script.HongDDGamePad
                         SendWXPadShowTopUpPanel(weiXinDt.userId);
                     }
 
-                    //在正在进行游戏的玩家微信数据中没有找到该玩家信息.
-                    //添加该玩家信息到登录游戏的玩家数据列表中.
-                    GamePlayerData loginPlayerDt = new GamePlayerData();
-                    //设置是否为免费体验玩家.
-                    loginPlayerDt.IsMianFeiTiYanPlayer = isMianFeiTiYanPlayer;
-                    loginPlayerDt.m_PlayerWeiXinData = weiXinDt;
-                    AddLoginGamePlayerData(loginPlayerDt);
+                    GamePlayerData loginPlayerDt = FindLoginGamePlayerData(weiXinDt.userId);
+                    if (loginPlayerDt != null)
+                    {
+                        //在已经登录的玩家数据列表中找到该玩家信息.
+                        //需要将玩家数据信息设置为免费试玩玩家,便于玩家点击开始游戏按键后激活该玩家.
+                        loginPlayerDt.IsMianFeiTiYanPlayer = isMianFeiTiYanPlayer;
+                    }
+                    else
+                    {
+                        //在正在进行游戏的玩家微信数据中没有找到该玩家信息.
+                        //在已经登录的玩家数据列表中没有找到该玩家信息.
+                        //添加该玩家信息到登录游戏的玩家数据列表中.
+                        loginPlayerDt = new GamePlayerData();
+                        //设置是否为免费体验玩家.
+                        loginPlayerDt.IsMianFeiTiYanPlayer = isMianFeiTiYanPlayer;
+                        loginPlayerDt.m_PlayerWeiXinData = weiXinDt;
+                        AddLoginGamePlayerData(loginPlayerDt);
+                    }
                     return;
                 }
             }
