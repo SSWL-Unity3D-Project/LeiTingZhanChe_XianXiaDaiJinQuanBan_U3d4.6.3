@@ -72,6 +72,25 @@ public class XKPlayerCamera : MonoBehaviour
             DaoJuSpawnPoint = daoJuList.ToArray();
             DaoJuSpawnPointArray.gameObject.SetActive(false);
         }
+
+        XkPlayerCtrl script = GetComponentInParent<XkPlayerCtrl>();
+        if (script != null)
+        {
+            switch (script.PlayerSt)
+            {
+                case PlayerTypeEnum.FeiJi:
+                    _InstanceFeiJi = this;
+                    break;
+
+                case PlayerTypeEnum.TanKe:
+                    _InstanceTanKe = this;
+                    break;
+
+                case PlayerTypeEnum.CartoonCamera:
+                    _InstanceCartoon = this;
+                    break;
+            }
+        }
     }
 
 	// Use this for initialization

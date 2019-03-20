@@ -198,7 +198,10 @@ public class XKPlayerMoveCtrl : MonoBehaviour
 		ResetIsWuDiState();
 		RigCom = rigidbody;
 		PlayerTran = transform;
-		GameCameraTran = XKPlayerCamera.GetInstanceFeiJi().transform;
+        if (XKPlayerCamera.GetInstanceFeiJi() != null)
+        {
+            GameCameraTran = XKPlayerCamera.GetInstanceFeiJi().transform;
+        }
 		TerrainLayer = XkGameCtrl.GetInstance().LandLayer;
 
 		bool isActivePlayer = true;

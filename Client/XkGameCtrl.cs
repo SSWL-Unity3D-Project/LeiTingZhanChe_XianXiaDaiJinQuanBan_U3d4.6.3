@@ -590,6 +590,7 @@ public class XkGameCtrl : SSGameMono
             Application.runInBackground = true;
             InitCheckLoadingMovieScene();
 
+            XKGlobalData.GetInstance();
             if (m_SSShangHuInfo != null)
             {
                 m_SSShangHuInfo.Init();

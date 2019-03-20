@@ -71,6 +71,7 @@ public class SSChouJiangData : MonoBehaviour
                 }
                 maxPlayer = (100 / baoJiangLv) + addVal;
             }
+            //SSDebug.LogWarning("SetMaxPlayer -> maxPlayer =================== " + maxPlayer);
         }
 
         /// <summary>
