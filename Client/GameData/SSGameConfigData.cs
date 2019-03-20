@@ -75,7 +75,7 @@ public class SSGameConfigData
         if (XkGameCtrl.GetInstance().PlayerXueLiangMax != m_PlayerHealthMax)
         {
             //更新血量最大值.
-            XkGameCtrl.GetInstance().PlayerXueLiangMax = m_PlayerHealthMax;
+            XkGameCtrl.GetInstance().UpdatePlayerMaxHealth(m_PlayerHealthMax);
         }
     }
 
@@ -92,7 +92,7 @@ public class SSGameConfigData
         if (XkGameCtrl.GetInstance().PlayerXueLiangMax != playerHealthMax)
         {
             //更新血量最大值.
-            XkGameCtrl.GetInstance().PlayerXueLiangMax = playerHealthMax;
+            XkGameCtrl.GetInstance().UpdatePlayerMaxHealth(playerHealthMax);
         }
 
         if (m_PlayerHealthMax != playerHealthMax)

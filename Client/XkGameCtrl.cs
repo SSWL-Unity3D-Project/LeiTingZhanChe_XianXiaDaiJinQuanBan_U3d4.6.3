@@ -4544,6 +4544,17 @@ public class XkGameCtrl : SSGameMono
     #endregion
 
     /// <summary>
+    /// 更新游戏中玩家的最大血量数据.
+    /// </summary>
+    internal void UpdatePlayerMaxHealth(int maxHealth)
+    {
+        if (PlayerXueLiangMax != maxHealth)
+        {
+            MaxPlayerHealth = PlayerXueLiangMax = maxHealth;
+        }
+    }
+
+    /// <summary>
     /// 释放游戏游离资源.
     /// </summary>
     public void UnloadUnusedAssets()
