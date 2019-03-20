@@ -720,7 +720,7 @@ public class SSBoxPostNet : MonoBehaviour
                             //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
                             //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
 
-                            int mianFeiFuHuoCiShu = 0; //免费复活次数.
+                            int mianFeiFuHuoCiShu = 1; //免费复活次数(默认数值).
                             if (jd_Data["setting"].Keys.Contains("firstFreeResurrection") == true)
                             {
                                 mianFeiFuHuoCiShu = Convert.ToInt32(jd_Data["setting"]["firstFreeResurrection"].ToString());
