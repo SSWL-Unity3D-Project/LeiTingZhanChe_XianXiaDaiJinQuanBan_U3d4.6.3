@@ -68,7 +68,7 @@ public class SSGameMacManage : MonoBehaviour
                 //和GameJiaoYanKey.db文件中的keyValue数据进行比较，如果相等则校验通过，否则提示
                 //“游戏校验失败，请将“GameJiaoYanKey.db”。
                 string jieMiValue = Md5Decrypt(jiaoYanValue);
-                if (jiaoYanValue == keyValue)
+                if (jieMiValue == keyValue)
                 {
                     //加密校验数据符合,通过校验.
                     isJiaoYanFailed = false;
@@ -98,8 +98,13 @@ public class SSGameMacManage : MonoBehaviour
                 boxPostDebug.SetIsNotFindLocalMac();
             }
         }
-
         IsMd5JiaoYanFailed = isJiaoYanFailed;
+
+        if (isJiaoYanFailed == true)
+        {
+            m_GuiStyle = new GUIStyle();
+            m_GuiStyle.fontSize = 20;
+        }
         return isJiaoYanFailed;
     }
 
@@ -113,6 +118,7 @@ public class SSGameMacManage : MonoBehaviour
     /// 是否Md5数据校验失败.
     /// </summary>
     bool IsMd5JiaoYanFailed = false;
+    GUIStyle m_GuiStyle = null;
     private void OnGUI()
     {
         if (IsNotFindLocalMac == true)
@@ -125,9 +131,16 @@ public class SSGameMacManage : MonoBehaviour
             return;
         }
 
+        if (m_GuiStyle == null)
+        {
+            return;
+        }
+
         GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), "");
-        GUI.color = Color.red;
-        GUI.Box(new Rect(30f, 50f, Screen.width - 60f, 25f), "游戏校验失败,请将游戏路径中的\"GameJiaoYanKey.db\"文件发送给游戏提供商.");
+        GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize),
+            "游戏校验失败,请将游戏路径中的\"GameJiaoYanKey.db\"文件发送给游戏提供商.", m_GuiStyle);
+        GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize),
+            "注意: 在游戏提供商没有回传\"GameJiaoYanValue.db\"文件之前,禁止重复开启游戏,否则会导致加密校验失败!", m_GuiStyle);
     }
 
     #region 读写数据功能
