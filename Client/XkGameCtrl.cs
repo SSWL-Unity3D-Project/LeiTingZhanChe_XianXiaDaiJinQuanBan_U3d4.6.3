@@ -1,4 +1,3 @@
-#define GAME_VERSION_ZHENG_SHI_BAN_WU_SHUI_YIN //游戏发布后的版本为不带有测试版水印UI的版本.
 #define USE_CHECK_LOAD_MOVIE_SCENE
 //#define DEBUG_SHOW_RESTART_GAME_TIME //测试游戏重启倒计时信息.
 //#define TEST_SCREEN_CONFIG
@@ -58,11 +57,7 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 游戏版本控制数据.
     /// </summary>
-#if GAME_VERSION_ZHENG_SHI_BAN_WU_SHUI_YIN //游戏发布后的版本为不带有测试版水印UI的版本.
-    internal GameVersion m_GameVersion = GameVersion.FaBuBan;
-#else
-    internal GameVersion m_GameVersion = GameVersion.CeShiBan;
-#endif
+    public GameVersion m_GameVersion = GameVersion.FaBuBan;
 
     /// <summary>
     /// 彩票算法模式.
