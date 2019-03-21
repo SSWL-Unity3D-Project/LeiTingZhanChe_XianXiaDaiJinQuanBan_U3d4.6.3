@@ -72,7 +72,7 @@ public class SSGameConfigData
         }
         m_PlayerHealthMax = Convert.ToInt32(info);
 
-        if (XkGameCtrl.GetInstance().PlayerXueLiangMax != m_PlayerHealthMax)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().PlayerXueLiangMax != m_PlayerHealthMax)
         {
             //更新血量最大值.
             XkGameCtrl.GetInstance().UpdatePlayerMaxHealth(m_PlayerHealthMax);
@@ -89,7 +89,7 @@ public class SSGameConfigData
             playerHealthMax = 0;
         }
 
-        if (XkGameCtrl.GetInstance().PlayerXueLiangMax != playerHealthMax)
+        if (XkGameCtrl.GetInstance() != null && XkGameCtrl.GetInstance().PlayerXueLiangMax != playerHealthMax)
         {
             //更新血量最大值.
             XkGameCtrl.GetInstance().UpdatePlayerMaxHealth(playerHealthMax);

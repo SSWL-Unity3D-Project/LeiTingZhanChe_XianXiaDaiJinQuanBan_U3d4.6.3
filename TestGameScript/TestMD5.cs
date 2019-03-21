@@ -9,16 +9,32 @@ public class TestMD5 : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        string text = "12345";
-        string jiaMiText = Md5Sum(text);
-        Debug.Log("text ==== " + text);
-        Debug.Log("jiaMiText ==== " + jiaMiText);
+        string mac = "1234567890ab";
+        string text = mac + "-" + System.DateTime.Now.ToString();
+        string jiaMiText = "";
+        //jiaMiText = Md5Sum(text);
+        //Debug.Log("text ==== " + text);
+        //Debug.Log("jiaMiText ==== " + jiaMiText);
 
         jiaMiText = Md5Encrypt(text);
+        Debug.Log("shuJu jiaMi...");
         Debug.Log("text ==== " + text);
         Debug.Log("jiaMiText ==== " + jiaMiText);
         
         text = Md5Decrypt(jiaMiText);
+        Debug.Log("shuJu jieMi...");
+        Debug.Log("jiaMiText ==== " + jiaMiText);
+        Debug.Log("text ==== " + text);
+
+        //再次对数据进行加密.
+        text = jiaMiText;
+        jiaMiText = Md5Encrypt(text);
+        Debug.Log("shuJu jiaMi...");
+        Debug.Log("text ==== " + text);
+        Debug.Log("jiaMiText ==== " + jiaMiText);
+
+        text = Md5Decrypt(jiaMiText);
+        Debug.Log("shuJu jieMi...");
         Debug.Log("jiaMiText ==== " + jiaMiText);
         Debug.Log("text ==== " + text);
     }
@@ -42,9 +58,9 @@ public class TestMD5 : MonoBehaviour
     }
 
     #region MD5秘钥
-    //建立加密对象的密钥和偏移量           
-    static byte[] iv = { 102, 66, 93, 156, 78, 4, 253, 32 };//定义偏移量   
-    static byte[] key = { 55, 36, 246, 128, 36, 99, 89, 3 };//定义密钥     
+    //建立加密对象的密钥和偏移量
+    static byte[] iv = { 102, 66, 93, 156, 78, 56, 253, 36 };//定义偏移量
+    static byte[] key = { 55, 36, 226, 128, 36, 99, 89, 39 };//定义密钥
     #endregion
 
     #region MD5加密

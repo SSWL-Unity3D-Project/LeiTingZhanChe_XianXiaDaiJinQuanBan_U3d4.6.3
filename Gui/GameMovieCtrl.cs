@@ -162,11 +162,45 @@ public class GameMovieCtrl : SSGameMono
         //}
     }
 
+    /// <summary>
+    /// 游戏Md5数据加密偏移量.
+    /// iv = { 102, 66, 93, 156, 78, 56, 253, 36 };
+    /// </summary>
+    public int[] gameIv = new int[8];
+    /// <summary>
+    /// 游戏Md5数据加密秘钥.
+    /// key = { 55, 36, 226, 128, 36, 99, 89, 39 };
+    /// </summary>
+    public int[] gameKey = new int[8];
+
     void Start()
     {
         //加载游戏关卡.
         //Application.LoadLevel((int)GameLevel.Scene_1);
-        StartCoroutine(DelayLoadGame());
+
+        //SSGameLogoData.m_GameVersionState = SSGameLogoData.GameVersionState.KTV; //test
+        if (SSGameLogoData.m_GameVersionState == SSGameLogoData.GameVersionState.KTV)
+        {
+            //KTV版本游戏需要进行加密校验.
+            SSGameMacManage gameMacManage = gameObject.AddComponent<SSGameMacManage>();
+            if (gameMacManage != null)
+            {
+                bool isJiaoYanFailed = gameMacManage.Init(gameIv, gameKey);
+                if (isJiaoYanFailed == true)
+                {
+                    //数据校验失败.
+                }
+                else
+                {
+                    //数据校验成功.
+                    StartCoroutine(DelayLoadGame());
+                }
+            }
+        }
+        else
+        {
+            StartCoroutine(DelayLoadGame());
+        }
     }
 
     IEnumerator DelayLoadGame()
