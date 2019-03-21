@@ -1223,7 +1223,7 @@ public class SSCaiPiaoDataManage : SSGameMono
             return;
         }
         m_PlayerCoinData[indexVal].TimeActive = Time.time;
-        Debug.Log("Unity: SetPlayerCoinTimeActive -> index == " + index + ", time == " + Time.time);
+        //Debug.Log("Unity: SetPlayerCoinTimeActive -> index == " + index + ", time == " + Time.time);
     }
 
     /// <summary>
@@ -1243,7 +1243,7 @@ public class SSCaiPiaoDataManage : SSGameMono
 
         int coinStart = XKGlobalData.GameNeedCoin;
         m_PlayerCoinData[indexVal].XuBiVal += coinStart;
-        Debug.Log("Unity: AddPlayerXuBiVal -> index == " + index + ", coinVal ==== " + m_PlayerCoinData[indexVal].XuBiVal);
+        //Debug.Log("Unity: AddPlayerXuBiVal -> index == " + index + ", coinVal ==== " + m_PlayerCoinData[indexVal].XuBiVal);
     }
 
     /// <summary>

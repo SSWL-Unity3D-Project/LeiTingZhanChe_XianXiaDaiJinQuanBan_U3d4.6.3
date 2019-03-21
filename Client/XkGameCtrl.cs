@@ -3515,8 +3515,17 @@ public class XkGameCtrl : SSGameMono
 			break;
 		}
 
-		if (isActive) {
-			PlayerHealthArray[indexPlayer] = MaxPlayerHealth;
+		if (isActive)
+        {
+            if (XkPlayerCtrl.GetInstanceFeiJi() != null
+                && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage != null
+                && XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage != null)
+            {
+                //设置玩家游戏激活时间信息.
+                XkPlayerCtrl.GetInstanceFeiJi().m_SpawnNpcManage.m_CaiPiaoDataManage.SetPlayerCoinTimeActive(indexVal);
+            }
+
+            PlayerHealthArray[indexPlayer] = MaxPlayerHealth;
 			if (djsCtrl != null)
             {
                 if (djsCtrl.IsPlayDaoJishi)
@@ -3743,7 +3752,12 @@ public class XkGameCtrl : SSGameMono
 		if (IsCartoonShootTest) {
 			return;
 		}
-		//pcvr.GetInstance().ActiveFangXiangDouDong(indexVal, false);
+        //pcvr.GetInstance().ActiveFangXiangDouDong(indexVal, false);
+        //if (XKPlayerMoveCtrl.GetInstance(indexVal) != null && XKPlayerMoveCtrl.GetInstance(indexVal).GetIsShanShuoState() == false)
+        //{
+        //    SSDebug.LogWarning("SubGamePlayerHealth -> indexVal *************** ======== " + indexVal + ", valSub ========= " + valSub
+        //        + ", playerHealth == " + PlayerHealthArray[(int)indexVal - 1]); //test
+        //}
 
         float damagaAddVal = 0f;
         if (XkPlayerCtrl.GetInstanceFeiJi() != null)
@@ -3769,6 +3783,12 @@ public class XkGameCtrl : SSGameMono
             }
         }
 
+        //if (XKPlayerMoveCtrl.GetInstance(indexVal) != null && XKPlayerMoveCtrl.GetInstance(indexVal).GetIsShanShuoState() == false)
+        //{
+        //    SSDebug.LogWarning("SubGamePlayerHealth -> indexVal ======== " + indexVal + ", valSub ========= " + valSub
+        //        + ", playerHealth == " + PlayerHealthArray[(int)indexVal - 1]); //test
+        //}
+
         switch (indexVal) {
 		case PlayerEnum.PlayerOne:
 			if (!IsActivePlayerOne
@@ -3776,8 +3796,8 @@ public class XkGameCtrl : SSGameMono
 				return;
 			}
 			XKPlayerMoveCtrl.GetInstancePOne().ShowPlayerShanShuo();
-			
-			valSub *= PlayerQuanShu[0];
+
+            valSub *= PlayerQuanShu[0];
 			PlayerHealthArray[0] -= valSub;
 			if (XueKuangCtrl.GetInstanceOne() != null) {
 				XueKuangCtrl.GetInstanceOne().HandlePlayerXueTiaoInfo(PlayerHealthArray[0]);
@@ -3874,8 +3894,9 @@ public class XkGameCtrl : SSGameMono
 				//Debug.Log("Unity:"+"SubGamePlayerHealth -> PlayerFour is death!");
 				PlayerHealthArray[3] = 0f;
 				PlayerQuanShu[3] = 1;
-				//SetActivePlayerFour(false);
-				XKPlayerMoveCtrl.GetInstancePFour().HiddenGamePlayer();
+                //SetActivePlayerFour(false);
+                OnHealthOverPlayer(PlayerEnum.PlayerFour);
+                XKPlayerMoveCtrl.GetInstancePFour().HiddenGamePlayer();
 			}
 			break;
 		}
