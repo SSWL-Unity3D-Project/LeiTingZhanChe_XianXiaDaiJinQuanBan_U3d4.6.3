@@ -33,7 +33,8 @@ public class SSBoxPostNet : MonoBehaviour
         InitGameVersionInfo();
         InitHddBoxLoginData();
 
-        string boxNum = "000000000000";
+        string defaultPcMac = "000000000000";
+        string boxNum = defaultPcMac;
 #if UNITY_STANDALONE_WIN
         try
         {
@@ -77,6 +78,17 @@ public class SSBoxPostNet : MonoBehaviour
         boxNum = boxNum.Length > 12 ? boxNum.Substring(0, 12) : boxNum;
         m_BoxLoginData.boxNumber = boxNum;
         SSDebug.Log("boxNumber == " + m_BoxLoginData.boxNumber);
+
+        //boxNum = defaultPcMac; //test.
+        if (boxNum == defaultPcMac)
+        {
+            SSBoxPostDebug boxPostDebug = gameObject.AddComponent<SSBoxPostDebug>();
+            if (boxPostDebug != null)
+            {
+                //没有获取到电脑的Mac地址.
+                boxPostDebug.SetIsNotFindLocalMac();
+            }
+        }
 
         if (m_WebSocketSimpet != null)
         {
