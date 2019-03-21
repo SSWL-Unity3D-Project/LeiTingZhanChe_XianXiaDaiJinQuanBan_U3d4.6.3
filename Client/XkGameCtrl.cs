@@ -4553,6 +4553,7 @@ public class XkGameCtrl : SSGameMono
         if (PlayerXueLiangMax != maxHealth)
         {
             MaxPlayerHealth = PlayerXueLiangMax = maxHealth;
+            KeyBloodUI = (1f - MinBloodUIAmount) / MaxPlayerHealth;
         }
     }
 
