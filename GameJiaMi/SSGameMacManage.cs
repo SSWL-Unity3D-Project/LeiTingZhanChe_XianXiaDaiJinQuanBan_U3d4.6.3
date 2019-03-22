@@ -64,6 +64,7 @@ public class SSGameMacManage : MonoBehaviour
         bool isRefreshKeyValue = true;
         if (boxNum != defaultPcMac && GameKeyFile != "" && GameValueFile != "")
         {
+            boxNum = boxNum.ToLower();
             //开始进行电脑Mac地址信息校验.
             string keyValue = ReadFromFileXml(GameKeyFile, "value"); //GameKey.db文件中的数据.
             string jiaoYanValue = ReadFromFileXml(GameValueFile, "value"); //GameValue.db文件中的数据.
@@ -79,7 +80,7 @@ public class SSGameMacManage : MonoBehaviour
                 //“游戏校验失败，请将“GameKey.db”。
                 string jieMiKeyValue = Decrypt(keyValue);
                 string[] keyValArray = jieMiKeyValue.Split('#');
-                if (keyValArray.Length >= 3)
+                if (keyValArray.Length >= 4)
                 {
                     if (keyValArray[0] == boxNum)
                     {
@@ -119,12 +120,13 @@ public class SSGameMacManage : MonoBehaviour
             {
                 //刷新GameKey.db文件中的数据.
                 string gameName = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState + "_" + XKGlobalData.m_GameVersionHddServer;
+                string gameVersion = XKGameVersionCtrl.GameVersion;
                 string randStr = "";
                 for (int i = 0; i < 4096; i++)
                 {
                     randStr += (UnityEngine.Random.Range(0, 100) % 10).ToString();
                 }
-                keyValue = boxNum + "#" + DateTime.Now.ToString() + "#" + gameName + "#" + randStr;
+                keyValue = boxNum + "#" + DateTime.Now.ToString() + "#" + gameName + "#" + gameVersion + "#" + randStr;
                 keyValue = Encrypt(keyValue); //对keyValue进行MD5数据加密.
                 WriteToFileXml(GameKeyFile, "value", keyValue);
             }
