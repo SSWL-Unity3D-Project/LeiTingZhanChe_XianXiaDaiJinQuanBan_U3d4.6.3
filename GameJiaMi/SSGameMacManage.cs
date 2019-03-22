@@ -118,7 +118,7 @@ public class SSGameMacManage : MonoBehaviour
             if (isJiaoYanFailed == true && isRefreshKeyValue == true)
             {
                 //刷新GameKey.db文件中的数据.
-                string gameName = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState;
+                string gameName = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState + "_" + XKGlobalData.m_GameVersionHddServer;
                 string randStr = "";
                 for (int i = 0; i < 4096; i++)
                 {
