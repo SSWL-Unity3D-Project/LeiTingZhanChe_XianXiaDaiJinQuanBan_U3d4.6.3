@@ -172,6 +172,10 @@ public class GameMovieCtrl : SSGameMono
     /// key = { 55, 36, 226, 128, 36, 99, 89, 39 };
     /// </summary>
     public int[] gameKey = new int[8];
+    /// <summary>
+    /// 游戏加密校验所需数据信息.
+    /// </summary>
+    public SSGameMacManage.GameDate m_GameDate;
 
     void Start()
     {
@@ -185,7 +189,7 @@ public class GameMovieCtrl : SSGameMono
             SSGameMacManage gameMacManage = gameObject.AddComponent<SSGameMacManage>();
             if (gameMacManage != null)
             {
-                bool isJiaoYanFailed = gameMacManage.Init(gameIv, gameKey);
+                bool isJiaoYanFailed = gameMacManage.Init(gameIv, gameKey, m_GameDate);
                 if (isJiaoYanFailed == true)
                 {
                     //数据校验失败.

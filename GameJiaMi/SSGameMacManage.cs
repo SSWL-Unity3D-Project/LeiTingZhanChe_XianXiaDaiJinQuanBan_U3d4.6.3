@@ -9,8 +9,15 @@ using System.Xml;
 public class SSGameMacManage : MonoBehaviour
 {
 	// Use this for initialization
-	internal bool Init(int[] iv, int[] key)
+	internal bool Init(int[] iv, int[] key, GameDate gmDt)
     {
+        m_GameDate = gmDt;
+        if (gmDt != null)
+        {
+            GameKeyFile = gmDt.keyFile;
+            GameValueFile = gmDt.valueFile;
+        }
+
         MD5_iv = new byte[iv.Length];
         for (int i = 0; i < iv.Length; i++)
         {
@@ -42,45 +49,84 @@ public class SSGameMacManage : MonoBehaviour
 
             if (isFindLocalAreaConnection == false)
             {
-                SSDebug.LogWarning("not find local area connection!");
+                //SSDebug.LogWarning("not find local area connection!");
             }
         }
         catch (Exception ex)
         {
-            SSDebug.LogWarning("Mac get error! ex == " + ex);
+            SSDebug.LogWarning("error::ex == " + ex);
         }
 #endif
 
         //是否校验失败.
         bool isJiaoYanFailed = true;
-        if (boxNum != defaultPcMac)
+        //是否刷新秘钥文件.
+        bool isRefreshKeyValue = true;
+        if (boxNum != defaultPcMac && GameKeyFile != "" && GameValueFile != "")
         {
             //开始进行电脑Mac地址信息校验.
-            string keyValue = ReadFromFileXml(GameJiaoYanKeyFile, "keyValue"); //GameJiaoYanKey.db文件中的数据.
-            string jiaoYanValue = ReadFromFileXml(GameJiaoYanValueFile, "jiaoYanValue"); //GameJiaoYanValue.db文件中的数据.
-            if (keyValue == "" || jiaoYanValue == "")
+            string keyValue = ReadFromFileXml(GameKeyFile, "value"); //GameKey.db文件中的数据.
+            string jiaoYanValue = ReadFromFileXml(GameValueFile, "value"); //GameValue.db文件中的数据.
+            //if (keyValue == "" || jiaoYanValue == "")
+            if (keyValue == "")
             {
                 //获取的加密校验数据有问题.
             }
             else
             {
-                //最终进行数据校验判断时，将GameJiaoYanValue.db的jiaoYanValue数据用md5解密之后
-                //和GameJiaoYanKey.db文件中的keyValue数据进行比较，如果相等则校验通过，否则提示
-                //“游戏校验失败，请将“GameJiaoYanKey.db”。
-                string jieMiValue = Md5Decrypt(jiaoYanValue);
-                if (jieMiValue == keyValue)
+                //最终进行数据校验判断时，将GameValue.db的value数据用md5解密之后
+                //和GameKey.db文件中的value数据进行比较，如果相等则校验通过，否则提示
+                //“游戏校验失败，请将“GameKey.db”。
+                string jieMiKeyValue = Decrypt(keyValue);
+                string[] keyValArray = jieMiKeyValue.Split('#');
+                if (keyValArray.Length >= 3)
                 {
-                    //加密校验数据符合,通过校验.
-                    isJiaoYanFailed = false;
+                    if (keyValArray[0] == boxNum)
+                    {
+                        //解密后的mac信息和本电脑的mac信息一致.
+                        //可以继续进行加密数据校验.
+                        string jieMiValue = "";
+                        if (jiaoYanValue == "")
+                        {
+                            //校验数据错误.
+                        }
+                        else
+                        {
+                            //解析校验数据.
+                            jieMiValue = Decrypt(jiaoYanValue);
+                        }
+
+                        if (jieMiValue == keyValue)
+                        {
+                            //加密校验数据符合,通过校验.
+                            isJiaoYanFailed = false;
+                        }
+                        else
+                        {
+                            //秘钥信息中的Mac地址和该电脑的Mac信息一致,不用进行秘钥信息刷新.
+                            isRefreshKeyValue = false;
+                        }
+                    }
+                    else
+                    {
+                        //解密后的mac信息和本电脑的mac信息不一致.
+                        //不用继续进行数据校验了.
+                    }
                 }
             }
 
-            if (isJiaoYanFailed == true)
+            if (isJiaoYanFailed == true && isRefreshKeyValue == true)
             {
-                //刷新GameJiaoYanKey.db文件中的数据.
-                keyValue = boxNum + "-" + DateTime.Now.ToString();
-                keyValue = Md5Encrypt(keyValue); //对keyValue进行MD5数据加密.
-                WriteToFileXml(GameJiaoYanKeyFile, "keyValue", keyValue);
+                //刷新GameKey.db文件中的数据.
+                string gameName = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState;
+                string randStr = "";
+                for (int i = 0; i < 4096; i++)
+                {
+                    randStr += (UnityEngine.Random.Range(0, 100) % 10).ToString();
+                }
+                keyValue = boxNum + "#" + DateTime.Now.ToString() + "#" + gameName + "#" + randStr;
+                keyValue = Encrypt(keyValue); //对keyValue进行MD5数据加密.
+                WriteToFileXml(GameKeyFile, "value", keyValue);
             }
         }
         else
@@ -103,7 +149,7 @@ public class SSGameMacManage : MonoBehaviour
         if (isJiaoYanFailed == true)
         {
             m_GuiStyle = new GUIStyle();
-            m_GuiStyle.fontSize = 20;
+            m_GuiStyle.fontSize = 50;
         }
         return isJiaoYanFailed;
     }
@@ -136,16 +182,56 @@ public class SSGameMacManage : MonoBehaviour
             return;
         }
 
+        if (m_GameDate == null)
+        {
+            return;
+        }
+
         GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), "");
-        GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize),
-            "游戏校验失败,请将游戏路径中的\"GameJiaoYanKey.db\"文件发送给游戏提供商.", m_GuiStyle);
-        GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize),
-            "注意: 在游戏提供商没有回传\"GameJiaoYanValue.db\"文件之前,禁止重复开启游戏,否则会导致加密校验失败!", m_GuiStyle);
+        GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize), m_GameDate.msg1, m_GuiStyle);
+        GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize), m_GameDate.msg2, m_GuiStyle);
+        //GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize),
+        //    "游戏校验失败!", m_GuiStyle);
+        //GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize),
+        //    "请将游戏路径中的\"GameKey.db\"文件发送给游戏提供商.", m_GuiStyle);
     }
 
+    [Serializable]
+    public class GameDate
+    {
+        /// <summary>
+        /// 游戏校验文件.
+        /// </summary>
+        public string keyFile = "";
+        /// <summary>
+        /// 游戏秘钥文件.
+        /// </summary>
+        public string valueFile = "";
+        /// <summary>
+        /// 游戏校验失败提示信息1.
+        /// </summary>
+        public string msg1 = "";
+        /// <summary>
+        /// 游戏校验失败提示信息2.
+        /// </summary>
+        public string msg2 = "";
+    }
+    /// <summary>
+    /// 游戏校验数据信息.
+    /// </summary>
+    GameDate m_GameDate;
+
     #region 读写数据功能
-    string GameJiaoYanKeyFile = "../GameJiaoYanKey.db";
-    string GameJiaoYanValueFile = "../GameJiaoYanValue.db";
+    /// <summary>
+    /// 游戏校验文件.
+    /// </summary>
+    //string GameKeyFile = "../GameKey.db";
+    string GameKeyFile = "";
+    /// <summary>
+    /// 游戏秘钥文件.
+    /// </summary>
+    //string GameValueFile = "../GameValue.db";
+    string GameValueFile = "";
     public string ReadFromFileXml(string fileName, string attribute)
     {
         string filepath = Application.dataPath + "/" + fileName;
@@ -214,8 +300,7 @@ public class SSGameMacManage : MonoBehaviour
         }
     }
     #endregion
-
-
+    
     #region MD5秘钥
     //建立加密对象的密钥和偏移量
     //byte[] iv = { 102, 66, 93, 156, 78, 56, 253, 36 };//定义偏移量
@@ -230,7 +315,7 @@ public class SSGameMacManage : MonoBehaviour
     /// </summary>   
     /// <param name="strSource">需要加密的字符串</param>   
     /// <returns>MD5加密后的字符串</returns>   
-    string Md5Encrypt(string strSource)
+    string Encrypt(string strSource)
     {
         //把字符串放到byte数组中   
         byte[] bytIn = System.Text.Encoding.Default.GetBytes(strSource);
@@ -254,7 +339,7 @@ public class SSGameMacManage : MonoBehaviour
     /// </summary>   
     /// <param name="Source">需要解密的字符串</param>   
     /// <returns>MD5解密后的字符串</returns>   
-    string Md5Decrypt(string Source)
+    string Decrypt(string Source)
     {
         string val = "0";
         try
@@ -274,7 +359,7 @@ public class SSGameMacManage : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.Log("Md5Decrypt -> ex == " + ex);
+            Debug.Log("Decrypt -> ex == " + ex);
         }
         return val;
     }
