@@ -14,8 +14,9 @@ public class SSGameMacManage : MonoBehaviour
         m_GameDate = gmDt;
         if (gmDt != null)
         {
-            GameKeyFile = gmDt.keyFile;
-            GameValueFile = gmDt.valueFile;
+            GameFilePath = gmDt.filePath;
+            GameKeyFile = GameFilePath + "/" + gmDt.keyFile;
+            GameValueFile = GameFilePath + "/" + gmDt.valueFile;
         }
 
         MD5_iv = new byte[iv.Length];
@@ -62,6 +63,13 @@ public class SSGameMacManage : MonoBehaviour
         bool isJiaoYanFailed = true;
         //是否刷新秘钥文件.
         bool isRefreshKeyValue = true;
+#if UNITY_STANDALONE_WIN
+        if (!Directory.Exists(GameFilePath))
+        {
+            Directory.CreateDirectory(GameFilePath);
+        }
+#endif
+
         if (boxNum != defaultPcMac && GameKeyFile != "" && GameValueFile != "")
         {
             boxNum = boxNum.ToLower();
@@ -190,12 +198,16 @@ public class SSGameMacManage : MonoBehaviour
         }
 
         GUI.Box(new Rect(0f, 0f, Screen.width, Screen.height), "");
+        //m_GuiStyle.normal.textColor = Color.red;
         GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize), m_GameDate.msg1, m_GuiStyle);
-        GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize), m_GameDate.msg2, m_GuiStyle);
+        string msg21 = m_GameDate.msg2.Substring(0, 35);
+        string msg22 = m_GameDate.msg2.Substring(35);
+        GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize), msg21, m_GuiStyle);
+        GUI.Label(new Rect(30f, 50f + 2f * m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize), msg22, m_GuiStyle);
         //GUI.Label(new Rect(30f, 50f, Screen.width, m_GuiStyle.fontSize),
         //    "游戏校验失败!", m_GuiStyle);
         //GUI.Label(new Rect(30f, 50f + m_GuiStyle.fontSize, Screen.width, m_GuiStyle.fontSize),
-        //    "请将游戏路径中的\"GameKey.db\"文件发送给游戏提供商.", m_GuiStyle);
+        //    "请将\"c:/ssGameData\"路径中的\"GameKey.db\"文件发送给游戏提供商.", m_GuiStyle);
     }
 
     [Serializable]
@@ -203,12 +215,19 @@ public class SSGameMacManage : MonoBehaviour
     {
         /// <summary>
         /// 游戏校验文件.
+        /// "GameKey.db"
         /// </summary>
         public string keyFile = "";
         /// <summary>
         /// 游戏秘钥文件.
+        /// "GameValue.db"
         /// </summary>
         public string valueFile = "";
+        /// <summary>
+        /// 游戏加密数据文件路径.
+        /// "c:/ssGameData"
+        /// </summary>
+        public string filePath = "";
         /// <summary>
         /// 游戏校验失败提示信息1.
         /// </summary>
@@ -227,21 +246,22 @@ public class SSGameMacManage : MonoBehaviour
     /// <summary>
     /// 游戏校验文件.
     /// </summary>
-    //string GameKeyFile = "../GameKey.db";
+    //string GameKeyFile = "GameKey.db";
     string GameKeyFile = "";
     /// <summary>
     /// 游戏秘钥文件.
     /// </summary>
-    //string GameValueFile = "../GameValue.db";
+    //string GameValueFile = "GameValue.db";
     string GameValueFile = "";
+    /// <summary>
+    /// 游戏秘钥文件.
+    /// </summary>
+    //string GameFilePath = "c:/ssGameData";
+    string GameFilePath = "";
     public string ReadFromFileXml(string fileName, string attribute)
     {
-        string filepath = Application.dataPath + "/" + fileName;
-#if UNITY_ANDROID
-		//filepath = Application.persistentDataPath + "//" + fileName;
-#endif
+        string filepath = fileName;
         string valueStr = "";
-
         if (File.Exists(filepath))
         {
             try
@@ -268,11 +288,7 @@ public class SSGameMacManage : MonoBehaviour
 
     public void WriteToFileXml(string fileName, string attribute, string valueStr)
     {
-        string filepath = Application.dataPath + "/" + fileName;
-#if UNITY_ANDROID
-		filepath = Application.persistentDataPath + "//" + fileName;
-#endif
-
+        string filepath = fileName;
         //create file
         if (!File.Exists(filepath))
         {
