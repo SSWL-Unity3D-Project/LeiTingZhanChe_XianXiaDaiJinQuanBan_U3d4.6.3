@@ -185,20 +185,28 @@ public class GameMovieCtrl : SSGameMono
         //SSGameLogoData.m_GameVersionState = SSGameLogoData.GameVersionState.KTV; //test
         if (SSGameLogoData.m_GameVersionState == SSGameLogoData.GameVersionState.KTV)
         {
-            //KTV版本游戏需要进行加密校验.
-            SSGameMacManage gameMacManage = gameObject.AddComponent<SSGameMacManage>();
-            if (gameMacManage != null)
+            if (SSGameLogoData.m_GameVersionShuiYinStatic == XkGameCtrl.GameVersion.FaBuBan)
             {
-                bool isJiaoYanFailed = gameMacManage.Init(gameIv, gameKey, m_GameDate);
-                if (isJiaoYanFailed == true)
+                //KTV无水印版本游戏需要进行加密校验.
+                SSGameMacManage gameMacManage = gameObject.AddComponent<SSGameMacManage>();
+                if (gameMacManage != null)
                 {
-                    //数据校验失败.
+                    bool isJiaoYanFailed = gameMacManage.Init(gameIv, gameKey, m_GameDate);
+                    if (isJiaoYanFailed == true)
+                    {
+                        //数据校验失败.
+                    }
+                    else
+                    {
+                        //数据校验成功.
+                        StartCoroutine(DelayLoadGame());
+                    }
                 }
-                else
-                {
-                    //数据校验成功.
-                    StartCoroutine(DelayLoadGame());
-                }
+            }
+            else
+            {
+                //KTV测试版加载游戏资源.
+                StartCoroutine(DelayLoadGame());
             }
         }
         else

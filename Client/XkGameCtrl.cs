@@ -57,7 +57,13 @@ public class XkGameCtrl : SSGameMono
     /// <summary>
     /// 游戏版本控制数据.
     /// </summary>
-    public GameVersion m_GameVersion = GameVersion.FaBuBan;
+    internal GameVersion m_GameVersion
+    {
+        get
+        {
+            return SSGameLogoData.m_GameVersionShuiYinStatic;
+        }
+    }
 
     /// <summary>
     /// 彩票算法模式.

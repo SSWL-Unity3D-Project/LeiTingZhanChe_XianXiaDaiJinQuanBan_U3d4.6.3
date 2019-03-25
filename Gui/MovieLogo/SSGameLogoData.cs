@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define USE_GAME_VERSION_CE_SHI_BAN_DAI_SHUI_YIN //游戏发布为带有测试版水印的版本
+using UnityEngine;
 
 public class SSGameLogoData : MonoBehaviour
 {
@@ -74,6 +75,17 @@ public class SSGameLogoData : MonoBehaviour
     /// 游戏版本状态.
     /// </summary>
     public static GameVersionState m_GameVersionState = GameVersionState.HaiDiLao;
+#if USE_GAME_VERSION_CE_SHI_BAN_DAI_SHUI_YIN
+    /// <summary>
+    /// 游戏水印控制.
+    /// </summary>
+    public static XkGameCtrl.GameVersion m_GameVersionShuiYinStatic = XkGameCtrl.GameVersion.CeShiBan;
+#else
+    /// <summary>
+    /// 游戏水印控制.
+    /// </summary>
+    public static  XkGameCtrl.GameVersion m_GameVersionShuiYinStatic = XkGameCtrl.GameVersion.FaBuBan;
+#endif
 
     private void Awake()
     {
