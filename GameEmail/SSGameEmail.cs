@@ -254,7 +254,7 @@ namespace XKGame.Script.GameEmail
                 TimeSpan ts = ts2.Subtract(ts1).Duration();
 
                 int dTime = (int)ts.TotalHours; //小时.
-                int minTime = 10; //小时.
+                int minTime = 24; //小时.
                 if (dTime >= minTime)
                 {
                     //间隔时间大于可以发送邮件的间隔时间.

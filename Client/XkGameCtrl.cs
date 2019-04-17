@@ -1113,6 +1113,7 @@ public class XkGameCtrl : SSGameMono
     {
         float timeRestartVal = 3600f * 0.5f;
         //timeRestartVal = 2f * 60f; //test
+        //timeRestartVal = 3600f * 12f; //test
 #if DEBUG_SHOW_RESTART_GAME_TIME
         float timeTestVal = timeRestartVal - (Time.time - m_TimeLastMovie);
         if (timeTestVal < 0f)
