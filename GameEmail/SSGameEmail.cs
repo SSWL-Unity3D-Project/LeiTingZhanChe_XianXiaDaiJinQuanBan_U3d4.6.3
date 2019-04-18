@@ -254,7 +254,7 @@ namespace XKGame.Script.GameEmail
                 TimeSpan ts = ts2.Subtract(ts1).Duration();
 
                 int dTime = (int)ts.TotalHours; //小时.
-                int minTime = 24; //小时.
+                int minTime = 24 * 5; //小时.
                 if (dTime >= minTime)
                 {
                     //间隔时间大于可以发送邮件的间隔时间.
@@ -305,15 +305,14 @@ namespace XKGame.Script.GameEmail
                     //smtp.qq.com
                     //string senderServerIp = "58.251.149.147";
                     //string senderServerIp = "smtp.sina.com";
-                    //string toMailAddress = "mingmingruyuedlut@163.com";
-                    //string fromMailAddress = "mingmingruyuedlut@163.com";
-                    string toMailAddress = "shenyongqiang2008@126.com";
-                    string fromMailAddress = "shenyongqiang2008@163.com";
-                    string subjectInfo = "LeiTingZhanChe_" + SSGameLogoData.m_GameVersionState + " sending e_mail";
+                    string toMailAddress = "shengshiwl2019@126.com";
+                    string fromMailAddress = "shengshiwl2019@163.com";
+                    string gameVersionKey = SSGameLogoData.m_GameVersionState.ToString() + "_" + XKGlobalData.m_GameVersionHddServer.ToString();
+                    string subjectInfo = "LeiTingZhanChe_" + gameVersionKey + " sending e_mail";
                     string bodyInfo = m_Msg;
-                    string mailUsername = "shenyongqiang2008";
-                    double num = Math.Pow(2, 10) + Math.Pow(2, 9) + Math.Pow(2, 8) + Math.Pow(2, 7) + 66;
-                    string tmp = "shen";
+                    string mailUsername = "shengshiwl2019";
+                    double num = 123456789;
+                    string tmp = "sswl";
                     string mailPassword = num.ToString() + tmp; //发送邮箱的密码（）
                     string mailPort = "25";
                     MyEmail email = new MyEmail(senderServerIp, toMailAddress, fromMailAddress, subjectInfo, bodyInfo, mailUsername, mailPassword, mailPort, false, false);
