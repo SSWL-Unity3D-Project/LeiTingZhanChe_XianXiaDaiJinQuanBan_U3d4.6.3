@@ -111,8 +111,9 @@ namespace XKGame.Script.GameEmail
                         {
                             mSmtpClient.Credentials = new System.Net.NetworkCredential(this.mSenderUsername, this.mSenderPassword);
                         }
-                        mSmtpClient.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                        mSmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                         mSmtpClient.Send(mMailMessage);
+                        SSDebug.Log("Senging eMail over..................");
                     }
                 }
                 catch (Exception ex)
@@ -267,14 +268,23 @@ namespace XKGame.Script.GameEmail
                     return;
                 }
             }
-            //将发送游戏的时间信息保存到配置文件.
-            WriteGameSendEmailTime(DateTime.Now);
-
-            ThreadSendOpenGameMsgToEmail threadSendEmail = new ThreadSendOpenGameMsgToEmail(msg);
-            if (threadSendEmail != null)
+            
+            if (pcvr.GetInstance().m_HongDDGamePadInterface != null && pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet() != null)
             {
-                System.Threading.Thread threadEmail = new System.Threading.Thread(new System.Threading.ThreadStart(threadSendEmail.Run));
-                threadEmail.Start();
+                SSBoxPostNet.BoxLoginData loginDt = pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet().m_BoxLoginData;
+                if (loginDt != null && loginDt.screenId != "0")
+                {
+                    //将发送游戏的时间信息保存到配置文件.
+                    WriteGameSendEmailTime(DateTime.Now);
+
+                    string screenId = loginDt.screenId;
+                    ThreadSendOpenGameMsgToEmail threadSendEmail = new ThreadSendOpenGameMsgToEmail(msg, screenId);
+                    if (threadSendEmail != null)
+                    {
+                        System.Threading.Thread threadEmail = new System.Threading.Thread(new System.Threading.ThreadStart(threadSendEmail.Run));
+                        threadEmail.Start();
+                    }
+                }
             }
         }
         
@@ -283,10 +293,12 @@ namespace XKGame.Script.GameEmail
         /// </summary>
         public class ThreadSendOpenGameMsgToEmail
         {
+            string m_ScreenId = "";
             string m_Msg = "";
-            public ThreadSendOpenGameMsgToEmail(string msg)
+            public ThreadSendOpenGameMsgToEmail(string msg, string screenId)
             {
                 m_Msg = msg;
+                m_ScreenId = screenId;
             }
 
             ~ThreadSendOpenGameMsgToEmail()
@@ -300,15 +312,17 @@ namespace XKGame.Script.GameEmail
                 {
                     //smtp.163.com
                     string senderServerIp = "123.125.50.133";
+                    //string senderServerIp = "smtp.163.com";
                     //smtp.gmail.com
                     //string senderServerIp = "74.125.127.109";
                     //smtp.qq.com
                     //string senderServerIp = "58.251.149.147";
+                    //string senderServerIp = "smtp.qq.com";
                     //string senderServerIp = "smtp.sina.com";
-                    string toMailAddress = "shengshiwl2019@126.com";
+                    string toMailAddress = "shengshiwl2019@163.com";
                     string fromMailAddress = "shengshiwl2019@163.com";
                     string gameVersionKey = SSGameLogoData.m_GameVersionState.ToString() + "_" + XKGlobalData.m_GameVersionHddServer.ToString();
-                    string subjectInfo = "LeiTingZhanChe_" + gameVersionKey + " sending e_mail";
+                    string subjectInfo = "LeiTingZhanChe_" + gameVersionKey + ", Id " + m_ScreenId;
                     string bodyInfo = m_Msg;
                     string mailUsername = "shengshiwl2019";
                     double num = 123456789;
