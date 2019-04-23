@@ -113,7 +113,7 @@ namespace XKGame.Script.GameEmail
                         }
                         mSmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                         mSmtpClient.Send(mMailMessage);
-                        SSDebug.Log("Senging eMail over..................");
+                        SSDebug.Log("Sending eMail over..................");
                     }
                 }
                 catch (Exception ex)
