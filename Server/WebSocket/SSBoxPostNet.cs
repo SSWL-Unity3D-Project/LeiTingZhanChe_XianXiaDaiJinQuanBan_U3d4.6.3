@@ -342,7 +342,7 @@ public class SSBoxPostNet : MonoBehaviour
         public string token = "";              //连接websocket的令牌.
         public string versionNumber = "";      //当前游戏最新的版本号,可能为空.
     }
-    BoxLoginRtData m_BoxLoginDt = new BoxLoginRtData();
+    BoxLoginRtData m_BoxLoginRtDt = new BoxLoginRtData();
 
     /// <summary>
     /// Post网络数据.
@@ -386,9 +386,9 @@ public class SSBoxPostNet : MonoBehaviour
                         m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
                         if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
                         {
-                            m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
-                            m_BoxLoginDt.token = jd["data"]["token"].ToString();
-                            SSDebug.LogWarning("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
+                            m_BoxLoginRtDt.serverIp = jd["data"]["serverIp"].ToString();
+                            m_BoxLoginRtDt.token = jd["data"]["token"].ToString();
+                            SSDebug.LogWarning("Unity:"+"serverIp " + m_BoxLoginRtDt.serverIp + ", token " + m_BoxLoginRtDt.token);
                             //ConnectWebSocketServer();
                             StartCoroutine(DelayConnectWebSocketServer());
 
@@ -1107,19 +1107,28 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     void ConnectWebSocketServer()
     {
+        if (m_BoxLoginData == null)
+        {
+            SSDebug.LogWarning("ConnectWebSocketServer -> m_BoxLoginData was null");
+            return;
+        }
+
         if (m_BoxLoginRt != BoxLoginRt.Success)
         {
             Debug.Log("Unity:"+"ConnectWebSocket -> m_BoxLoginRt == " + m_BoxLoginRt);
             return;
         }
 
-        string serverIp = m_BoxLoginDt.serverIp;
+        string serverIp = m_BoxLoginRtDt.serverIp;
         if (serverIp.Contains(":") == true)
         {
             string[] strSplit = serverIp.Split(':');
             serverIp = strSplit[0];
         }
-        string url = "ws://" + serverIp + "/websocket.do?token=" + m_BoxLoginDt.token;
+
+        //string url = "ws://" + serverIp + "/websocket.do?token=" + m_BoxLoginDt.token;
+        string url = "ws://" + serverIp + "/newGameServer/websocket?id=" + m_BoxLoginData.screenId
+            + "&screenCode=0&token=" + m_BoxLoginRtDt.token;
         Debug.Log("Unity:"+"ConnectWebSocket -> url " + url);
         if (m_WebSocketSimpet != null)
         {
