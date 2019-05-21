@@ -264,7 +264,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 System.TimeSpan ts2 = new System.TimeSpan(timeRecord.Ticks);
                 System.TimeSpan ts = ts2.Subtract(ts1).Duration();
 
-                int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                //int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                int dTime = (int)ts.TotalSeconds;
                 int minTime = XKGlobalData.GetInstance().m_TimeMianFeiNum * 60; //秒.
                 if (dTime > minTime)
                 {
