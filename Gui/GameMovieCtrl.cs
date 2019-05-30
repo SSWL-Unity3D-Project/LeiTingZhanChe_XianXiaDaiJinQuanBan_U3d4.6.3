@@ -1,4 +1,5 @@
-﻿#define FULL_GAME_SCREEN_MODE //全屏幕游戏展示.
+﻿//#define USE_GAME_MAC_JIA_MI_JIAO_YAN //使用游戏机台Mac地址进行游戏校验.
+#define FULL_GAME_SCREEN_MODE //全屏幕游戏展示.
 //#define TEST_MOVIE
 using System.Collections;
 using UnityEngine;
@@ -185,6 +186,7 @@ public class GameMovieCtrl : SSGameMono
         //SSGameLogoData.m_GameVersionState = SSGameLogoData.GameVersionState.KTV; //test
         if (SSGameLogoData.m_GameVersionState == SSGameLogoData.GameVersionState.KTV)
         {
+#if USE_GAME_MAC_JIA_MI_JIAO_YAN //使用游戏机台Mac地址进行游戏校验.
             if (SSGameLogoData.m_GameVersionShuiYinStatic == XkGameCtrl.GameVersion.FaBuBan)
             {
                 //KTV无水印版本游戏需要进行加密校验.
@@ -208,9 +210,14 @@ public class GameMovieCtrl : SSGameMono
                 //KTV测试版加载游戏资源.
                 StartCoroutine(DelayLoadGame());
             }
+#else
+            //加载游戏资源.
+            StartCoroutine(DelayLoadGame());
+#endif
         }
         else
         {
+            //加载游戏资源.
             StartCoroutine(DelayLoadGame());
         }
     }
